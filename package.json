@@ -5,10 +5,10 @@
   "description": "backend app ppdp jateng",
   "main": "index.js",
   "scripts": {
-     "test": "echo \"Error: no test specified\" && exit 1",
-     "start": "NODE_ENV=production node index.js",
-     "start:dev": "NODE_ENV=development node index.js",
-     "start:test": "NODE_ENV=test node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node index.js",
+    "start:dev": "NODE_ENV=development node index.js",
+    "start:test": "NODE_ENV=test node index.js"
   },
   "author": "Ocx",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "express": "^4.19.2",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.6.15",
     "sequelize": "^6.37.3"
   }
 }
