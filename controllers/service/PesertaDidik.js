@@ -1,11 +1,11 @@
 // controllers/PesertaDidik.js
-import DataPesertaDidik from '../../models/service/DataPesertaDidik.js';
+import DataPesertaDidiks from '../../models/service/DataPesertaDidik.js';
 import Sekolah from '../../models/master/Sekolah.js';
 
 // Service function
 const getPesertaDidikByNisn = async (nisn) => {
     try {
-        const pesertaDidik = await DataPesertaDidik.findOne({
+        const pesertaDidik = await DataPesertaDidiks.findOne({
             where: { nisn },
             include: [{
                 model: Sekolah,

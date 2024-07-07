@@ -4,7 +4,7 @@ import EzSekolah from '../master/Sekolah.js';
 
 const { DataTypes } = Sequelize;
 
-const EzPesertaDidiks = db.define('ez_peserta_didik', {
+const DataPesertaDidiks = db.define('ez_peserta_didik', {
     id: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -133,6 +133,6 @@ const EzPesertaDidiks = db.define('ez_peserta_didik', {
     timestamps: false, // Nonaktifkan timestamps
 });
 
-EzPesertaDidiks.belongsTo(EzSekolah, { foreignKey: 'sekolah_id', targetKey: 'id' });
+DataPesertaDidiks.belongsTo(EzSekolah, { foreignKey: 'sekolah_id', targetKey: 'id' });
 
-export default EzPesertaDidiks;
+export default DataPesertaDidiks;
