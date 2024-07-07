@@ -1,6 +1,10 @@
 // controllers/PesertaDidik.js
-import DataPesertaDidiks from '../../models/service/DataPesertaDidik.js';
-import Sekolah from '../../models/master/Sekolah.js';
+import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
+import Sekolah from '../../models/master/SekolahModel.js';
+import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
+import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
+// import getDataWilayah from '../service/WilayahService.js';
+import { getProvinsi, getKabupatenKota, getKecamatan, getDesaKelurahan } from '../service/WilayahService.js';
 
 // Service function
 const getPesertaDidikByNisn = async (nisn) => {
@@ -9,8 +13,21 @@ const getPesertaDidikByNisn = async (nisn) => {
             where: { nisn },
             include: [{
                 model: Sekolah,
-                attributes: ['npsn', 'nama']
-            }]
+                as: 'data_sekolah', // Tambahkan alias di sini
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
+                include: [{
+                    model: BentukPendidikan,
+                    as: 'bentuk_pendidikan',
+                    attributes: ['id','nama']
+                }]
+            },
+            {
+                model: WilayahVerDapodik,
+                as: 'data_wilayah',
+                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah']
+            }
+            ],
+         
         });
 
         if (!pesertaDidik) {
@@ -43,10 +60,36 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             });
         }
 
+        // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
+
+        let dataKec = {};
+        let dataKabKota = {};
+        let dataProvinsi = {};
+
+        if (pesertaDidik.data_wilayah) {
+            dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        }
+
+        if (dataKec.mst_kode_wilayah) {
+            dataKabKota = await getKabupatenKota(dataKec.mst_kode_wilayah);
+        }
+
+        if (dataKabKota.mst_kode_wilayah) {
+            dataProvinsi = await getProvinsi(dataKabKota.mst_kode_wilayah);
+        }
+        
+
         res.status(200).json({
             status: 1,
             message: 'Data berhasil ditemukan',
-            data: pesertaDidik
+            // ss: dataKec,
+            data: {
+                ...pesertaDidik.toJSON(),
+                data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
+                data_wilayah_kabkota: dataKabKota, // Masukkan data wilayah ke dalam respons
+                data_wilayah_provinsi: dataProvinsi // Masukkan data wilayah ke dalam respons
+            }
         });
     } catch (err) {
         console.error('Error fetching data:', err);

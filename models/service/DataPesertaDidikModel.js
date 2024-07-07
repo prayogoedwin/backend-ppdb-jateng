@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
-import EzSekolah from '../master/Sekolah.js';
+import EzSekolahs from '../master/SekolahModel.js';
+import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
 
 const { DataTypes } = Sequelize;
 
@@ -132,7 +133,11 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
 });
+// 
+DataPesertaDidiks.belongsTo(EzSekolahs, { as: 'data_sekolah', foreignKey: 'sekolah_id' });
+DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah', foreignKey: 'kode_wilayah', targetKey: 'kode_wilayah' }); // Asosiasi dengan Wilayah
 
-DataPesertaDidiks.belongsTo(EzSekolah, { foreignKey: 'sekolah_id', targetKey: 'id' });
 
 export default DataPesertaDidiks;
+
+

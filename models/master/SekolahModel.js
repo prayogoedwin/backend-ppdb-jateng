@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
+import EzBentukPendidikan from './BentukPendidikanModel.js';
 
 const { DataTypes } = Sequelize;
 
@@ -56,5 +57,7 @@ const EzSekolahs = db.define('ez_sekolah', {
 }, {
     freezeTableName: true
 });
+
+EzSekolahs.belongsTo(EzBentukPendidikan, { as: 'bentuk_pendidikan', foreignKey: 'bentuk_pendidikan_id' });
 
 export default EzSekolahs;
