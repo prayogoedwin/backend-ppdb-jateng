@@ -44,7 +44,7 @@ export const getStatusDomisili = async (req, res) => {
             }else{
 
                 res.status(200).json({
-                    'status': 1,
+                    'status': 0,
                     'message': 'Data kosong',
                     'data': resData
                 });
