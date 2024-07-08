@@ -54,7 +54,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         const pesertaDidik = await getPesertaDidikByNisn(nisn);
 
         if (!pesertaDidik) {
-            return res.status(204).json({
+            return res.status(200).json({
                 status: 0,
                 message: 'Peserta didik tidak ditemukan'
             });
