@@ -30,9 +30,9 @@ const getPesertaDidikByNisn = async (nisn) => {
          
         });
 
-        if (!pesertaDidik) {
-            throw new Error('Peserta didik tidak ditemukan');
-        }
+        // if (!pesertaDidik) {
+        //     throw new Error('Peserta didik tidak ditemukan');
+        // }
 
         return pesertaDidik;
     } catch (error) {
@@ -54,7 +54,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         const pesertaDidik = await getPesertaDidikByNisn(nisn);
 
         if (!pesertaDidik) {
-            return res.status(404).json({
+            return res.status(200).json({
                 status: 0,
                 message: 'Peserta didik tidak ditemukan'
             });
