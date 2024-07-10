@@ -181,7 +181,8 @@ export const getPerangkingan = async (req, res) => {
                 is_delete: 0
             },
             order: [
-                ['nilai_akhir', 'DESC'] // Sorting by nilai_akhir in descending order
+                ['nilai_akhir', 'DESC'], // Sorting by nilai_akhir in descending order
+                ['umur', 'DESC'] 
             ]
         });
 
