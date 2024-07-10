@@ -19,6 +19,8 @@ import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
 
+import { getSekolahTujuan } from "../controllers/master/SekolahTujuan.js";
+
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
@@ -51,6 +53,10 @@ router.get('/uapi/internal/cache/key_values', getAllCacheKeysAndValues);
 router.get('/api/master/status_domisili', getStatusDomisili);
 router.get('/api/master/sekolah_asal', getSekolahAsal);
 router.get('/api/master/jenis_lulusan', getJenisLulusan);
+
+router.post('/api/master/sekolah_tujuan', getSekolahTujuan);
+
+
 router.get('/api/master/jenis_kejuaraan', getJenisKejuaraan);
 router.post('/api/master/jalur_pendaftaran', getJalurPendaftaran);
 

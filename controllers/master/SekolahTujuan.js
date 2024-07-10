@@ -1,5 +1,5 @@
 // Import model Product
-import JalurPendaftarans from "../../models/master/JalurPendaftaranModel.js";
+import SekolahTujuans from "../../models/master/SekolahTujuanModel.js";
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
 
@@ -13,8 +13,8 @@ import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functio
 //     }
 // }
 
-export const getJalurPendaftaran = async (req, res) => {
-    const redis_key = 'JalurPendaftaranBy_'+req.body.bentuk_pendidikan_id;
+export const getSekolahTujuan = async (req, res) => {
+    const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id;
     try {
         const cacheNya = await redisGet(redis_key);
         if (cacheNya) {
@@ -28,11 +28,11 @@ export const getJalurPendaftaran = async (req, res) => {
            
         }else{
 
-            const resData = await JalurPendaftarans.findAll({
+            const resData = await SekolahTujuans.findAll({
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                 },
-                attributes: ['id', 'bentuk_pendidikan_id', 'nama'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama', 'lat', 'lng'] // Specify the attributes to retrieve
             });
             if(resData.length > 0){
 

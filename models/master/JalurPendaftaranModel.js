@@ -16,7 +16,7 @@ const JalurPendaftarans = db.define('ez_jalur_pendaftaran', {
         unique: true,
         primaryKey: true
     },
-    smasmk: {
+    bentuk_pendidikan_id: {
       type: DataTypes.INTEGER
       //1 sma, 2 smk
     },
