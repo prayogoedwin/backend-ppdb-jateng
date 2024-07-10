@@ -1,8 +1,12 @@
 // controllers/PesertaDidik.js
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
+import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
+import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
+
+
 // import getDataWilayah from '../service/WilayahService.js';
 import { getProvinsi, getKabupatenKota, getKecamatan, getDesaKelurahan } from '../service/WilayahService.js';
 
@@ -89,6 +93,66 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
                 data_wilayah_kabkota: dataKabKota, // Masukkan data wilayah ke dalam respons
                 data_wilayah_provinsi: dataProvinsi // Masukkan data wilayah ke dalam respons
+            }
+        });
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: err.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+};
+
+
+//get anak miskin, get anak panti, get anak pondok by NIK
+export const getDataDukungByNIK = async (req, res) => {
+    const { nik } = req.body;
+    try {
+        if (!nik) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NIK is required',
+            });
+        }
+
+        // Fetch data anak miskin and data anak panti by NIK
+        const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
+        const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
+
+        let dataAnakMiskin = {};
+        let dataAnakPanti = {};
+
+        if (anakMiskin) {
+            dataAnakMiskin = {
+                anak_miskin: 1,
+                data_anak_miskin: anakMiskin.toJSON()
+            };
+        } else {
+            dataAnakMiskin = {
+                anak_miskin: 0,
+                data_anak_miskin: []
+            };
+        }
+
+        if (anakPanti) {
+            dataAnakPanti = {
+                anak_panti: 1,
+                data: anakPanti.toJSON()
+            };
+        } else {
+            dataAnakPanti = {
+                anak_panti: 0,
+                data: []
+            };
+        }
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil ditemukan',
+            data: {
+                ...dataAnakMiskin,
+                ...dataAnakPanti
             }
         });
     } catch (err) {

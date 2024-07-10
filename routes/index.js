@@ -17,17 +17,18 @@ import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
 
 //Service
-import { getPesertaDidikByNisnHandler } from '../controllers/service/PesertaDidik.js';
+import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
+import { createPendaftar } from '../controllers/service/Pendaftar.js';
 
 const router = express.Router();
 router.use(cors());
 
 
 //konfigurasi cache
-router.delete('/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
-router.delete('/internal/clear_all_cache', clearAllCache); // Clear all cache
-router.get('/internal/cache/keys', getAllCacheKeys); // Get all cache keys
-router.get('/internal/cache/key_values', getAllCacheKeysAndValues); 
+router.delete('/uapi/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
+router.delete('/uapi/internal/clear_all_cache', clearAllCache); // Clear all cache
+router.get('/uapi/internal/cache/keys', getAllCacheKeys); // Get all cache keys
+router.get('/uapi/internal/cache/key_values', getAllCacheKeysAndValues); 
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);
@@ -42,6 +43,7 @@ router.post('/api/master/kelurahan', getKelurahan);
 
 //service
 router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnHandler);
-// router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, getPesertaDidikByNisnHandler);
+router.post('/api/servis/daftar_akun', createPendaftar);
+router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 
 export default router;

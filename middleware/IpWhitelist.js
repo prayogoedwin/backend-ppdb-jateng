@@ -2,13 +2,14 @@ import IpWhitelist from '../models/config/IpWhitelistModel.js';
 
 const ipWhitelistMiddleware = async (req, res, next) => {
     try {
-        const clientIP = req.ip;
+        // const clientIP = req.ip;
+        const clientServerIp = req.connection.remoteAddress;
         // const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
         // Cari IP yang sesuai dengan clientIP di database
         const whitelistEntry = await IpWhitelist.findOne({
             where: {
-                ip: clientIP
+                ip: clientServerIp
             }
         });
 

@@ -128,6 +128,10 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
     flag_pip: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    tahun_data: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
 }, {
     freezeTableName: true,
