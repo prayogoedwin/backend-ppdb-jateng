@@ -28,7 +28,7 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar } from '../controllers/service/Pendaftar.js';
-import { createPerangkingan } from '../controllers/service/Perangkingan.js';
+import { createPerangkingan, getPerangkingan } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
 import { loginUser, logoutUser } from '../controllers/service/AuthPublic.js';
@@ -83,6 +83,9 @@ router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, 
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutUser);
 router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, createPerangkingan);
+router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+
+
 
 
 //========================================================================//
