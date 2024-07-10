@@ -32,28 +32,28 @@ const uploadFiles = upload.fields([
 // Fungsi untuk menangani permintaan POST
 export const createPendaftar = [
     // Validasi input
-    check('nisn').notEmpty().withMessage('NISN is required')
-        .custom(async (value) => {
-            const existing = await DataPesertaDidiks.findOne({ where: { nisn: value } });
-            if (existing) {
-                throw new Error('NISN already exists');
-            }
-        }),
-    check('no_wa').notEmpty().withMessage('No WA is required')
-        .matches(/^(0|62)\d+/).withMessage('No WA must start with 0 or 62')
-        .custom(async (value) => {
-            const existing = await DataPesertaDidiks.findOne({ where: { no_wa: value } });
-            if (existing) {
-                throw new Error('No WA already exists');
-            }
-        }),
-    check('nik').notEmpty().withMessage('NIK is required')
-        .custom(async (value) => {
-            const existing = await DataPesertaDidiks.findOne({ where: { nik: value } });
-            if (existing) {
-                throw new Error('NIK already exists');
-            }
-        }),
+    // check('nisn').notEmpty().withMessage('NISN is required')
+    //     .custom(async (value) => {
+    //         const existing = await DataPesertaDidiks.findOne({ where: { nisn: value } });
+    //         if (existing) {
+    //             throw new Error('NISN already exists');
+    //         }
+    //     }),
+    // check('no_wa').notEmpty().withMessage('No WA is required')
+    //     .matches(/^(0|62)\d+/).withMessage('No WA must start with 0 or 62')
+    //     .custom(async (value) => {
+    //         const existing = await DataPesertaDidiks.findOne({ where: { no_wa: value } });
+    //         if (existing) {
+    //             throw new Error('No WA already exists');
+    //         }
+    //     }),
+    // check('nik').notEmpty().withMessage('NIK is required')
+    //     .custom(async (value) => {
+    //         const existing = await DataPesertaDidiks.findOne({ where: { nik: value } });
+    //         if (existing) {
+    //             throw new Error('NIK already exists');
+    //         }
+    //     }),
     // Fungsi handler
     async (req, res) => {
         // Menangani hasil validasi
