@@ -59,7 +59,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
 }
 
 export const getDataPendaftarById = async (req, res) => {
-        const { id } = req.body;
+        const { id } = req.params; // Ambil id dari params URL
         try {
             const resData = await DataPendaftars.findOne({
                 where: {
@@ -93,7 +93,7 @@ export const getDataPendaftarById = async (req, res) => {
         
 }
 
-// User login
+// Uverif pendaftart
 export const verifikasiPendaftar = [
     async (req, res) => {
         const { id, is_verified, verified_by } = req.body;

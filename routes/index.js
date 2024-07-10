@@ -82,7 +82,7 @@ router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, 
 
 //menu menu & action admin
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarForVerif);
-router.get('/admin-api/data/pendaftar_detail', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarById);
+router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarById);
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, verifikasiPendaftar);
 
 
