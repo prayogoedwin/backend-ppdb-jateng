@@ -104,6 +104,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     kejuaraan_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        defaultValue:0
     },
     nama_kejuaraan: {
         type: DataTypes.STRING,
