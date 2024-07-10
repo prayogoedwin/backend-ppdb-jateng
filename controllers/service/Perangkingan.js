@@ -52,6 +52,20 @@ const generatePendaftaranNumber = async () => {
     return code;
 };
 
+const calculateAge = (birthdate) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    // Jika bulan ulang tahun belum terjadi, kurangi umur satu tahun
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
+};
+
 // Function to handle POST request
 export const createPerangkingan = [
     async (req, res) => {
@@ -164,7 +178,10 @@ export const getPerangkingan = async (req, res) => {
             where: {
                 sekolah_tujuan_id: req.body.sekolah_tujuan_id,
                 is_delete: 0
-            }
+            },
+            order: [
+                ['nilai_akhir', 'DESC'] // Sorting by nilai_akhir in descending order
+            ]
         });
 
         if (resData) { // Check if resData is not null
