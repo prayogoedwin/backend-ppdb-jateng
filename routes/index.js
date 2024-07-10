@@ -21,11 +21,10 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
-import { createPendaftar } from '../controllers/service/Pendaftar.js';
+import { createPendaftar, getPendaftarforCetak } from '../controllers/service/Pendaftar.js';
 
 
 //Admin
-
 //Auth
 import { generateSuperAdmin, loginAdmin } from '../controllers/service/admin/Auth.js';
 
@@ -56,6 +55,7 @@ router.post('/api/master/kelurahan', getKelurahan);
 //service
 router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', createPendaftar);
+router.post('/api/servis/cetak_pendaftaran', getPendaftarforCetak);
 router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 
 

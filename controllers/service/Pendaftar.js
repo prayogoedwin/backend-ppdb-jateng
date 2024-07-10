@@ -1,9 +1,11 @@
 import { check, validationResult } from 'express-validator';
-import DataPesertaDidiks from "../../models/service/DataPendaftarModel.js";
+import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -42,7 +44,7 @@ const generateVerificationCode = async () => {
             code += characters[randomIndex];
         }
 
-        const existingCode = await DataPesertaDidiks.findOne({ where: { kode_verifikasi: code } });
+        const existingCode = await DataPendaftars.findOne({ where: { kode_verifikasi: code } });
         exists = !!existingCode;
     }
 
@@ -117,7 +119,7 @@ export const createPendaftar = [
                 const dok_piagam = files.dok_piagam ? files.dok_piagam[0].filename : null;
 
                 // Membuat entri baru dalam tabel ez_pendaftar
-                const newPendaftar = await DataPesertaDidiks.create({
+                const newPendaftar = await DataPendaftars.create({
                     nisn,
                     sekolah_asal_id,
                     jenis_lulusan_id,
@@ -181,5 +183,90 @@ export const createPendaftar = [
                 });
             }
         });
+    }
+];
+
+export const getPendaftarforCetak = async (req, res) => {
+    try {
+        const resData = await DataPendaftars.findOne({
+            where: {
+                kode_verifikasi: req.body.kode_verifikasi,
+                is_delete: 0
+            }
+        });
+
+        if (resData) { // Check if resData is not null
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData // Return the found data
+            });
+        } else {
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+                'data': null // Return null or an appropriate value when data is not found
+            });
+        }
+
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({ // Use 500 for server error
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+
+// User login
+export const aktivasiAkunPendaftar = [
+
+    async (req, res) => {
+
+        const { nisn, kode_verifkasi, password } = req.body;
+
+        try {
+            // Check if user exists
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const user = await DataPendaftars.findOne({
+                where: {
+                    nisn,
+                    kode_verifkasi,
+                    is_verif: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (!user) {
+                return res.status(400).json({ status: 0, message: 'Invalid nisn or kode_verifikasi' });
+            }
+
+             // Generate tokens
+             const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+             const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+
+            // Save tokens to user record
+            user.access_token = accessToken;
+            user.access_token_refresh = refreshToken;
+            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Login successful',
+                data: {
+                    userId: user.id,
+                    username: user.username,
+                    role: user.role,
+                    accessToken,
+                    refreshToken
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
     }
 ];
