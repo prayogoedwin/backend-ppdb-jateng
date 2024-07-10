@@ -22,13 +22,13 @@ export const loginUser = [
             });
 
             if (!user) {
-                return res.status(400).json({ status: 0, message: 'Invalid nisn or password or account unactivated or account unverified' });
+                return res.status(200).json({ status: 0, message: 'Invalid nisn or password or account unactivated or account unverified' });
             }
 
             // Compare password
             const isMatch = await bcrypt.compare(password, user.password_);
             if (!isMatch) {
-                return res.status(400).json({ status: 0, message: 'Invalid nisn or password' });
+                return res.status(200).json({ status: 0, message: 'Invalid nisn or password' });
             }
 
             // Generate tokens
