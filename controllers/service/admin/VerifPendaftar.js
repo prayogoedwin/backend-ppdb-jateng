@@ -1,5 +1,6 @@
 import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
+import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 
 
 // Get semua product
@@ -68,7 +69,7 @@ export const getDataPendaftarById = async (req, res) => {
                 }
             });
             if(resData.length > 0){
-
+               
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
@@ -119,6 +120,8 @@ export const verifikasiPendaftar = [
                     id
                 }
             });
+
+            await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
 
             res.status(200).json({
                 status: 1,

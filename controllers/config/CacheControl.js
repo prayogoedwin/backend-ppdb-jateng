@@ -11,6 +11,18 @@ const clearCacheByKey = async (req, res) => {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+
+  // Function to clear cache for a specific key / untuk di konsumsi fungsi private
+  const clearCacheByKeyFunction = async (key) => {
+    try {
+        await redisClearKey(key);
+        return { message: `Cache for key ${key} cleared` };
+    } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Internal Server Error');
+    }
+  };
+
   
   // Function to clear all cache
   const clearAllCache = async (req, res) => {
@@ -44,4 +56,4 @@ const clearCacheByKey = async (req, res) => {
     }
   };
 
-  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues };
+  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByKeyFunction };

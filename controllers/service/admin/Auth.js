@@ -49,13 +49,13 @@ export const loginAdmin = [
             });
 
             if (!user) {
-                return res.status(400).json({ status: 0, message: 'Invalid username or password' });
+                return res.status(400).json({ status: 0, message: 'Invalid username or password 1' });
             }
 
             // Compare password
             const isMatch = await bcrypt.compare(password, user.password_);
             if (!isMatch) {
-                return res.status(400).json({ status: 0, message: 'Invalid username or password' });
+                return res.status(400).json({ status: 0, message: 'Invalid username or password 2' });
             }
 
             // Generate tokens
