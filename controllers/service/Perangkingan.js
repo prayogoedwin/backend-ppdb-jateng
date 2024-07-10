@@ -176,6 +176,7 @@ export const getPerangkingan = async (req, res) => {
     try {
         const resData = await DataPerangkingans.findAll({
             where: {
+                jalur_pendaftaran_id: req.body.jalur_pendaftaran_id,
                 sekolah_tujuan_id: req.body.sekolah_tujuan_id,
                 is_delete: 0
             },
