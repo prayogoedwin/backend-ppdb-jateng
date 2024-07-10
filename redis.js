@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
  * @returns {Promise<string|null>} - The value associated with the key, or null if the key does not exist
  */
 const redisGet = async (key) => {
-  return true;
+  return false;
 };
 
 /**
@@ -17,28 +17,28 @@ const redisGet = async (key) => {
  * @returns {Promise<void>}
  */
 const redisSet = async (key, value, expiration = 3600) => {
-  return true;
+  return false;
 };
 
 
 // redis.js
 const redisClearKey = async (key) => {
-  return true;
+  return false;
 };
 
 // Function to clear all keys from Redis
 const redisClearAll = async () => {
-  return true;
+  return false;
 };
 
 
 // Function to get all keys from Redis
 const redisGetAllKeys = async () => {
-  return true;
+  return false;
 };
 
 const redisGetAllKeysAndValues = async () => {
-  return true;
+  return false;
 };
 
 export { redisGet, redisSet, redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues };

@@ -26,6 +26,9 @@ import { createPendaftar } from '../controllers/service/Pendaftar.js';
 //Auth
 import { generateSuperAdmin, loginAdmin } from '../controllers/service/admin/Auth.js';
 
+//verifikasi pendaftar
+import { getDataPendaftarForVerif } from "../controllers/service/admin/VerifPendaftar.js";
+
 const router = express.Router();
 router.use(cors());
 
@@ -57,5 +60,9 @@ router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
 router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
+
+//admin dashboard
+router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarForVerif);
+
 
 export default router;
