@@ -6,3 +6,10 @@ node_modules/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+
+# Ignore all files in upload/berkas
+/upload/berkas/*
+
+# But don't ignore the folder itself
+!/upload/berkas/
