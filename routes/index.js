@@ -20,6 +20,12 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar } from '../controllers/service/Pendaftar.js';
 
+
+//Admin
+
+//Auth
+import { generateSuperAdmin, loginAdmin } from '../controllers/service/admin/Auth.js';
+
 const router = express.Router();
 router.use(cors());
 
@@ -45,5 +51,11 @@ router.post('/api/master/kelurahan', getKelurahan);
 router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', createPendaftar);
 router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
+
+
+//API Khusus Admin
+//Auth
+router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
+router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
 
 export default router;
