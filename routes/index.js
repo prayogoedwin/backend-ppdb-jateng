@@ -28,7 +28,7 @@ import { createPendaftar, getPendaftarforCetak } from '../controllers/service/Pe
 
 //Admin
 //Auth
-import { generateSuperAdmin, loginAdmin } from '../controllers/service/admin/Auth.js';
+import { generateSuperAdmin, loginAdmin, logoutAdmin } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
 import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar } from "../controllers/service/admin/VerifPendaftar.js";
@@ -75,6 +75,7 @@ router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
 router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
+router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logoutAdmin);
 
 //menu menu & action admin
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarForVerif);

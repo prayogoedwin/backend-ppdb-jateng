@@ -86,3 +86,42 @@ export const loginAdmin = [
         }
     }
 ];
+
+
+// User logout
+export const logoutAdmin = [
+
+    async (req, res) => {
+        const { userId } = req.body;
+
+        try {
+            // Check if user exists
+            const user = await DataUsers.findOne({
+                where: {
+                    id: userId,
+                    is_active: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (!user) {
+                return res.status(400).json({ status: 0, message: 'Invalid user ID' });
+            }
+
+            // Invalidate tokens
+            user.access_token = null;
+            user.access_token_refresh = null;
+            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Logout successful',
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
