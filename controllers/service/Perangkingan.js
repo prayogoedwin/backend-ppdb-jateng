@@ -1,5 +1,6 @@
 import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -32,7 +33,7 @@ const uploadFiles = upload.fields([
 ]);
 
 //Generate Verification Code
-const generateVerificationCode = async () => {
+const generatePendaftaranNumber = async () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let code;
     let exists = true;
@@ -44,12 +45,117 @@ const generateVerificationCode = async () => {
             code += characters[randomIndex];
         }
 
-        const existingCode = await DataPendaftars.findOne({ where: { kode_verifikasi: code } });
+        const existingCode = await DataPerangkingans.findOne({ where: { no_pendaftaran: code } });
         exists = !!existingCode;
     }
 
     return code;
 };
+
+// Function to handle POST request
+export const createPerangkingan = [
+    async (req, res) => {
+        // // Handle validation results
+        // const errors = validationResult(req);
+        // if (!errors.isEmpty()) {
+        //     return res.status(400).json({ status: 0, errors: errors.array() });
+        // }
+
+        try {
+            const {
+                id_pendaftar,
+                bentuk_pendidikan_id,
+                jalur_pendaftaran_id,
+                sekolah_tujuan_id,
+                jurusan_id,
+                nisn,
+            } = req.body;
+
+             // Retrieve data from DataPendaftarModel
+             const pendaftar = await DataPendaftars.findOne({
+                where: {
+                    id: id_pendaftar,
+                    is_delete: 0
+                }
+            });
+
+            if (!pendaftar) {
+                return res.status(400).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
+            }
+
+            // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
+            const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0);
+
+            // Count existing entries with the same NISN that are not deleted
+            const count = await DataPerangkingans.count({
+                where: {
+                    nisn,
+                    is_delete: 0
+                }
+            });
+
+            if (count >= 2) {
+                return res.status(400).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
+            }
+
+            const no_pendaftaran = await generatePendaftaranNumber();
+
+
+
+            // Create a new entry in the ez_perangkingan table
+            const newPerangkingan = await DataPerangkingans.create({
+                id_pendaftar,
+                no_pendaftaran,
+                bentuk_pendidikan_id,
+                jalur_pendaftaran_id,
+                sekolah_tujuan_id,
+                jurusan_id,
+                nisn,
+
+                nik: pendaftar.nik,
+                nama_lengkap: pendaftar.nama_lengkap,
+                tanggal_lahir: new Date(pendaftar.tanggal_lahir),
+                umur: pendaftar.umur ? pendaftar.umur : 0,
+                tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
+                umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
+
+                jarak: 20,
+
+                nilai_raport: pendaftar.nilai_raport_rata,
+                nilai_prestasi: pendaftar.nilai_prestasi,
+                nilai_akhir,
+
+                is_tidak_sekolah: pendaftar.is_tidak_sekolah,
+                is_anak_panti: pendaftar.is_anak_panti,
+                is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
+                is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
+                is_pip: pendaftar.is_pip,
+
+                created_by: id_pendaftar,
+                created_by_ip: req.ip
+            });
+
+            // Filter the data to be sent as a response
+            const responseData = {
+                nisn: newPerangkingan.nisn,
+                nama_lengkap: newPerangkingan.nama_lengkap
+            };
+
+            // Send success response
+            res.status(201).json({
+                status: 1,
+                message: 'Perangkingan berhasil dibuat',
+                data: responseData
+            });
+        } catch (error) {
+            console.error('Error perangkingan:', error);
+            res.status(500).json({
+                status: 0,
+                message: error.message || 'Terjadi kesalahan saat proses perangkingan'
+            });
+        }
+    }
+];
 
 
 // Fungsi untuk menangani permintaan POST
@@ -95,8 +201,6 @@ export const createPendaftar = [
                     tanggal_sertifikat,
                     umur_sertifikat,
                     nomor_sertifikat,
-                    nilai_raport,
-                    nilai_raport_rata,
                     nilai_prestasi,
                     is_tidak_sekolah,
                     is_anak_panti,
@@ -163,8 +267,6 @@ export const createPendaftar = [
                     umur_sertifikat: umur_sertifikat ? umur_sertifikat : 0,
                     nomor_sertifikat,
                     nilai_prestasi,
-                    nilai_raport,
-                    nilai_raport_rata,
                     dok_pakta_integritas,
                     dok_kk,
                     dok_suket_nilai_raport,
@@ -234,105 +336,3 @@ export const getPendaftarforCetak = async (req, res) => {
         });
     }
 }
-
-// User aktivasi
-export const aktivasiAkunPendaftar2 = [
-
-    async (req, res) => {
-
-        const { nisn, kode_verifkasi, password } = req.body;
-
-        try {
-            // Check if user exists
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            const user = await DataPendaftars.findOne({
-                where: {
-                    nisn,
-                    kode_verifkasi,
-                    is_verified: 1,
-                    is_delete: 0
-                }
-            });
-
-            if (!user) {
-                return res.status(400).json({ status: 0, message: 'Invalid nisn or kode_verifikasi' });
-            }
-
-             // Generate tokens
-             const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-             const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-
-            // Save tokens to user record
-            user.access_token = accessToken;
-            user.access_token_refresh = refreshToken;
-            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
-
-            res.status(200).json({
-                status: 1,
-                message: 'Login successful',
-                data: {
-                    userId: user.id,
-                    username: user.username,
-                    role: user.role,
-                    accessToken,
-                    refreshToken
-                }
-            });
-        } catch (error) {
-            res.status(500).json({
-                status: 0,
-                message: error.message,
-            });
-        }
-    }
-];
-
-// User login
-export const aktivasiAkunPendaftar = [
-    async (req, res) => {
-        const { nisn, kode_verifikasi, password } = req.body;
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        try {
-            const resData = await DataPendaftars.findOne({
-                where: {
-                    nisn,
-                    kode_verifikasi,
-                    is_verified: 1,
-                    is_delete: 0
-                }
-            });
-
-            if (!resData) {
-                return res.status(200).json({ status: 0, message: 'Data aktivasi salah, atau belum di verifikasi' });
-            }
-
-            await DataPendaftars.update({
-                is_active: 1,
-                password_: hashedPassword,
-                activated_at: new Date(), // Set the current date and time
-                activated_by: req.ip
-            }, {
-                where: {
-                    nisn,
-                    kode_verifikasi,
-                    is_verified: 1,
-                    is_delete: 0
-                }
-            });
-
-            res.status(200).json({
-                status: 1,
-                message: 'Aktivasi Berhasil',
-            });
-
-        } catch (error) {
-            res.status(500).json({
-                status: 0,
-                message: error.message,
-            });
-        }
-    }
-];
