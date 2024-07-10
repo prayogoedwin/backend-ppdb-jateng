@@ -17,6 +17,8 @@ import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValu
 import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
 import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
+import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
+
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
@@ -50,6 +52,7 @@ router.get('/api/master/status_domisili', getStatusDomisili);
 router.get('/api/master/sekolah_asal', getSekolahAsal);
 router.get('/api/master/jenis_lulusan', getJenisLulusan);
 router.get('/api/master/jenis_kejuaraan', getJenisKejuaraan);
+router.post('/api/master/jalur_pendaftaran', getJalurPendaftaran);
 
 router.get('/api/master/provinsi', getProvinsi);
 router.post('/api/master/kabkota', getKabkota);
@@ -72,7 +75,6 @@ router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, 
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutUser);
-
 
 
 
