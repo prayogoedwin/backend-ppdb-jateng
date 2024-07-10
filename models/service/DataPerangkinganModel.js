@@ -7,6 +7,10 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         autoIncrement: true,
         primaryKey: true,
     },
+    bentuk_pendidikan_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     id_pendaftar: {
         type: DataTypes.BIGINT,
         allowNull: true
