@@ -119,9 +119,11 @@ export const getDataDukungByNIK = async (req, res) => {
         // Fetch data anak miskin and data anak panti by NIK
         const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
+        const anakPondok = null;
 
         let dataAnakMiskin = {};
         let dataAnakPanti = {};
+        let dataAnakPondok = {};
 
         if (anakMiskin) {
             dataAnakMiskin = {
@@ -138,12 +140,24 @@ export const getDataDukungByNIK = async (req, res) => {
         if (anakPanti) {
             dataAnakPanti = {
                 anak_panti: 1,
-                data: anakPanti.toJSON()
+                data_anak_panti: anakPanti.toJSON()
             };
         } else {
             dataAnakPanti = {
                 anak_panti: 0,
-                data: []
+                data_anak_panti: []
+            };
+        }
+
+        if (anakPondok) {
+            dataAnakPondok = {
+                anak_pondok: 1,
+                data_anak_pondok: anakPondok.toJSON()
+            };
+        } else {
+            dataAnakPondok = {
+                anak_pondok: 0,
+                data_anak_pondok: []
             };
         }
 
@@ -152,7 +166,8 @@ export const getDataDukungByNIK = async (req, res) => {
             message: 'Data berhasil ditemukan',
             data: {
                 ...dataAnakMiskin,
-                ...dataAnakPanti
+                ...dataAnakPanti,
+                ...dataAnakPondok
             }
         });
     } catch (err) {
