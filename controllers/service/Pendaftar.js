@@ -300,7 +300,7 @@ export const aktivasiAkunPendaftar = [
             });
 
             if (!resData) {
-                return res.status(400).json({ status: 0, message: 'Data aktivasi salah, atau belum di verifikasi' });
+                return res.status(200).json({ status: 0, message: 'Data aktivasi salah, atau belum di verifikasi' });
             }
 
             await DataPendaftars.update({
