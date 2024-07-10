@@ -125,6 +125,14 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.DOUBLE,
         allowNull: true,
     },
+    nilai_raport: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    nilai_raport_rata: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+    },
     dok_pakta_integritas: {
         type: DataTypes.STRING,
         allowNull: true,

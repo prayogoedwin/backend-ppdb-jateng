@@ -95,7 +95,7 @@ export const createPendaftar = [
                     tanggal_sertifikat,
                     umur_sertifikat,
                     nomor_sertifikat,
-                    nilai_raport,
+                    // nilai_raport,
                     nilai_raport_rata,
                     nilai_prestasi,
                     is_tidak_sekolah,
@@ -121,6 +121,20 @@ export const createPendaftar = [
                 if (existingPendaftar) {
                     return res.status(400).json({ status: 0, message: 'NISN sudah terdaftar' });
                 }
+
+                let nilai_raport = {
+                    "pendidikan_agama": 85,
+                    "pkn": 78,
+                    "bahasa_indonesia": 82,
+                    "matematika": 82,
+                    "ipa":90,
+                    "ips": 90,
+                    "bahasa_inggris": 78,
+                    "pjok": 80,
+                    "seni_budaya": 80
+                  }
+
+                nilai_raport = JSON.stringify(nilai_raport);
 
                 // Menghasilkan kode verifikasi unik
                 const kode_verifikasi = await generateVerificationCode();
@@ -184,6 +198,7 @@ export const createPendaftar = [
                     nisn: newPendaftar.nisn,
                     nama_lengkap: newPendaftar.nama_lengkap,
                     kode_verifikasi: newPendaftar.kode_verifikasi,
+        
                 };
 
                 // Mengirim respons berhasil
