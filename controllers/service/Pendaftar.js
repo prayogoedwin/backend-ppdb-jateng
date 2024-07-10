@@ -29,32 +29,29 @@ const uploadFiles = upload.fields([
     { name: 'dok_piagam', maxCount: 1 }
 ]);
 
+//Generate Verification Code
+const generateVerificationCode = async () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code;
+    let exists = true;
+
+    while (exists) {
+        code = '';
+        for (let i = 0; i < 10; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            code += characters[randomIndex];
+        }
+
+        const existingCode = await DataPesertaDidiks.findOne({ where: { kode_verifikasi: code } });
+        exists = !!existingCode;
+    }
+
+    return code;
+};
+
+
 // Fungsi untuk menangani permintaan POST
 export const createPendaftar = [
-    // Validasi input
-    // check('nisn').notEmpty().withMessage('NISN is required')
-    //     .custom(async (value) => {
-    //         const existing = await DataPesertaDidiks.findOne({ where: { nisn: value } });
-    //         if (existing) {
-    //             throw new Error('NISN already exists');
-    //         }
-    //     }),
-    // check('no_wa').notEmpty().withMessage('No WA is required')
-    //     .matches(/^(0|62)\d+/).withMessage('No WA must start with 0 or 62')
-    //     .custom(async (value) => {
-    //         const existing = await DataPesertaDidiks.findOne({ where: { no_wa: value } });
-    //         if (existing) {
-    //             throw new Error('No WA already exists');
-    //         }
-    //     }),
-    // check('nik').notEmpty().withMessage('NIK is required')
-    //     .custom(async (value) => {
-    //         const existing = await DataPesertaDidiks.findOne({ where: { nik: value } });
-    //         if (existing) {
-    //             throw new Error('NIK already exists');
-    //         }
-    //     }),
-    // Fungsi handler
     async (req, res) => {
         // Menangani hasil validasi
         const errors = validationResult(req);
@@ -102,13 +99,15 @@ export const createPendaftar = [
                     is_anak_keluarga_tidak_mampu,
                     is_anak_guru_jateng,
                     is_pip,
-                    kode_verifikasi,
                     created_by,
                     saved_by,
                     is_saved,
                     no_urut,
                     is_diterima
                 } = req.body;
+
+                // Menghasilkan kode verifikasi unik
+                const kode_verifikasi = await generateVerificationCode();
 
                 // Get file paths
                 const files = req.files;
@@ -165,7 +164,7 @@ export const createPendaftar = [
                     // id: newPendaftar.id,
                     nisn: newPendaftar.nisn,
                     nama_lengkap: newPendaftar.nama_lengkap,
-                    kode_verifikasi: newPendaftar.nisn,
+                    kode_verifikasi: newPendaftar.kode_verifikasi,
                 };
 
                 // Mengirim respons berhasil
@@ -184,129 +183,3 @@ export const createPendaftar = [
         });
     }
 ];
-
-
-
-
-// Fungsi untuk menangani permintaan POST
-export const createPendaftarBAK = async (req, res) => {
-    uploadFiles(req, res, async (err) => {
-        if (err) {
-            return res.status(500).json({ status: 0, message: 'File upload error', error: err.message });
-        }
-
-        try {
-            const {
-                nisn,
-                sekolah_asal_id,
-                jenis_lulusan_id,
-                tahun_lulus,
-                nama_sekolah_asal,
-                nik,
-                nama_lengkap,
-                jenis_kelamin,
-                tanggal_lahir,
-                tempat_lahir,
-                status_domisili,
-                alamat,
-                provinsi_id,
-                kabkota_id,
-                kecamatan_id,
-                kelurahan_id,
-                rt,
-                rw,
-                lat,
-                lng,
-                no_wa,
-                tanggal_cetak_kk,
-                kejuaraan_id,
-                nama_kejuaraan,
-                tanggal_sertifikat,
-                umur_sertifikat,
-                nomor_sertifikat,
-                nilai_prestasi,
-                is_tidak_sekolah,
-                is_anak_panti,
-                is_anak_keluarga_tidak_mampu,
-                is_anak_guru_jateng,
-                is_pip,
-                kode_verifikasi,
-                created_by,
-                saved_by,
-                is_saved,
-                no_urut,
-                is_diterima
-            } = req.body;
-
-
-            // Get file paths
-            const files = req.files;
-            const dok_pakta_integritas = files.dok_pakta_integritas ? files.dok_pakta_integritas[0].filename : null;
-            const dok_kk = files.dok_kk ? files.dok_kk[0].filename : null;
-            const dok_suket_nilai_raport = files.dok_suket_nilai_raport ? files.dok_suket_nilai_raport[0].filename : null;
-            const dok_piagam = files.dok_piagam ? files.dok_piagam[0].filename : null;
-
-            // Membuat entri baru dalam tabel ez_pendaftar
-            const newPendaftar = await DataPesertaDidiks.create({
-                nisn,
-                sekolah_asal_id,
-                jenis_lulusan_id,
-                tahun_lulus,
-                nama_sekolah_asal,
-                nik,
-                nama_lengkap,
-                jenis_kelamin,
-                tanggal_lahir: new Date(tanggal_lahir),
-                tempat_lahir,
-                status_domisili,
-                alamat,
-                provinsi_id,
-                kabkota_id,
-                kecamatan_id,
-                kelurahan_id,
-                rt,
-                rw,
-                lat,
-                lng,
-                no_wa,
-                tanggal_cetak_kk: tanggal_cetak_kk ? new Date(tanggal_cetak_kk) : null,
-                kejuaraan_id,
-                nama_kejuaraan,
-                tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
-                umur_sertifikat,
-                nomor_sertifikat,
-                nilai_prestasi,
-                dok_pakta_integritas,
-                dok_kk,
-                dok_suket_nilai_raport,
-                dok_piagam,
-                is_tidak_sekolah,
-                is_anak_panti,
-                is_anak_keluarga_tidak_mampu,
-                is_anak_guru_jateng,
-                is_pip,
-                created_by: req.ip
-            });
-
-            // Menyaring data yang akan dikirim sebagai respons
-            const responseData = {
-                nisn: newPendaftar.nisn,
-                nama_lengkap: newPendaftar.nama_lengkap,
-                kode_verifikasi: newPendaftar.nisn,
-            };
-
-            // Mengirim respons berhasil
-            res.status(201).json({
-                status: 1,
-                message: 'Pendaftaran berhasil',
-                data: responseData
-            });
-        } catch (error) {
-            console.error('Error pendaftaran:', error);
-            res.status(500).json({
-                status: 0,
-                message: error.message || 'Terjadi kesalahan saat proses daftar'
-            });
-        }
-    });
-};
