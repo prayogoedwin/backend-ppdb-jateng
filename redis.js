@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 
+dotenv.config();
+
 /**
  * Get value from Redis
  * @param {string} key - The key to retrieve from Redis
