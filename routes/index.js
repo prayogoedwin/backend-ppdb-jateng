@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from 'dotenv';
 
 dotenv.config();
+const router = express.Router();
+router.use(cors());
 
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
@@ -29,10 +31,9 @@ import { createPendaftar, getPendaftarforCetak } from '../controllers/service/Pe
 import { generateSuperAdmin, loginAdmin } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
-import { getDataPendaftarForVerif } from "../controllers/service/admin/VerifPendaftar.js";
+import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar } from "../controllers/service/admin/VerifPendaftar.js";
 
-const router = express.Router();
-router.use(cors());
+
 
 
 //konfigurasi cache
@@ -52,6 +53,9 @@ router.post('/api/master/kabkota', getKabkota);
 router.post('/api/master/kecamatan', getKecamatan); 
 router.post('/api/master/kelurahan', getKelurahan); 
 
+//========================================================================//
+//API Pendaftaran
+
 //service
 router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', createPendaftar);
@@ -59,13 +63,24 @@ router.post('/api/servis/cetak_pendaftaran', getPendaftarforCetak);
 router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 
 
+//========================================================================//
+//API Calon Siswa After Login
+
+
+
+
+//========================================================================//
 //API Khusus Admin
+
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
 router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
 
-//admin dashboard
+//menu menu & action admin
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarForVerif);
+router.get('/admin-api/data/pendaftar_detail', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarById);
+router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, verifikasiPendaftar);
+
 
 
 export default router;

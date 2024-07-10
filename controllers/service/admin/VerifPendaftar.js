@@ -1,4 +1,4 @@
-import DataPesertaDidiks from "../../../models/service/DataPendaftarModel.js";
+import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 
 
@@ -13,7 +13,7 @@ import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis func
 // }
 
 export const getDataPendaftarForVerif = async (req, res) => {
-    const redis_key = 'DataPendaftarAll';
+    const redis_key = 'DataPendaftarAllinAdmin';
     try {
         const cacheNya = await redisGet(redis_key);
         if (cacheNya) {
@@ -27,7 +27,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
            
         }else{
 
-            const resData = await DataPesertaDidiks.findAll();
+            const resData = await DataPendaftars.findAll();
             if(resData.length > 0){
 
                 const newCacheNya = resData;
@@ -57,3 +57,79 @@ export const getDataPendaftarForVerif = async (req, res) => {
         });
     }
 }
+
+export const getDataPendaftarById = async (req, res) => {
+        const { id } = req.body;
+        try {
+            const resData = await DataPendaftars.findOne({
+                where: {
+                    id,
+                    is_delete: 0
+                }
+            });
+            if(resData.length > 0){
+
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': resData
+                });
+            }else{
+
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': resData
+                });
+
+            }
+        }catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+
+        
+}
+
+// User login
+export const verifikasiPendaftar = [
+    async (req, res) => {
+        const { id, is_verified, verified_by } = req.body;
+
+        try {
+            const resData = await DataPendaftars.findOne({
+                where: {
+                    id,
+                    is_delete: 0
+                }
+            });
+
+            if (!resData) {
+                return res.status(400).json({ status: 0, message: 'Invalid id' });
+            }
+
+            await DataPendaftars.update({
+                is_verified,
+                verified_at: new Date(), // Set the current date and time
+                verified_by
+            }, {
+                where: {
+                    id
+                }
+            });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Update successful',
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
+

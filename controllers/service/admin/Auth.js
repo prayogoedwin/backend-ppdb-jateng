@@ -1,7 +1,6 @@
 import DataUsers from '../../../models/service/DataUsersModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { body, validationResult, check } from 'express-validator';
 
 export const generateSuperAdmin = async (req, res) => {
     try {
@@ -50,13 +49,13 @@ export const loginAdmin = [
             });
 
             if (!user) {
-                return res.status(400).json({ status: 0, message: 'Invalid username or password 1' });
+                return res.status(400).json({ status: 0, message: 'Invalid username or password' });
             }
 
             // Compare password
             const isMatch = await bcrypt.compare(password, user.password_);
             if (!isMatch) {
-                return res.status(400).json({ status: 0, message: 'Invalid username or password 2' });
+                return res.status(400).json({ status: 0, message: 'Invalid username or password' });
             }
 
             // Generate tokens
