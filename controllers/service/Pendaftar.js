@@ -158,7 +158,7 @@ export const createPendaftar = [
                     kejuaraan_id: kejuaraan_id ? kejuaraan_id : 0,
                     nama_kejuaraan,
                     tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
-                    umur_sertifikat,
+                    umur_sertifikat: umur_sertifikat ? umur_sertifikat : 0,
                     nomor_sertifikat,
                     nilai_prestasi,
                     dok_pakta_integritas,
