@@ -129,7 +129,7 @@ export const createPerangkingan = [
                 nik: pendaftar.nik,
                 nama_lengkap: pendaftar.nama_lengkap,
                 tanggal_lahir: new Date(pendaftar.tanggal_lahir),
-                umur: pendaftar.umur ? pendaftar.umur : 0,
+                umur: calculateAge(pendaftar.tanggal_lahir),
                 tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
                 umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
 
