@@ -25,6 +25,9 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar } from '../controllers/service/Pendaftar.js';
 
+//akun siswa
+import { loginUser, logoutUser } from '../controllers/service/AuthPublic.js';
+
 
 //Admin
 //Auth
@@ -64,10 +67,11 @@ router.post('/api/servis/aktivasi_akun', ipWhitelistMiddleware, appKeyMiddleware
 router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 
 
+
 //========================================================================//
-//API Calon Siswa After Login
-
-
+//API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
+router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
+router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 
 
 

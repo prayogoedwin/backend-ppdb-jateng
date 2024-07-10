@@ -233,6 +233,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    password_: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     
 }, {
     freezeTableName: true,

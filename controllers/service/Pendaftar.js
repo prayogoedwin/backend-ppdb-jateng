@@ -122,6 +122,7 @@ export const createPendaftar = [
 
                 // Menghasilkan kode verifikasi unik
                 const kode_verifikasi = await generateVerificationCode();
+                const hashedPassword = await bcrypt.hash('Admin123#=', 10);
 
                 // Get file paths
                 const files = req.files;
@@ -170,7 +171,8 @@ export const createPendaftar = [
                     is_anak_guru_jateng,
                     is_pip,
                     kode_verifikasi,
-                    created_by: req.ip
+                    created_by: req.ip,
+                    password_:hashedPassword
                 });
 
                 // Menyaring data yang akan dikirim sebagai respons
