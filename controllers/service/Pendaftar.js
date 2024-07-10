@@ -108,6 +108,18 @@ export const createPendaftar = [
                     is_diterima
                 } = req.body;
 
+                // Cek apakah NISN sudah terdaftar dan belum dihapus
+                const existingPendaftar = await DataPendaftars.findOne({
+                    where: {
+                        nisn,
+                        is_delete: null
+                    }
+                });
+
+                if (existingPendaftar) {
+                    return res.status(400).json({ status: 0, message: 'NISN sudah terdaftar' });
+                }
+
                 // Menghasilkan kode verifikasi unik
                 const kode_verifikasi = await generateVerificationCode();
 
@@ -163,7 +175,6 @@ export const createPendaftar = [
 
                 // Menyaring data yang akan dikirim sebagai respons
                 const responseData = {
-                    // id: newPendaftar.id,
                     nisn: newPendaftar.nisn,
                     nama_lengkap: newPendaftar.nama_lengkap,
                     kode_verifikasi: newPendaftar.kode_verifikasi,
@@ -218,8 +229,8 @@ export const getPendaftarforCetak = async (req, res) => {
     }
 }
 
-// User login
-export const aktivasiAkunPendaftar = [
+// User aktivasi
+export const aktivasiAkunPendaftar2 = [
 
     async (req, res) => {
 
@@ -233,7 +244,7 @@ export const aktivasiAkunPendaftar = [
                 where: {
                     nisn,
                     kode_verifkasi,
-                    is_verif: 1,
+                    is_verified: 1,
                     is_delete: 0
                 }
             });
@@ -262,6 +273,55 @@ export const aktivasiAkunPendaftar = [
                     refreshToken
                 }
             });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
+
+// User login
+export const aktivasiAkunPendaftar = [
+    async (req, res) => {
+        const { nisn, kode_verifikasi, password } = req.body;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        try {
+            const resData = await DataPendaftars.findOne({
+                where: {
+                    nisn,
+                    kode_verifikasi,
+                    is_verified: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (!resData) {
+                return res.status(400).json({ status: 0, message: 'Data aktivasi salah, atau belum di verifikasi' });
+            }
+
+            await DataPendaftars.update({
+                is_active: 1,
+                password_: hashedPassword,
+                activated_at: new Date(), // Set the current date and time
+                activated_by: req.ip
+            }, {
+                where: {
+                    nisn,
+                    kode_verifikasi,
+                    is_verified: 1,
+                    is_delete: 0
+                }
+            });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Aktivasi Berhasil',
+            });
+
         } catch (error) {
             res.status(500).json({
                 status: 0,
