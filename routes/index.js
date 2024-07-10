@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
