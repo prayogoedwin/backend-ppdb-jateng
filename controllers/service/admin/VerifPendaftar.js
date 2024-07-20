@@ -179,7 +179,7 @@ export const verifikasiPendaftar = [
         try {
             const resData = await DataPendaftars.findOne({
                 where: {
-                    id,
+                    id: decodeId(id),
                     is_delete: 0
                 }
             });
@@ -196,7 +196,7 @@ export const verifikasiPendaftar = [
                 verified_by: req.user.userId, //ambil dr token
             }, {
                 where: {
-                    id
+                    id: decodeId(id),
                 }
             });
 
