@@ -256,6 +256,7 @@ DataPesertaDidiks.belongsTo(EzSekolahs, { as: 'data_sekolah', foreignKey: 'sekol
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah', foreignKey: 'kelurahan_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kec', foreignKey: 'kecamatan_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kot', foreignKey: 'kabkota_id', targetKey: 'kode_wilayah' });
+DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_prov', foreignKey: 'provinsi_id', targetKey: 'kode_wilayah' });
 
 
 export default DataPesertaDidiks;
