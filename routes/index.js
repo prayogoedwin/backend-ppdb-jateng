@@ -9,6 +9,9 @@ router.use(cors());
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
 import appKeyMiddleware from '../middleware/AppKey.js';
+import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
+import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.js';
+
 
 //konfigurasi cache
 import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues } from '../controllers/config/CacheControl.js';
@@ -18,12 +21,12 @@ import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
 import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
-
 import { getSekolahTujuan } from "../controllers/master/SekolahTujuan.js";
-
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
-
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
+
+//kebutuhan beranda
+import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
@@ -41,7 +44,13 @@ import { generateSuperAdmin, loginAdmin, logoutAdmin } from '../controllers/serv
 //verifikasi pendaftar
 import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar } from "../controllers/service/admin/VerifPendaftar.js";
 
+//timenline
+import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
 
+
+// refresh token
+router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
+router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 
 //konfigurasi cache
@@ -66,6 +75,14 @@ router.post('/api/master/kabkota', getKabkota);
 router.post('/api/master/kecamatan', getKecamatan); 
 router.post('/api/master/kelurahan', getKelurahan); 
 
+
+//kebutuhan beranda
+router.get('/api/beranda/timeline', getTimelinePublic);
+
+
+
+
+
 //========================================================================//
 //API Pendaftaran
 
@@ -77,12 +94,11 @@ router.post('/api/servis/aktivasi_akun', ipWhitelistMiddleware, appKeyMiddleware
 router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 
 
-
 //========================================================================//
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutUser);
-router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, createPerangkingan);
+router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
 router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
 
 
@@ -97,9 +113,16 @@ router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, l
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logoutAdmin);
 
 //menu menu & action admin
-router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarForVerif);
-router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, getDataPendaftarById);
-router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, verifikasiPendaftar);
+
+// menu pendaftaran
+router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarForVerif);
+router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarById);
+router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, verifikasiPendaftar);
+
+//menu timeline
+router.get('/admin-api/setting/timeline', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getTimeline);
+router.get('/admin-api/setting/timeline_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getTimelineById);
+router.post('/admin-api/setting/timeline_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateTimeline);
 
 
 

@@ -1,0 +1,139 @@
+import Timelines from "../../../models/service/TimelineModel.js";
+import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
+import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
+
+
+export const getTimeline = async (req, res) => {
+    const redis_key = 'TimelineAllinAdmin';
+    try {
+        const cacheNya = await redisGet(redis_key);
+        if (cacheNya) {
+
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data di ambil dari cache',
+                'data': JSON.parse(cacheNya)
+            });
+
+           
+        }else{
+
+            const resData = await Timelines.findAll();
+            if(resData.length > 0){
+
+                const newCacheNya = resData;
+                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
+
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': resData
+                });
+            }else{
+
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': resData
+                });
+
+            }
+
+        }
+    } catch (err){
+        console.error('Error fetching data:', err); // Log the error for debugging
+        res.status(404).json({
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+
+export const getTimelineById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const resData = await Timelines.findOne({
+            where: {
+                id
+            }
+        });
+        if(resData.length > 0){
+           
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData
+            });
+        }else{
+
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+                'data': resData
+            });
+
+        }
+    }catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+
+    
+}
+
+// Uverif pendaftart
+export const updateTimeline = [
+    async (req, res) => {
+        const { 
+            id, 
+            nama, 
+            keterangan,
+            tanggal_buka,
+            tanggal_tutup,
+            status,
+            icon,
+        } = req.body;
+
+
+        try {
+            const resData = await Timelines.findOne({
+                where: {
+                    id
+                }
+            });
+
+            if (!resData) {
+                return res.status(400).json({ status: 0, message: 'Invalid id' });
+            }
+
+            await Timelines.update({
+                nama,
+                keterangan,
+                tanggal_buka,
+                tanggal_tutup,
+                status,
+                updatedAt: new Date(), // Set the current date and time
+                updatedby: req.user.userId, // Use user ID from token
+                icon
+            }, {
+                where: {
+                    id
+                }
+            });
+
+            await clearCacheByKeyFunction('TimelineAllinAdmin');
+
+            res.status(200).json({
+                status: 1,
+                message: 'Update successful'+ req.user.userId,
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];

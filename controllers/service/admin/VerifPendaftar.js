@@ -97,7 +97,7 @@ export const getDataPendaftarById = async (req, res) => {
 // Uverif pendaftart
 export const verifikasiPendaftar = [
     async (req, res) => {
-        const { id, is_verified, verified_by } = req.body;
+        const { id, is_verified } = req.body;
 
         try {
             const resData = await DataPendaftars.findOne({
@@ -113,8 +113,10 @@ export const verifikasiPendaftar = [
 
             await DataPendaftars.update({
                 is_verified,
+                updated_at: new Date(), // Set the current date and time
+                updated_by: req.user.userId, //ambil dr token
                 verified_at: new Date(), // Set the current date and time
-                verified_by
+                verified_by: req.user.userId, //ambil dr token
             }, {
                 where: {
                     id
