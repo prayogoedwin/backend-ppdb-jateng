@@ -13,12 +13,6 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         primaryKey: true,
         autoIncrement: true, // Add this line
     },
-    id_: {
-        type: DataTypes.VIRTUAL,
-        get() {
-            return encodeId(this.getDataValue('id')); // Menggunakan fungsi encodeId untuk mendapatkan nilai encoded
-        }
-    },
     nisn: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -193,7 +187,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
     },
     updated_by: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
     },
     activated_at: {
@@ -213,7 +207,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
     },
     verified_by: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
     },
     is_verified: {
@@ -226,6 +220,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     },
     deleted_by: {
         type: DataTypes.STRING,
+        allowNull: true,
+    },
+    is_delete: {
+        type: DataTypes.INTEGER,
         allowNull: true,
     },
     saved_at: {

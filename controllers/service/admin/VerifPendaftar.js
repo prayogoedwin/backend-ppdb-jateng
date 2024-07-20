@@ -62,7 +62,9 @@ export const getDataPendaftarForVerif = async (req, res) => {
                 // }));
                 const resDatas = resData.map(item => {
                     const jsonItem = item.toJSON();
+                    jsonItem.id_ = encodeId(item.id); // Add the encoded ID to the response
                     delete jsonItem.id; // Hapus kolom id dari output JSON
+                   
                     return jsonItem;
                 });
 
@@ -143,6 +145,7 @@ export const getDataPendaftarById = async (req, res) => {
                 // });
                
                 const data = {
+                    id_: encodeId(item.id), 
                     ...resData.toJSON(), // Convert Sequelize instance to plain object
                 };
                 delete data.id; // Remove original ID from the response
@@ -171,42 +174,63 @@ export const getDataPendaftarById = async (req, res) => {
         
 }
 
-// Uverif pendaftart
 export const verifikasiPendaftar = [
     async (req, res) => {
         const { id, is_verified } = req.body;
 
+        if (!id) {
+            return res.status(400).json({ status: 0, message: 'ID is required' });
+        }
+
+        let decodedId;
+        try {
+            decodedId = decodeId(id);
+            if (!decodedId) {
+                return res.status(400).json({ status: 0, message: 'Invalid ID format' });
+            }
+        } catch (err) {
+            console.error('Error decoding ID:', err);
+            return res.status(400).json({ status: 0, message: 'Invalid ID format' });
+        }
+
+        console.log('Decoded ID:', decodedId); // For debugging
+
         try {
             const resData = await DataPendaftars.findOne({
                 where: {
-                    id: decodeId(id),
+                    id: decodedId,
                     is_delete: 0
                 }
             });
 
             if (!resData) {
-                return res.status(400).json({ status: 0, message: 'Invalid id' });
+                return res.status(400).json({ status: 0, message: 'Data not found' });
             }
 
-            await DataPendaftars.update({
-                is_verified,
-                updated_at: new Date(), // Set the current date and time
-                updated_by: req.user.userId, //ambil dr token
-                verified_at: new Date(), // Set the current date and time
-                verified_by: req.user.userId, //ambil dr token
-            }, {
-                where: {
-                    id: decodeId(id),
+            await DataPendaftars.update(
+                {
+                    is_verified,
+                    updated_at: new Date(), // Set the current date and time
+                    updated_by: req.user.userId, // Extracted from token
+                    verified_at: new Date(), // Set the current date and time
+                    verified_by: req.user.userId, // Extracted from token
+                },
+                {
+                    where: {
+                        id: decodedId,
+                        is_delete: 0
+                    }
                 }
-            });
+            );
 
-            await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+            // await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
 
             res.status(200).json({
                 status: 1,
                 message: 'Update successful',
             });
         } catch (error) {
+            console.error('Error updating data:', error);
             res.status(500).json({
                 status: 0,
                 message: error.message,
