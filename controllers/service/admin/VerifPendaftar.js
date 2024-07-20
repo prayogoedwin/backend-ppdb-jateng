@@ -30,7 +30,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
         }else{
 
             const resData = await DataPendaftars.findAll({
-                attributes: { exclude: ['password_'] },
+                attributes: { exclude: ['id','password_'] },
                 include: [
                     {
                         model: WilayahVerDapodik,
@@ -54,7 +54,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
                     }
                 ]
             });
-            if(resData.length > 0){
+            if(resData != null){
 
                 // const resDatas = resData.map(item => ({
                 //     ...item.toJSON(),
@@ -98,7 +98,7 @@ export const getDataPendaftarById = async (req, res) => {
         try {
             const resData = await DataPendaftars.findOne({
                 where: {
-                    id: id,
+                    id: decodeId(id),
                     is_delete: 0
                 },
                 include: [
@@ -122,21 +122,30 @@ export const getDataPendaftarById = async (req, res) => {
                         as: 'data_wilayah_prov',
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
                     }
-                ]
+                ],
+                
             });
             if(resData != null){
+                
+    
+                // res.status(200).json({
+                //     status: 1,
+                //     message: 'Data berhasil ditemukan',
+                //     data: resData
+                // });
+               
+                const data = {
+                    ...resData.toJSON(), // Convert Sequelize instance to plain object
+                    encodedId: encodeId(resData.id) // Add encoded ID
+                };
+                delete data.id; // Remove original ID from the response
     
                 res.status(200).json({
                     status: 1,
                     message: 'Data berhasil ditemukan',
-                    data: resData
+                    data: data
                 });
-               
-                // res.status(200).json({
-                //     'status': 1,
-                //     'message': 'Data berhasil ditemukan',
-                //     'data': resData
-                // });
+
             }else{
 
                 res.status(200).json({

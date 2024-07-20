@@ -13,6 +13,12 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         primaryKey: true,
         autoIncrement: true, // Add this line
     },
+    id_: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return encodeId(this.getDataValue('id')); // Menggunakan fungsi encodeId untuk mendapatkan nilai encoded
+        }
+    },
     nisn: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -246,6 +252,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    
     
 }, {
     freezeTableName: true,

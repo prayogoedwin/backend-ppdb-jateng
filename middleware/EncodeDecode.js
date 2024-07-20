@@ -1,4 +1,4 @@
-const secretKey = 'your-secret-key'; // Replace with your actual secret key
+const secretKey = 'y0u12-53cr3t-k3y#'; // Replace with your actual secret key
 
 export const encodeId = (id) => {
     const base64Id = Buffer.from(id.toString()).toString('base64');
