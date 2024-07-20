@@ -46,6 +46,11 @@ export const getDataPendaftarForVerif = async (req, res) => {
                         model: WilayahVerDapodik,
                         as: 'data_wilayah_kot',
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
                     }
                 ]
             });
@@ -110,6 +115,11 @@ export const getDataPendaftarById = async (req, res) => {
                     {
                         model: WilayahVerDapodik,
                         as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
                     }
                 ]
