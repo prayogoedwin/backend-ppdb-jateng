@@ -145,7 +145,7 @@ export const getDataPendaftarById = async (req, res) => {
                 // });
                
                 const data = {
-                    id_: encodeId(item.id), 
+                    id_: id, 
                     ...resData.toJSON(), // Convert Sequelize instance to plain object
                 };
                 delete data.id; // Remove original ID from the response
