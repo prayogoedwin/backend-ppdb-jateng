@@ -179,18 +179,18 @@ export const verifikasiPendaftar = [
         const { id, is_verified } = req.body;
 
         if (!id) {
-            return res.status(400).json({ status: 0, message: 'ID is required' });
+            return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
         }
 
         let decodedId;
         try {
             decodedId = decodeId(id);
             if (!decodedId) {
-                return res.status(400).json({ status: 0, message: 'Invalid ID format' });
+                return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
             }
         } catch (err) {
             console.error('Error decoding ID:', err);
-            return res.status(400).json({ status: 0, message: 'Invalid ID format' });
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
         }
 
         console.log('Decoded ID:', decodedId); // For debugging
@@ -204,7 +204,7 @@ export const verifikasiPendaftar = [
             });
 
             if (!resData) {
-                return res.status(400).json({ status: 0, message: 'Data not found' });
+                return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
             }
 
             await DataPendaftars.update(
@@ -227,7 +227,7 @@ export const verifikasiPendaftar = [
 
             res.status(200).json({
                 status: 1,
-                message: 'Update successful',
+                message: 'Berhasil perbaharui data',
             });
         } catch (error) {
             console.error('Error updating data:', error);
