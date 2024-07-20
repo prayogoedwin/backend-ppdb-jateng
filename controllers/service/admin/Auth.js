@@ -49,18 +49,18 @@ export const loginAdmin = [
             });
 
             if (!user) {
-                return res.status(400).json({ status: 0, message: 'Invalid username or password 1' });
+                return res.status(200).json({ status: 0, message: 'Invalid username or password 1' });
             }
 
             // Compare password
             const isMatch = await bcrypt.compare(password, user.password_);
             if (!isMatch) {
-                return res.status(400).json({ status: 0, message: 'Invalid username or password 2' });
+                return res.status(200).json({ status: 0, message: 'Invalid username or password 2' });
             }
 
             // Generate tokens
-            const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-            const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+            const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
+            const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
 
             // Save tokens to user record
             user.access_token = accessToken;
