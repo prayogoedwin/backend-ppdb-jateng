@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+import { Sequelize} from "sequelize";
 import db from "../../config/Database.js";
 import EzRoles from '../service/RolesModel.js';
 

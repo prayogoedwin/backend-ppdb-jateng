@@ -30,7 +30,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
         }else{
 
             const resData = await DataPendaftars.findAll({
-                attributes: { exclude: ['id','password_'] },
+                attributes: { exclude: ['password_'] },
                 include: [
                     {
                         model: WilayahVerDapodik,
@@ -65,6 +65,14 @@ export const getDataPendaftarForVerif = async (req, res) => {
                     delete jsonItem.id; // Hapus kolom id dari output JSON
                     return jsonItem;
                 });
+
+                // const resDatas = resData.map(item => {
+                //     const jsonItem = item.toJSON();
+                //     const encodedId = encodeId(jsonItem.id); // Encode the original ID
+                //     delete jsonItem.id; // Remove the original ID from the response
+                //     jsonItem.encodedId = encodedId; // Add the encoded ID to the response
+                //     return jsonItem;
+                // });
 
                 const newCacheNya = resDatas;
                 await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_DATA); 
@@ -136,7 +144,6 @@ export const getDataPendaftarById = async (req, res) => {
                
                 const data = {
                     ...resData.toJSON(), // Convert Sequelize instance to plain object
-                    encodedId: encodeId(resData.id) // Add encoded ID
                 };
                 delete data.id; // Remove original ID from the response
     
