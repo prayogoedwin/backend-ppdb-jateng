@@ -1,6 +1,8 @@
+import { encodeId, decodeId } from '../../../middleware/EncodeDecode.js';
 import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
+import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
 
 
 // Get semua product
@@ -24,27 +26,54 @@ export const getDataPendaftarForVerif = async (req, res) => {
                 'message': 'Data di ambil dari cache',
                 'data': JSON.parse(cacheNya)
             });
-
            
         }else{
 
-            const resData = await DataPendaftars.findAll();
+            const resData = await DataPendaftars.findAll({
+                attributes: { exclude: ['password_'] },
+                include: [
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    }
+                ]
+            });
             if(resData.length > 0){
 
-                const newCacheNya = resData;
-                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
+                // const resDatas = resData.map(item => ({
+                //     ...item.toJSON(),
+                //     encodedId: encodeId(item.id)
+                // }));
+                const resDatas = resData.map(item => {
+                    const jsonItem = item.toJSON();
+                    delete jsonItem.id; // Hapus kolom id dari output JSON
+                    return jsonItem;
+                });
+
+                const newCacheNya = resDatas;
+                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_DATA); 
 
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': resData
+                    'data': resDatas
                 });
             }else{
 
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': resData
                 });
 
             }
@@ -64,23 +93,45 @@ export const getDataPendaftarById = async (req, res) => {
         try {
             const resData = await DataPendaftars.findOne({
                 where: {
-                    id,
+                    id: id,
                     is_delete: 0
-                }
+                },
+                include: [
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    }
+                ]
             });
-            if(resData.length > 0){
-               
+            if(resData != null){
+    
                 res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': resData
+                    status: 1,
+                    message: 'Data berhasil ditemukan',
+                    data: resData
                 });
+               
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': resData
+                // });
             }else{
 
                 res.status(200).json({
                     'status': 0,
-                    'message': 'Data kosong',
-                    'data': resData
+                    'message': 'Data tidak ditemukan',
                 });
 
             }
