@@ -128,7 +128,7 @@ router.get('/admin-api/setting/timeline_detail/:id', ipWhitelistMiddleware, appK
 router.post('/admin-api/setting/timeline_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateTimeline);
 
 //menu user
-router.get('/admin-api/setting/user', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUsers);
+router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUsers);
 router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUserById);
 router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, addUser);
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateUser);
