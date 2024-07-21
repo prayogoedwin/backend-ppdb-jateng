@@ -231,7 +231,7 @@ export const addUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    const { id, username, email, nama, whatsapp, password, role, sekolah_id, is_active } = req.body;
+    const { id, username, email, nama, whatsapp, role, sekolah_id, is_active } = req.body;
 
     try {
     
@@ -292,6 +292,52 @@ export const updateUser = async (req, res) => {
     }
 };
 
+export const resetPasswordById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const resData = await DataUsers.findOne({
+            where: {
+                id: decodeId(id),
+                is_delete: 0
+            },
+            
+        });
+        if(resData != null){
+            
+             // Hash the password before saving it to the database
+            const hashedPassword = await bcrypt.hash(process.env.PASSWORD_DEFAULT_ADMIN, 10);
+           
+           
+            const data = {
+                id_: id, 
+                ...resData.toJSON(), // Convert Sequelize instance to plain object
+            };
+            delete data.id; // Remove original ID from the response
+
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: data
+            });
+
+        }else{
+
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data tidak ditemukan',
+            });
+
+        }
+    }catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+
+    
+}
+
 export const softDeleteUser = async (req, res) => {
     const { id } = req.params; // Ambil id dari params URL
     try {
@@ -312,7 +358,7 @@ export const softDeleteUser = async (req, res) => {
 
         // Update kolom is_delete, updated_at dan updated_by
         await user.update({
-            is_delete: 0,
+            is_delete: 1,
             updated_at: new Date(),
             updated_by: updatedById,
             deleted_at: new Date(),
