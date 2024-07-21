@@ -38,10 +38,11 @@ export const getUsers = async (req, res) => {
             resData = await DataUsers.findAll({
                 where: {
                     [Op.and]: [
+                        { is_delete: 0 },
                         { role_: { [Op.ne]: 77 } },
                         { role_: { [Op.in]: [93, 94, 95] } },
                         { sekolah_id: user.sekolah_id },
-                        { is_delete: 0 }
+                      
                     ]
                 },
                 order: [
@@ -52,8 +53,9 @@ export const getUsers = async (req, res) => {
             // Super, BPTIK
             resData = await DataUsers.findAll({
                 where: {
-                    role_: { [Op.ne]: 77 },
-                    is_delete: 0
+                    is_delete: 0,
+                    role_: { [Op.ne]: 77 }
+        
                 },
                 include: [
                     {
@@ -233,9 +235,10 @@ export const updateUser = async (req, res) => {
 
     try {
     
+        const decode_id = decodeId(id);
         const user = await DataUsers.findOne({
             where: {
-                id: decodeId(id),
+                id: decode_id,
                 is_delete: 0,
             }
         });
@@ -246,39 +249,6 @@ export const updateUser = async (req, res) => {
                 message: 'Data tidak ditemukan'
             });
         }
-
-         // Combine checks into a single query
-         const existingUser = await DataUsers.findOne({
-            where: {
-                [Op.and]: [
-                    {
-                        id: {
-                            [Op.ne]:  decodeId(id)// Exclude this ID
-                        }
-                    },
-                    {
-                        [Op.or]: [
-                            { email: email, is_delete: 0 }, // Email condition
-                            { username: username, is_delete: 0 }, // Username condition
-                            { whatsapp: whatsapp, is_delete: 0 } // WhatsApp condition
-                        ]
-                    }
-                ]
-            }
-        });
-
-        if (existingUser) {
-            if (existingUser.email === email) {
-                return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
-            }
-            if (existingUser.username === username) {
-                return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
-            }
-            if (existingUser.whatsapp === whatsapp) {
-                return res.status(200).json({ status: 0, message: 'Nomor WhatsApp sudah digunakan' });
-            }
-        }
-
 
         const updateData = {
             username,
@@ -291,6 +261,7 @@ export const updateUser = async (req, res) => {
             updated_by: req.user.userId, // Use user ID from token
             is_active
         };
+
 
         if (password) {
             // Hash the new password if provided
@@ -341,7 +312,7 @@ export const softDeleteUser = async (req, res) => {
 
         // Update kolom is_delete, updated_at dan updated_by
         await user.update({
-            is_delete: 1,
+            is_delete: 0,
             updated_at: new Date(),
             updated_by: updatedById,
             deleted_at: new Date(),

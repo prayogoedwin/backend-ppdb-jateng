@@ -89,7 +89,12 @@ const DataUsers = db.define('ez_users', {
     deleted_by: {
         type: DataTypes.STRING,
         allowNull: true,
-    }
+    },
+    is_delete: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+    },
     
 }, {
     freezeTableName: true,
