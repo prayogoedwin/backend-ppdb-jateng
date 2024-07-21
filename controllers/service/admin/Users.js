@@ -228,7 +228,6 @@ export const addUser = async (req, res) => {
     }
 };
 
-// Update user by ID function
 export const updateUser = async (req, res) => {
     const { id, username, email, nama, whatsapp, password, role, sekolah_id, is_active } = req.body;
 
@@ -251,14 +250,21 @@ export const updateUser = async (req, res) => {
          // Combine checks into a single query
          const existingUser = await DataUsers.findOne({
             where: {
-                [Op.or]: [
-                    { email, is_delete: 0 },
-                    { username, is_delete: 0 },
-                    { whatsapp, is_delete: 0 }
-                ],
-                id: {
-                    [Op.ne]: decodeId(id),
-                }
+                [Op.and]: [
+                    {
+                        id: {
+                            [Op.ne]:  decodeId(id), // Exclude this ID
+                        }
+                    },
+                    {
+                        [Op.or]: [
+                            { email: email, is_delete: 0 }, // Email condition
+                            { username: username, is_delete: 0 }, // Username condition
+                            { whatsapp: whatsapp, is_delete: 0 } // WhatsApp condition
+                        ]
+                    }
+                ]
+                
             }
         });
 
