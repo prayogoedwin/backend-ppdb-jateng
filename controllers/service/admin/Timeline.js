@@ -18,7 +18,11 @@ export const getTimeline = async (req, res) => {
            
         }else{
 
-            const resData = await Timelines.findAll();
+            const resData = await Timelines.findAll({
+                order: [
+                    ['id', 'ASC']
+                ]
+            });
             if(resData != null ){
 
                 const newCacheNya = resData;

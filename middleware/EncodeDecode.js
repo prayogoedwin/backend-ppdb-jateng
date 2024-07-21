@@ -19,3 +19,12 @@ export const decodeId = (encodedId) => {
     }
     return Buffer.from(base64Id, 'base64').toString('utf8');
 };
+
+// Testing the encoding and decoding functions with BigInt
+const testIds = [1n, 2n, 3n, 123456789012345678901234567890n, 7890123456789012345678901234567890n];
+
+testIds.forEach(id => {
+    const encoded = encodeId(id.toString()); // Ensure id is converted to string
+    const decoded = decodeId(encoded);
+    console.log(`ID: ${id}, Encoded: ${encoded}, Decoded: ${decoded}`);
+});

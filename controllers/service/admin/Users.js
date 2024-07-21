@@ -41,7 +41,10 @@ export const getUsers = async (req, res) => {
                         { sekolah_id: user.sekolah_id },
                         { is_delete: 0 }
                     ]
-                }
+                },
+                order: [
+                    ['id', 'DESC']
+                ]
             });
         } else if (user.role_ == 77 || user.role_ == 89) {
             // Super, BPTIK
@@ -49,7 +52,10 @@ export const getUsers = async (req, res) => {
                 where: {
                     role_: { [Op.ne]: 77 },
                     is_delete: 0
-                }
+                },
+                order: [
+                    ['id', 'DESC']
+                ]
             });
         } else {
             return res.status(400).json({ status: 0, message: 'Anda tidak memilik hak akses' });
@@ -151,6 +157,30 @@ export const addUser = async (req, res) => {
     }
 
     try {
+
+        // Combine checks into a single query
+        const existingUser = await DataUsers.findOne({
+            where: {
+                [Op.or]: [
+                    { email, is_delete: 0 },
+                    { username, is_delete: 0 },
+                    { whatsapp, is_delete: 0 }
+                ]
+            }
+        });
+
+        if (existingUser) {
+            if (existingUser.email === email) {
+                return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
+            }
+            if (existingUser.username === username) {
+                return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
+            }
+            if (existingUser.whatsapp === whatsapp) {
+                return res.status(200).json({ status: 0, message: 'Nomor WhatsApp sudah digunakan' });
+            }
+        }
+
         // Hash the password before saving it to the database
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -169,23 +199,158 @@ export const addUser = async (req, res) => {
             is_active // Set the new user as active
         });
 
-        const data = {
-            id_: encodeId(newUser.id), // Use the virtual id_ field which is already encoded
-            ...newUser.toJSON()
-        };
-        delete data.id; // Remove the original ID from the response
-        delete data.password_ // Remove the original ID from the response
+        
+        if(!newUser){
+            return res.status(200).json({ status: 0, message: 'Gagal tambah pengguna' });
+        }
 
+        await clearCacheByKeyFunction('DataUsersAllinAdmin');
         res.status(200).json({
             status: 1,
             message: 'Berhasil tambah pengguna',
-            data: data
         });
+
     } catch (error) {
         console.error('Gagal tambah pengguna:', error);
         res.status(500).json({
             status: 0,
             message: error.message
+        });
+    }
+};
+
+// Update user by ID function
+export const updateUser = async (req, res) => {
+    const { id, username, email, nama, whatsapp, password, role, sekolah_id, is_active } = req.body;
+
+    try {
+    
+        const user = await DataUsers.findOne({
+            where: {
+                id: decodeId(id),
+                is_delete: 0,
+            }
+        });
+
+        if (!user) {
+            return res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan'
+            });
+        }
+
+         // Combine checks into a single query
+         const existingUser = await DataUsers.findOne({
+            where: {
+                [Op.or]: [
+                    { email, is_delete: 0 },
+                    { username, is_delete: 0 },
+                    { whatsapp, is_delete: 0 }
+                ],
+                id: {
+                    [Op.ne]: decodeId(id),
+                }
+            }
+        });
+
+        if (existingUser) {
+            if (existingUser.email === email) {
+                return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
+            }
+            if (existingUser.username === username) {
+                return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
+            }
+            if (existingUser.whatsapp === whatsapp) {
+                return res.status(200).json({ status: 0, message: 'Nomor WhatsApp sudah digunakan' });
+            }
+        }
+
+       
+        if (user.email === email) {
+            return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
+        }
+        if (user.username === username) {
+            return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
+        }
+        if (user.whatsapp === whatsapp) {
+            return res.status(200).json({ status: 0, message: 'Nomor WhatsApp sudah digunakan' });
+        }
+
+        const updateData = {
+            username,
+            email,
+            nama,
+            whatsapp,
+            role_: role,
+            sekolah_id,
+            updated_at: new Date(),
+            updated_by: req.user.userId, // Use user ID from token
+            is_active
+        };
+
+        if (password) {
+            // Hash the new password if provided
+            updateData.password_ = await bcrypt.hash(password, 10);
+        }
+
+        await user.update(updateData);
+
+        const updatedUser = {
+            id_: encodeId(user.id), // Use the virtual id_ field which is already encoded
+            ...user.toJSON()
+        };
+        delete updatedUser.id; // Remove the original ID from the response
+        delete updatedUser.password_; // Remove the password from the response
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil diupdate',
+            data: updatedUser
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
+
+export const softDeleteUser = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const userId = decodeId(id); // Dekode ID
+        const updatedById = req.user.userId; // Ambil userId dari token
+
+        // Cari user berdasarkan id dan is_delete = 0
+        const user = await DataUsers.findOne({
+            where: {
+                id: userId,
+                is_delete: 0
+            }
+        });
+
+        if (!user) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // Update kolom is_delete, updated_at dan updated_by
+        await user.update({
+            is_delete: 1,
+            updated_at: new Date(),
+            updated_by: updatedById,
+            deleted_at: new Date(),
+            deleted_by: updatedById
+        });
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil dihapus',
+            data: user
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
         });
     }
 };

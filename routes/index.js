@@ -47,6 +47,9 @@ import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar } f
 //timenline
 import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
 
+//users
+import { getUsers, getUserById, addUser, updateUser, softDeleteUser } from "../controllers/service/admin/Users.js";
+
 
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
@@ -123,6 +126,15 @@ router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKe
 router.get('/admin-api/setting/timeline', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getTimeline);
 router.get('/admin-api/setting/timeline_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getTimelineById);
 router.post('/admin-api/setting/timeline_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateTimeline);
+
+//menu user
+router.get('/admin-api/setting/user', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUsers);
+router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUserById);
+router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, addUser);
+router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateUser);
+router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, softDeleteUser);
+
+
 
 
 
