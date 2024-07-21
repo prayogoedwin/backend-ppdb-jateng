@@ -4,6 +4,7 @@ import { Op } from 'sequelize';
 import { redisGet, redisSet } from '../../../redis.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 
 export const getUsers = async (req, res) => {
     const userId = req.user.userId;

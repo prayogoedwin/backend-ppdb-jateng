@@ -1,7 +1,6 @@
 import { Sequelize} from "sequelize";
 import db from "../../config/Database.js";
 import EzRoles from '../service/RolesModel.js';
-import { encodeId } from '../../middleware/EncodeDecode.js'; // Import fungsi encodeId
 
 const { DataTypes } = Sequelize;
 
@@ -11,12 +10,6 @@ const DataUsers = db.define('ez_users', {
         allowNull: false,
         primaryKey: true,
         autoIncrement: true, // Add this line
-    },
-    id_: {
-        type: DataTypes.VIRTUAL,
-        get() {
-            return encodeId(this.getDataValue('id')); // Menggunakan fungsi encodeId untuk mendapatkan nilai encoded
-        }
     },
     username: {
         type: DataTypes.STRING,
