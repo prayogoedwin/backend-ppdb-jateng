@@ -45,6 +45,13 @@ export const getUsers = async (req, res) => {
                       
                     ]
                 },
+                include: [
+                    {
+                        model: RolesData,
+                        as: 'data_role',
+                        attributes: ['id','nama', 'id']
+                    },
+                ],
                 order: [
                     ['id', 'DESC']
                 ]
