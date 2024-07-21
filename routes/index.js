@@ -50,6 +50,9 @@ import { getTimeline, getTimelineById, updateTimeline } from "../controllers/ser
 //users
 import { getUsers, getUserById, addUser, updateUser, softDeleteUser } from "../controllers/service/admin/Users.js";
 
+//roles
+import { getRoles } from "../controllers/service/admin/Role.js";
+
 
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
@@ -133,6 +136,9 @@ router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMi
 router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, addUser);
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateUser);
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, softDeleteUser);
+
+//role
+router.get('/admin-api/setting/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
 
 
 
