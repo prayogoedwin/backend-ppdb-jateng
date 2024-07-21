@@ -269,7 +269,7 @@ export const updateUser = async (req, res) => {
 
         if (existingUser) {
             if (existingUser.email === email) {
-                return res.status(200).json({ status: 0, message: existingUser });
+                return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
             }
             if (existingUser.username === username) {
                 return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
