@@ -53,8 +53,7 @@ const generateVerificationCode = async () => {
 
 
 // Fungsi untuk menangani permintaan POST
-export const createPendaftar = [
-    async (req, res) => {
+export const createPendaftar = async (req, res) => {
         // Menangani hasil validasi
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -114,7 +113,10 @@ export const createPendaftar = [
                 const existingPendaftar = await DataPendaftars.findOne({
                     where: {
                         nisn,
-                        is_delete: null
+                        [Op.or]: [
+                            { is_delete: 0 }, // Entri yang belum dihapus
+                            { is_delete: null } // Entri yang belum diatur
+                        ]
                     }
                 });
 
@@ -215,8 +217,7 @@ export const createPendaftar = [
                 });
             }
         });
-    }
-];
+};
 
 export const getPendaftarforCetak = async (req, res) => {
     try {
@@ -251,9 +252,7 @@ export const getPendaftarforCetak = async (req, res) => {
 }
 
 // User aktivasi
-export const aktivasiAkunPendaftar2 = [
-
-    async (req, res) => {
+export const aktivasiAkunPendaftar2 = async (req, res) => {
 
         const { nisn, kode_verifkasi, password } = req.body;
 
@@ -300,12 +299,10 @@ export const aktivasiAkunPendaftar2 = [
                 message: error.message,
             });
         }
-    }
-];
+};
 
-// User login
-export const aktivasiAkunPendaftar = [
-    async (req, res) => {
+// User aktivasi
+export const aktivasiAkunPendaftar = async (req, res) => {
         const { nisn, kode_verifikasi, password } = req.body;
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -349,5 +346,4 @@ export const aktivasiAkunPendaftar = [
                 message: error.message,
             });
         }
-    }
-];
+};
