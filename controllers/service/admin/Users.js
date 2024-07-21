@@ -250,27 +250,18 @@ export const updateUser = async (req, res) => {
          // Combine checks into a single query
          const existingUser = await DataUsers.findOne({
             where: {
-                [Op.and]: [
-                    {
-                        id: {
-                            [Op.ne]:  decodeId(id), // Exclude this ID
-                        }
-                    },
-                    {
-                        [Op.or]: [
-                            { email: email, is_delete: 0 }, // Email condition
-                            { username: username, is_delete: 0 }, // Username condition
-                            { whatsapp: whatsapp, is_delete: 0 } // WhatsApp condition
-                        ]
+
+                id: {
+                        [Op.ne]:  decodeId(id), 
                     }
-                ]
+                   
                 
             }
         });
 
         if (existingUser) {
             if (existingUser.email === email) {
-                return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
+                return res.status(200).json({ status: 0, message: existingUser });
             }
             if (existingUser.username === username) {
                 return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
@@ -280,16 +271,6 @@ export const updateUser = async (req, res) => {
             }
         }
 
-       
-        if (user.email === email) {
-            return res.status(200).json({ status: 0, message: 'Email sudah digunakan' });
-        }
-        if (user.username === username) {
-            return res.status(200).json({ status: 0, message: 'Username sudah digunakan' });
-        }
-        if (user.whatsapp === whatsapp) {
-            return res.status(200).json({ status: 0, message: 'Nomor WhatsApp sudah digunakan' });
-        }
 
         const updateData = {
             username,
