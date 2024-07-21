@@ -1,7 +1,8 @@
 import DataUsers from '../../../models/service/DataUsersModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import { Sequelize, Op } from "sequelize";
+ 
 export const generateSuperAdmin = async (req, res) => {
     try {
         // Hash password
@@ -78,7 +79,7 @@ export const loginAdmin = [
                 data: {
                     userId: user.id,
                     username: user.username,
-                    role: user.role_,
+                    role: user.role,
                     accessToken,
                     refreshToken
                 }
