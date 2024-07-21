@@ -295,22 +295,36 @@ export const updateUser = async (req, res) => {
 export const resetPasswordById = async (req, res) => {
     const { id } = req.params; // Ambil id dari params URL
     try {
-        const resData = await DataUsers.findOne({
+        const user = await DataUsers.findOne({
             where: {
                 id: decodeId(id),
                 is_delete: 0
             },
             
         });
-        if(resData != null){
+
+        if (!user) {
+            return res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan'
+            });
+        }
             
              // Hash the password before saving it to the database
-            const hashedPassword = bcrypt.hash(process.env.PASSWORD_DEFAULT_ADMIN, 10);
+            const hashedPassword = await bcrypt.hash(process.env.PASSWORD_DEFAULT_ADMIN, 10);
+
             const updateData = {
-                password : hashedPassword
+                password_: hashedPassword,
+                updated_at: new Date(),
+                updated_by: req.user.userId, // Use user ID from token
             };
+
+
+            // const updateData = {
+            //     password : hashedPassword
+            // };
     
-            await resData.update(updateData);
+            await user.update(updateData);
            
 
             res.status(200).json({
@@ -318,14 +332,7 @@ export const resetPasswordById = async (req, res) => {
                 message: 'Berhasil reset password menjadi: '+process.env.PASSWORD_DEFAULT_ADMIN,
             });
 
-        }else{
-
-            res.status(200).json({
-                'status': 0,
-                'message': 'Data tidak ditemukan',
-            });
-
-        }
+        
     }catch (error) {
         res.status(500).json({
             status: 0,
