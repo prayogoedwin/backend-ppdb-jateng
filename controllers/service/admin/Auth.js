@@ -30,12 +30,8 @@ export const generateSuperAdmin = async (req, res) => {
     }
 };
 
-
-
 // User login
-export const loginAdmin = [
-
-    async (req, res) => {
+export const loginAdmin = async (req, res) => {
 
         const { username, password } = req.body;
 
@@ -90,14 +86,11 @@ export const loginAdmin = [
                 message: error.message,
             });
         }
-    }
-];
+};
 
 
 // User logout
-export const logoutAdmin = [
-
-    async (req, res) => {
+export const logoutAdmin = async (req, res) => {
         const { userId } = req.body;
 
         try {
@@ -129,5 +122,4 @@ export const logoutAdmin = [
                 message: error.message,
             });
         }
-    }
-];
+};
