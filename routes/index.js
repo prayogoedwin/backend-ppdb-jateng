@@ -138,7 +138,7 @@ router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddl
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, softDeleteUser);
 
 //role
-router.get('/admin-api/setting/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
+router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
 
 
 
