@@ -19,7 +19,7 @@ export const getTimeline = async (req, res) => {
         }else{
 
             const resData = await Timelines.findAll();
-            if(resData.length > 0){
+            if(resData != null ){
 
                 const newCacheNya = resData;
                 await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
@@ -34,7 +34,7 @@ export const getTimeline = async (req, res) => {
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': resData
+    
                 });
 
             }
@@ -57,19 +57,19 @@ export const getTimelineById = async (req, res) => {
                 id
             }
         });
-        if(resData.length > 0){
+        if(resData != null ){
            
             res.status(200).json({
                 'status': 1,
                 'message': 'Data berhasil ditemukan',
                 'data': resData
             });
+
         }else{
 
             res.status(200).json({
                 'status': 0,
                 'message': 'Data kosong',
-                'data': resData
             });
 
         }
@@ -127,7 +127,7 @@ export const updateTimeline = [
 
             res.status(200).json({
                 status: 1,
-                message: 'Update successful'+ req.user.userId,
+                message: 'Update berhasil',
             });
         } catch (error) {
             res.status(500).json({
