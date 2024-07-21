@@ -14,7 +14,7 @@ export const generateSuperAdmin = async (req, res) => {
             nama: 'Super Admin',
             whatsapp: '081111111111',
             password_: hashedPassword , // Sesuaikan dengan password yang di-hash
-            role_: 86,
+            role_: 77,
             is_active: 1,
         }, {
             fields: ['username', 'email', 'nama', 'whatsapp', 'password_', 'role_', 'is_active'] // Tentukan kolom-kolom yang ingin Anda masukkan nilainya
