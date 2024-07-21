@@ -6,6 +6,7 @@ import path from "path";
 import fs from "fs";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { Op } from 'sequelize';
 
 // Configure multer storage
 const storage = multer.diskStorage({
