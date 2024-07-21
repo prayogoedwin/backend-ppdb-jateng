@@ -5,6 +5,7 @@ import { redisGet, redisSet } from '../../../redis.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
+import RolesData from '../../../models/service/RolesModel.js';
 
 export const getUsers = async (req, res) => {
     const userId = req.user.userId;
@@ -54,6 +55,13 @@ export const getUsers = async (req, res) => {
                     role_: { [Op.ne]: 77 },
                     is_delete: 0
                 },
+                include: [
+                    {
+                        model: RolesData,
+                        as: 'data_role',
+                        attributes: ['id','nama', 'id']
+                    },
+                ],
                 order: [
                     ['id', 'DESC']
                 ]
@@ -303,6 +311,8 @@ export const updateUser = async (req, res) => {
         delete updatedUser.id; // Remove the original ID from the response
         delete updatedUser.password_; // Remove the password from the response
 
+        await clearCacheByKeyFunction('DataUsersAllinAdmin');
+
         res.status(200).json({
             status: 1,
             message: 'Data berhasil diupdate',
@@ -342,6 +352,8 @@ export const softDeleteUser = async (req, res) => {
             deleted_at: new Date(),
             deleted_by: updatedById
         });
+
+        await clearCacheByKeyFunction('DataUsersAllinAdmin');
 
         res.status(200).json({
             status: 1,

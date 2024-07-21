@@ -96,7 +96,7 @@ const DataUsers = db.define('ez_users', {
     timestamps: false, // Nonaktifkan timestamps
 });
 
-DataUsers.belongsTo(EzRoles, { as: 'data_roles', foreignKey: 'role_'});
+DataUsers.belongsTo(EzRoles, { as: 'data_role', foreignKey: 'role_'});
 export default DataUsers;
 
 
