@@ -79,7 +79,7 @@ export const loginAdmin = [
                 data: {
                     userId: user.id,
                     username: user.username,
-                    role: user.role,
+                    role: user.role_,
                     accessToken,
                     refreshToken
                 }
