@@ -263,10 +263,10 @@ export const updateUser = async (req, res) => {
         };
 
 
-        if (password) {
-            // Hash the new password if provided
-            updateData.password_ = await bcrypt.hash(password, 10);
-        }
+        // if (password) {
+        //     // Hash the new password if provided
+        //     updateData.password_ = await bcrypt.hash(password, 10);
+        // }
 
         await user.update(updateData);
 
@@ -305,19 +305,17 @@ export const resetPasswordById = async (req, res) => {
         if(resData != null){
             
              // Hash the password before saving it to the database
-            const hashedPassword = await bcrypt.hash(process.env.PASSWORD_DEFAULT_ADMIN, 10);
-           
-           
-            const data = {
-                id_: id, 
-                ...resData.toJSON(), // Convert Sequelize instance to plain object
+            const hashedPassword = bcrypt.hash(process.env.PASSWORD_DEFAULT_ADMIN, 10);
+            const updateData = {
+                password : hashedPassword
             };
-            delete data.id; // Remove original ID from the response
+    
+            await resData.update(updateData);
+           
 
             res.status(200).json({
                 status: 1,
-                message: 'Data berhasil ditemukan',
-                data: data
+                message: 'Berhasil reset password menjadi: '+process.env.PASSWORD_DEFAULT_ADMIN,
             });
 
         }else{
@@ -331,7 +329,7 @@ export const resetPasswordById = async (req, res) => {
     }catch (error) {
         res.status(500).json({
             status: 0,
-            message: error.message,
+            message: error.message+'a',
         });
     }
 

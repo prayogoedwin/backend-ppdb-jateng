@@ -48,7 +48,7 @@ import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar, up
 import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
 
 //users
-import { getUsers, getUserById, addUser, updateUser, softDeleteUser } from "../controllers/service/admin/Users.js";
+import { getUsers, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById } from "../controllers/service/admin/Users.js";
 
 //roles
 import { getRoles } from "../controllers/service/admin/Role.js";
@@ -138,6 +138,8 @@ router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMi
 router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, addUser);
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, updateUser);
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, softDeleteUser);
+router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, resetPasswordById);
+
 
 //role
 router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
