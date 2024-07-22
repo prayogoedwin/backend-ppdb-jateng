@@ -16,6 +16,10 @@ import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.
 //konfigurasi cache
 import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues } from '../controllers/config/CacheControl.js';
 
+
+//download
+import { downloadFile } from '../middleware/Donlod.js'; 
+
 // Master Data
 import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
 import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
@@ -57,6 +61,9 @@ import { getRoles } from "../controllers/service/admin/Role.js";
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
+
+//downloadfile
+router.get('/download/:nisn/:filename', ipWhitelistMiddleware, appKeyMiddleware, downloadFile);
 
 
 //konfigurasi cache
@@ -143,6 +150,8 @@ router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, 
 
 //role
 router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
+
+
 
 
 

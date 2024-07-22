@@ -154,7 +154,8 @@ export const getDataPendaftarById = async (req, res) => {
             });
             if(resData != null){
 
-                const baseUrl = process.env.BASE_URL+'upload/berkas/'+resData.nisn+'/';// Ganti dengan URL dasar yang diinginkan
+                // const baseUrl = process.env.BASE_URL+'upload/berkas/'+resData.nisn+'/';// Ganti dengan URL dasar yang diinginkan
+                const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan
 
                 const data = {
                     id_: id,
