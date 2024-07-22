@@ -63,7 +63,7 @@ router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 //downloadfile
-router.get('/download/:nisn/:filename', ipWhitelistMiddleware, appKeyMiddleware, downloadFile);
+router.get('/download/:nisn/:filename', downloadFile);
 
 
 //konfigurasi cache
