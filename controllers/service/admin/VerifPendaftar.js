@@ -153,6 +153,35 @@ export const getDataPendaftarById = async (req, res) => {
                 
             });
             if(resData != null){
+
+                const baseUrl = process.env.BASE_URL+'upload/berkas/'+resData.nisn+'/';// Ganti dengan URL dasar yang diinginkan
+
+                const data = {
+                    id_: id,
+                    ...resData.toJSON(), // Convert Sequelize instance to plain object
+                };
+                delete data.id; // Remove original ID from the response
+
+                // Custom value for dok_piagam and dok_kk
+               
+                if (data.dok_kk) {
+                    data.dok_kk = baseUrl + data.dok_kk;
+                }
+                if (data.dok_pakta_integritas) {
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;
+                }
+                if (data.dok_suket_nilai_raport) {
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;
+                }
+                if (data.dok_piagam) {
+                    data.dok_piagam = baseUrl + data.dok_piagam;
+                }
+
+                res.status(200).json({
+                    status: 1,
+                    message: 'Data berhasil ditemukan',
+                    data: data
+                });
                 
     
                 // res.status(200).json({
@@ -161,17 +190,17 @@ export const getDataPendaftarById = async (req, res) => {
                 //     data: resData
                 // });
                
-                const data = {
-                    id_: id, 
-                    ...resData.toJSON(), // Convert Sequelize instance to plain object
-                };
-                delete data.id; // Remove original ID from the response
+                // const data = {
+                //     id_: id, 
+                //     ...resData.toJSON(), // Convert Sequelize instance to plain object
+                // };
+                // delete data.id; // Remove original ID from the response
     
-                res.status(200).json({
-                    status: 1,
-                    message: 'Data berhasil ditemukan',
-                    data: data
-                });
+                // res.status(200).json({
+                //     status: 1,
+                //     message: 'Data berhasil ditemukan',
+                //     data: data
+                // });
 
             }else{
 
