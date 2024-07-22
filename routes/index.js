@@ -18,7 +18,7 @@ import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValu
 
 
 //download
-import { downloadFile } from '../middleware/Donlod.js'; 
+import { downloadFile, viewFile } from '../middleware/Donlod.js'; 
 
 // Master Data
 import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
@@ -63,7 +63,8 @@ router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 //downloadfile
-router.get('/download/:nisn/:filename', downloadFile);
+router.get('/download/:nisn/:filename', viewFile);
+
 
 
 //konfigurasi cache
