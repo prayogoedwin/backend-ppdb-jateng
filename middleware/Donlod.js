@@ -63,17 +63,14 @@ export const viewFile = async (req, res) => {
                     message: 'File tidak ditemukan',
                 });
             } else {
-                // Baca konten file
-                fs.readFile(filePath, 'utf8', (err, data) => {
+                // Tampilkan file
+                res.sendFile(filePath, (err) => {
                     if (err) {
                         res.status(500).json({
                             status: 0,
-                            message: 'Terjadi kesalahan saat membaca file',
+                            message: 'Terjadi kesalahan saat menampilkan file',
                         });
                     } else {
-                        // Kirim konten file sebagai HTML
-                        res.setHeader('Content-Type', 'text/html');
-                        res.send(data);
                         console.log(`File ${filename} berhasil ditampilkan.`);
                     }
                 });
