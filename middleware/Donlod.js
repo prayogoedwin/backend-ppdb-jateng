@@ -1,6 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 
+import { fileURLToPath } from 'url';
+
+// Utility function to get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Folder tempat file yang akan diunduh
 
 export const downloadFile =  async (req, res, next) => {
