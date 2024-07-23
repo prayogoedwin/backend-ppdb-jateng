@@ -67,8 +67,7 @@ const calculateAge = (birthdate) => {
 };
 
 // Function to handle POST request
-export const createPerangkingan = [
-    async (req, res) => {
+export const createPerangkingan = async (req, res) => {
         // // Handle validation results
         // const errors = validationResult(req);
         // if (!errors.isEmpty()) {
@@ -150,16 +149,16 @@ export const createPerangkingan = [
             });
 
             // Filter the data to be sent as a response
-            const responseData = {
-                nisn: newPerangkingan.nisn,
-                nama_lengkap: newPerangkingan.nama_lengkap
-            };
+            // const responseData = {
+            //     nisn: newPerangkingan.nisn,
+            //     nama_lengkap: newPerangkingan.nama_lengkap
+            // };
 
             // Send success response
             res.status(201).json({
                 status: 1,
                 message: 'Perangkingan berhasil dibuat',
-                data: responseData
+                data: newPerangkingan
             });
         } catch (error) {
             console.error('Error perangkingan:', error);
@@ -168,23 +167,86 @@ export const createPerangkingan = [
                 message: error.message || 'Terjadi kesalahan saat proses perangkingan'
             });
         }
-    }
-];
+}
 
 
 export const getPerangkingan = async (req, res) => {
+
     try {
+
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+        } = req.body;
+        
+        if(jalur_pendaftaran_id == 1){
+            //Jalur Zonasi Reguler SMA
+            const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0
+                },
+                order: [
+                    ['jarak', 'ASC'], //jarak terendah
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] //daftar sekolah terawal
+                ]
+                
+            });
+        }else if(jalur_pendaftaran_id == 2){
+            //Jalur Zonasi KHUSUS SMA
+            const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0
+                },
+                order: [
+                    ['umur', 'DESC'], //umur tertua
+                    ['nilai', 'DESC'], //jarak terendah
+                    ['created_at', 'ASC'] //daftar sekolah terawal
+                ]
+            });
+        }else if(jalur_pendaftaran_id == 3){
+             //Jalur Prestasi SMA
+             const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0
+                },
+                order: [
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] // daftar sekolah terawal
+                ]
+               
+            });
+        }else if(jalur_pendaftaran_id == 4){
+            //Jalur PTO SMA
+            const resData = await DataPerangkingans.findAll({
+               where: {
+                   jalur_pendaftaran_id,
+                   sekolah_tujuan_id,
+                   is_delete: 0
+               },
+               
+           });
+       }else if(jalur_pendaftaran_id == 5){
+        //Jalur Afirmasi SMA
         const resData = await DataPerangkingans.findAll({
-            where: {
-                jalur_pendaftaran_id: req.body.jalur_pendaftaran_id,
-                sekolah_tujuan_id: req.body.sekolah_tujuan_id,
-                is_delete: 0
-            },
-            order: [
-                ['nilai_akhir', 'DESC'], // Sorting by nilai_akhir in descending order
-                ['umur', 'DESC'] 
-            ]
-        });
+           where: {
+               jalur_pendaftaran_id,
+               sekolah_tujuan_id,
+               is_delete: 0
+           },
+           
+       });
+   }
 
         if (resData) { // Check if resData is not null
             res.status(200).json({
