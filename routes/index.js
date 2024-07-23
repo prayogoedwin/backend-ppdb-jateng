@@ -66,7 +66,6 @@ router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 router.get('/download/:nisn/:filename', viewFile);
 
 
-
 //konfigurasi cache
 router.delete('/uapi/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
 router.delete('/uapi/internal/clear_all_cache', clearAllCache); // Clear all cache
@@ -112,7 +111,7 @@ router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, 
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutUser);
-router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
+router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
 router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
 
 

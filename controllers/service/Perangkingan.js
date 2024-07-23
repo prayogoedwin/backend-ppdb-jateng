@@ -116,7 +116,39 @@ export const createPerangkingan = async (req, res) => {
 
 
             // Create a new entry in the ez_perangkingan table
-            const newPerangkingan = await DataPerangkingans.create({
+            // const newPerangkingan = await DataPerangkingans.create({
+            //     id_pendaftar,
+            //     no_pendaftaran,
+            //     bentuk_pendidikan_id,
+            //     jalur_pendaftaran_id,
+            //     sekolah_tujuan_id,
+            //     jurusan_id,
+            //     nisn,
+
+            //     nik: pendaftar.nik,
+            //     nama_lengkap: pendaftar.nama_lengkap,
+            //     tanggal_lahir: new Date(pendaftar.tanggal_lahir),
+            //     umur: calculateAge(pendaftar.tanggal_lahir),
+            //     tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
+            //     umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
+
+            //     jarak: 20,
+
+            //     nilai_raport: pendaftar.nilai_raport_rata,
+            //     nilai_prestasi: pendaftar.nilai_prestasi,
+            //     nilai_akhir,
+
+            //     is_tidak_sekolah: pendaftar.is_tidak_sekolah,
+            //     is_anak_panti: pendaftar.is_anak_panti,
+            //     is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
+            //     is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
+            //     is_pip: pendaftar.is_pip,
+
+            //     created_by: id_pendaftar,
+            //     created_by_ip: req.ip
+            // });
+
+            const newPerangkingan = {
                 id_pendaftar,
                 no_pendaftaran,
                 bentuk_pendidikan_id,
@@ -146,7 +178,7 @@ export const createPerangkingan = async (req, res) => {
 
                 created_by: id_pendaftar,
                 created_by_ip: req.ip
-            });
+            };
 
             // Filter the data to be sent as a response
             // const responseData = {
