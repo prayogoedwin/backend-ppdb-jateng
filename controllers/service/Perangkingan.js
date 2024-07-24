@@ -87,7 +87,7 @@ export const cekPerangkingan = async (req, res) => {
              // Retrieve data from DataPendaftarModel
             const pendaftar = await DataPendaftars.findOne({
                 where: {
-                    id: id_pendaftar,
+                    id: decodeId(id_pendaftar),
                     is_delete: 0
                 }
             });
@@ -161,7 +161,7 @@ export const cekPerangkingan = async (req, res) => {
             
 
             const data = {
-                id_: encodeId(id_pendaftar), 
+                id_: id_pendaftar, 
                 ...newPerangkingan, 
                 data_file_tambahan: data_file_tambahan // tambahkan properti baru
             };
