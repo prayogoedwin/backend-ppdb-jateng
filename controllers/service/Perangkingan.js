@@ -84,7 +84,7 @@ export const cekPerangkingan = async (req, res) => {
                 nisn,
             } = req.body;
 
-             // Retrieve data from DataPendaftarModel
+            // Retrieve data from DataPendaftarModel
             const pendaftar = await DataPendaftars.findOne({
                 where: {
                     id: decodeId(id_pendaftar),
@@ -110,6 +110,34 @@ export const cekPerangkingan = async (req, res) => {
             if (count >= 2) {
                 return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
             }
+
+             // Count existing entries with the same NISN that are not deleted
+            const cari = await DataPerangkingans.findOne({
+            where: {
+                nisn,
+                is_delete: 0
+            }
+            });
+
+            if(cari != null){
+
+                if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
+                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
+                }
+    
+                if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
+                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 sekolah di masing-masing sekolah' });
+                }
+    
+                if (bentuk_pendidikan_id == 15) {
+                    if(cari.jurusan_id == jurusan_id){
+                        return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jurusan di masing-masing jurusan' });
+                    }
+                }       
+
+            }
+
+             
 
             const data_file_tambahan = await FileTambahans.findAll({
                 where: {
