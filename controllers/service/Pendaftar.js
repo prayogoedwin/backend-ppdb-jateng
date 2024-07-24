@@ -252,6 +252,38 @@ export const getPendaftarforCetak = async (req, res) => {
     }
 }
 
+export const getPendaftarDetail = async (req, res) => {
+    try {
+        const resData = await DataPendaftars.findOne({
+            where: {
+                nisn: req.body.nisn,
+                is_delete: 0
+            }
+        });
+
+        if (resData) { // Check if resData is not null
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData // Return the found data
+            });
+        } else {
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+                'data': null // Return null or an appropriate value when data is not found
+            });
+        }
+
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({ // Use 500 for server error
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+
 // User aktivasi
 export const aktivasiAkunPendaftar2 = async (req, res) => {
 
