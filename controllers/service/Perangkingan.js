@@ -6,8 +6,7 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -159,14 +158,20 @@ export const cekPerangkingan = async (req, res) => {
             //     nama_lengkap: newPerangkingan.nama_lengkap
             // };
 
+            
+
+            const data = {
+                id_: encodeId(id_pendaftar), 
+                ...newPerangkingan, 
+                data_file_tambahan: data_file_tambahan // tambahkan properti baru
+            };
+            delete data.id_pendaftar; //
+
             // Send success response
             res.status(201).json({
                 status: 1,
                 message: 'Hasil pengecekan',
-                data: {
-                    ...newPerangkingan.toJSON(),
-                    file_tambahan: data_file_tambahan
-                }
+                data: data
             });
         } catch (error) {
             console.error('Error pengecekan:', error);
