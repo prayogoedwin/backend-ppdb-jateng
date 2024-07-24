@@ -22,18 +22,18 @@ export const loginUser = [
             });
 
             if (!user) {
-                return res.status(200).json({ status: 0, message: 'Invalid nisn or password or account unactivated or account unverified' });
+                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
             }
 
             // Compare password
             const isMatch = await bcrypt.compare(password, user.password_);
             if (!isMatch) {
-                return res.status(200).json({ status: 0, message: 'Invalid nisn or password' });
+                return res.status(200).json({ status: 0, message: 'NISN / password salah' });
             }
 
             // Generate tokens
-            const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-            const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+            const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
+            const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
 
             // Save tokens to user record
             user.access_token = accessToken;
@@ -42,9 +42,9 @@ export const loginUser = [
 
             res.status(200).json({
                 status: 1,
-                message: 'Login successful',
+                message: 'Berhasil masuk',
                 data: {
-                    userId: user.id,
+                    userId: encodeId(user.id),
                     nisn: user.nisn,
                     accessToken,
                     refreshToken
