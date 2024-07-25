@@ -518,6 +518,49 @@ export const cetakBuktiPerangkingan = async (req, res) => {
 }
 
 
+// Function to handle DELETE request
+export const softDeletePerangkingan = async (req, res) => {
+    try {
+        const { id_perangkingan } = req.body;
+
+        // Decode the ID
+        const id_perangkingan_decode = decodeId(id_perangkingan);
+
+        // Find the record to be updated
+        const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: id_perangkingan_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // Update the record to set is_delete to 1
+        await DataPerangkingans.update(
+            { 
+                is_delete: 1,
+                deleted_at: new Date(),
+                deleted_by: perangkingan.id_pendaftar
+             },
+            { where: { id: id_perangkingan_decode } }
+        );
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil dihapus'
+        });
+    } catch (error) {
+        console.error('Error hapus:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat menghapus data'
+        });
+    }
+}
+
 
 
 // Configure multer storage
