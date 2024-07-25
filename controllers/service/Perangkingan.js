@@ -125,11 +125,11 @@ export const getPerangkingan = async (req, res) => {
                     sekolah_tujuan_id,
                     is_delete: 0
                 },
-                order: [
-                    ['jarak', 'ASC'], //jarak terendah
-                    ['umur', 'DESC'], //umur tertua
-                    ['created_at', 'ASC'] //daftar sekolah terawal
-                ]
+                // order: [
+                //     ['jarak', 'ASC'], //jarak terendah
+                //     ['umur', 'DESC'], //umur tertua
+                //     ['created_at', 'ASC'] //daftar sekolah terawal
+                // ]
                 
             });
         }else if(jalur_pendaftaran_id == 2){
