@@ -92,7 +92,7 @@ export const getPerangkinganSaya = async (req, res) => {
             res.status(200).json({
                 status: 0,
                 message: 'Data kosong',
-                data: null
+                data: Array()
             });
         }
     } catch (err) {
