@@ -385,12 +385,11 @@ export const createPerangkingan = async (req, res) => {
 }
 
 
-
 // Configure multer storage
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         try {
-            const uploadPath = `upload/berkas/${req.body.nisn}`;
+            const uploadPath = `upload/berkas/${req.params.nisn}`;
             await fs.promises.mkdir(uploadPath, { recursive: true });
             cb(null, uploadPath);
         } catch (err) {
@@ -407,143 +406,95 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Fungsi untuk mendapatkan konfigurasi upload berdasarkan nama file
-const getUploadFields = async (jalur_pendaftaran_id) => {
-    // if (!jalur_pendaftaran_id) {
-    //     throw new Error('ID Jalur Pendaftaran tidak valid');
-    // }
-
+const getUploadFields = async (id_jalur_pendaftaran) => {
     const data_file_tambahan = await FileTambahans.findAll({
         where: {
-            id_jalur_pendaftaran: jalur_pendaftaran_id,
+            id_jalur_pendaftaran: id_jalur_pendaftaran,
             is_active: 1
         }
     });
 
-    const uploadFields = data_file_tambahan.map(file => ({
+    return data_file_tambahan.map(file => ({
         name: file.nama_file,
         maxCount: 1
     }));
-
-    return uploadFields;
 };
 
 // Function to handle POST request
-export const createPerangkinganBAK = async (req, res) => {
-
-      // Menangani hasil validasi
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-          return res.status(400).json({ status: 0, errors: errors.array() });
-      }
-
+export const uploadFileTambahan = async (req, res) => {
     try {
-        const jalur_pendaftaran_id = req.body.jalur_pendaftaran_id;
 
-        console.log('Text data:', req.body);
-        console.log('Files:', req.files);
+        const {
+            id_jalur_pendaftaran,
+            id_pendaftar,
+        } = req.params;
 
-        // if (!jalur_pendaftaran_id) {
-        //     return res.status(400).json({ status: 0, message: 'ID Jalur Pendaftaran tidak diberikan' });
-        // }
 
-        // Dapatkan konfigurasi upload fields
-        const uploadFields = await getUploadFields(jalur_pendaftaran_id);
+
+        const decode_id_pendaftar =  decodeId(id_pendaftar)
+        // Get upload fields dynamically
+        const uploadFields = await getUploadFields(id_jalur_pendaftaran);
+        const uploadFiles = upload.fields(uploadFields);
 
         // Handle file uploads
-        upload.fields(uploadFields)(req, res, async (err) => {
+        uploadFiles(req, res, async (err) => {
             if (err) {
-                return res.status(400).json({ status: 0, message: err.message });
+                return res.status(500).json({ status: 0, message: 'File upload error', error: err.message });
             }
 
-            // Debugging: Print form data and files
-            console.log('Text data:', req.body);
-            console.log('Files:', req.files);
-
             try {
-                const {
-                    id_pendaftar,
-                    bentuk_pendidikan_id,
-                    sekolah_tujuan_id,
-                    jurusan_id,
-                    nisn,
-                } = req.body;
 
-                const pendaftar = await DataPendaftars.findOne({
-                    where: {
-                        id: decodeId(id_pendaftar),
-                        is_delete: 0
-                    }
-                });
-
-                if (!pendaftar) {
-                    return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
-                }
-
-                const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0);
-
-                const count = await DataPerangkingans.count({
-                    where: {
-                        nisn,
-                        is_delete: 0
-                    }
-                });
-
-                if (count >= 2) {
-                    return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
-                }
-
-                const no_pendaftaran = await generatePendaftaranNumber();
-
+                // Collect uploaded file data
                 const uploadedFiles = [];
                 if (req.files) {
-                    for (const [key, value] of Object.entries(req.files)) {
-                        uploadedFiles.push({
-                            nama_file: key,
-                            nama_file_with_extension: value[0].filename
+                    for (const [fieldname, files] of Object.entries(req.files)) {
+                        files.forEach(file => {
+                            uploadedFiles.push({
+                                fieldname: fieldname,
+                                originalname: file.originalname,
+                                filename: file.filename
+                            });
                         });
                     }
                 }
+                
+               // Find pendaftar
+               const pendaftar = await DataPendaftars.findOne({
+                where: {
+                    id: decode_id_pendaftar,
+                }
+                });
 
-                const newPerangkinganData = {
-                    id_pendaftar,
-                    no_pendaftaran,
-                    bentuk_pendidikan_id,
-                    jalur_pendaftaran_id,
-                    sekolah_tujuan_id,
-                    jurusan_id,
-                    nisn,
-                    nik: pendaftar.nik,
-                    nama_lengkap: pendaftar.nama_lengkap,
-                    tanggal_lahir: new Date(pendaftar.tanggal_lahir),
-                    umur: calculateAge(pendaftar.tanggal_lahir),
-                    tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
-                    umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
-                    jarak: 20,
-                    nilai_raport: pendaftar.nilai_raport_rata,
-                    nilai_prestasi: pendaftar.nilai_prestasi,
-                    nilai_akhir,
-                    is_tidak_sekolah: pendaftar.is_tidak_sekolah,
-                    is_anak_panti: pendaftar.is_anak_panti,
-                    is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
-                    is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
-                    is_pip: pendaftar.is_pip,
-                    created_by: id_pendaftar,
-                    created_by_ip: req.ip,
-                    file_tambahan: JSON.stringify(uploadedFiles)
+                if (!pendaftar) {
+                    return res.status(404).json({ status: 0, message: decode_id_pendaftar + ' Pendaftar tidak ditemukan' });
+                }
+
+                const updateData = {
+                    file_tambahan: uploadedFiles,
                 };
 
-                // const newPerangkingan = await DataPerangkingans.create(newPerangkinganData);
+                // Update pendaftar
+                const updated = await pendaftar.update(updateData);
 
-                res.status(201).json({
+
+                if (!updated) {
+                    return res.status(404).json({ status: 0, message: decode_id_pendaftar + ' Gagal Update' });
+                }
+                
+                // Mengirim respons berhasil
+                res.status(200).json({
                     status: 1,
-                    message: 'Perangkingan berhasil dibuat',
-                    data: newPerangkinganData
+                    message: 'File tambahan berhasil diperbarui',
+                    data: updateData,
+                    id: decode_id_pendaftar
+                    
+             
                 });
             } catch (error) {
-                console.error('Error perangkingan:', error);
+                console.error('Error updating pendaftar:', error);
                 res.status(500).json({
                     status: 0,
-                    message: error.message || 'Terjadi kesalahan saat proses perangkingan'
+                    message: error.message || 'Terjadi kesalahan saat proses pembaruan pendaftar'
                 });
             }
         });
@@ -554,6 +505,5 @@ export const createPerangkinganBAK = async (req, res) => {
         });
     }
 };
-
 
 
