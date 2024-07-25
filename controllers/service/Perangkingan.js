@@ -92,7 +92,7 @@ export const getPerangkinganSaya = async (req, res) => {
             res.status(200).json({
                 status: 0,
                 message: 'Data kosong',
-                data: Array()
+                data: []
             });
         }
     } catch (err) {
@@ -116,6 +116,7 @@ export const getPerangkingan = async (req, res) => {
             nisn,
         } = req.body;
         
+        const resData = null;
         if(jalur_pendaftaran_id == 1){
             //Jalur Zonasi Reguler SMA
             const resData = await DataPerangkingans.findAll({
@@ -141,7 +142,7 @@ export const getPerangkingan = async (req, res) => {
                 },
                 order: [
                     ['umur', 'DESC'], //umur tertua
-                    ['nilai', 'DESC'], //jarak terendah
+                    ['nilai_akhir', 'DESC'], //jarak terendah
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ]
             });
@@ -182,19 +183,19 @@ export const getPerangkingan = async (req, res) => {
        });
    }
 
-        if (resData) { // Check if resData is not null
-            res.status(200).json({
-                'status': 1,
-                'message': 'Data berhasil ditemukan',
-                'data': resData // Return the found data
-            });
-        } else {
-            res.status(200).json({
-                'status': 0,
-                'message': 'Data kosong',
-                'data': null // Return null or an appropriate value when data is not found
-            });
-        }
+    if (resData) { // Check if resData is not null
+        res.status(200).json({
+            'status': 1,
+            'message': 'Data berhasil ditemukan',
+            'data': resData // Return the found data
+        });
+    } else {
+        res.status(200).json({
+            'status': 0,
+            'message': 'Data kosong',
+            'data': [] // Return null or an appropriate value when data is not found
+        });
+    }
 
     } catch (err) {
         console.error('Error fetching data:', err);
