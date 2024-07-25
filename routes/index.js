@@ -35,7 +35,7 @@ import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail } from '../controllers/service/Pendaftar.js';
-import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan } from '../controllers/service/Perangkingan.js';
+import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
 import { loginUser, logoutUser } from '../controllers/service/AuthPublic.js';
@@ -117,11 +117,15 @@ router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutU
 router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cekPerangkingan);
 router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
 router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cetakBuktiPerangkingan);
+
+
 // router.post('/api/servis/upload_file_tambahan/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
 
 
 router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+
+router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
 
 
 

@@ -43,6 +43,45 @@ const calculateAge = (birthdate) => {
     return age;
 };
 
+export const getPerangkinganSaya = async (req, res) => {
+
+    try {
+
+        const {
+            id_pendaftar
+        } = req.body;
+        
+        const resData = await DataPerangkingans.findAll({
+            where: {
+                id_pendaftar: decodeId(id_pendaftar),
+                is_delete: 0
+            },
+            
+          });
+
+        if (resData) { // Check if resData is not null
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData // Return the found data
+            });
+        } else {
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+                'data': null // Return null or an appropriate value when data is not found
+            });
+        }
+
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({ // Use 500 for server error
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+
 export const getPerangkingan = async (req, res) => {
 
     try {
@@ -421,15 +460,24 @@ export const cetakBuktiPerangkingan = async (req, res) => {
             return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
         }
 
-        const datas = {
+        // Convert Sequelize model instance to a plain object
+        const perangkinganData = perangkingan.toJSON();
 
-            pendaftar : pendaftar,
-            perangkingan : perangkingan,
+    
+        const sekolah_tujuan = {
+            npsn : '12345678',
+            nama : 'SMA / SMK Dummy'
+        }
+
+        // Add `sekolah_tujuan` to the plain object
+        perangkinganData.sekolah_tujuan = sekolah_tujuan;
+
+        const datas = {
+            pendaftar: pendaftar,
+            perangkingan: perangkinganData,
             id_pendaftar_: id_pendaftar, // Menambahkan ID ke dalam data yang dikembalikan
             id_perangkingan_: id_perangkingan, // Menambahkan ID ke dalam data yang dikembalikan
-
-           
-        }
+        };
         delete pendaftar.id; 
         delete perangkingan.id; 
 
