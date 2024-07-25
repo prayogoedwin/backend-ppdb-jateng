@@ -2,7 +2,6 @@ import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 
 
 // User login
