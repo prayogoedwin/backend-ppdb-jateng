@@ -116,7 +116,6 @@ export const getPerangkingan = async (req, res) => {
             nisn,
         } = req.body;
         
-        const resData = null;
         if(jalur_pendaftaran_id == 1){
             //Jalur Zonasi Reguler SMA
             const resData = await DataPerangkingans.findAll({
@@ -125,13 +124,28 @@ export const getPerangkingan = async (req, res) => {
                     sekolah_tujuan_id,
                     is_delete: 0
                 },
-                // order: [
-                //     ['jarak', 'ASC'], //jarak terendah
-                //     ['umur', 'DESC'], //umur tertua
-                //     ['created_at', 'ASC'] //daftar sekolah terawal
-                // ]
+                order: [
+                    ['jarak', 'ASC'], //jarak terendah
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] //daftar sekolah terawal
+                ]
                 
             });
+
+            if (resData) { // Check if resData is not null
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': resData // Return the found data
+                });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [] // Return null or an appropriate value when data is not found
+                });
+            }
+
         }else if(jalur_pendaftaran_id == 2){
             //Jalur Zonasi KHUSUS SMA
             const resData = await DataPerangkingans.findAll({
@@ -146,6 +160,21 @@ export const getPerangkingan = async (req, res) => {
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ]
             });
+
+            if (resData) { // Check if resData is not null
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': resData // Return the found data
+                });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [] // Return null or an appropriate value when data is not found
+                });
+            }
+
         }else if(jalur_pendaftaran_id == 3){
              //Jalur Prestasi SMA
              const resData = await DataPerangkingans.findAll({
@@ -161,6 +190,22 @@ export const getPerangkingan = async (req, res) => {
                 ]
                
             });
+
+            if (resData) { // Check if resData is not null
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': resData // Return the found data
+                });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [] // Return null or an appropriate value when data is not found
+                });
+            }
+
+
         }else if(jalur_pendaftaran_id == 4){
             //Jalur PTO SMA
             const resData = await DataPerangkingans.findAll({
@@ -171,31 +216,47 @@ export const getPerangkingan = async (req, res) => {
                },
                
            });
+
+           if (resData) { // Check if resData is not null
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData // Return the found data
+            });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [] // Return null or an appropriate value when data is not found
+                });
+            }
+
        }else if(jalur_pendaftaran_id == 5){
         //Jalur Afirmasi SMA
-        const resData = await DataPerangkingans.findAll({
-           where: {
-               jalur_pendaftaran_id,
-               sekolah_tujuan_id,
-               is_delete: 0
-           },
+            const resData = await DataPerangkingans.findAll({
+            where: {
+                jalur_pendaftaran_id,
+                sekolah_tujuan_id,
+                is_delete: 0
+            },
            
-       });
-   }
+            });
+            if (resData) { // Check if resData is not null
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': resData // Return the found data
+                });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [] // Return null or an appropriate value when data is not found
+                });
+            }
+        }
 
-    if (resData) { // Check if resData is not null
-        res.status(200).json({
-            'status': 1,
-            'message': 'Data berhasil ditemukan',
-            'data': resData // Return the found data
-        });
-    } else {
-        res.status(200).json({
-            'status': 0,
-            'message': 'Data kosong',
-            'data': [] // Return null or an appropriate value when data is not found
-        });
-    }
+   
 
     } catch (err) {
         console.error('Error fetching data:', err);
