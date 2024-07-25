@@ -10,10 +10,17 @@ import { Op } from 'sequelize';
 
 // Configure multer storage
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = `upload/berkas/${req.body.nisn}`;
-        fs.mkdirSync(uploadPath, { recursive: true });
-        cb(null, uploadPath);
+    destination: async (req, file, cb) => {
+        try {
+            const uploadPath = `upload/berkas/${req.body.nisn}`;
+            
+            // Asynchronously create the directory if it does not exist
+            fs.promises.mkdir(uploadPath, { recursive: true })
+                .then(() => cb(null, uploadPath))
+                .catch(err => cb(err));
+        } catch (err) {
+            cb(err);
+        }
     },
     filename: (req, file, cb) => {
         const hash = crypto.createHash('md5').update(file.originalname + Date.now().toString()).digest('hex');

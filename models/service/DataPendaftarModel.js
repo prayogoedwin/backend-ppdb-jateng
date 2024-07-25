@@ -250,6 +250,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    file_tambahan: {
+        type: DataTypes.JSON,
+        allowNull: true,
+    },
     
     
 }, {
