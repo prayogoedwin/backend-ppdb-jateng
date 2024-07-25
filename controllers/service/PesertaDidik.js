@@ -15,7 +15,8 @@ const getPesertaDidikByNisn = async (nisn) => {
     try {
         const pesertaDidik = await DataPesertaDidiks.findOne({
             where: { nisn },
-            include: [{
+            include: [
+                {
                 model: Sekolah,
                 as: 'data_sekolah', // Tambahkan alias di sini
                 attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],

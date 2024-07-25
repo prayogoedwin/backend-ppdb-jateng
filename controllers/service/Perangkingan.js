@@ -2,6 +2,8 @@ import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import FileTambahans from "../../models/master/FileTambahanModel.js";
+import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
+import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -44,43 +46,63 @@ const calculateAge = (birthdate) => {
 };
 
 export const getPerangkinganSaya = async (req, res) => {
-
     try {
+        const { id_pendaftar } = req.body;
 
-        const {
-            id_pendaftar
-        } = req.body;
-        
+        // Decode the ID
+        const decodedIdPendaftar = decodeId(id_pendaftar);
+
+        // Fetch the data
         const resData = await DataPerangkingans.findAll({
             where: {
-                id_pendaftar: decodeId(id_pendaftar),
+                id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
                 is_delete: 0
             },
-            
-          });
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['npsn', 'nama']
+                },{
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['bentuk_pendidikan_id', 'nama']
+                }
+            ]
+        });
 
-        if (resData) { // Check if resData is not null
+        const resDatas = resData.map(item => {
+            const jsonItem = item.toJSON();
+            jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
+            jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
+            delete jsonItem.id; // Hapus kolom id dari output JSON
+            delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
+           
+            return jsonItem;
+        });
+
+        // Check if data is found
+        if (resData && resData.length > 0) {
             res.status(200).json({
-                'status': 1,
-                'message': 'Data berhasil ditemukan',
-                'data': resData // Return the found data
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: resDatas
             });
         } else {
             res.status(200).json({
-                'status': 0,
-                'message': 'Data kosong',
-                'data': null // Return null or an appropriate value when data is not found
+                status: 0,
+                message: 'Data kosong',
+                data: null
             });
         }
-
     } catch (err) {
         console.error('Error fetching data:', err);
-        res.status(500).json({ // Use 500 for server error
-            'status': 0,
-            'message': 'Error'
+        res.status(500).json({
+            status: 0,
+            message: 'Error'
         });
     }
-}
+};
 
 export const getPerangkingan = async (req, res) => {
 
@@ -481,7 +503,7 @@ export const cetakBuktiPerangkingan = async (req, res) => {
         delete pendaftar.id; 
         delete perangkingan.id; 
 
-        res.status(201).json({
+        res.status(200).json({
             status: 1,
             message: 'Data ditemukan',
             data: datas

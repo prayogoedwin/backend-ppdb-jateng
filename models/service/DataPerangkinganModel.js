@@ -1,5 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from "../../config/Database.js";
+import SekolahTujuan from '../master/SekolahTujuanModel.js';
+import JalurPendaftarans from '../master/JalurPendaftaranModel.js';
 
 const PerangkinganModels = db.define('ez_perangkingan', {
     id: {
@@ -24,7 +26,7 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         allowNull: false
     },
     sekolah_tujuan_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     jurusan_id: {
@@ -158,3 +160,6 @@ const PerangkinganModels = db.define('ez_perangkingan', {
 });
 
 export default PerangkinganModels;
+PerangkinganModels.belongsTo(SekolahTujuan, { as: 'sekolah_tujuan', foreignKey: 'sekolah_tujuan_id' });
+PerangkinganModels.belongsTo(JalurPendaftarans, { as: 'jalur_pendaftaran', foreignKey: 'jalur_pendaftaran_id' });
+

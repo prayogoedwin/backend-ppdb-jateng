@@ -1,11 +1,12 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
+import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
 
 const { DataTypes } = Sequelize;
 
 const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
     id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
@@ -53,9 +54,32 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
     lng: {
         type: DataTypes.DOUBLE,
         allowNull: true,
+    },
+    kuota_zonasi: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_zonasi_khusus: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_afirmasi: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_prestasi: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_pto: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
 }, {
     freezeTableName: true
 });
 
 export default EzSekolahTujuans;
+EzSekolahTujuans.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah', foreignKey: 'kode_wilayah', targetKey: 'kode_wilayah' }); // Asosiasi dengan Wilayah
+
+

@@ -128,6 +128,7 @@ export const updateTimeline = [
             });
 
             await clearCacheByKeyFunction('TimelineAllinAdmin');
+            await clearCacheByKeyFunction('TimelineAll');
 
             res.status(200).json({
                 status: 1,
