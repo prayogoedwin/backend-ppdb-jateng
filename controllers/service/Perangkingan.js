@@ -208,7 +208,7 @@ export const cekPerangkingan = async (req, res) => {
                 }
     
                 if (bentuk_pendidikan_id == 15) {
-                    if(cari.jurusan_id == jurusan_id){
+                    if(cari.jurusan_id != 0 && cari.jurusan_id == jurusan_id){
                         return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jurusan di masing-masing jurusan' });
                     }
                 }       
@@ -383,6 +383,8 @@ export const createPerangkingan = async (req, res) => {
         });
     }
 }
+
+
 
 // Configure multer storage
 const storage = multer.diskStorage({
