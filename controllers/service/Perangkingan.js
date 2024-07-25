@@ -364,7 +364,7 @@ export const createPerangkingan = async (req, res) => {
         const datas = {
             ...newPerangkinganData,
             id_pendaftar_: id_pendaftar, // Menambahkan ID ke dalam data yang dikembalikan
-            id_: encodeId(newPerangkingan.id), // Menambahkan ID ke dalam data yang dikembalikan
+            id_perangkingan_: encodeId(newPerangkingan.id), // Menambahkan ID ke dalam data yang dikembalikan
 
            
         }
@@ -383,6 +383,71 @@ export const createPerangkingan = async (req, res) => {
         });
     }
 }
+
+// Function to handle POST request
+export const cetakBuktiPerangkingan = async (req, res) => {
+
+    try {
+        const {
+            id_pendaftar,
+            id_perangkingan,
+            nisn
+        } = req.body;
+
+        let id_pendaftar_decode = decodeId(id_pendaftar);
+        let id_perangkingan_decode = decodeId(id_perangkingan);
+
+         // Retrieve data from DataPendaftarModel
+         const pendaftar = await DataPendaftars.findOne({
+            where: {
+                id: id_pendaftar_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!pendaftar) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+         // Retrieve data from DataPendaftarModel
+         const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: id_perangkingan_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        const datas = {
+
+            pendaftar : pendaftar,
+            perangkingan : perangkingan,
+            id_pendaftar_: id_pendaftar, // Menambahkan ID ke dalam data yang dikembalikan
+            id_perangkingan_: id_perangkingan, // Menambahkan ID ke dalam data yang dikembalikan
+
+           
+        }
+        delete pendaftar.id; 
+        delete perangkingan.id; 
+
+        res.status(201).json({
+            status: 1,
+            message: 'Data ditemukan',
+            data: datas
+        });
+    } catch (error) {
+        console.error('Error daftar:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+}
+
+
 
 
 // Configure multer storage
@@ -476,7 +541,6 @@ export const uploadFileTambahan = async (req, res) => {
                 // Update pendaftar
                 const updated = await pendaftar.update(updateData);
 
-
                 if (!updated) {
                     return res.status(404).json({ status: 0, message: decode_id_pendaftar + ' Gagal Update' });
                 }
@@ -486,7 +550,6 @@ export const uploadFileTambahan = async (req, res) => {
                     status: 1,
                     message: 'File tambahan berhasil diperbarui',
                     data: updateData,
-                    id: decode_id_pendaftar
                     
              
                 });
