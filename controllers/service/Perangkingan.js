@@ -116,7 +116,7 @@ export const getPerangkingan = async (req, res) => {
             nisn,
         } = req.body;
         
-        // const resData = null;
+        const resData = null;
         if(jalur_pendaftaran_id == 1){
             //Jalur Zonasi Reguler SMA
             const resData = await DataPerangkingans.findAll({
