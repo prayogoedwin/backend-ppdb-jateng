@@ -29,7 +29,7 @@ const getPesertaDidikByNisn = async (nisn) => {
             {
                 model: WilayahVerDapodik,
                 as: 'data_wilayah',
-                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah']
+                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
             }
             ],
          
