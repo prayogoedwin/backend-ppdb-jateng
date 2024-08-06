@@ -45,7 +45,7 @@ export const getDesaKelurahan = async (kode_wilayah_des) => {
     try {
         const desaKelurahan = await WilayahVerDapodiks.findOne({
             where: { kode_wilayah: kode_wilayah_des },
-            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
         });
         return desaKelurahan;
     } catch (error) {
