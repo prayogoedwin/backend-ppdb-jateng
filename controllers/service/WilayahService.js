@@ -4,7 +4,7 @@ export const getProvinsi = async (kode_wilayah_prov) => {
     try {
         const provinsi = await WilayahVerDapodiks.findOne({
             where: { kode_wilayah: kode_wilayah_prov },
-            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
         });
         return provinsi;
     } catch (error) {
@@ -17,7 +17,7 @@ export const getKabupatenKota = async (kode_wilayah_kab) => {
     try {
         const kabupatenKota = await WilayahVerDapodiks.findOne({
             where: { kode_wilayah: kode_wilayah_kab },
-            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
         });
         return kabupatenKota;
     } catch (error) {
@@ -31,7 +31,7 @@ export const getKecamatan = async (kode_wilayah_kec) => {
     try {
         const kecamatan = await WilayahVerDapodiks.findOne({
             where: { kode_wilayah: kode_wilayah_kec },
-            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
         });
         return kecamatan;
     } catch (error) {

@@ -20,6 +20,10 @@ const EzWilayahVerDapodiks = db.define('ez_wilayah_dapodik', {
     mst_kode_wilayah: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    kode_dagri: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
 }, {
     freezeTableName: true,
