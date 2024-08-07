@@ -456,7 +456,7 @@ export const cekPerangkingan = async (req, res) => {
                     // Check if the pendaftar has registered in any of the zonasi sekolah using any other path except zonasi
                     const previousRegistrations = await DataPendaftars.findAll({
                         where: {
-                        id_pendaftar,
+                        id: decodeId(id_pendaftar),
                         sekolah_tujuan_id: {
                             [Op.in]: zonasiSekolahIds // In the zonasi sekolah IDs
                         },
