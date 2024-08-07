@@ -66,7 +66,7 @@ export const getSekolahTujuan = async (req, res) => {
 }
 
 export const getSekolahTujuanAdmin = async (req, res) => {
-    const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id;
+    const redis_key = 'SekolahTujuanAdmin'+req.body.bentuk_pendidikan_id;
     const nisn = req.body.bentuk_pendidikan_id;
     try {
         const cacheNya = await redisGet(redis_key);
@@ -114,4 +114,39 @@ export const getSekolahTujuanAdmin = async (req, res) => {
             'message': 'Error'
         });
     }
+}
+
+
+export const getSekolahTujuanAdminById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const resData = await SekolahTujuans.findOne({
+            where: {
+                id
+            }
+        });
+        if(resData != null ){
+           
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData
+            });
+
+        }else{
+
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+            });
+
+        }
+    }catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+
+    
 }
