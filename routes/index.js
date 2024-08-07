@@ -60,6 +60,9 @@ import { getUsers, getUserById, addUser, updateUser, softDeleteUser, resetPasswo
 //roles
 import { getRoles } from "../controllers/service/admin/Role.js";
 
+//rekap
+import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
+
 
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
@@ -174,6 +177,8 @@ router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddl
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, softDeleteUser);
 router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, resetPasswordById);
 
+//rekap
+router.get('/admin-api/rekap/pendaftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
 
 //role
 router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);

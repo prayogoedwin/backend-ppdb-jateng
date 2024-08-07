@@ -146,8 +146,10 @@ export const updateSekolahTujuanAdmin = [
                 }
             });
 
-            await clearCacheByKeyFunction('TimelineAllinAdmin');
-            await clearCacheByKeyFunction('TimelineAll');
+            await clearCacheByKeyFunction('SekolahTujuanAdmin13');
+            await clearCacheByKeyFunction('SekolahTujuanAdmin15');
+            await clearCacheByKeyFunction('SekolahTujuans13');
+            await clearCacheByKeyFunction('SekolahTujuans15');
 
             res.status(200).json({
                 status: 1,
