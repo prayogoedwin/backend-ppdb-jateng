@@ -349,7 +349,7 @@ export const cekPerangkingan = async (req, res) => {
                       let isInZonasis = false;
                       
                       cariZonasis.forEach(zonasi => {
-                        if (zonasi.kecamatan_id === kecPendaftar) {
+                        if (zonasi.kode_kecamatan_dapodik === kecPendaftar) {
                           isInZonasis = true;
                         }
                       });
@@ -365,7 +365,7 @@ export const cekPerangkingan = async (req, res) => {
                      // Get all zonasi for the pendaftar's kecamatan
                     const allZonasisForKecamatan = await Zonasis.findAll({
                         where: {
-                        kecamatan_id: kecPendaftar
+                            kode_kecamatan_dapodik: kecPendaftar
                         }
                     });
 
@@ -430,7 +430,7 @@ export const cekPerangkingan = async (req, res) => {
                       let isInZonasis = false;
                       
                       cariZonasis.forEach(zonasi => {
-                        if (zonasi.kecamatan_id === kecPendaftar) {
+                        if (zonasi.kode_kecamatan_dapodik === kecPendaftar) {
                           isInZonasis = true;
                         }
                       });
@@ -446,7 +446,7 @@ export const cekPerangkingan = async (req, res) => {
                      // Get all zonasi for the pendaftar's kecamatan
                     const allZonasisForKecamatan = await Zonasis.findAll({
                         where: {
-                        kecamatan_id: kecPendaftar
+                            kode_kecamatan_dapodik: kecPendaftar
                         }
                     });
 
