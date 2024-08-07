@@ -423,7 +423,7 @@ export const cekPerangkingan = async (req, res) => {
                     //tidak boleh jika tidak dalam zonasi
                     const cariZonasis = await Zonasis.findAll({
                         where: {
-                          sekolah_tujuan_id
+                          id_sekolah
                         }
                       });
                 
