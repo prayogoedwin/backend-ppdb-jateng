@@ -1,4 +1,4 @@
-import SekolahTujuans from '../../../models/service/SekolahTujuanModel.js';
+import SekolahTujuans from '../../../models/master/SekolahTujuanModel.js';
 import { encodeId, decodeId } from '../../../middleware/EncodeDecode.js';
 import { Op } from 'sequelize';
 import { redisGet, redisSet } from '../../../redis.js';
