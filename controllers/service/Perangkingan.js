@@ -356,7 +356,7 @@ export const cekPerangkingan = async (req, res) => {
                 
                       if (!isInZonasis) {
                         return res.status(200).json({
-                          success: false,
+                            status: 0,
                           message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar.",
                         });
                       }
@@ -389,7 +389,7 @@ export const cekPerangkingan = async (req, res) => {
 
                     if (previousRegistrations.length > 0) {
                         return res.status(200).json({
-                        success: false,
+                            status: 0,
                         message: "Anda sudah mendaftar di sekolah yang berada di zonasi ini melalui jalur lain. Jalur zonasi tidak bisa digunakan.",
                         });
                     }
@@ -437,7 +437,7 @@ export const cekPerangkingan = async (req, res) => {
                 
                       if (!isInZonasis) {
                         return res.status(200).json({
-                          success: 0,
+                          status: 0,
                           message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar.",
                         });
                       }
@@ -470,7 +470,7 @@ export const cekPerangkingan = async (req, res) => {
 
                     if (previousRegistrations.length > 0) {
                         return res.status(200).json({
-                        success: 0,
+                        status: 0,
                         message: "Anda sudah mendaftar di sekolah yang berada di zonasi ini melalui jalur lain. Jalur zonasi tidak bisa digunakan.",
                         });
                     }
