@@ -76,7 +76,8 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
         allowNull: true,
     }
 }, {
-    freezeTableName: true
+    freezeTableName: true,
+    timestamps: false, // Nonaktifkan timestamps
 });
 
 export default EzSekolahTujuans;

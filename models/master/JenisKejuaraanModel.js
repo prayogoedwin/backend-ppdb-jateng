@@ -24,7 +24,8 @@ const JenisKejuaraans = db.define('ez_jenis_kejuaraan', {
   }
 },{
   // Freeze Table Name
-  freezeTableName: true
+  freezeTableName: true,
+  timestamps: false, // Nonaktifkan timestamps
 });
  
 // Export model Product

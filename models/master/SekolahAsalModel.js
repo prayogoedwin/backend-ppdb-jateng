@@ -21,7 +21,8 @@ const SekolahAsals = db.define('ez_sekolah_asal', {
     }
 },{
   // Freeze Table Name
-  freezeTableName: true
+  freezeTableName: true,
+  timestamps: false, // Nonaktifkan timestamps
 });
  
 // Export model Product

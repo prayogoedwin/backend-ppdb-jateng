@@ -21,7 +21,8 @@ const StatusDomisilis = db.define('ez_status_domisili', {
     }
 },{
   // Freeze Table Name
-  freezeTableName: true
+  freezeTableName: true,
+  timestamps: false, // Nonaktifkan timestamps
 });
  
 // Export model Product

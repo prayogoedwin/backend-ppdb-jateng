@@ -21,7 +21,8 @@ const JenisLulusans = db.define('ez_jenis_lulusan', {
     }
 },{
   // Freeze Table Name
-  freezeTableName: true
+  freezeTableName: true,
+  timestamps: false, // Nonaktifkan timestamps
 });
  
 // Export model Product
