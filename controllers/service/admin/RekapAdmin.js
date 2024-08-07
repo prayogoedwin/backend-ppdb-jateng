@@ -1,4 +1,5 @@
 import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
+import DataPerangkingans from "../../../models/service/DataPerangkinganModel.js";
 import { redisGet, redisSet } from '../../../redis.js';
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import { Op } from 'sequelize';
@@ -49,11 +50,34 @@ export const countPendaftar = async (req, res) => {
         }
       });
 
+       // Count the total pendaftar
+       const perangkinganSmaCount = await DataPerangkingans.count({
+        where: {
+          [Op.or]: [
+            { is_delete: { [Op.is]: null } },
+            { is_delete: 0 }
+          ],
+          bentuk_pendidikan_id: 13
+        }
+      });
+       // Count the total pendaftar
+       const perangkinganSmkCount = await DataPerangkingans.count({
+        where: {
+          [Op.or]: [
+            { is_delete: { [Op.is]: null } },
+            { is_delete: 0 }
+          ],
+          bentuk_pendidikan_id: 15
+        }
+      });
+
       // Structure the result
       const result = {
         pendaftar: pendaftarCount,
         pendaftar_terverifikasi: verifiedCount,
-        pendaftar_aktivasi: activatedCount
+        pendaftar_aktivasi: activatedCount,
+        daftar_sma: perangkinganSmaCount,
+        daftar_smk: perangkinganSmkCount,
       };
 
       // Store the result in Redis cache
