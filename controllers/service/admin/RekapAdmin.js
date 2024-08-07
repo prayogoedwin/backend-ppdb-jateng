@@ -4,7 +4,7 @@ import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import { Op } from 'sequelize';
 
 export const countPendaftar = async (req, res) => {
-  const redis_key = 'JalurPendaftaranBy_' + req.body.bentuk_pendidikan_id;
+  const redis_key = 'RekapAdminsAll'
 
   try {
     // Check if the data is already in cache
@@ -62,15 +62,15 @@ export const countPendaftar = async (req, res) => {
       // Return the result
       res.status(200).json({
         success: true,
-        message: "Count of pendaftar retrieved successfully",
+        message: "Berhasil hitung data",
         data: result
       });
     }
   } catch (error) {
-    console.error("Error counting pendaftar:", error);
+    console.error("Error hitung data:", error);
     res.status(500).json({
       success: false,
-      message: "Error counting pendaftar",
+      message: "Error hitung data",
       error: error.message
     });
   }
