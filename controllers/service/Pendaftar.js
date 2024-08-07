@@ -1,5 +1,7 @@
 import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
+import SekolahTujuan from "../../models/master/SekolahTujuanModel.js"; // Import model SekolahTujuan
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -259,7 +261,7 @@ export const getPendaftarforCetak = async (req, res) => {
     }
 }
 
-export const getPendaftarDetail = async (req, res) => {
+export const getPendaftarDetail_BAK = async (req, res) => {
     try {
         const resData = await DataPendaftars.findOne({
             where: {
@@ -273,6 +275,7 @@ export const getPendaftarDetail = async (req, res) => {
                 'status': 1,
                 'message': 'Data berhasil ditemukan',
                 'data': resData // Return the found data
+
             });
         } else {
             res.status(200).json({
@@ -291,6 +294,84 @@ export const getPendaftarDetail = async (req, res) => {
     }
 }
 
+export const getPendaftarDetail = async (req, res) => {
+    try {
+      // Ambil data pendaftar berdasarkan NISN
+      const profil = await DataPendaftars.findOne({
+        where: {
+          nisn: req.body.nisn,
+          is_delete: 0
+        }
+      });
+  
+      if (profil) {
+        // Ambil detail pendaftaran sekolah dan daftar ulang
+        const perangkinganDetails = await DataPerangkingans.findAll({
+          where: {
+            nisn: req.body.nisn,
+            is_delete: 0
+          },
+          attributes: ['sekolah_tujuan_id', 'is_daftar_ulang'] // Ambil atribut yang diperlukan
+        });
+  
+        let pendaftaranSekolah = null;
+        let daftarUlang = null;
+  
+        // Loop melalui perangkinganDetails untuk menemukan pendaftaran sekolah dan daftar ulang
+        for (const detail of perangkinganDetails) {
+          const sekolahDetail = await SekolahTujuan.findOne({
+            where: {
+              id: detail.sekolah_tujuan_id
+            },
+            attributes: ['id', 'nama', 'npsn', 'daya_tampung'] // Ambil atribut yang diperlukan dari SekolahTujuan
+          });
+  
+          if (detail.is_daftar_ulang) {
+            daftarUlang = {
+              nama_sekolah: sekolahDetail ? sekolahDetail.nama : null,
+              status: detail.is_daftar_ulang,
+              sekolah_detail: sekolahDetail
+            };
+          } else {
+            pendaftaranSekolah = sekolahDetail;
+          }
+        }
+  
+        // Buat timeline_pendaftar
+        const timeline_pendaftar = {
+          pendaftaran: 1,
+          verifikasi: profil.is_verified, // Asumsi bahwa resData memiliki atribut is_verified
+          aktivasi: profil.is_active, // Asumsi bahwa resData memiliki atribut is_active
+          pendaftaran_sekolah: pendaftaranSekolah,
+          daftar_ulang: daftarUlang
+        };
+  
+        res.status(200).json({
+          status: 1,
+          message: 'Data berhasil ditemukan',
+          data: {
+            profil, // Data yang ditemukan
+            timeline_pendaftar // Tambahkan timeline_pendaftar ke dalam data
+          }
+        });
+  
+      } else {
+        res.status(200).json({
+          status: 0,
+          message: 'Data kosong',
+          data: null
+        });
+      }
+  
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).json({
+        status: 0,
+        message: 'Error'
+      });
+    }
+  }
+  
 // User aktivasi
 export const aktivasiAkunPendaftar2 = async (req, res) => {
 
