@@ -55,7 +55,15 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
         type: DataTypes.DOUBLE,
         allowNull: true,
     },
+    daya_tampung: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     kuota_zonasi: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_zonasi_persentase: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
@@ -63,7 +71,15 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    kuota_zonasi_khusus_persentase: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     kuota_afirmasi: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_afirmasi_persentase: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
@@ -71,7 +87,23 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    kuota_prestasi_persentase: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_prestasi_khusus: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_prestasi_khusus_persentase: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     kuota_pto: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kuota_pto_persentase: {
         type: DataTypes.INTEGER,
         allowNull: true,
     }

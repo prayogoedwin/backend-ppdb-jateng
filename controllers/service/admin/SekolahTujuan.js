@@ -5,8 +5,9 @@ import { redisGet, redisSet } from '../../../redis.js';
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 
 
-export const getSekolahTujuan = async (req, res) => {
-    const redis_key = 'DataSekolahTujuanAllinAdmin';
+export const getSekolahTujuanAdmin = async (req, res) => {
+    const redis_key = 'SekolahTujuanAdmin'+req.body.bentuk_pendidikan_id;
+    const nisn = req.body.bentuk_pendidikan_id;
     try {
         const cacheNya = await redisGet(redis_key);
         if (cacheNya) {
@@ -16,54 +17,31 @@ export const getSekolahTujuan = async (req, res) => {
                 'message': 'Data di ambil dari cache',
                 'data': JSON.parse(cacheNya)
             });
+
            
         }else{
 
-            const resData = await DataPendaftars.findAll({
-                attributes: { exclude: ['password_'] },
-                include: [
-                    {
-                        model: WilayahVerDapodik,
-                        as: 'data_wilayah',
-                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah']
-                    },
-                ]
+            const resData = await SekolahTujuans.findAll({
+                where: {
+                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
+                },
             });
-            if(resData != null){
+            if(resData.length > 0){
 
-                // const resDatas = resData.map(item => ({
-                //     ...item.toJSON(),
-                //     encodedId: encodeId(item.id)
-                // }));
-                const resDatas = resData.map(item => {
-                    const jsonItem = item.toJSON();
-                    jsonItem.id_ = encodeId(item.id); // Add the encoded ID to the response
-                    delete jsonItem.id; // Hapus kolom id dari output JSON
-                   
-                    return jsonItem;
-                });
-
-                // const resDatas = resData.map(item => {
-                //     const jsonItem = item.toJSON();
-                //     const encodedId = encodeId(jsonItem.id); // Encode the original ID
-                //     delete jsonItem.id; // Remove the original ID from the response
-                //     jsonItem.encodedId = encodedId; // Add the encoded ID to the response
-                //     return jsonItem;
-                // });
-
-                const newCacheNya = resDatas;
-                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_DATA); 
+                const newCacheNya = resData;
+                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
 
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': resDatas
+                    'data': resData
                 });
             }else{
 
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
+                    'data': resData
                 });
 
             }
@@ -77,3 +55,109 @@ export const getSekolahTujuan = async (req, res) => {
         });
     }
 }
+
+
+export const getSekolahTujuanAdminById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const resData = await SekolahTujuans.findOne({
+            where: {
+                id
+            }
+        });
+        if(resData != null ){
+           
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData
+            });
+
+        }else{
+
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+            });
+
+        }
+    }catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+
+    
+}
+
+// Uverif pendaftart
+export const updateSekolahTujuanAdmin = [
+    async (req, res) => {
+        const { 
+            id, 
+            daya_tampung, 
+            kuota_zonasi_persentase,
+            kuota_zonasi,
+            kuota_zonasi_khusus_persentase,
+            kuota_zonasi_khusus,
+            kuota_afirmasi_persentase,
+            kuota_afirmasi,
+            kuota_prestasi_persentase,
+            kuota_prestasi,
+            kuota_prestasi_khusus_persentase,
+            kuota_prestasi_khusus,
+            kuota_pto_persentase,
+            kuota_pto,
+        } = req.body;
+
+
+        try {
+            const resData = await SekolahTujuans.findOne({
+                where: {
+                    id
+                }
+            });
+
+            if (!resData) {
+                return res.status(400).json({ status: 0, message: 'Invalid id' });
+            }
+
+            await Timelines.update({
+                daya_tampung, 
+                kuota_zonasi_persentase,
+                kuota_zonasi,
+                kuota_zonasi_khusus_persentase,
+                kuota_zonasi_khusus,
+                kuota_afirmasi_persentase,
+                kuota_afirmasi,
+                kuota_prestasi_persentase,
+                kuota_prestasi,
+                kuota_prestasi_khusus_persentase,
+                kuota_prestasi_khusus,
+                kuota_pto_persentase,
+                kuota_pto,
+                updated_at: new Date(), // Set the current date and time
+                updated_by: req.user.userId, // Use user ID from token
+                updated_by_ip: req.ip
+            }, {
+                where: {
+                    id
+                }
+            });
+
+            await clearCacheByKeyFunction('TimelineAllinAdmin');
+            await clearCacheByKeyFunction('TimelineAll');
+
+            res.status(200).json({
+                status: 1,
+                message: 'Update berhasil',
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
