@@ -26,6 +26,7 @@ import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
 import { getSekolahTujuan } from "../controllers/master/SekolahTujuan.js";
+import { getSekolahTujuanAdmin } from "../controllers/master/SekolahTujuanAdmin.js";
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
 
@@ -141,6 +142,9 @@ router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddl
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
 router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logoutAdmin);
+
+//master data admin
+router.post('/api/master/sekolah_tujuan_admin', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanAdmin);
 
 
 //menu menu & action admin
