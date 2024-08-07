@@ -333,7 +333,7 @@ export const getPendaftarDetail = async (req, res) => {
             where: {
               id: detail.sekolah_tujuan_id
             },
-            attributes: ['id', 'nama', 'npsn', 'daya_tampung'] // Ambil atribut yang diperlukan dari SekolahTujuan
+            attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
           });
   
           if (sekolahDetail) {
@@ -347,13 +347,13 @@ export const getPendaftarDetail = async (req, res) => {
             where: {
               id: detail.sekolah_tujuan_id
             },
-            attributes: ['id', 'nama', 'npsn', 'daya_tampung'] // Ambil atribut yang diperlukan dari SekolahTujuan
+            attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
           });
   
           if (sekolahDetail) {
             daftarUlang.push({
               nama_sekolah: sekolahDetail.nama,
-              status: detail.is_daftar_ulang,
+              status_daftar_ulang: detail.is_daftar_ulang,
             //   sekolah_detail: sekolahDetail
             });
           }

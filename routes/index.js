@@ -35,7 +35,7 @@ import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail } from '../controllers/service/Pendaftar.js';
-import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan } from '../controllers/service/Perangkingan.js';
+import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
 import { loginUser, logoutUser } from '../controllers/service/AuthPublic.js';
@@ -134,6 +134,10 @@ router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware,
 router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
 
 router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, softDeletePerangkingan);
+
+router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware, daftarUlangPerangkingan);
+
+
 
 
 

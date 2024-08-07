@@ -654,6 +654,48 @@ export const cetakBuktiPerangkingan = async (req, res) => {
 }
 
 // Function to handle DELETE request
+export const daftarUlangPerangkingan = async (req, res) => {
+    try {
+        const { id_perangkingan } = req.body;
+
+        // Decode the ID
+        const id_perangkingan_decode = decodeId(id_perangkingan);
+
+        // Find the record to be updated
+        const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: id_perangkingan_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // Update the record to set is_delete to 1
+        await DataPerangkingans.update(
+            { 
+                is_daftar_ulang: 1,
+                daftar_ulang_at: new Date(),
+             },
+            { where: { id: id_perangkingan_decode } }
+        );
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil diupdate'
+        });
+    } catch (error) {
+        console.error('Error hapus:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat update data'
+        });
+    }
+}
+
+// Function to handle DELETE request
 export const softDeletePerangkingan = async (req, res) => {
     try {
         const { id_perangkingan } = req.body;
