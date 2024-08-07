@@ -336,62 +336,64 @@ export const cekPerangkingan = async (req, res) => {
                 //cari zonasi untuk SMA
                 if(jalur_pendaftaran_id == 1){
 
-                    const kecPendaftar = pendaftar.kecamatan_id;
+                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
 
-                    //tidak boleh jika tidak dalam zonasi
-                    const cariZonasis = await Zonasis.findAll({
-                        where: {
-                          sekolah_tujuan_id
-                        }
-                      });
+                    // const kecPendaftar = pendaftar.kecamatan_id;
+
+                    // //tidak boleh jika tidak dalam zonasi
+                    // const cariZonasis = await Zonasis.findAll({
+                    //     where: {
+                    //       sekolah_tujuan_id
+                    //     }
+                    //   });
                 
-                      let isInZonasis = false;
+                    //   let isInZonasis = false;
                       
-                      cariZonasis.forEach(zonasi => {
-                        if (zonasi.kecamatan_id === kecPendaftar) {
-                          isInZonasis = true;
-                        }
-                      });
+                    //   cariZonasis.forEach(zonasi => {
+                    //     if (zonasi.kecamatan_id === kecPendaftar) {
+                    //       isInZonasis = true;
+                    //     }
+                    //   });
                 
-                      if (!isInZonasis) {
-                        return res.status(200).json({
-                          success: false,
-                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar.",
-                        });
-                      }
+                    //   if (!isInZonasis) {
+                    //     return res.status(200).json({
+                    //       success: false,
+                    //       message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar.",
+                    //     });
+                    //   }
 
 
-                     // Get all zonasi for the pendaftar's kecamatan
-                    const allZonasisForKecamatan = await Zonasis.findAll({
-                        where: {
-                        kecamatan_id: kecPendaftar
-                        }
-                    });
+                    //  // Get all zonasi for the pendaftar's kecamatan
+                    // const allZonasisForKecamatan = await Zonasis.findAll({
+                    //     where: {
+                    //     kecamatan_id: kecPendaftar
+                    //     }
+                    // });
 
-                    const zonasiSekolahIds = allZonasisForKecamatan.map(zonasi => zonasi.sekolah_tujuan_id);
+                    // const zonasiSekolahIds = allZonasisForKecamatan.map(zonasi => zonasi.sekolah_tujuan_id);
 
-                    // Check if the pendaftar has registered in any of the zonasi sekolah using any other path except zonasi
-                    const previousRegistrations = await DataPendaftars.findAll({
-                        where: {
-                        id_pendaftar,
-                        sekolah_tujuan_id: {
-                            [Op.in]: zonasiSekolahIds // In the zonasi sekolah IDs
-                        },
-                        jalur_pendaftaran_id: {
-                            [Op.ne]: 1 // Not using zonasi path
-                        },
-                        is_delete: {
-                            [Op.or]: [null, 0]
-                        }
-                        }
-                    });
+                    // // Check if the pendaftar has registered in any of the zonasi sekolah using any other path except zonasi
+                    // const previousRegistrations = await DataPendaftars.findAll({
+                    //     where: {
+                    //     id_pendaftar,
+                    //     sekolah_tujuan_id: {
+                    //         [Op.in]: zonasiSekolahIds // In the zonasi sekolah IDs
+                    //     },
+                    //     jalur_pendaftaran_id: {
+                    //         [Op.ne]: 1 // Not using zonasi path
+                    //     },
+                    //     is_delete: {
+                    //         [Op.or]: [null, 0]
+                    //     }
+                    //     }
+                    // });
 
-                    if (previousRegistrations.length > 0) {
-                        return res.status(200).json({
-                        success: false,
-                        message: "Anda sudah mendaftar di sekolah yang berada di zonasi ini melalui jalur lain. Jalur zonasi tidak bisa digunakan.",
-                        });
-                    }
+                    // if (previousRegistrations.length > 0) {
+                    //     return res.status(200).json({
+                    //     success: false,
+                    //     message: "Anda sudah mendaftar di sekolah yang berada di zonasi ini melalui jalur lain. Jalur zonasi tidak bisa digunakan.",
+                    //     });
+                    // }
 
 
                 }
