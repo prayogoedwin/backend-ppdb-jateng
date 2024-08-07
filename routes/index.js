@@ -144,7 +144,7 @@ router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, l
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logoutAdmin);
 
 //master data admin
-router.post('/api/master/sekolah_tujuan_admin', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanAdmin);
+router.post('/admin-api/master/sekolah_tujuan_admin', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanAdmin);
 
 
 //menu menu & action admin
