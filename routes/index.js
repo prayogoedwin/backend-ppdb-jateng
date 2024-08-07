@@ -26,7 +26,7 @@ import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
 import { getSekolahTujuan } from "../controllers/master/SekolahTujuan.js";
-import { getSekolahTujuanAdmin } from "../controllers/master/SekolahTujuanAdmin.js";
+import { getSekolahTujuanAdmin } from "../controllers/master/SekolahTujuan.js";
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
 
