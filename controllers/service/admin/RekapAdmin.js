@@ -4,8 +4,7 @@ import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import { Op } from 'sequelize';
 
 export const countPendaftar = async (req, res) => {
-  const redis_key = 'CountPendaftars'
-  const nisn = req.body.bentuk_pendidikan_id;
+  const redis_key = 'JalurPendaftaranBy_' + req.body.bentuk_pendidikan_id;
 
   try {
     // Check if the data is already in cache
@@ -13,28 +12,58 @@ export const countPendaftar = async (req, res) => {
     if (cacheNya) {
       // Return the cached data
       res.status(200).json({
-        status: 1,
+        success: true,
         message: 'Data di ambil dari cache',
         data: JSON.parse(cacheNya)
       });
     } else {
-      // Count the data from the database
-      const count = await DataPendaftars.count({
+      // Count the total pendaftar
+      const pendaftarCount = await DataPendaftars.count({
         where: {
-          deleted_at: {
-            [Op.is]: null
-          }
+          [Op.or]: [
+            { is_delete: { [Op.is]: null } },
+            { is_delete: 0 }
+          ]
         }
       });
 
+      // Count the verified pendaftar
+      const verifiedCount = await DataPendaftars.count({
+        where: {
+          [Op.or]: [
+            { is_delete: { [Op.is]: null } },
+            { is_delete: 0 }
+          ],
+          is_verified: 1
+        }
+      });
+
+      // Count the activated pendaftar
+      const activatedCount = await DataPendaftars.count({
+        where: {
+          [Op.or]: [
+            { is_delete: { [Op.is]: null } },
+            { is_delete: 0 }
+          ],
+          is_active: 1
+        }
+      });
+
+      // Structure the result
+      const result = {
+        pendaftar: pendaftarCount,
+        pendaftar_terverifikasi: verifiedCount,
+        pendaftar_aktivasi: activatedCount
+      };
+
       // Store the result in Redis cache
-      await redisSet(redis_key, JSON.stringify({ count }));
+      await redisSet(redis_key, JSON.stringify(result));
 
       // Return the result
       res.status(200).json({
         success: true,
         message: "Count of pendaftar retrieved successfully",
-        data: { count }
+        data: result
       });
     }
   } catch (error) {
