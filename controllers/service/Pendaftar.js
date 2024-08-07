@@ -305,20 +305,30 @@ export const getPendaftarDetail = async (req, res) => {
       });
   
       if (profil) {
-        // Ambil detail pendaftaran sekolah dan daftar ulang
-        const perangkinganDetails = await DataPerangkingans.findAll({
+        // Ambil detail pendaftaran sekolah
+        const pendaftaranSekolahDetails = await DataPerangkingans.findAll({
           where: {
             nisn: req.body.nisn,
             is_delete: 0
           },
+          attributes: ['sekolah_tujuan_id'] // Ambil atribut yang diperlukan
+        });
+  
+        // Ambil detail daftar ulang
+        const daftarUlangDetails = await DataPerangkingans.findAll({
+          where: {
+            nisn: req.body.nisn,
+            is_delete: 0,
+            is_daftar_ulang: 1 // Hanya yang is_daftar_ulang = 1
+          },
           attributes: ['sekolah_tujuan_id', 'is_daftar_ulang'] // Ambil atribut yang diperlukan
         });
   
-        let pendaftaranSekolah = null;
-        let daftarUlang = null;
+        let pendaftaranSekolah = [];
+        let daftarUlang = [];
   
-        // Loop melalui perangkinganDetails untuk menemukan pendaftaran sekolah dan daftar ulang
-        for (const detail of perangkinganDetails) {
+        // Loop melalui pendaftaranSekolahDetails untuk mendapatkan detail sekolah
+        for (const detail of pendaftaranSekolahDetails) {
           const sekolahDetail = await SekolahTujuan.findOne({
             where: {
               id: detail.sekolah_tujuan_id
@@ -326,14 +336,25 @@ export const getPendaftarDetail = async (req, res) => {
             attributes: ['id', 'nama', 'npsn', 'daya_tampung'] // Ambil atribut yang diperlukan dari SekolahTujuan
           });
   
-          if (detail.is_daftar_ulang) {
-            daftarUlang = {
-              nama_sekolah: sekolahDetail ? sekolahDetail.nama : null,
-              status: detail.is_daftar_ulang,
-              sekolah_detail: sekolahDetail
-            };
-          } else {
-            pendaftaranSekolah = sekolahDetail;
+          if (sekolahDetail) {
+            pendaftaranSekolah.push(sekolahDetail);
+          }
+        }
+  
+        // Loop melalui daftarUlangDetails untuk mendapatkan detail sekolah daftar ulang
+        for (const detail of daftarUlangDetails) {
+          const sekolahDetail = await SekolahTujuan.findOne({
+            where: {
+              id: detail.sekolah_tujuan_id
+            },
+            attributes: ['id', 'nama', 'npsn', 'daya_tampung'] // Ambil atribut yang diperlukan dari SekolahTujuan
+          });
+  
+          if (sekolahDetail) {
+            daftarUlang.push({
+              nama_sekolah: sekolahDetail.nama,
+              status_daftar_ulang: detail.is_daftar_ulang,
+            });
           }
         }
   

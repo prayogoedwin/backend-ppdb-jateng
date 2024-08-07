@@ -152,6 +152,15 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: true
+    },
+    is_daftar_ulang: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
+    },
+    daftar_ulang_at: {
+        type: DataTypes.DATE,
+        allowNull: true
     }
 }, {
     freezeTableName: true,
