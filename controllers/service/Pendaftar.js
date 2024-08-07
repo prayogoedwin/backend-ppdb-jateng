@@ -309,7 +309,7 @@ export const getPendaftarDetail = async (req, res) => {
         const pendaftaranSekolahDetails = await DataPerangkingans.findAll({
           where: {
             nisn: req.body.nisn,
-            is_delete: 0
+            is_delete: 0,
           },
           attributes: ['sekolah_tujuan_id'] // Ambil atribut yang diperlukan
         });
@@ -353,7 +353,8 @@ export const getPendaftarDetail = async (req, res) => {
           if (sekolahDetail) {
             daftarUlang.push({
               nama_sekolah: sekolahDetail.nama,
-              status_daftar_ulang: detail.is_daftar_ulang,
+              status: detail.is_daftar_ulang,
+            //   sekolah_detail: sekolahDetail
             });
           }
         }
@@ -361,19 +362,19 @@ export const getPendaftarDetail = async (req, res) => {
         // Buat timeline_pendaftar
         const timeline_pendaftar = {
           pendaftaran: 1,
-          verifikasi: profil.is_verified, // Asumsi bahwa resData memiliki atribut is_verified
-          aktivasi: profil.is_active, // Asumsi bahwa resData memiliki atribut is_active
+          verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
+          aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
           pendaftaran_sekolah: pendaftaranSekolah,
           daftar_ulang: daftarUlang
         };
   
+        // Masukkan timeline_pendaftar ke dalam profil
+        profil.setDataValue('timeline_pendaftar', timeline_pendaftar);
+  
         res.status(200).json({
           status: 1,
           message: 'Data berhasil ditemukan',
-          data: {
-            profil, // Data yang ditemukan
-            timeline_pendaftar // Tambahkan timeline_pendaftar ke dalam data
-          }
+          data: profil // Data yang ditemukan, termasuk timeline_pendaftar
         });
   
       } else {
@@ -392,7 +393,7 @@ export const getPendaftarDetail = async (req, res) => {
       });
     }
   }
-  
+
 // User aktivasi
 export const aktivasiAkunPendaftar2 = async (req, res) => {
 
