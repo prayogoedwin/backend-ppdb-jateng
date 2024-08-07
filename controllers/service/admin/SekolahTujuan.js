@@ -123,7 +123,7 @@ export const updateSekolahTujuanAdmin = [
                 return res.status(400).json({ status: 0, message: 'Invalid id' });
             }
 
-            await Timelines.update({
+            await SekolahTujuans.update({
                 daya_tampung, 
                 kuota_zonasi_persentase,
                 kuota_zonasi,
