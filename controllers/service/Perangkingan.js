@@ -591,6 +591,7 @@ export const createPerangkingan = async (req, res) => {
             jalur_pendaftaran_id,
             sekolah_tujuan_id,
             jurusan_id,
+            jarak,
             nisn,
         } = req.body;
 
@@ -639,7 +640,7 @@ export const createPerangkingan = async (req, res) => {
             umur: calculateAge(pendaftar.tanggal_lahir),
             tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
             umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
-            jarak: 20,
+            jarak,
             nilai_raport: pendaftar.nilai_raport_rata,
             nilai_prestasi: pendaftar.nilai_prestasi,
             nilai_akhir,
