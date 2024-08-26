@@ -17,7 +17,6 @@ export const getSekolahTujuan = async (req, res) => {
     const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id;
 
     const sekolah_id = req.body.sekolah_id
-    const nisn = req.body.bentuk_pendidikan_id;
     try {
         const cacheNya = await redisGet(redis_key);
         if (cacheNya) {
@@ -31,23 +30,13 @@ export const getSekolahTujuan = async (req, res) => {
            
         }else{
 
-            if(sekolah_id != null){
+            const resData = await SekolahTujuans.findAll({
+                where: {
+                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
+                },
+                attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
+            });
 
-                const resData = await SekolahTujuans.findAll({
-                    where: {
-                        id: sekolah_id,
-                    },
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
-                });
-
-            }else{
-                const resData = await SekolahTujuans.findAll({
-                    where: {
-                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
-                    },
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
-                });
-            }
             
             if(resData.length > 0){
 

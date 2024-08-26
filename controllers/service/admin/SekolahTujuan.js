@@ -7,7 +7,7 @@ import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 
 export const getSekolahTujuanAdmin = async (req, res) => {
     const redis_key = 'SekolahTujuanAdmin'+req.body.bentuk_pendidikan_id;
-    const nisn = req.body.bentuk_pendidikan_id;
+    const sekolah_id = req.body.sekolah_id;
     try {
         const cacheNya = await redisGet(redis_key);
         if (cacheNya) {
@@ -21,30 +21,69 @@ export const getSekolahTujuanAdmin = async (req, res) => {
            
         }else{
 
-            const resData = await SekolahTujuans.findAll({
-                where: {
-                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
-                },
-            });
-            if(resData.length > 0){
+            if(sekolah_id == ''){
 
-                const newCacheNya = resData;
-                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
-
-                res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': resData
+                const resData = await SekolahTujuans.findAll({
+                    where: {
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
+                    },
+                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
                 });
+
+                if(resData.length > 0){
+
+                    const newCacheNya = resData;
+                    await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
+    
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': resData
+                    });
+                }else{
+    
+                    res.status(200).json({
+                        'status': 0,
+                        'message': 'Data kosong',
+                        'data': resData
+                    });
+    
+                }
+
+               
             }else{
 
-                res.status(200).json({
-                    'status': 0,
-                    'message': 'Data kosong',
-                    'data': resData
+                const resData = await SekolahTujuans.findAll({
+                    where: {
+                        id: sekolah_id
+                    },
+                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
                 });
 
+                if(resData.length > 0){
+
+                    const newCacheNya = resData;
+                    await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
+    
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': resData
+                    });
+                }else{
+    
+                    res.status(200).json({
+                        'status': 0,
+                        'message': 'Data kosong',
+                        'data': resData
+                    });
+    
+                }
+
+               
             }
+
+           
 
         }
     } catch (err){
