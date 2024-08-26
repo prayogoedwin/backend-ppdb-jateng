@@ -348,8 +348,6 @@ export const updatePendaftar = async (req, res) => {
         is_anak_guru_jateng,
         is_pip,
         verifikasikan_disdukcapil,
-        is_verified_disdukcapil,
-        dari_dukcapil
     
     } = req.body;
 
