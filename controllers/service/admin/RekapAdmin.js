@@ -5,7 +5,7 @@ import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import { Op } from 'sequelize';
 
 export const countPendaftar = async (req, res) => {
-  const sekolah_id = req.param.sekolah_id;
+  const sekolah_id = req.params.sekolah_id;
   const redis_key = 'RekapAdminsAll'
 
   try {
