@@ -76,6 +76,7 @@ export const loginAdmin = async (req, res) => {
                 data: {
                     userId: user.id,
                     username: user.username,
+                    nama: user.nama,
                     role: user.role_,
                     sekolah_id: user.sekolah_id,
                     accessToken,
