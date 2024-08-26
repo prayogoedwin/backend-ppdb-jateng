@@ -94,8 +94,6 @@ export const countPendaftar = async (req, res) => {
         const perangkinganSmkCount = await DataPerangkingans.count({
           where: wherePerangkinganSmkCount
         });
-        // cons
-
       
        // Count the total pendaftar
       //  const perangkinganSmkCount = await DataPerangkingans.count({
