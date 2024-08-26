@@ -107,7 +107,7 @@ export const countPendaftar = async (req, res) => {
 
       // Count the verified pendaftar
       const perangkinganSmkCount = await DataPendaftars.count({
-        where: whereClause
+        where: whereClause2
       });
 
       // Structure the result
