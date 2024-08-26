@@ -9,7 +9,8 @@ export const getSekolahTujuanAdmin = async (req, res) => {
     const redis_key = 'SekolahTujuanAdmin'+req.body.bentuk_pendidikan_id;
     const sekolah_id = req.body.sekolah_id;
     try {
-        const cacheNya = await redisGet(redis_key);
+        // const cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
         if (cacheNya) {
 
             res.status(200).json({
@@ -27,7 +28,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
                     where: {
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                     },
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
+                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan'] // Specify the attributes to retrieve
                 });
 
                 if(resData.length > 0){
@@ -57,7 +58,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
                     where: {
                         id: sekolah_id
                     },
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
+                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan'] // Specify the attributes to retrieve
                 });
 
                 if(resData.length > 0){

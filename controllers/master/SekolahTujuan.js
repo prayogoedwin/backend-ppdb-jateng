@@ -15,10 +15,9 @@ import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functio
 
 export const getSekolahTujuan = async (req, res) => {
     const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id;
-    const sekolah_id = req.body.sekolah_id
     try {
-        // const cacheNya = await redisGet(redis_key);
-        const cacheNya = false;
+        const cacheNya = await redisGet(redis_key);
+        // const cacheNya = false;
         if (cacheNya) {
 
             res.status(200).json({
