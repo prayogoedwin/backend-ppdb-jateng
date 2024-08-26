@@ -3,6 +3,7 @@ import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
+import DataUsers from '../../../models/service/DataUsersModel.js';
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -45,6 +46,28 @@ export const getDataPendaftarForVerif = async (req, res) => {
             });
            
         }else{
+
+            const adminNya = req.user.userId;
+
+            const dataAdminNya = await DataUsers.findOne({
+                where: {
+                    id: adminNya,
+                    is_active: 1,
+                    is_delete: 0
+                }
+            });
+
+
+            let whereFor = {
+                [Op.or]: [
+                  { is_delete: { [Op.is]: null } },
+                  { is_delete: 0 }
+                ]
+              };
+      
+            if (dataAdminNya.role_ == 101) {
+                whereFor.verifikasikan_disdukcapil = 1
+            }
 
             const resData = await DataPendaftars.findAll({
                 attributes: { exclude: ['password_'] },
@@ -321,8 +344,10 @@ export const updatePendaftar = async (req, res) => {
         is_anak_panti,
         is_anak_keluarga_tidak_mampu,
         is_anak_guru_jateng,
-        is_pip
-    
+        is_pip,
+        verifikasikan_disdukcapil,
+        is_verified_disdukcapil,
+        dari_dukcapil
     
     } = req.body;
 
@@ -407,7 +432,7 @@ export const updatePendaftar = async (req, res) => {
                 is_anak_guru_jateng,
                 is_pip,
                 updated_at: new Date(),
-                updated_by: req.user.userId
+                updated_by: req.user.userId,
 
             },
             {
@@ -420,6 +445,29 @@ export const updatePendaftar = async (req, res) => {
                 }
             }
         );
+
+        if(dari_dukcapil == 1){
+
+            await DataPendaftars.update(
+                {
+                    verifikasikan_disdukcapil,
+                    is_verified_disdukcapil,
+                    disdukcapil_at: new Date(),
+                    disdukcapil_by: req.user.userId,
+    
+                },
+                {
+                    where: {
+                        id: decodedId,
+                        [Op.or]: [
+                            { is_delete: 0 }, // Entri yang belum dihapus
+                            { is_delete: null } // Entri yang belum diatur
+                        ]
+                    }
+                }
+            );
+
+        }
 
         await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
 

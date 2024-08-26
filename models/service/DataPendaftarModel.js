@@ -254,6 +254,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.JSON,
         allowNull: true,
     },
+    verifikasikan_disdukcapil: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    is_verified_disdukcapil: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    disdukcapil_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    disdukcapil_at: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    }
     
     
 }, {
