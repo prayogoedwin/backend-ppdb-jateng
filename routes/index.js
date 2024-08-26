@@ -182,7 +182,7 @@ router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyM
 router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, resetPasswordById);
 
 //rekap
-router.get('/admin-api/rekap/pendaftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
+router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
 
 //role
 router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
