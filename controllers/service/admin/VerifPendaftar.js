@@ -434,6 +434,7 @@ export const updatePendaftar = async (req, res) => {
                 is_pip,
                 updated_at: new Date(),
                 updated_by: req.user.userId,
+                verifikasikan_disdukcapil,
 
             },
             {
