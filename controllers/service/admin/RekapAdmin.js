@@ -61,7 +61,7 @@ export const countPendaftar = async (req, res) => {
           bentuk_pendidikan_id: 13
         };
 
-        if (sekolah_id !== '') {
+        if (sekolah_id != 0) {
           wherePerangkinganSmaCount.sekolah_tujuan_id = sekolah_id;
         }
 
@@ -87,7 +87,7 @@ export const countPendaftar = async (req, res) => {
           bentuk_pendidikan_id: 15
         };
 
-        if (sekolah_id !== '') {
+        if (sekolah_id != 0) {
           wherePerangkinganSmkCount.sekolah_tujuan_id = sekolah_id;
         }
 
