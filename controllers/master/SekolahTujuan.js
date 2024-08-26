@@ -35,7 +35,7 @@ export const getSekolahTujuan = async (req, res) => {
 
                 const resData = await SekolahTujuans.findAll({
                     where: {
-                        id: req.body.sekolah_id,
+                        id: sekolah_id,
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                     },
                     attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
