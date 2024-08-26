@@ -93,7 +93,8 @@ export const getDataPendaftarForVerif = async (req, res) => {
                         as: 'data_wilayah_prov',
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
                     }
-                ]
+                ],
+                where: whereFor
             });
             if(resData != null){
 
