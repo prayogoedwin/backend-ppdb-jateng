@@ -21,7 +21,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
            
         }else{
 
-            if(sekolah_id == ''){
+            if(sekolah_id == null){
 
                 const resData = await SekolahTujuans.findAll({
                     where: {
