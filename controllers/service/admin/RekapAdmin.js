@@ -5,6 +5,7 @@ import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import { Op } from 'sequelize';
 
 export const countPendaftar = async (req, res) => {
+  const sekolah_id = req.body.sekolah_id;
   const redis_key = 'RekapAdminsAll'
 
   try {
@@ -51,24 +52,62 @@ export const countPendaftar = async (req, res) => {
       });
 
        // Count the total pendaftar
-       const perangkinganSmaCount = await DataPerangkingans.count({
-        where: {
-          [Op.or]: [
-            { is_delete: { [Op.is]: null } },
-            { is_delete: 0 }
-          ],
-          bentuk_pendidikan_id: 13
-        }
+      //  const perangkinganSmaCount = await DataPerangkingans.count({
+      //   where: {
+      //     [Op.or]: [
+      //       { is_delete: { [Op.is]: null } },
+      //       { is_delete: 0 }
+      //     ],
+      //     bentuk_pendidikan_id: 13
+      //   }
+      // });
+      // Define your where clause with the initial conditions
+      let whereClause = {
+        [Op.or]: [
+          { is_delete: { [Op.is]: null } },
+          { is_delete: 0 }
+        ],
+        is_verified: 1
+      };
+
+      // Add the sekolah_id condition if it's not an empty string
+      if (sekolah_id !== '') {
+        whereClause.sekolah_id = sekolah_id;
+      }
+
+      // Count the verified pendaftar
+      const perangkinganSmaCount = await DataPendaftars.count({
+        where: whereClause
       });
+
+
        // Count the total pendaftar
-       const perangkinganSmkCount = await DataPerangkingans.count({
-        where: {
-          [Op.or]: [
-            { is_delete: { [Op.is]: null } },
-            { is_delete: 0 }
-          ],
-          bentuk_pendidikan_id: 15
-        }
+      //  const perangkinganSmkCount = await DataPerangkingans.count({
+      //   where: {
+      //     [Op.or]: [
+      //       { is_delete: { [Op.is]: null } },
+      //       { is_delete: 0 }
+      //     ],
+      //     bentuk_pendidikan_id: 15
+      //   }
+      // });
+
+      let whereClause2 = {
+        [Op.or]: [
+          { is_delete: { [Op.is]: null } },
+          { is_delete: 0 }
+        ],
+        bentuk_pendidikan_id: 15
+      };
+
+      // Add the sekolah_id condition if it's not an empty string
+      if (sekolah_id !== '') {
+        whereClause2.sekolah_id = sekolah_id;
+      }
+
+      // Count the verified pendaftar
+      const perangkinganSmkCount = await DataPendaftars.count({
+        where: whereClause
       });
 
       // Structure the result
