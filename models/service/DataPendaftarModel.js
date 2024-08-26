@@ -267,7 +267,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
     },
     disdukcapil_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DATE,
         allowNull: true,
     }
     
