@@ -15,6 +15,8 @@ import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functio
 
 export const getSekolahTujuan = async (req, res) => {
     const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id;
+
+    const sekolah_id = eq.body.sekolah_id
     const nisn = req.body.bentuk_pendidikan_id;
     try {
         const cacheNya = await redisGet(redis_key);
@@ -29,12 +31,25 @@ export const getSekolahTujuan = async (req, res) => {
            
         }else{
 
-            const resData = await SekolahTujuans.findAll({
-                where: {
-                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
-                },
-                attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
-            });
+            if(sekolah_id != null){
+
+                const resData = await SekolahTujuans.findAll({
+                    where: {
+                        id: req.body.sekolah_id,
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
+                    },
+                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
+                });
+
+            }else{
+                const resData = await SekolahTujuans.findAll({
+                    where: {
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
+                    },
+                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
+                });
+            }
+            
             if(resData.length > 0){
 
                 const newCacheNya = resData;
