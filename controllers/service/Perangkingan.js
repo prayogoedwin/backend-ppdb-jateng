@@ -840,13 +840,13 @@ export const cetakBuktiPerangkingan = async (req, res) => {
         const perangkinganData = perangkingan.toJSON();
 
     
-        const sekolah_tujuan = {
-            npsn : '12345678',
-            nama : 'SMA / SMK Dummy'
-        }
+        // const sekolah_tujuan = {
+        //     npsn : '12345678',
+        //     nama : 'SMA / SMK Dummy'
+        // }
 
-        // Add `sekolah_tujuan` to the plain object
-        perangkinganData.sekolah_tujuan = sekolah_tujuan;
+        // // Add `sekolah_tujuan` to the plain object
+        // perangkinganData.sekolah_tujuan = sekolah_tujuan;
 
         const datas = {
             pendaftar: pendaftar,
