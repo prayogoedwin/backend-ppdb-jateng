@@ -831,6 +831,11 @@ export const cetakBuktiPerangkingan = async (req, res) => {
                     as: 'sekolah_tujuan',
                     attributes: ['nama']
                 },
+                {
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['nama']
+                }
             ]
         });
 
