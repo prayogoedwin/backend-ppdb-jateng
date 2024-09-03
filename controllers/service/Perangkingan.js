@@ -116,7 +116,7 @@ export const getPerangkinganDetail = async (req, res) => {
         const decodedIdPerangkingan = decodeId(id_perangkingan);
 
         // Fetch the data
-        const resData = await DataPerangkingans.findAll({
+        const resData = await DataPerangkingans.findOne({
             where: {
                 id: decodedIdPerangkingan, // Pastikan id_pendaftar adalah string
                 is_delete: 0
@@ -138,25 +138,16 @@ export const getPerangkinganDetail = async (req, res) => {
         // Check if data is found
         if (resData && resData.length > 0) {
 
-            const resDatas = resData.map(item => {
-
-                const jsonItem = item.toJSON();
-                jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
-                // jsonItem.pendaftar = profil;
-                delete jsonItem.id; // Hapus kolom id dari output JSON
-            
-                return jsonItem;
-            });
-
-
-
-
+            const jsonItem = resData.toJSON();
+            jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
+            delete jsonItem.id; // Remove the original ID from the output
 
             res.status(200).json({
                 status: 1,
                 message: 'Data berhasil ditemukan',
-                data: resDatas
+                data: jsonItem
             });
+
         } else {
             res.status(200).json({
                 status: 0,
