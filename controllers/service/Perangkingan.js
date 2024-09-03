@@ -106,6 +106,65 @@ export const getPerangkinganSaya = async (req, res) => {
     }
 };
 
+export const getPerangkinganDetail = async (req, res) => {
+    try {
+        const { id_pendaftar } = req.body;
+
+        // Decode the ID
+        const decodedIdPendaftar = decodeId(id_pendaftar);
+
+        // Fetch the data
+        const resData = await DataPerangkingans.findAll({
+            where: {
+                id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
+                is_delete: 0
+            },
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['npsn', 'nama']
+                },{
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['bentuk_pendidikan_id', 'nama']
+                }
+            ]
+        });
+
+        const resDatas = resData.map(item => {
+            const jsonItem = item.toJSON();
+            jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
+            jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
+            delete jsonItem.id; // Hapus kolom id dari output JSON
+            delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
+           
+            return jsonItem;
+        });
+
+        // Check if data is found
+        if (resData && resData.length > 0) {
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: resDatas
+            });
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: 'Data kosong',
+                data: []
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
 export const getPerangkingan = async (req, res) => {
 
     try {

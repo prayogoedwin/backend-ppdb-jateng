@@ -2,6 +2,7 @@ import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import SekolahTujuan from "../../models/master/SekolahTujuanModel.js"; // Import model SekolahTujuan
+import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -235,7 +236,30 @@ export const getPendaftarforCetak = async (req, res) => {
             where: {
                 kode_verifikasi: req.body.kode_verifikasi,
                 is_delete: 0
-            }
+            },
+            include: [
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kec',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kot',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_prov',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                }
+            ],
+
         });
 
         if (resData) { // Check if resData is not null
