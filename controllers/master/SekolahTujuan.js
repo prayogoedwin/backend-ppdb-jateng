@@ -33,7 +33,7 @@ export const getSekolahTujuan = async (req, res) => {
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                 },
-                attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
             });
 
             
