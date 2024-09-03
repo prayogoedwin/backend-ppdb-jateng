@@ -829,7 +829,7 @@ export const cetakBuktiPerangkingan = async (req, res) => {
                 {
                     model: SekolahTujuan,
                     as: 'sekolah_tujuan',
-                    attributes: ['nama','alamat']
+                    attributes: ['nama']
                 },
             ]
         });
