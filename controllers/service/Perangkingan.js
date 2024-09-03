@@ -138,20 +138,49 @@ export const getPerangkinganDetail = async (req, res) => {
         // Check if data is found
         if (resData) {
 
+            const profil = await DataPendaftars.findOne({
+                where: {
+                  id: resData.id_pendaftar,
+                  is_delete: 0
+                },
+                include: [
+                    {
+                        model: StatusDomisilis,
+                        as: 'status_domisili_name',
+                        attributes: ['nama']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    }
+                ],
+            });
 
-            // const resDatas = resData.map(item => {
-
-
-            //     const jsonItem = item.toJSON();
-            //     jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
-            //     // jsonItem.pendaftar = profil;
-            //     delete jsonItem.id; // Hapus kolom id dari output JSON
-            
-            //     return jsonItem;
-            // });
+             // Convert to JSON and remove the id from profil
+             const jsonProfil = profil ? profil.toJSON() : null;
+             if (jsonProfil) {
+                 delete jsonProfil.id;
+             }
 
             const jsonItem = resData.toJSON();
             jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
+            jsonItem.data_pendaftar = jsonProfil;
             delete jsonItem.id; // Remove the original ID from the output
 
             res.status(200).json({
