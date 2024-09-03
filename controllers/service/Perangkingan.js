@@ -6,6 +6,7 @@ import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
+import StatusDomisilis from '../../models/master/StatusDomisilis.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -785,6 +786,11 @@ export const cetakBuktiPerangkingan = async (req, res) => {
                 is_delete: 0
             },
             include: [
+                {
+                    model: StatusDomisilis,
+                    as: 'status_domisili',
+                    attributes: ['id','nama']
+                },
                 {
                     model: WilayahVerDapodik,
                     as: 'data_wilayah',

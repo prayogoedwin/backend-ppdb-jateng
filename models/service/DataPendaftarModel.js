@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 import EzSekolahs from '../master/SekolahModel.js';
 import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
+import StatusDomisilis from '../master/StatusDomisiliModel.js';
 import { encodeId } from '../../middleware/EncodeDecode.js'; // Import fungsi encodeId
 
 const { DataTypes } = Sequelize;
@@ -278,10 +279,12 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
 });
 // 
 DataPesertaDidiks.belongsTo(EzSekolahs, { as: 'data_sekolah', foreignKey: 'sekolah_asal_id' });
-DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah', foreignKey: 'kelurahan_id', targetKey: 'kode_wilayah' });
+DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'status_domisili', foreignKey: 'status_domisili', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kec', foreignKey: 'kecamatan_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kot', foreignKey: 'kabkota_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_prov', foreignKey: 'provinsi_id', targetKey: 'kode_wilayah' });
+DataPesertaDidiks.belongsTo(StatusDomisilis, { as: 'data_sekolah', foreignKey: 'sekolah_asal_id' });
+
 
 
 export default DataPesertaDidiks;
