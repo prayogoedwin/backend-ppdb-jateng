@@ -787,9 +787,14 @@ export const cetakBuktiPerangkingan = async (req, res) => {
             },
             include: [
                 {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['nama','alamat']
+                },
+                {
                     model: StatusDomisilis,
                     as: 'status_domisili_name',
-                    attributes: ['id','nama']
+                    attributes: ['nama']
                 },
                 {
                     model: WilayahVerDapodik,
