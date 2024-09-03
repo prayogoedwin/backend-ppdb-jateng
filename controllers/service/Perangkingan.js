@@ -787,11 +787,6 @@ export const cetakBuktiPerangkingan = async (req, res) => {
             },
             include: [
                 {
-                    model: SekolahTujuan,
-                    as: 'sekolah_tujuan',
-                    attributes: ['nama','alamat']
-                },
-                {
                     model: StatusDomisilis,
                     as: 'status_domisili_name',
                     attributes: ['nama']
@@ -829,7 +824,14 @@ export const cetakBuktiPerangkingan = async (req, res) => {
             where: {
                 id: id_perangkingan_decode,
                 is_delete: 0
-            }
+            },
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['nama','alamat']
+                },
+            ]
         });
 
         if (!perangkingan) {
