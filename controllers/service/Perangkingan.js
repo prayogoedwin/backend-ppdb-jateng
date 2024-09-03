@@ -788,7 +788,7 @@ export const cetakBuktiPerangkingan = async (req, res) => {
             include: [
                 {
                     model: StatusDomisilis,
-                    as: 'status_domisili',
+                    as: 'status_domisili_name',
                     attributes: ['id','nama']
                 },
                 {
