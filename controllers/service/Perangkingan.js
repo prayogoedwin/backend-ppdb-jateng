@@ -136,7 +136,19 @@ export const getPerangkinganDetail = async (req, res) => {
 
 
         // Check if data is found
-        if (resData && resData.length > 0) {
+        if (resData) {
+
+
+            // const resDatas = resData.map(item => {
+
+
+            //     const jsonItem = item.toJSON();
+            //     jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
+            //     // jsonItem.pendaftar = profil;
+            //     delete jsonItem.id; // Hapus kolom id dari output JSON
+            
+            //     return jsonItem;
+            // });
 
             const jsonItem = resData.toJSON();
             jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
