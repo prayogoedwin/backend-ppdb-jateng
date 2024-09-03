@@ -6,7 +6,7 @@ import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
-import StatusDomisilis from '../../models/master/StatusDomisilis.js';
+import StatusDomisilis from '../../models/master/StatusDomisiliModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
