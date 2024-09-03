@@ -5,6 +5,7 @@ import Zonasis from "../../models/service/ZonasiModel.js";
 import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
+import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -782,7 +783,30 @@ export const cetakBuktiPerangkingan = async (req, res) => {
             where: {
                 id: id_pendaftar_decode,
                 is_delete: 0
-            }
+            },
+            include: [
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kec',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kot',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_prov',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                }
+            ],
+
         });
 
         if (!pendaftar) {
