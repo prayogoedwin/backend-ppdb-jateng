@@ -100,13 +100,13 @@ export const logoutUser = [
 // Reset Password API
 export const resetPassword = [
     async (req, res) => {
-        const { username, password_lama, password_baru } = req.body;
+        const { nisn, password_lama, password_baru } = req.body;
 
         try {
             // Check if user exists
             const user = await DataPendaftars.findOne({
                 where: {
-                    nisn: username, // Assuming 'nisn' is the username field
+                    nisn: nisn, // Assuming 'nisn' is the username field
                     is_active: 1,
                     is_verified: 1,
                     is_delete: 0
