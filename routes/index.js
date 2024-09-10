@@ -38,7 +38,7 @@ import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaf
 import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, getPerangkinganDetail } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
-import { loginUser, logoutUser } from '../controllers/service/AuthPublic.js';
+import { loginUser, logoutUser, resetPassword } from '../controllers/service/AuthPublic.js';
 
 
 //Admin
@@ -120,6 +120,8 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutUser);
+router.post('/api/auth/reset', ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
+
 router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cekPerangkingan);
 router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
 router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cetakBuktiPerangkingan);

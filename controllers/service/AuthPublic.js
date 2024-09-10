@@ -96,3 +96,49 @@ export const logoutUser = [
         }
     }
 ];
+
+// Reset Password API
+export const resetPassword = [
+    async (req, res) => {
+        const { username, password_lama, password_baru } = req.body;
+
+        try {
+            // Check if user exists
+            const user = await DataPendaftars.findOne({
+                where: {
+                    nisn: username, // Assuming 'nisn' is the username field
+                    is_active: 1,
+                    is_verified: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (!user) {
+                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum diaktifasi / verifikasi' });
+            }
+
+            // Compare old password
+            const isMatch = await bcrypt.compare(password_lama, user.password_);
+            if (!isMatch) {
+                return res.status(200).json({ status: 0, message: 'Password lama salah' });
+            }
+
+            // Hash the new password
+            const hashedNewPassword = await bcrypt.hash(password_baru, 10);
+
+            // Update the password
+            user.password_ = hashedNewPassword;
+            await user.save({ fields: ['password_', 'updated_at'] });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Password berhasil diubah',
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
