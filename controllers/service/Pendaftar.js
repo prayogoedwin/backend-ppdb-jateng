@@ -10,6 +10,11 @@ import fs from "fs";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
+import { fileURLToPath } from 'url';
+
+// Mendapatkan __filename dan __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configure multer storage
 const storage = multer.diskStorage({
@@ -382,6 +387,28 @@ export const getPendaftarDetail = async (req, res) => {
             });
           }
         }
+
+          // Tambahkan base64 ke file_tambahan
+          let fileTambahanWithBase64 = profil.file_tambahan.map(file => {
+            const filePath = path.join(__dirname, `../upload/berkas/${req.body.nisn}/${file.filename}`);
+            
+            let base64 = '';
+
+            try {
+                const fileBuffer = fs.readFileSync(filePath);
+                base64 = fileBuffer.toString('base64');
+            } catch (err) {
+                console.error(`Error reading file ${file.filename}:`, err);
+            }
+
+            return {
+                ...file,
+                base64: base64
+            };
+        });
+
+        // Masukkan file_tambahan yang sudah di-update dengan base64 ke profil
+        profil.setDataValue('file_tambahan', fileTambahanWithBase64);
   
         // Buat timeline_pendaftar
         const timeline_pendaftar = {
