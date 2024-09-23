@@ -9,6 +9,11 @@ import path from "path";
 import fs from "fs";
 import { Op } from 'sequelize';
 
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -145,7 +150,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
     }
 }
 
-export const getDataPendaftarById = async (req, res) => {
+export const getDataPendaftarById_ = async (req, res) => {
         const { id } = req.params; // Ambil id dari params URL
         try {
             const resData = await DataPendaftars.findOne({
@@ -188,19 +193,52 @@ export const getDataPendaftarById = async (req, res) => {
                 };
                 delete data.id; // Remove original ID from the response
 
+                const fileBasePath = path.join(__dirname, 'upload', 'berkas', resData.nisn);
+
+                // Helper function to convert file to base64
+                const getFileBase64 = (filePath) => {
+                    try {
+                        const fileData = fs.readFileSync(filePath);
+                        return fileData.toString('base64');
+                    } catch (err) {
+                        console.error('Error reading file:', err);
+                        return null;
+                    }
+                };
+
                 // Custom value for dok_piagam and dok_kk
                
                 if (data.dok_kk) {
-                    data.dok_kk = baseUrl + data.dok_kk;
+                    // data.dok_kk = baseUrl + data.dok_kk;
+                    const filePath = path.join(fileBasePath, data.dok_kk);
+                    data.dok_kk = {
+                        url: baseUrl + data.dok_kk,
+                        base64: getFileBase64(filePath)
+                    };
                 }
                 if (data.dok_pakta_integritas) {
-                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;
+                    // data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;
+                    const filePath = path.join(fileBasePath, data.dok_pakta_integritas);
+                    data.dok_pakta_integritas = {
+                        url: baseUrl + data.dok_pakta_integritas,
+                        base64: getFileBase64(filePath)
+                    };
                 }
                 if (data.dok_suket_nilai_raport) {
-                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;
+                    // data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;
+                    const filePath = path.join(fileBasePath, data.dok_suket_nilai_raport);
+                    data.dok_suket_nilai_raport = {
+                        url: baseUrl + data.dok_suket_nilai_raport,
+                        base64: getFileBase64(filePath)
+                    };
                 }
                 if (data.dok_piagam) {
-                    data.dok_piagam = baseUrl + data.dok_piagam;
+                    // data.dok_piagam = baseUrl + data.dok_piagam;
+                    const filePath = path.join(fileBasePath, data.dok_piagam);
+                    data.dok_piagam = {
+                        url: baseUrl + data.dok_piagam,
+                        base64: getFileBase64(filePath)
+                    };
                 }
 
                 res.status(200).json({
@@ -245,6 +283,90 @@ export const getDataPendaftarById = async (req, res) => {
 
         
 }
+
+export const getDataPendaftarById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const resData = await DataPendaftars.findOne({
+            where: {
+                id: decodeId(id),
+                is_delete: 0
+            },
+            include: [
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kec',
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kot',
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_prov',
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                }
+            ],
+        });
+
+        if (resData != null) {
+            const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan
+
+            const data = {
+                id_: id,
+                ...resData.toJSON(), // Convert Sequelize instance to plain object
+            };
+            delete data.id; // Remove original ID from the response
+
+             // Proses file tambahan dengan base64 encoding
+             if (data.file_tambahan && Array.isArray(data.file_tambahan)) {
+                const fileTambahanWithBase64 = data.file_tambahan.map(file => {
+                    const filePath = path.join(__dirname, `../upload/berkas/${resData.nisn}/${file.filename}`);
+                    let base64 = '';
+
+                    try {
+                        const fileBuffer = fs.readFileSync(filePath); // Baca file dari path
+                        base64 = fileBuffer.toString('base64'); // Konversi ke base64
+                    } catch (err) {
+                        console.error(`Error reading file ${file.filename}:`, err); // Jika ada error, tampilkan di console
+                    }
+
+                    return {
+                        ...file,
+                        base64: base64 // Tambahkan base64 ke file_tambahan
+                    };
+                });
+
+                // Update data.file_tambahan dengan file yang sudah di-encode
+                data.file_tambahan = fileTambahanWithBase64;
+            }
+
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: data
+            });
+
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan',
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
 
 export const verifikasiPendaftar = async (req, res) => {
         const { id, is_verified } = req.body;
