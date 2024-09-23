@@ -325,6 +325,54 @@ export const getDataPendaftarById = async (req, res) => {
             };
             delete data.id; // Remove original ID from the response
 
+            const fileBasePath = path.join(__dirname, 'upload', 'berkas', resData.nisn);
+
+            // Helper function to convert file to base64
+            const getFileBase64 = (filePath) => {
+                try {
+                    const fileData = fs.readFileSync(filePath);
+                    return fileData.toString('base64');
+                } catch (err) {
+                    console.error('Error reading file:', err);
+                    return null;
+                }
+            };
+
+            // Custom value for dok_piagam and dok_kk
+           
+            if (data.dok_kk) {
+                // data.dok_kk = baseUrl + data.dok_kk;
+                const filePath = path.join(fileBasePath, data.dok_kk);
+                data.dok_kk = {
+                    url: baseUrl + data.dok_kk,
+                    base64: getFileBase64(filePath)
+                };
+            }
+            if (data.dok_pakta_integritas) {
+                // data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;
+                const filePath = path.join(fileBasePath, data.dok_pakta_integritas);
+                data.dok_pakta_integritas = {
+                    url: baseUrl + data.dok_pakta_integritas,
+                    base64: getFileBase64(filePath)
+                };
+            }
+            if (data.dok_suket_nilai_raport) {
+                // data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;
+                const filePath = path.join(fileBasePath, data.dok_suket_nilai_raport);
+                data.dok_suket_nilai_raport = {
+                    url: baseUrl + data.dok_suket_nilai_raport,
+                    base64: getFileBase64(filePath)
+                };
+            }
+            if (data.dok_piagam) {
+                // data.dok_piagam = baseUrl + data.dok_piagam;
+                const filePath = path.join(fileBasePath, data.dok_piagam);
+                data.dok_piagam = {
+                    url: baseUrl + data.dok_piagam,
+                    base64: getFileBase64(filePath)
+                };
+            }
+
              // Proses file tambahan dengan base64 encoding
              if (data.file_tambahan && Array.isArray(data.file_tambahan)) {
                 const fileTambahanWithBase64 = data.file_tambahan.map(file => {
