@@ -155,10 +155,9 @@ export const verifikasiOtpUser = [
             // Check if user exists
             const user = await DataPendaftars.findOne({
                 where: {
-
                     id: decodeId(userid),
-                    access_token: otp,
                     nisn,
+                    // access_token: otp,
                     is_active: 1,
                     is_verified: 1,
                     is_delete: 0
@@ -168,6 +167,10 @@ export const verifikasiOtpUser = [
 
             if (!user) {
                 return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+            }
+
+            if(user.access_token != otp){
+                return res.status(200).json({ status: 0, message: 'OTP salah' });
             }
 
             // Check if OTP has expired

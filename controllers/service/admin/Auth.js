@@ -232,7 +232,7 @@ export const verifikasiOtp = async (req, res) => {
                 // username,
                 id: decodeId(userid),
                 username: username,
-                access_token: otp,
+                // access_token: otp,
                 is_active: 1,
                 is_delete: 0
             }
@@ -240,6 +240,10 @@ export const verifikasiOtp = async (req, res) => {
 
         if (!user) {
             return res.status(200).json({ status: 0, message: 'Proses Login 2 Fakor Gagal, OTP Salah 1' });
+        }
+
+        if(user.access_token != otp){
+            return res.status(200).json({ status: 0, message: 'OTP salah' });
         }
 
          // Check if OTP has expired
