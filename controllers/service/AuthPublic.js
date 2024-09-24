@@ -120,10 +120,21 @@ export const loginUser = [
 
 
 
-        // Save OTP to access_token field
-        user.access_token = otpCode; // Store OTP in access_token field
-        user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
-        await user.save({ fields: ['access_token', 'otp_expiration'] });
+            const otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
+            // await user.save({ fields: ['access_token', 'otp_expiration'] });
+            // Save tokens to user record with where clause (based on user id)
+            await DataPendaftars.update(
+                {
+                    access_token: otpCode,
+                    otp_expiration: otp_expiration,
+                },
+                {
+                    where: {
+                        id: user.id
+                    }
+                }
+            );
+
 
             res.status(200).json({
                 status: 1,
