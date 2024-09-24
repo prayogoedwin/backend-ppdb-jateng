@@ -38,12 +38,12 @@ import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaf
 import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, getPerangkinganDetail } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
-import { loginUser, logoutUser, resetPassword } from '../controllers/service/AuthPublic.js';
+import { loginUser, logoutUser, resetPassword, forgotPassword } from '../controllers/service/AuthPublic.js';
 
 
 //Admin
 //Auth
-import { generateSuperAdmin, loginAdmin, logoutAdmin } from '../controllers/service/admin/Auth.js';
+import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
 import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar, updatePendaftar } from "../controllers/service/admin/VerifPendaftar.js";
@@ -121,6 +121,7 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, loginUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logoutUser);
 router.post('/api/auth/ubah_password', ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
+router.post('/api/auth/lupa_password', ipWhitelistMiddleware, appKeyMiddleware, forgotPassword);
 
 router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cekPerangkingan);
 router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
@@ -154,7 +155,10 @@ router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
 router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
+router.post('/admin-api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, verifikasiOtp);
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logoutAdmin);
+
+
 
 //master data admin
 router.post('/admin-api/master/sekolah_tujuan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanAdmin);

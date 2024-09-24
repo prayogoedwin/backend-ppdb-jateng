@@ -135,7 +135,7 @@ export const loginAdmin = async (req, res) => {
             // Failed to send OTP via WhatsApp, return the error message from the API
             return res.status(500).json({
                 status: 0,
-                message: whatsappResponse.message || 'Failed to send OTP via WhatsApp'
+                message: whatsappResponse.message || 'Gagal kirim OTP melalui whatsapp'
             });
         }
 
@@ -149,12 +149,12 @@ export const loginAdmin = async (req, res) => {
         // Respond with OTP status
         return res.status(200).json({
             status: 1,
-            message: 'OTP has been sent via WhatsApp',
+            message: 'OTP berhasil dikirim via WhatsApp',
             data: {
                 userId: encodeId(user.id),
                 username: user.username,
                 otpRequired: true, // Inform client that OTP is required,
-                no: user.whatsapp
+                otp_expiration: user.otp_expiration
             }
         });
         
@@ -220,7 +220,57 @@ async function sendOtpToWhatsapp(phone, message) {
     }
 }
 
+// User login
+export const verifikasiOtp = async (req, res) => {
 
+    const { userid, username, otp } = req.body;
+
+    try {
+        // Check if user exists
+        const user = await DataUsers.findOne({
+            where: {
+                // username,
+                id: decodeId(userid),
+                username: username,
+                access_token: otp,
+                is_active: 1,
+                is_delete: 0
+            }
+        });
+
+        if (!user) {
+            return res.status(200).json({ status: 0, message: 'Proses Login 2 Fakor Gagal, OTP Salah 1' });
+        }
+
+        // Generate tokens
+        const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
+        const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
+
+        // Save tokens to user record
+        user.access_token = accessToken;
+        user.access_token_refresh = refreshToken;
+        await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+
+        res.status(200).json({
+            status: 1,
+            message: 'Berhasil masuk',
+            data: {
+                userId: encodeId(user.id),
+                username: user.username,
+                nama: user.nama,
+                role: user.role_,
+                sekolah_id: user.sekolah_id,
+                accessToken,
+                refreshToken
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
 
 // User logout
 export const logoutAdmin = async (req, res) => {
