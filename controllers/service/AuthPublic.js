@@ -123,7 +123,7 @@ export const loginUser = [
         // Save OTP to access_token field
         user.access_token = otpCode; // Store OTP in access_token field
         user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
-        await user.save({ fields: ['access_token', 'otp_expiration', 'updated_at'] });
+        await user.save({ fields: ['access_token', 'otp_expiration'] });
 
             res.status(200).json({
                 status: 1,
@@ -174,12 +174,6 @@ export const verifikasiOtpUser = [
             const currentTime = new Date();
             if (user.otp_expiration && user.otp_expiration < currentTime) {
                 return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
-            }
-
-            // Compare password
-            const isMatch = await bcrypt.compare(password, user.password_);
-            if (!isMatch) {
-                return res.status(200).json({ status: 0, message: 'NISN / password salah' });
             }
 
             // Generate tokens

@@ -276,6 +276,14 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,      // Sesuaikan dengan kebutuhan Anda
         defaultValue: null    // Atur defaultValue jika diperlukan
     },
+    access_token: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    access_token_refresh: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     
     
 }, {
