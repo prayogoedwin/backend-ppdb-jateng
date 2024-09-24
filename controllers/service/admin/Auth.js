@@ -127,7 +127,7 @@ export const loginAdmin = async (req, res) => {
 
        
         // Send OTP via WhatsApp
-        const otpMessage = `Your OTP code is ${otpCode}`;
+        const otpMessage = `Berikut kode OTP anda ${otpCode}`;
         const whatsappResponse = await sendOtpToWhatsapp(user.whatsapp, otpMessage);
 
         // Check if WhatsApp OTP sending was successful
@@ -241,6 +241,12 @@ export const verifikasiOtp = async (req, res) => {
         if (!user) {
             return res.status(200).json({ status: 0, message: 'Proses Login 2 Fakor Gagal, OTP Salah 1' });
         }
+
+         // Check if OTP has expired
+         const currentTime = new Date();
+         if (user.otp_expiration && user.otp_expiration < currentTime) {
+             return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
+         }
 
         // Generate tokens
         const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });

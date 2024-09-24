@@ -270,7 +270,12 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     disdukcapil_at: {
         type: DataTypes.DATE,
         allowNull: true,
-    }
+    },
+    otp_expiration: {
+        type: DataTypes.DATE, // Gunakan DataTypes.DATE untuk TIMESTAMP
+        allowNull: true,      // Sesuaikan dengan kebutuhan Anda
+        defaultValue: null    // Atur defaultValue jika diperlukan
+    },
     
     
 }, {

@@ -14,11 +14,8 @@ const generateRandomPassword = () => {
     return password;
 };
 
-
-
-
 // User login
-export const loginUser = [
+export const loginUser_S = [
 
     async (req, res) => {
 
@@ -62,6 +59,81 @@ export const loginUser = [
                     nisn: user.nisn,
                     accessToken,
                     refreshToken
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
+
+
+
+
+// User login
+export const loginUser = [
+
+    async (req, res) => {
+
+        const { nisn, password } = req.body;
+
+        try {
+            // Check if user exists
+            const user = await DataPendaftars.findOne({
+                where: {
+                    nisn,
+                    is_active: 1,
+                    is_verified: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (!user) {
+                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+            }
+
+            // Compare password
+            const isMatch = await bcrypt.compare(password, user.password_);
+            if (!isMatch) {
+                return res.status(200).json({ status: 0, message: 'NISN / password salah' });
+            }
+
+            // Generate OTP
+            // const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
+            const otpCode = generateOtp(5); // Generate 5-character OTP
+
+        
+            // Send OTP via WhatsApp
+            const otpMessage = `Berikut kode OTP anda ${otpCode}`;
+            const whatsappResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+
+            // Check if WhatsApp OTP sending was successful
+            if (whatsappResponse.status === 0) {
+                // Failed to send OTP via WhatsApp, return the error message from the API
+                return res.status(500).json({
+                    status: 0,
+                    message: whatsappResponse.message || 'Gagal kirim OTP melalui whatsapp'
+                });
+            }
+
+
+
+        // Save OTP to access_token field
+        user.access_token = otpCode; // Store OTP in access_token field
+        user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
+        await user.save({ fields: ['access_token', 'otp_expiration', 'updated_at'] });
+
+            res.status(200).json({
+                status: 1,
+                message: 'OTP berhasil dikirim via WhatsApp',
+                data: {
+                    userId: encodeId(user.id),
+                    nisn: user.nisn,
+                    otpRequired: true, // Inform client that OTP is required,
+                    otp_expiration: user.otp_expiration
                 }
             });
         } catch (error) {
@@ -207,24 +279,6 @@ export const resetPassword = [
         }
     }
 ];
-
-
-// Fungsi untuk mengirimkan pesan WhatsApp
-const sendWa = async (phone, message) => {
-    const token = 'oqH4v6yOogEs4odkPG54RZTrltYEYbokNqgyEUoWZ8w7NDshzk'; // Sesuaikan dengan token yang kamu gunakan
-    const url = 'https://nusagateway.com/api/send-message.php';
-    
-    try {
-        const response = await axios.post(url, {
-            token: token,
-            phone: phone,
-            message: message
-        });
-        return response.data;
-    } catch (error) {
-        throw new Error('Error sending WhatsApp message: ' + error.message);
-    }
-};
 
 // Fungsi untuk mengecek apakah nomor WhatsApp valid (misal: diawali dengan +62 dan hanya berisi angka)
 const isValidPhoneNumber = (phone) => {
