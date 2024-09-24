@@ -128,7 +128,7 @@ export const loginAdmin = async (req, res) => {
        
         // Send OTP via WhatsApp
         const otpMessage = `Your OTP code is ${otpCode}`;
-        const whatsappResponse = await sendOtpToWhatsapp('085641903904', otpMessage);
+        const whatsappResponse = await sendOtpToWhatsapp(user.whatsapp, otpMessage);
 
         // Check if WhatsApp OTP sending was successful
         if (whatsappResponse.status === 0) {
