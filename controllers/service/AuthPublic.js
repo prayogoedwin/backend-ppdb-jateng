@@ -72,8 +72,6 @@ export const loginUser_S = [
 ];
 
 
-
-
 // User login
 export const loginUser = [
 
@@ -145,6 +143,73 @@ export const loginUser = [
         }
     }
 ];
+
+// User login
+export const verifikasiOtpUser = [
+
+    async (req, res) => {
+
+        const { nisn, userid, otp } = req.body;
+
+        try {
+            // Check if user exists
+            const user = await DataPendaftars.findOne({
+                where: {
+
+                    id: decodeId(userid),
+                    access_token: otp,
+                    nisn,
+                    is_active: 1,
+                    is_verified: 1,
+                    is_delete: 0
+                }
+                
+            });
+
+            if (!user) {
+                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+            }
+
+            // Check if OTP has expired
+            const currentTime = new Date();
+            if (user.otp_expiration && user.otp_expiration < currentTime) {
+                return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
+            }
+
+            // Compare password
+            const isMatch = await bcrypt.compare(password, user.password_);
+            if (!isMatch) {
+                return res.status(200).json({ status: 0, message: 'NISN / password salah' });
+            }
+
+            // Generate tokens
+            const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
+            const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
+
+            // Save tokens to user record
+            user.access_token = accessToken;
+            user.access_token_refresh = refreshToken;
+            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil masuk',
+                data: {
+                    userId: encodeId(user.id),
+                    nisn: user.nisn,
+                    accessToken,
+                    refreshToken
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
+
 
 // Function to generate OTP excluding 'O' and '0'
 function generateOtp(length) {
