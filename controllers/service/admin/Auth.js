@@ -142,9 +142,25 @@ export const loginAdmin = async (req, res) => {
 
 
         // Save OTP to access_token field
-        user.access_token = otpCode; // Store OTP in access_token field
-        user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
-        await user.save({ fields: ['access_token', 'otp_expiration', 'updated_at'] });
+        // user.access_token = otpCode; // Store OTP in access_token field
+        // user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
+        // await user.save({ fields: ['access_token', 'otp_expiration', 'updated_at'] });
+
+        const otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
+            // await user.save({ fields: ['access_token', 'otp_expiration'] });
+            // Save tokens to user record with where clause (based on user id)
+            await DataUsers.update(
+                {
+                    access_token: otpCode,
+                    otp_expiration: otp_expiration,
+                },
+                {
+                    where: {
+                        id: user.id
+                    }
+                }
+            );
+
 
         // Respond with OTP status
         return res.status(200).json({
@@ -260,6 +276,7 @@ export const verifikasiOtp = async (req, res) => {
         user.access_token = accessToken;
         user.access_token_refresh = refreshToken;
         await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+        
 
         res.status(200).json({
             status: 1,
