@@ -2,6 +2,19 @@ import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
+
+// Fungsi untuk generate password acak 5 karakter dari A-Z, 1-9
+const generateRandomPassword = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
+    let password = '';
+    for (let i = 0; i < 5; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+};
+
+
 
 
 // User login
@@ -59,6 +72,58 @@ export const loginUser = [
         }
     }
 ];
+
+// Function to generate OTP excluding 'O' and '0'
+function generateOtp(length) {
+    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789'; // Exclude 'O' and '0'
+    let otpCode = '';
+    for (let i = 0; i < length; i++) {
+        otpCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return otpCode;
+}
+
+async function sendOtpToWhatsapp(phone, message) {
+    const url = 'https://nusagateway.com/api/send-message.php';
+    const token = process.env.WA_TOKEN; // Ganti dengan token Anda
+
+    try {
+        // Buat form-data untuk request
+        const formData = new FormData();
+        formData.append('token', token);
+        formData.append('phone', phone);
+        formData.append('message', message);
+
+        // Kirim request POST dengan form-data
+        const response = await axios.post(url, formData, {
+            headers: {
+                ...formData.getHeaders() // Dapatkan header form-data otomatis
+            }
+        });
+
+        // Log respons dari API untuk debugging
+        // console.log('WhatsApp API Response:', response.data);
+
+        // Cek apakah pesan berhasil dikirim
+        if (response.data.result === 'true') {
+            return {
+                status: 1,
+                message: 'OTP berhasil dikirim melalui whatsapp'
+            };
+        } else {
+            return {
+                status: 0,
+                message: response.data.message || 'OTP gagal dikirim melalui whatsapp'
+            };
+        }
+    } catch (error) {
+        console.error('OTP gagal dikirim melalui whatsapp:', error.message);
+        return {
+            status: 0,
+            message: 'OTP gagal dikirim melalui whatsapp'
+        };
+    }
+}
 
 
 // User logout
@@ -138,6 +203,91 @@ export const resetPassword = [
             res.status(500).json({
                 status: 0,
                 message: error.message,
+            });
+        }
+    }
+];
+
+
+// Fungsi untuk mengirimkan pesan WhatsApp
+const sendWa = async (phone, message) => {
+    const token = 'oqH4v6yOogEs4odkPG54RZTrltYEYbokNqgyEUoWZ8w7NDshzk'; // Sesuaikan dengan token yang kamu gunakan
+    const url = 'https://nusagateway.com/api/send-message.php';
+    
+    try {
+        const response = await axios.post(url, {
+            token: token,
+            phone: phone,
+            message: message
+        });
+        return response.data;
+    } catch (error) {
+        throw new Error('Error sending WhatsApp message: ' + error.message);
+    }
+};
+
+// Fungsi untuk mengecek apakah nomor WhatsApp valid (misal: diawali dengan +62 dan hanya berisi angka)
+const isValidPhoneNumber = (phone) => {
+    // Regex untuk mengecek apakah nomor diawali dengan +62 atau 08 (format nomor Indonesia)
+    const regex = /^(?:\+62|62|08)[0-9]{9,13}$/;
+    return regex.test(phone);
+};
+
+// Fitur Lupa Password
+export const forgotPassword = [
+    async (req, res) => {
+        const { nisn } = req.body;
+
+        try {
+            // Cek apakah user dengan NISN tersebut ada
+            const user = await DataPendaftars.findOne({
+                where: {
+                    nisn,
+                    is_active: 1,
+                    is_verified: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (!user) {
+                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum diaktifasi / verifikasi' });
+            }
+
+            // Ambil no_wa dari user
+            const noWa = user.no_wa;
+            if (!noWa) {
+                return res.status(200).json({ status: 0, message: 'Nomor WhatsApp tidak tersedia untuk akun ini' });
+            }
+
+             // Cek apakah nomor WhatsApp valid
+             if (!isValidPhoneNumber(noWa)) {
+                return res.status(200).json({ status: 0, message: 'Nomor WhatsApp tidak valid' });
+            }
+
+            // Generate password baru
+            const newPassword = generateRandomPassword();
+
+            // Hash password baru
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Update password di database
+            user.password_ = hashedPassword;
+            await user.save({ fields: ['password_', 'updated_at'] });
+
+            // Kirim password baru ke nomor WhatsApp
+            const waMessage = `Halo, ini adalah password baru Anda: ${newPassword}`;
+            const waResponse = await sendWa(noWa, waMessage);
+
+            // Jika berhasil mengirim WA
+            res.status(200).json({
+                status: 1,
+                message: 'Password baru telah dikirim ke WhatsApp Anda',
+                waResponse
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: 'Terjadi kesalahan: ' + error.message,
             });
         }
     }

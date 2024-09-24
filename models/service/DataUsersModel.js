@@ -95,6 +95,11 @@ const DataUsers = db.define('ez_users', {
         allowNull: true,
         defaultValue: 0
     },
+    otp_expiration: {
+        type: DataTypes.DATE, // Gunakan DataTypes.DATE untuk TIMESTAMP
+        allowNull: true,      // Sesuaikan dengan kebutuhan Anda
+        defaultValue: null    // Atur defaultValue jika diperlukan
+    },
     
 }, {
     freezeTableName: true,
