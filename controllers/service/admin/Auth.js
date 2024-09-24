@@ -286,7 +286,7 @@ export const logoutAdmin = async (req, res) => {
             // Check if user exists
             const user = await DataUsers.findOne({
                 where: {
-                    id: userId,
+                    id: decodeId(userId),
                     is_active: 1,
                     is_delete: 0
                 }
