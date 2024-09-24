@@ -153,7 +153,8 @@ export const loginAdmin = async (req, res) => {
             data: {
                 userId: encodeId(user.id),
                 username: user.username,
-                otpRequired: true // Inform client that OTP is required
+                otpRequired: true, // Inform client that OTP is required,
+                no: user.whatsapp
             }
         });
         
