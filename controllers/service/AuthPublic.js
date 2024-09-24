@@ -3,6 +3,7 @@ import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import FormData from 'form-data';
 
 // Fungsi untuk generate password acak 5 karakter dari A-Z, 1-9
 const generateRandomPassword = () => {
