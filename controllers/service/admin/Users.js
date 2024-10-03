@@ -167,7 +167,7 @@ export const getUserById = async (req, res) => {
 }
 
 export const addUser = async (req, res) => {
-    const { username, email, nama, whatsapp, password, role, sekolah_id, is_active } = req.body;
+    const { username, email, nama, whatsapp, password, role, sekolah_id, cabdin_id, kabkota_id, is_active } = req.body;
 
     // Validate request data
     if (!username || !email || !nama || !whatsapp || !password) {
@@ -211,6 +211,8 @@ export const addUser = async (req, res) => {
             password_: hashedPassword,
             role_: role,
             sekolah_id,
+            cabdin_id,
+            kabkota_id,
             created_at: new Date(),
             created_by: req.user.userId, // Use user ID from token
             created_by_ip: req.ip,

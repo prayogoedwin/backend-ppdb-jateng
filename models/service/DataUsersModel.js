@@ -49,6 +49,14 @@ const DataUsers = db.define('ez_users', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    cabdin_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kabkota_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     created_at: {
         type: DataTypes.DATE,
         allowNull: true,

@@ -70,6 +70,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
       
             if (dataAdminNya.role_ == 101) {
                 whereFor.verifikasikan_disdukcapil = 1
+                whereFor.kabkota_id = dataAdminNya.kabkota_id
             }
 
             const resData = await DataPendaftars.findAll({
