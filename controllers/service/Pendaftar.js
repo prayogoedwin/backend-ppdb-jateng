@@ -188,7 +188,7 @@ export const createPendaftar = async (req, res) => {
                     lat,
                     lng,
                     no_wa,
-                    tanggal_cetak_kk: tanggal_cetak_kk ? new Date(tanggal_cetak_kk) : null,
+                    tanggal_cetak_kk: new Date(tanggal_cetak_kk),
                     kejuaraan_id: kejuaraan_id ? kejuaraan_id : 0,
                     nama_kejuaraan,
                     tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
