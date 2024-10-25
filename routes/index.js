@@ -72,6 +72,9 @@ router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 router.get('/download/:nisn/:filename', viewFile);
 router.get('/downloadjson', viewGeoJson);
 
+router.get('/abc', (req, res) => res.send('abc')); // Mengirimkan teks "abc"
+
+
 
 //konfigurasi cache
 router.delete('/uapi/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
