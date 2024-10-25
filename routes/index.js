@@ -70,7 +70,7 @@ router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 //downloadfile
 router.get('/download/:nisn/:filename', viewFile);
-router.get('/geojson', viewGeoJson);
+router.get('/downloadjson', viewGeoJson);
 
 
 //konfigurasi cache
