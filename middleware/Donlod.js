@@ -84,3 +84,40 @@ export const viewFile = async (req, res) => {
         });
     }
 };
+
+export const viewGeoJson = async (req, res) => {
+    try {
+        const filename = 'ADM_JATENG.json';
+
+        const fileDirectory = path.join(__dirname, '../json');
+        const filePath = path.join(fileDirectory, filename);
+
+        // Cek apakah file ada di folder
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                res.status(404).json({
+                    status: 0,
+                    message: 'File tidak ditemukan',
+                });
+            } else {
+                // Tampilkan file
+                res.sendFile(filePath, (err) => {
+                    if (err) {
+                        res.status(500).json({
+                            status: 0,
+                            message: 'Terjadi kesalahan saat menampilkan file',
+                        });
+                    } else {
+                        console.log(`File ${filename} berhasil ditampilkan.`);
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error View:', error);
+        res.status(500).json({
+            status: 0,
+            message: 'Internal Server Error',
+        });
+    }
+};
