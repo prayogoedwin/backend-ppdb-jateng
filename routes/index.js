@@ -70,9 +70,7 @@ router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 //downloadfile
 router.get('/download/:nisn/:filename', viewFile);
-router.get('/downloadjson', viewGeoJson);
-
-router.get('/abc', (req, res) => res.send('abc')); // Mengirimkan teks "abc"
+router.get('/geojson', viewGeoJson);
 
 
 
