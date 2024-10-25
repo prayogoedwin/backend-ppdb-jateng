@@ -86,38 +86,52 @@ export const viewFile = async (req, res) => {
 };
 
 export const viewGeoJson = async (req, res) => {
+    const redis_key = 'GeoJson';
     try {
-        const filename = 'ADM_JATENG.json';
+        const cacheNya = await redisGet(redis_key);
+        if (cacheNya) {
 
-        const fileDirectory = path.join(__dirname, '../json');
-        const filePath = path.join(fileDirectory, filename);
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data di ambil dari cache',
+                'data': JSON.parse(cacheNya)
+            });
 
-        // Cek apakah file ada di folder
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-            if (err) {
-                res.status(404).json({
-                    status: 0,
-                    message: 'File tidak ditemukan',
-                });
-            } else {
-                // Tampilkan file
-                res.sendFile(filePath, (err) => {
-                    if (err) {
-                        res.status(500).json({
-                            status: 0,
-                            message: 'Terjadi kesalahan saat menampilkan file',
-                        });
-                    } else {
-                        console.log(`File ${filename} berhasil ditampilkan.`);
-                    }
-                });
-            }
-        });
-    } catch (error) {
-        console.error('Error View:', error);
-        res.status(500).json({
-            status: 0,
-            message: 'Internal Server Error',
+           
+        }else{
+
+            const filename = 'ADM_JATENG.json';
+            const fileDirectory = path.join(__dirname, '../json');
+            const filePath = path.join(fileDirectory, filename);
+
+            // Cek apakah file ada di folder
+            fs.access(filePath, fs.constants.F_OK, (err) => {
+                if (err) {
+                    res.status(404).json({
+                        status: 0,
+                        message: 'File tidak ditemukan',
+                    });
+                } else {
+                    // Tampilkan file
+                    res.sendFile(filePath, (err) => {
+                        if (err) {
+                            res.status(500).json({
+                                status: 0,
+                                message: 'Terjadi kesalahan saat menampilkan file',
+                            });
+                        } else {
+                            console.log(`File ${filename} berhasil ditampilkan.`);
+                        }
+                    });
+                }
+            });
+
+        }
+    } catch (err){
+        console.error('Error fetching data:', err); // Log the error for debugging
+        res.status(404).json({
+            'status': 0,
+            'message': 'Error'
         });
     }
-};
+}
