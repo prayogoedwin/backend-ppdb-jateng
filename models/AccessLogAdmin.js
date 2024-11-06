@@ -39,4 +39,4 @@ const AccessLogAdmin = db.define('AccessLogAdmin', {
     timestamps: false
 });
 
-export default AccessLog;
+export default AccessLogAdmin;
