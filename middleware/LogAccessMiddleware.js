@@ -1,5 +1,6 @@
 // middleware/logAccess.js
 import AccessLog from '../models/AccessLog.js';
+import jwt from 'jsonwebtoken';
 
 async function logAccess(req, res, next) {
 
