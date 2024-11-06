@@ -10,9 +10,6 @@ import Router from "./routes/index.js";
 //Import dotenv
 import dotenv from "dotenv";
 
-// Di file server utama Anda (misalnya app.js atau index.js)
-import logAccessMiddleware from './middleware/logAccessMiddleware.js';
-
 
 
 // Load environment variables from .env files
@@ -39,7 +36,6 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
-// app.use(logAccessMiddleware);
 // use router
 app.use(Router);
 // listen on port

@@ -19,7 +19,7 @@ const AccessLog = db.define('AccessLog', {
         allowNull: true
     },
     json_data: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON, 
         allowNull: true
     },
     created_by: {
