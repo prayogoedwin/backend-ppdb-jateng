@@ -11,7 +11,7 @@ import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
 import appKeyMiddleware from '../middleware/AppKey.js';
 import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
 import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.js';
-import { logAccess, logAccessAdmin } from '../middleware/logAccessMiddleware.js'; // Import log middleware
+import { logAccess, logAccessAdmin } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
 
 
 //konfigurasi cache
