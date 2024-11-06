@@ -126,7 +126,7 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
 router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, logAccess, loginUser);
 router.post('/api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, verifikasiOtpUser);
-router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess logoutUser);
+router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
 router.post('/api/auth/ubah_password', ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
 router.post('/api/auth/lupa_password', ipWhitelistMiddleware, appKeyMiddleware, forgotPassword);
 
