@@ -133,7 +133,7 @@ router.post('/api/auth/lupa_password', ipWhitelistMiddleware, appKeyMiddleware, 
 
 
 
-router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cekPerangkingan, logAccessMiddleware);
+router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccessMiddleware,  cekPerangkingan);
 router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
 router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cetakBuktiPerangkingan);
 
