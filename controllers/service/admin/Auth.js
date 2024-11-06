@@ -1,5 +1,6 @@
 import DataUsers from '../../../models/service/DataUsersModel.js';
 import { encodeId, decodeId } from '../../../middleware/EncodeDecode.js';
+import { sendOtpToWhatsapp } from '../../../helpers/HelpHelper.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Sequelize, Op } from "sequelize";
@@ -193,7 +194,7 @@ function generateOtp(length) {
     return otpCode;
 }
 
-async function sendOtpToWhatsapp(phone, message) {
+async function sendOtpToWhatsapp_BAK(phone, message) {
     const url = 'https://nusagateway.com/api/send-message.php';
     const token = process.env.WA_TOKEN; // Ganti dengan token Anda
 

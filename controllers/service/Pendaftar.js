@@ -3,6 +3,7 @@ import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import SekolahTujuan from "../../models/master/SekolahTujuanModel.js"; // Import model SekolahTujuan
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
+import { sendOtpToWhatsapp } from '../../helpers/HelpHelper.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -218,6 +219,11 @@ export const createPendaftar = async (req, res) => {
                     kode_verifikasi: newPendaftar.kode_verifikasi,
         
                 };
+
+                 
+                // Send OTP via WhatsApp
+                const otpMessage = `Berikut KODE VERFIKASI PPDB JATENG anda ${newPendaftar.kode_verifikasi}`;
+                const whatsappResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
 
                 // Mengirim respons berhasil
                 res.status(201).json({
@@ -490,7 +496,7 @@ export const aktivasiAkunPendaftar = async (req, res) => {
             });
 
             if (!resData) {
-                return res.status(200).json({ status: 0, message: 'Data aktivasi salah, atau belum di verifikasi' });
+                return res.status(200).json({ status: 0, message: 'Data aktivasi salah, atau belum diverifikasi' });
             }
 
             await DataPendaftars.update({
