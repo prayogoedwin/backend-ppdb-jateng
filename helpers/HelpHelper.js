@@ -1,7 +1,7 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-async function sendOtpToWhatsapp(phone, message) {
+export async function sendOtpToWhatsapp(phone, message) {
     const url = 'https://nusagateway.com/api/send-message.php';
     const token = process.env.WA_TOKEN; // Ambil token dari environment variables
 
@@ -39,7 +39,3 @@ async function sendOtpToWhatsapp(phone, message) {
         };
     }
 }
-
-module.exports = {
-    sendOtpToWhatsapp
-};
