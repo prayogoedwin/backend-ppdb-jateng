@@ -5,11 +5,12 @@ import AccessLogAdmin from '../models/AccessLogAdmin.js';
 // async function logAccess(req, res, next) {
 export const logAccess = async (req, res, next) => {
 
+    const akun = req.user && req.user.userId ? req.user.userId : req.body.nisn;
 
     try {
         const logData = {
             url: req.originalUrl,
-            akun: req.user.userId, // Jika menggunakan autentikasi, ambil dari `req.user`
+            akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
             json_data:  req.body, // Ambil data JSON dari body
             created_at: new Date(),
             created_by: req.body.nisn,
@@ -38,13 +39,15 @@ export const logAccess = async (req, res, next) => {
 
 export const logAccessAdmin = async (req, res, next) => {
 
+    const akun = req.user && req.user.userId ? req.user.userId : req.body.username;
+
     try {
         const logData = {
             url: req.originalUrl,
-            akun: req.user.userId, // Jika menggunakan autentikasi, ambil dari `req.user`
+            akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
             json_data:  req.body, // Ambil data JSON dari body
             created_at: new Date(),
-            created_by: req.user.userId,
+            created_by: req.body.username,
             created_by_ip: req.ip // Alamat IP pengguna
         };
 

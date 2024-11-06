@@ -163,9 +163,9 @@ router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,
 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
-router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, loginAdmin);
+router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
 router.post('/admin-api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, verifikasiOtp);
-router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logoutAdmin);
+router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
 
 
