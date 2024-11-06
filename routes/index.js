@@ -11,6 +11,8 @@ import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
 import appKeyMiddleware from '../middleware/AppKey.js';
 import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
 import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.js';
+import logAccessMiddleware from '../middleware/logAccessMiddleware.js'; // Import log middleware
+
 
 
 //konfigurasi cache
@@ -63,6 +65,8 @@ import { getRoles } from "../controllers/service/admin/Role.js";
 //rekap
 import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
 
+// Terapkan logAccessMiddleware ke semua route
+router.use(logAccessMiddleware);
 
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
