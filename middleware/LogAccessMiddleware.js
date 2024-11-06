@@ -1,31 +1,13 @@
 // middleware/logAccess.js
 import AccessLog from '../models/AccessLog.js';
-import jwt from 'jsonwebtoken';
 
 async function logAccess(req, res, next) {
 
-    // Extract token from the Authorization header
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Extract token from Bearer
-
-    let userId = null;
-
-    // If there's a token, verify it
-    if (token) {
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-            userId = decoded.userId;  // Assuming userId is in the token payload
-        } catch (err) {
-            userId = null;
-            console.error('Token verification failed:', err);
-            return res.status(403).json({ message: 'Invalid token' });
-        }
-    }
 
     try {
         const logData = {
             url: req.originalUrl,
-            akun: userId, // Jika menggunakan autentikasi, ambil dari `req.user`
+            akun: req.user, // Jika menggunakan autentikasi, ambil dari `req.user`
             json_data:  null, // Ambil data JSON dari body
             created_at: new Date(),
             created_by: req.user ? req.user.id : null, // ID user jika tersedia
