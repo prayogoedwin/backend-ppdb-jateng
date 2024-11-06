@@ -147,7 +147,7 @@ router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddle
 
 router.post('/api/servis/perangkingan_detail', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
 
-router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, softDeletePerangkingan);
+router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
 
 router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware, daftarUlangPerangkingan);
 
