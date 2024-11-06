@@ -1,5 +1,6 @@
 // middleware/logAccess.js
 import AccessLog from '../models/AccessLog.js';
+import AccessLogAdmin from '../models/AccessLogAdmin.js';
 
 // async function logAccess(req, res, next) {
 export const logAccess = async (req, res, next) => {
@@ -48,7 +49,7 @@ export const logAccessAdmin = async (req, res, next) => {
         };
 
         // Simpan ke dalam database
-        await AccessLog.create(logData);
+        await AccessLogAdmin.create(logData);
         console.log("Log entry created:", logData); // 
         next(); // Lanjutkan ke handler berikutnya
 
