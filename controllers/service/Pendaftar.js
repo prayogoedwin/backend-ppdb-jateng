@@ -223,7 +223,7 @@ export const createPendaftar = async (req, res) => {
                  
                 // Send OTP via WhatsApp
                 const otpMessage = `Berikut KODE VERFIKASI PPDB JATENG anda ${newPendaftar.kode_verifikasi}`;
-                const whatsappResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+                const whatsappResponse = await sendOtpToWhatsapp(no_wa, otpMessage);
 
                 // Mengirim respons berhasil
                 res.status(201).json({
