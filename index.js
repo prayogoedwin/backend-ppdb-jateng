@@ -39,7 +39,7 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
-app.use(logAccessMiddleware);
+// app.use(logAccessMiddleware);
 // use router
 app.use(Router);
 // listen on port

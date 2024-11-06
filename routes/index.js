@@ -65,8 +65,8 @@ import { getRoles } from "../controllers/service/admin/Role.js";
 //rekap
 import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
 
-// Terapkan logAccessMiddleware ke semua route
-router.use(logAccessMiddleware);
+// // Terapkan logAccessMiddleware ke semua route
+// router.use(logAccessMiddleware);
 
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
@@ -133,7 +133,7 @@ router.post('/api/auth/lupa_password', ipWhitelistMiddleware, appKeyMiddleware, 
 
 
 
-router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cekPerangkingan);
+router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cekPerangkingan, logAccessMiddleware);
 router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, createPerangkingan);
 router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, cetakBuktiPerangkingan);
 
