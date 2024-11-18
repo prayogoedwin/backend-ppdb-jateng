@@ -69,20 +69,7 @@ export const getSekolahTujuanPublik = async (req, res) => {
 }
 
 export const getSekolahTujuan = async (req, res) => {
-    // const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id+req.body.nisn;
-    try {
-        // const cacheNya = await redisGet(redis_key);
-        const cacheNya = false;
-        if (cacheNya) {
 
-            res.status(200).json({
-                'status': 1,
-                'message': 'Data di ambil dari cache',
-                'data': JSON.parse(cacheNya)
-            });
-
-           
-        }else{
 
             const nins = req.body.nisn;
             const jalur_pendaftaran_id = req.body.jalur_pendaftaran_id;
@@ -134,9 +121,6 @@ export const getSekolahTujuan = async (req, res) => {
                 });
 
                 if(resData.length > 0){
-
-                    const newCacheNya = resData;
-                    await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
     
                     res.status(200).json({
                         'status': 1,
@@ -155,18 +139,5 @@ export const getSekolahTujuan = async (req, res) => {
 
             }
 
-            
-
-            
-            
-
-        }
-    } catch (err){
-        console.error('Error fetching data:', err); // Log the error for debugging
-        res.status(404).json({
-            'status': 0,
-            'message': 'Error'
-        });
-    }
 }
 
