@@ -14,7 +14,7 @@ import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functio
 //     }
 // }
 
-export const getSekolahTujuanX = async (req, res) => {
+export const getSekolahTujuanPublik = async (req, res) => {
     const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id;
     try {
         const cacheNya = await redisGet(redis_key);
@@ -34,7 +34,7 @@ export const getSekolahTujuanX = async (req, res) => {
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                 },
-                attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama',  'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
             });
 
             
@@ -101,7 +101,7 @@ export const getSekolahTujuan = async (req, res) => {
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
                         kode_wilayah_kec: cekPendaftar.kecamatan_id
                     },
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
+                    attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
                 });
 
                 if(resData.length > 0){
@@ -130,7 +130,7 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                     },
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
+                    attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
                 });
 
                 if(resData.length > 0){
