@@ -6,6 +6,8 @@ import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 
+import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+
 
 // import getDataWilayah from '../service/WilayahService.js';
 import { getProvinsi, getKabupatenKota, getKecamatan, getDesaKelurahan } from '../service/WilayahService.js';
@@ -53,6 +55,20 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             return res.status(400).json({
                 status: 0,
                 message: 'NISN is required',
+            });
+        }
+
+        const cekPendaftar = await DataPendaftars.findOne({
+            where: {
+                nisn: nisn,
+                is_delete: 0
+            },
+        });
+
+        if (!cekPendaftar) {
+            return res.status(200).json({
+                status: 2,
+                message: 'NISN Sudah Terdaftar Sebelumnya'
             });
         }
 
