@@ -69,10 +69,10 @@ export const getSekolahTujuanPublik = async (req, res) => {
 }
 
 export const getSekolahTujuan = async (req, res) => {
-    const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id+req.body.nisn;
+    // const redis_key = 'SekolahTujuans'+req.body.bentuk_pendidikan_id+req.body.nisn;
     try {
-        const cacheNya = await redisGet(redis_key);
-        // const cacheNya = false;
+        // const cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
         if (cacheNya) {
 
             res.status(200).json({
