@@ -92,9 +92,6 @@ export const getSekolahTujuan = async (req, res) => {
                 });
 
                 if(resData.length > 0){
-
-                    const newCacheNya = resData;
-                    await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
     
                     res.status(200).json({
                         'status': 1,
