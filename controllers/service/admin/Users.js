@@ -137,12 +137,14 @@ export const getUsersPagination = async (req, res) => {
         const offset = (page - 1) * limit;
 
         // Cek apakah data ada di Redis cache
-        const cacheNya = await redisGet(redis_key);
-        if (cacheNya && !email) { // Cache hanya digunakan jika tidak ada pencarian email
+        // const //cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
+        if (cacheNya) { // Cache hanya digunakan jika tidak ada pencarian email
             return res.status(200).json({
                 status: 1,
                 message: 'Data diambil dari cache',
-                data: JSON.parse(cacheNya)
+                // data: JSON.parse(cacheNya)
+                data: '';
             });
         }
 
