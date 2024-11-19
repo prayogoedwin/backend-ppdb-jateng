@@ -74,7 +74,8 @@ export const getPerangkinganSaya = async (req, res) => {
                     as: 'jalur_pendaftaran',
                     attributes: ['bentuk_pendidikan_id', 'nama']
                 }
-            ]
+            ],
+            order: [['id', 'ASC']] 
         });
 
         const resDatas = resData.map(item => {
