@@ -3,6 +3,7 @@ import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
 import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
+import SekolahTujuan from "../../models/master/SekolahTujuanModel.js"; // Import model SekolahTujuan
 import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
@@ -518,6 +519,49 @@ export const cekPerangkingan = async (req, res) => {
                 jurusan_id,
                 nisn,
             } = req.body;
+
+            const cariDtSekolah = await SekolahTujuan.findOne({
+            where: {
+                id: sekolah_tujuan_id,
+            }
+            });
+
+            if(jalur_pendaftaran_id == 2){
+
+                const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
+                if(zonasi_khusus < 1){
+                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+                }
+
+            }
+
+            if(jalur_pendaftaran_id == 4){
+
+                const pto = cariDtSekolah.kuota_pto_persentase;
+                if(pto < 1){
+                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+                }
+
+            }
+
+            if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
+
+                const afirmasi = cariDtSekolah.kuota_afirmasi_persentase;
+                if(afirmasi < 1){
+                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+                }
+
+            }
+
+            if(jalur_pendaftaran_id == 8){
+
+                const pk = cariDtSekolah.kuota_prestasi_khusus_persentase;
+                if(pk < 1){
+                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+                }
+
+            }
+
 
             // Retrieve data from DataPendaftarModel
             const pendaftar = await DataPendaftars.findOne({
