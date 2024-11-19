@@ -2,6 +2,7 @@ import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
+import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
 import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
@@ -563,16 +564,16 @@ export const cekPerangkingan = async (req, res) => {
                     const kecPendaftar = pendaftar.kecamatan_id;
 
                     //tidak boleh jika tidak dalam zonasi
-                    const cariZonasis = await Zonasis.findAll({
+                    const cariZonasis = await SekolahZonasis.findAll({
                         where: {
-                          sekolah_tujuan_id
+                          sekolah_id : sekolah_tujuan_id
                         }
                       });
                 
                       let isInZonasis = false;
                       
                       cariZonasis.forEach(zonasi => {
-                        if (zonasi.kode_kecamatan_dapodik === kecPendaftar) {
+                        if (zonasi.kode_wilayah_kec === kecPendaftar) {
                           isInZonasis = true;
                         }
                       });
@@ -586,9 +587,9 @@ export const cekPerangkingan = async (req, res) => {
 
 
                      // Get all zonasi for the pendaftar's kecamatan
-                    const allZonasisForKecamatan = await Zonasis.findAll({
+                    const allZonasisForKecamatan = await SekolahZonasis.findAll({
                         where: {
-                            kode_kecamatan_dapodik: kecPendaftar
+                            kode_wilayah_kec: kecPendaftar
                         }
                     });
 
