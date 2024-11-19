@@ -3,7 +3,6 @@ import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
 import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
-import SekolahTujuan from "../../models/master/SekolahTujuanModel.js"; // Import model SekolahTujuan
 import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
