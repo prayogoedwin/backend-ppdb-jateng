@@ -144,7 +144,7 @@ export const getUsersPagination = async (req, res) => {
                 status: 1,
                 message: 'Data diambil dari cache',
                 // data: JSON.parse(cacheNya)
-                data: '';
+                data: ''
             });
         }
 
