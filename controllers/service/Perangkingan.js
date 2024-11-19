@@ -645,7 +645,7 @@ export const cekPerangkingan = async (req, res) => {
                     const kecPendaftar = pendaftar.kecamatan_id;
 
                     //tidak boleh jika tidak dalam zonasi
-                    const cariZonasis = await Zonasis.findAll({
+                    const cariZonasis = await SekolahZonasis.findAll({
                         where: {
                           id_sekolah: sekolah_tujuan_id
                         }
@@ -668,7 +668,7 @@ export const cekPerangkingan = async (req, res) => {
 
 
                      // Get all zonasi for the pendaftar's kecamatan
-                    const allZonasisForKecamatan = await Zonasis.findAll({
+                    const allZonasisForKecamatan = await SekolahZonasis.findAll({
                         where: {
                             kode_kecamatan_dapodik: kecPendaftar
                         }
