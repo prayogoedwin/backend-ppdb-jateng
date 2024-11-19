@@ -37,23 +37,31 @@ export const getSekolahTujuanPublik = async (req, res) => {
                 attributes: ['id', 'nama',  'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
             });
 
-            
-            if(resData.length > 0){
+             // Tambahkan properti nama_npsn ke setiap item dalam resData
+             const formattedResData = resData.map(school => {
+                return {
+                    ...school.dataValues,
+                    nama_npsn: `${school.nama} ${school.npsn}` // Gabungkan nama dan npsn
+                };
+            });
 
-                const newCacheNya = resData;
+            
+            if(formattedResData.length > 0){
+
+                const newCacheNya = formattedResData;
                 await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_MASTER); 
 
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': resData
+                    'data': formattedResData
                 });
             }else{
 
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': resData
+                    'data': ''
                 });
 
             }
@@ -91,19 +99,28 @@ export const getSekolahTujuan = async (req, res) => {
                     attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] // Specify the attributes to retrieve
                 });
 
-                if(resData.length > 0){
+                 // Tambahkan properti nama_npsn ke setiap item dalam resData
+                const formattedResData = resData.map(school => {
+                    return {
+                        ...school.dataValues,
+                        nama_npsn: `${school.nama} ${school.npsn}` // Gabungkan nama dan npsn
+                    };
+                });
+
+
+                if(formattedResData.length > 0){
     
                     res.status(200).json({
                         'status': 1,
                         'message': 'Data berhasil ditemukan',
-                        'data': resData
+                        'data': formattedResData
                     });
                 }else{
     
                     res.status(200).json({
                         'status': 0,
                         'message': 'Data kosong',
-                        'data': resData
+                        'data': ''
                     });
     
                 }
