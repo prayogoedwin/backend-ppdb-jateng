@@ -547,7 +547,7 @@ export const updatePendaftarCapil = async (req, res) => {
             {
                 tanggal_kedatangan,
                 tanggal_kedatangan_ibu,
-                tanggal_kedatangan_ibu,
+                tanggal_kedatangan_ayah,
                 updated_at: new Date(),
                 updated_by: req.user.userId,
                 verifikasikan_disdukcapil,
