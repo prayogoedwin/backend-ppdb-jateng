@@ -8,6 +8,7 @@ import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import StatusDomisilis from '../../models/master/StatusDomisiliModel.js';
+import Timelines from "../../models/service/TimelineModel.js";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -86,18 +87,26 @@ export const getPerangkinganSaya = async (req, res) => {
             return jsonItem;
         });
 
+        const resTimeline = await Timelines.findOne({
+            where: {
+                id: 6,
+            },
+        });
+
         // Check if data is found
         if (resData && resData.length > 0) {
             res.status(200).json({
                 status: 1,
                 message: 'Data berhasil ditemukan',
-                data: resDatas
+                data: resDatas,
+                timeline: resTimeline
             });
         } else {
             res.status(200).json({
                 status: 0,
                 message: 'Data kosong',
-                data: []
+                data: [],
+                timeline: resTimeline
             });
         }
     } catch (err) {
