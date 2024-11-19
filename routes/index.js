@@ -56,7 +56,7 @@ import { getTimeline, getTimelineById, updateTimeline } from "../controllers/ser
 import { getSekolahTujuanAdmin, getSekolahTujuanAdminById, updateSekolahTujuanAdmin } from "../controllers/service/admin/SekolahTujuan.js";
 
 //users
-import { getUsers, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById } from "../controllers/service/admin/Users.js";
+import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById } from "../controllers/service/admin/Users.js";
 
 //roles
 import { getRoles } from "../controllers/service/admin/Role.js";
@@ -177,8 +177,6 @@ router.get('/admin-api/master/sekolah_tujuan_detail/:id', ipWhitelistMiddleware,
 router.post('/admin-api/master/sekolah_tujuan_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateSekolahTujuanAdmin);
 
 
-
-
 //menu menu & action admin
 
 // menu pendaftaran
@@ -195,7 +193,8 @@ router.get('/admin-api/setting/timeline_detail/:id', ipWhitelistMiddleware, appK
 router.post('/admin-api/setting/timeline_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateTimeline);
 
 //menu user
-router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getUsers);
+// router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getUsers);
+router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getUsersPagination);
 router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getUserById);
 router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, addUser);
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUser);

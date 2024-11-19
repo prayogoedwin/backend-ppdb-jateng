@@ -117,6 +117,116 @@ export const getUsers = async (req, res) => {
     }
 };
 
+export const getUsersPagination = async (req, res) => {
+    const userId = req.user.userId;
+
+    try {
+        // Dapatkan data user berdasarkan userId
+        const user = await DataUsers.findOne({
+            where: { id: userId }
+        });
+
+        if (!user) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        const redis_key = 'DataUsersAllinAdmin';
+
+        // Ambil parameter pagination dan email
+        const { page = 1, limit = 10, email } = req.query; // Default: page=1, limit=10
+        const offset = (page - 1) * limit;
+
+        // Cek apakah data ada di Redis cache
+        const cacheNya = await redisGet(redis_key);
+        if (cacheNya && !email) { // Cache hanya digunakan jika tidak ada pencarian email
+            return res.status(200).json({
+                status: 1,
+                message: 'Data diambil dari cache',
+                data: JSON.parse(cacheNya)
+            });
+        }
+
+        let whereCondition = {
+            is_delete: 0
+        };
+
+        // Filter tambahan berdasarkan role dan sekolah_id
+        if (user.role_ == 93) {
+            // Admin sekolah
+            whereCondition = {
+                ...whereCondition,
+                role_: { [Op.in]: [93, 94, 95] },
+                sekolah_id: user.sekolah_id
+            };
+        } else if (user.role_ == 77 || user.role_ == 89) {
+            // Super Admin, BPTIK
+            whereCondition = {
+                ...whereCondition,
+                role_: { [Op.ne]: 77 }
+            };
+        } else {
+            return res.status(400).json({ status: 0, message: 'Anda tidak memiliki hak akses' });
+        }
+
+        // Filter opsional berdasarkan email
+        if (email) {
+            whereCondition.email = { [Op.like]: `%${email}%` };
+        }
+
+        // Query dengan pagination
+        const { count, rows } = await DataUsers.findAndCountAll({
+            where: whereCondition,
+            include: [
+                {
+                    model: RolesData,
+                    as: 'data_role',
+                    attributes: ['id', 'nama', 'id']
+                }
+            ],
+            order: [['id', 'DESC']],
+            limit: parseInt(limit),
+            offset: parseInt(offset)
+        });
+
+        if (rows.length > 0) {
+            // Encode ID dan format data
+            const resDatas = rows.map(item => {
+                const jsonItem = item.toJSON();
+                jsonItem.id_ = encodeId(item.id); // Tambahkan ID yang ter-encode
+                delete jsonItem.id; // Hapus ID asli
+                return jsonItem;
+            });
+
+            // Simpan hasil query di Redis cache (jika tidak ada filter email)
+            if (!email) {
+                await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
+            }
+
+            return res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                currentPage: parseInt(page),
+                totalPages: Math.ceil(count / limit),
+                totalItems: count,
+                data: resDatas
+            });
+        } else {
+            return res.status(200).json({
+                status: 0,
+                message: 'Data kosong',
+                data: []
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err); // Log the error for debugging
+        return res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
+
 export const getUserById = async (req, res) => {
     const { id } = req.params; // Ambil id dari params URL
     try {
