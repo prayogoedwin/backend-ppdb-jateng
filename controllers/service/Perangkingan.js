@@ -654,7 +654,7 @@ export const cekPerangkingan = async (req, res) => {
                       let isInZonasis = false;
                       
                       cariZonasis.forEach(zonasi => {
-                        if (zonasi.kode_kecamatan_dapodik == kecPendaftar) {
+                        if (zonasi.kode_wilayah_kec == kecPendaftar) {
                           isInZonasis = true;
                         }
                       });
@@ -670,7 +670,7 @@ export const cekPerangkingan = async (req, res) => {
                      // Get all zonasi for the pendaftar's kecamatan
                     const allZonasisForKecamatan = await SekolahZonasis.findAll({
                         where: {
-                            kode_kecamatan_dapodik: kecPendaftar
+                            kode_wilayah_kec: kecPendaftar
                         }
                     });
 
