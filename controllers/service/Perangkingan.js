@@ -561,7 +561,7 @@ export const cekPerangkingan = async (req, res) => {
                 if(jalur_pendaftaran_id == 1){
 
 
-                    const kecPendaftar = pendaftar.kecamatan_id;
+                    const kecPendaftar = pendaftar.kecamatan_id.toString();
 
                     //tidak boleh jika tidak dalam zonasi
                     const cariZonasis = await SekolahZonasis.findAll({
@@ -642,7 +642,7 @@ export const cekPerangkingan = async (req, res) => {
                 if(jalur_pendaftaran_id == 1){
 
 
-                    const kecPendaftar = pendaftar.kecamatan_id;
+                    const kecPendaftar = pendaftar.kecamatan_id.toString();
 
                     //tidak boleh jika tidak dalam zonasi
                     const cariZonasis = await SekolahZonasis.findAll({
