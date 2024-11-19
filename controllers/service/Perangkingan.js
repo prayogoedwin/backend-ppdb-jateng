@@ -573,7 +573,7 @@ export const cekPerangkingan = async (req, res) => {
                       let isInZonasis = false;
                       
                       cariZonasis.forEach(zonasi => {
-                        if (zonasi.kode_wilayah_kec === kecPendaftar) {
+                        if (zonasi.kode_wilayah_kec == kecPendaftar) {
                           isInZonasis = true;
                         }
                       });
@@ -654,7 +654,7 @@ export const cekPerangkingan = async (req, res) => {
                       let isInZonasis = false;
                       
                       cariZonasis.forEach(zonasi => {
-                        if (zonasi.kode_kecamatan_dapodik === kecPendaftar) {
+                        if (zonasi.kode_kecamatan_dapodik == kecPendaftar) {
                           isInZonasis = true;
                         }
                       });
