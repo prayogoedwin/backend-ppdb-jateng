@@ -647,7 +647,7 @@ export const cekPerangkingan = async (req, res) => {
                     //tidak boleh jika tidak dalam zonasi
                     const cariZonasis = await SekolahZonasis.findAll({
                         where: {
-                          id_sekolah: sekolah_tujuan_id
+                          sekolah_id: sekolah_tujuan_id
                         }
                       });
                 
