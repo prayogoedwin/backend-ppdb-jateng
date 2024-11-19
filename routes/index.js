@@ -47,7 +47,7 @@ import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser
 import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
-import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar, updatePendaftar } from "../controllers/service/admin/VerifPendaftar.js";
+import { getDataPendaftarForVerif, getDataPendaftarById, verifikasiPendaftar, updatePendaftar, updatePendaftarCapil } from "../controllers/service/admin/VerifPendaftar.js";
 
 //timenline
 import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
@@ -186,6 +186,7 @@ router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddlewar
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/pendaftar_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftar);
+router.post('/admin-api/data/capil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarCapil);
 
 //menu timeline
 router.get('/admin-api/setting/timeline', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getTimeline);

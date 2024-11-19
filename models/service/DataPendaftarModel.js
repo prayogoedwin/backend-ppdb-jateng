@@ -284,6 +284,18 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    tanggal_kedatangan: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+    },
+    tanggal_kedatangan_ibu: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+    },
+    tanggal_kedatangan_ayah: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+    },
     
     
 }, {

@@ -500,6 +500,111 @@ export const updatePendaftar = async (req, res) => {
     }
 }
 
+export const updatePendaftarCapil = async (req, res) => {
+    const { 
+        
+        id,
+        verifikasikan_disdukcapil,
+        dari_dukcapil,
+        is_verified_disdukcapil,
+        tanggal_kedatangan,
+        tanggal_kedatangan_ibu,
+        tanggal_kedatangan_ayah
+    
+    } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
+    }
+
+    let decodedId;
+    try {
+        decodedId = decodeId(id);
+        if (!decodedId) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+    } catch (err) {
+        console.error('Error decoding ID:', err);
+        return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+    }
+
+    // console.log('Decoded ID:', decodedId); // For debugging
+
+    try {
+    
+        const resData = await DataPendaftars.findOne({
+            where: {
+                id: decodedId,
+                is_delete: 0
+            }
+        });
+
+        if (!resData) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        await DataPendaftars.update(
+            {
+                tanggal_kedatangan,
+                tanggal_kedatangan_ibu,
+                tanggal_kedatangan_ibu,
+                updated_at: new Date(),
+                updated_by: req.user.userId,
+                verifikasikan_disdukcapil,
+
+            },
+            {
+                where: {
+                    id: decodedId,
+                    [Op.or]: [
+                        { is_delete: 0 }, // Entri yang belum dihapus
+                        { is_delete: null } // Entri yang belum diatur
+                    ]
+                }
+            }
+        );
+
+        if(dari_dukcapil == 1){
+
+            await DataPendaftars.update(
+                {
+                    tanggal_kedatangan,
+                    tanggal_kedatangan_ibu,
+                    tanggal_kedatangan_ibu,
+                    verifikasikan_disdukcapil,
+                    is_verified_disdukcapil,
+                    disdukcapil_at: new Date(),
+                    disdukcapil_by: req.user.userId,
+    
+                },
+                {
+                    where: {
+                        id: decodedId,
+                        [Op.or]: [
+                            { is_delete: 0 }, // Entri yang belum dihapus
+                            { is_delete: null } // Entri yang belum diatur
+                        ]
+                    }
+                }
+            );
+
+        }
+
+        await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+
+        res.status(200).json({
+            status: 1,
+            message: 'Berhasil perbaharui data',
+        });
+    } catch (error) {
+        console.error('Error updating data:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+}
+
 //     const {
 //         id,
 //         sekolah_asal_id,
