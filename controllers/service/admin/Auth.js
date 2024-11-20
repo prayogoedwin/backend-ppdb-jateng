@@ -264,9 +264,9 @@ export const verifikasiOtp = async (req, res) => {
 
          // Check if OTP has expired
          const currentTime = new Date();
-         if (user.otp_expiration && user.otp_expiration < currentTime) {
-             return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
-         }
+        //  if (user.otp_expiration && user.otp_expiration < currentTime) {
+        //      return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
+        //  }
 
         // Generate tokens
         const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });

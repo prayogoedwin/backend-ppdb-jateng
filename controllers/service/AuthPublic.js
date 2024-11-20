@@ -181,15 +181,15 @@ export const verifikasiOtpUser = [
                 return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
             }
 
-            if(user.access_token != otp){
-                return res.status(200).json({ status: 0, message: 'OTP salah' });
-            }
+            // if(user.access_token != otp){
+            //     return res.status(200).json({ status: 0, message: 'OTP salah' });
+            // }
 
             // Check if OTP has expired
             const currentTime = new Date();
-            if (user.otp_expiration && user.otp_expiration < currentTime) {
-                return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
-            }
+            // if (user.otp_expiration && user.otp_expiration < currentTime) {
+            //     return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
+            // }
 
             // Generate tokens
             const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
