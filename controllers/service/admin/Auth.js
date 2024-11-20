@@ -258,9 +258,9 @@ export const verifikasiOtp = async (req, res) => {
             return res.status(200).json({ status: 0, message: 'Proses Login 2 Fakor Gagal, OTP Salah 1' });
         }
 
-        if(user.access_token != otp){
-            return res.status(200).json({ status: 0, message: 'OTP salah' });
-        }
+        // if(user.access_token != otp){
+        //     return res.status(200).json({ status: 0, message: 'OTP salah' });
+        // }
 
          // Check if OTP has expired
          const currentTime = new Date();
