@@ -129,7 +129,8 @@ export const loginAdmin = async (req, res) => {
        
         // Send OTP via WhatsApp
         const otpMessage = `Berikut kode OTP anda ${otpCode}`;
-        const whatsappResponse = await sendOtpToWhatsapp(user.whatsapp, otpMessage);
+        // const whatsappResponse = await sendOtpToWhatsapp(user.whatsapp, otpMessage);
+        const whatsappResponse = 1;
 
         if (whatsappResponse.status === 0) {
             // Failed to send OTP via WhatsApp, return the error message from the API

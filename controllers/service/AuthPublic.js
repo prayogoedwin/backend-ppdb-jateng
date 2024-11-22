@@ -108,7 +108,8 @@ export const loginUser = [
         
             // Send OTP via WhatsApp
             const otpMessage = `Berikut kode OTP anda ${otpCode}`;
-            const whatsappResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+            // const whatsappResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+            const whatsappResponse = 1;
 
             // Check if WhatsApp OTP sending was successful
             if (whatsappResponse.status === 0) {
