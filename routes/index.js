@@ -35,7 +35,7 @@ import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
-import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail } from '../controllers/service/Pendaftar.js';
+import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, getPerangkinganDetail } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -116,6 +116,9 @@ router.get('/api/beranda/timeline', getTimelinePublic);
 //service
 router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, createPendaftar);
+router.post('/api/servis/cari_batas_wilayah', ipWhitelistMiddleware, appKeyMiddleware, getBatasWlayah);
+
+
 router.post('/api/servis/cetak_pendaftaran', getPendaftarforCetak);
 router.post('/api/servis/aktivasi_akun', ipWhitelistMiddleware, appKeyMiddleware, aktivasiAkunPendaftar);
 router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);

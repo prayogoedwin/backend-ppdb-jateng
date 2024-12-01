@@ -6,11 +6,11 @@ const { DataTypes } = Sequelize;
 
 const EzSekolahs = db.define('ez_sekolah', {
     id: {
-        type: DataTypes.UUID,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
     },
-    npsn: {
+    objectid: {
         type: DataTypes.STRING,
         allowNull: false,
     },

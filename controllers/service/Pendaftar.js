@@ -1,7 +1,8 @@
 import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
-import SekolahTujuan from "../../models/master/SekolahTujuanModel.js"; // Import model SekolahTujuan
+import SekolahTujuan from "../../models/master/SekolahTujuanModel.js";
+import GeoJsons from "../../models/master/GeoJsonModel.js";
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import { sendOtpToWhatsapp } from '../../helpers/HelpHelper.js';
 import multer from "multer";
@@ -624,4 +625,42 @@ export const getPendaftarLog = async (req, res) => {
         message: 'Error'
       });
     }
+}
+
+export const getBatasWlayah = async (req, res) => {
+  try {
+    if (!req.body.kelurahan) {
+      return res.status(400).json({
+        status: 0,
+        message: 'Kode dapodik (kelurahan) tidak diberikan'
+      });
+    }
+
+    const json = await GeoJsons.findOne({
+      where: {
+        kode_dapodik: req.body.kelurahan,
+      }
+    });
+
+    if (json) {
+      res.status(200).json({
+        status: 1,
+        message: 'Data berhasil ditemukan',
+        data: json
+      });
+    } else {
+      res.status(200).json({
+        status: 0,
+        message: 'Data kosong',
+        data: null
+      });
+    }
+
+  } catch (err) {
+    console.error('Error fetching data:', err);
+    res.status(500).json({
+      status: 0,
+      message: 'Error'
+    });
+  }
 }
