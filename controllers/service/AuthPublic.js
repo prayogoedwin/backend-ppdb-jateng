@@ -84,7 +84,6 @@ export const loginUser = [
             // Check if user exists
             const user = await DataPendaftars.findOne({
                 where: {
-                    otp_via,
                     nisn,
                     is_active: 1,
                     is_verified: 1,
