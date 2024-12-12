@@ -108,7 +108,7 @@ export const loginUser = [
         
             // Send OTP via WhatsApp
             const otpMessage = `Berikut kode OTP untuk login akun PPDB anda ${otpCode}`;
-            if(otp_via == 'wa'){
+            if(otp_via == 'whatsapp'){
 
                 const otpResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
                 // Check if WhatsApp OTP sending was successful
@@ -153,7 +153,7 @@ export const loginUser = [
 
             res.status(200).json({
                 status: 1,
-                message: 'OTP berhasil dikirim via WhatsApp',
+                message: 'OTP berhasil dikirim via '.otp_via,
                 data: {
                     userId: encodeId(user.id),
                     nisn: user.nisn,
