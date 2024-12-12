@@ -69,24 +69,25 @@ export async function sendOtpToEmail(email, message) {
 
         // Send mail
         const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent: ', info);
 
         // Check if the message was sent
         if (info.accepted.length > 0) {
             return {
                 status: 1,
-                message: 'OTP berhasil dikirim melalui email'
+                message: 'OTP berhasil dikirim melalui email 1'
             };
         } else {
             return {
                 status: 0,
-                message: 'OTP gagal dikirim melalui email'
+                message: 'OTP gagal dikirim melalui email 2'
             };
         }
     } catch (error) {
         console.error('OTP gagal dikirim melalui email:', error.message);
         return {
             status: 0,
-            message: 'OTP gagal dikirim melalui email'
+            message: 'OTP gagal dikirim melalui email 3'
         };
     }
 }
