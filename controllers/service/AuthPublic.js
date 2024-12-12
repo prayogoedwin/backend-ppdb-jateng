@@ -153,7 +153,7 @@ export const loginUser = [
 
             res.status(200).json({
                 status: 1,
-                message: 'OTP berhasil dikirim via '.otp_via,
+                message: 'OTP berhasil dikirim via '+otp_via,
                 data: {
                     userId: encodeId(user.id),
                     nisn: user.nisn,
