@@ -1,5 +1,6 @@
 // Import model Product
 import SekolahTujuans from "../../models/master/SekolahTujuanModel.js";
+import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
@@ -160,6 +161,35 @@ export const getSekolahTujuan = async (req, res) => {
                 }
 
             }
+
+}
+
+export const getSekolahTujuanJurusanPublik = async (req, res) => {
+
+        const resData = await SekolahJurusan.findAll({
+            where: {
+                id_sekolah_tujuan: req.body.id_sekolah_tujuan, // Filter dari EzSekolahTujuans
+            },
+            attributes: ['id', 'npsn' ,'nama_jurusan', 'daya_tampung'], // Ambil atribut hanya dari EzSekolahJurusan
+        });
+
+
+        if(resData.length > 0){
+
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData
+            });
+        }else{
+
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+                'data': ''
+            });
+
+        }
 
 }
 

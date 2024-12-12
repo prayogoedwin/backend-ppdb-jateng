@@ -26,7 +26,7 @@ import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
 import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
-import { getSekolahTujuan, getSekolahTujuanPublik } from "../controllers/master/SekolahTujuan.js";
+import { getSekolahTujuan, getSekolahTujuanPublik, getSekolahTujuanJurusanPublik } from "../controllers/master/SekolahTujuan.js";
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
 
@@ -92,6 +92,7 @@ router.get('/api/master/jenis_lulusan', getJenisLulusan);
 router.post('/api/master/sekolah_tujuan', getSekolahTujuan);
 
 router.post('/api/master/sekolah_tujuan_publik', getSekolahTujuanPublik);
+router.post('/api/master/sekolah_tujuan_per_jurusan_publik', getSekolahTujuanJurusanPublik);
 
 
 router.get('/api/master/jenis_kejuaraan', getJenisKejuaraan);
