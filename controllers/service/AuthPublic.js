@@ -1,6 +1,6 @@
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
-import { sendOtpToWhatsapp } from '../../helpers/HelpHelper.js';
+import { sendOtpToWhatsapp, sendOtpToEmail } from '../../helpers/HelpHelper.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
