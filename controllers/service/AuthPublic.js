@@ -107,20 +107,33 @@ export const loginUser = [
 
         
             // Send OTP via WhatsApp
-            const otpMessage = `Berikut kode OTP anda ${otpCode}`;
-            // const whatsappResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
-            const whatsappResponse = 1;
+            const otpMessage = `Berikut kode OTP untuk login akun PPDB anda ${otpCode}`;
+            if(otp_via == 'wa'){
 
-            // Check if WhatsApp OTP sending was successful
-            if (whatsappResponse.status === 0) {
-                // Failed to send OTP via WhatsApp, return the error message from the API
-                return res.status(500).json({
-                    status: 0,
-                    message: whatsappResponse.message || 'Gagal kirim OTP melalui whatsapp'
-                });
+                const otpResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+                // Check if WhatsApp OTP sending was successful
+                if (otpResponse.status === 0) {
+                    // Failed to send OTP via WhatsApp, return the error message from the API
+                    return res.status(500).json({
+                        status: 0,
+                        message: otpResponse.message || 'Gagal kirim OTP melalui whatsapp'
+                    });
+                }
+
+            }else if(otp_via == 'email'){
+
+                const otpResponse = await sendOtpToEmail(user.email, otpMessage);
+                // Check if WhatsApp OTP sending was successful
+                if (otpResponse.status === 0) {
+                    // Failed to send OTP via WhatsApp, return the error message from the API
+                    return res.status(500).json({
+                        status: 0,
+                        message: otpResponse.message || 'Gagal kirim OTP melalui email'
+                    });
+                }
+
             }
-
-
+        
 
             const otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
             // await user.save({ fields: ['access_token', 'otp_expiration'] });
