@@ -78,12 +78,13 @@ export const loginUser = [
 
     async (req, res) => {
 
-        const { nisn, password } = req.body;
+        const { otp_via, nisn, password } = req.body;
 
         try {
             // Check if user exists
             const user = await DataPendaftars.findOne({
                 where: {
+                    otp_via,
                     nisn,
                     is_active: 1,
                     is_verified: 1,
