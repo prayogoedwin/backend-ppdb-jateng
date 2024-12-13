@@ -416,7 +416,7 @@ export const getPerangkingan = async (req, res) => {
                 });
             }
         }else if(jalur_pendaftaran_id == 6){
-            //Jalur Afirmasi SMK Terdekat
+            //Jalur SMK Terdekat
                 const resData = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
@@ -452,8 +452,8 @@ export const getPerangkingan = async (req, res) => {
                         'data': [] // Return null or an appropriate value when data is not found
                     });
                 }
-            }else{
-                //Jalur Afirmasi SMK Terdekat
+        }else{
+                   //Jalur Afirmasi SMK Terdekat
                     const resData = await DataPerangkingans.findAll({
                     where: {
                         jalur_pendaftaran_id,
