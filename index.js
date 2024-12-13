@@ -39,6 +39,6 @@ try {
 // use router
 app.use(Router);
 // listen on port
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3033;
 // app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
 app.listen(port, '0.0.0.0', () => console.log(`Server running at http://0.0.0.0:${port}`));
