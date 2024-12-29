@@ -37,11 +37,31 @@ const getPesertaDidikByNisn = async (nisn) => {
          
         });
 
-        // if (!pesertaDidik) {
-        //     throw new Error('Peserta didik tidak ditemukan');
-        // }
+        if (!pesertaDidik) {
+            pesertaDidik = await DataPesertaDidiks.findOne({
+                where: { nik: identifier },
+                include: [
+                    {
+                        model: Sekolah,
+                        as: 'data_sekolah', // Tambahkan alias di sini
+                        attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
+                        include: [{
+                            model: BentukPendidikan,
+                            as: 'bentuk_pendidikan',
+                            attributes: ['id','nama']
+                        }]
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    }
+                ],
+            });
+        }
 
         return pesertaDidik;
+        
     } catch (error) {
         console.error(error);
         throw error;
