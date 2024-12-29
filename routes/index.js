@@ -47,7 +47,16 @@ import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser
 import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
-import { getDataPendaftarForVerif, getDataPendaftarForVerifPagination, getDataPendaftarById, verifikasiPendaftar, updatePendaftar, updatePendaftarCapil } from "../controllers/service/admin/VerifPendaftar.js";
+import { getDataPendaftarForVerif, 
+    getDataPendaftarForVerifPagination, 
+    getDataPendaftarById, 
+    verifikasiPendaftar, 
+    updatePendaftar,
+    updatePendaftarCapil,
+
+
+    getDataPendaftarByWhere
+} from "../controllers/service/admin/VerifPendaftar.js";
 
 //timenline
 import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
@@ -186,6 +195,9 @@ router.post('/admin-api/master/sekolah_tujuan_update', ipWhitelistMiddleware, ap
 
 // menu pendaftaran
 // router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerif);
+router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByWhere);
+// router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
+
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);

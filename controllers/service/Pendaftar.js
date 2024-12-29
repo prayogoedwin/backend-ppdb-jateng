@@ -629,8 +629,9 @@ export const getPendaftarLog = async (req, res) => {
     }
 }
 
-export const getBatasWlayah = async (req, res) => {
+export const getBatasWlayahBAK = async (req, res) => {
   try {
+
     if (!req.body.kelurahan) {
       return res.status(400).json({
         status: 0,
@@ -656,6 +657,62 @@ export const getBatasWlayah = async (req, res) => {
         message: 'Data kosong',
         data: null
       });
+    }
+
+  } catch (err) {
+    console.error('Error fetching data:', err);
+    res.status(500).json({
+      status: 0,
+      message: 'Error'
+    });
+  }
+}
+
+
+export const getBatasWlayah = async (req, res) => {
+  try {
+   
+    if (!req.body.kelurahan) {
+      return res.status(400).json({
+        status: 0,
+        message: 'Kode dapodik (kelurahan) tidak diberikan'
+      });
+    }
+
+    const redis_key = 'BatasWilayah'+req.body.keluraha;
+    const cacheNya = await redisGet(redis_key);
+
+      if (cacheNya) {
+
+        res.status(200).json({
+          status: 1,
+          message: 'Data di ambil dari cache',
+          data: JSON.parse(cacheNya)
+        });
+
+
+      }else{
+
+        const json = await GeoJsons.findOne({
+          where: {
+            kode_dapodik: req.body.kelurahan,
+          }
+        });
+
+        if (json) {
+          res.status(200).json({
+            status: 1,
+            message: 'Data berhasil ditemukan',
+            data: json
+          });
+        } else {
+          res.status(200).json({
+            status: 0,
+            message: 'Data kosong',
+            data: null
+          });
+        }
+
     }
 
   } catch (err) {
