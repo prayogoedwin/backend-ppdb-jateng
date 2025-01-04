@@ -55,7 +55,8 @@ import { getDataPendaftarForVerif,
     updatePendaftarCapil,
 
 
-    getDataPendaftarByWhere
+    getDataPendaftarByWhere,
+    getDataPendaftarCount
 } from "../controllers/service/admin/VerifPendaftar.js";
 
 //timenline
@@ -195,8 +196,9 @@ router.post('/admin-api/master/sekolah_tujuan_update', ipWhitelistMiddleware, ap
 
 // menu pendaftaran
 // router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerif);
-router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByWhere);
-// router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
+// router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByWhere);
+router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
+router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);

@@ -92,9 +92,9 @@ export const getDataPendaftarForVerif = async (req, res) => {
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
                     },
                     {
-                        model: WilayahVerDapodik,
-                        as: 'data_wilayah_prov',
-                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                        model: DataUsers,
+                        as: 'diverifikasi_oleh',
+                        attributes: ['id', 'nama']
                     }
                 ],
                 where: whereFor
@@ -270,8 +270,8 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 data: JSON.parse(cacheNya)
             });
         } else {
-            const adminNya = req.user.userId;
-            // const adminNya = 19;
+            // const adminNya = req.user.userId;
+            const adminNya = 19;
 
             const dataAdminNya = await DataUsers.findOne({
                 where: {
@@ -354,6 +354,16 @@ export const getDataPendaftarByWhere = async (req, res) => {
                         model: WilayahVerDapodik,
                         as: 'data_wilayah_prov',
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: DataUsers,
+                        as: 'diverifikasi_oleh',
+                        attributes: ['id', 'nama']
                     }
                 ],
                 where: whereFor,
@@ -387,6 +397,92 @@ export const getDataPendaftarByWhere = async (req, res) => {
                     data: []
                 });
             }
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err); // Log the error for debugging
+        res.status(404).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
+export const getDataPendaftarCount = async (req, res) => {
+    const redis_key = 'DataPendaftarCountAdmin';
+    try {
+        // const cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
+        if (cacheNya) {
+            res.status(200).json({
+                status: 1,
+                message: 'Data diambil dari cache',
+                data: JSON.parse(cacheNya)
+            });
+        } else {
+            const adminNya = 19;
+
+            const dataAdminNya = await DataUsers.findOne({
+                where: {
+                    id: adminNya,
+                    is_active: 1,
+                    is_delete: 0
+                }
+            });
+
+            let whereFor = {
+                [Op.or]: [
+                    { is_delete: { [Op.is]: null } },
+                    { is_delete: 0 }
+                ]
+            };
+
+
+            if (dataAdminNya.role_ == 101) {
+                whereFor.kabkota_id = dataAdminNya.kabkota_id;
+            }
+
+            // Parameter pencarian opsional
+            const { nisn } = req.query;
+            if (nisn) {
+                whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
+            }
+
+            // Menghitung data berdasarkan kondisi
+            const countVerifikasikan1 = await DataPendaftars.count({
+                where: {
+                    ...whereFor,
+                    verifikasikan_disdukcapil: 1,
+                }
+            });
+
+            const countVerifikasikan1AndVerified1 = await DataPendaftars.count({
+                where: {
+                    ...whereFor,
+                    verifikasikan_disdukcapil: 1,
+                    is_verified_disdukcapil: 1,
+                }
+            });
+
+            const countVerifikasikan1AndVerifiedNullOr0 = await DataPendaftars.count({
+                where: {
+                    ...whereFor,
+                    verifikasikan_disdukcapil: 1,
+                    [Op.or]: [
+                        { is_verified_disdukcapil: { [Op.is]: null } },
+                        { is_verified_disdukcapil: 0 }
+                    ]
+                }
+            });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Jumlah data berhasil dihitung',
+                data: {
+                    verifikasikan_disdukcapil_1: countVerifikasikan1,
+                    verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_1: countVerifikasikan1AndVerified1,
+                    verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_null: countVerifikasikan1AndVerifiedNullOr0
+                }
+            });
         }
     } catch (err) {
         console.error('Error fetching data:', err); // Log the error for debugging
