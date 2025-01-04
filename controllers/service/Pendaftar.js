@@ -13,6 +13,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
 import { fileURLToPath } from 'url';
+import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
 // Mendapatkan __filename dan __dirname
 const __filename = fileURLToPath(import.meta.url);
