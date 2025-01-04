@@ -110,7 +110,8 @@ export const loginUser = [
             const otpMessage = `Berikut kode OTP untuk login akun PPDB anda ${otpCode}`;
             if(otp_via == 'whatsapp'){
 
-                const otpResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+                // const otpResponse = await sendOtpToWhatsapp(user.no_wa, otpMessage);
+                const otpResponse = 1;
                 // Check if WhatsApp OTP sending was successful
                 if (otpResponse.status === 0) {
                     // Failed to send OTP via WhatsApp, return the error message from the API
@@ -122,7 +123,8 @@ export const loginUser = [
 
             }else if(otp_via == 'email'){
 
-                const otpResponse = await sendOtpToEmail(user.email, otpMessage);
+                // const otpResponse = await sendOtpToEmail(user.email, otpMessage);
+                const otpResponse = 1;
                 // Check if WhatsApp OTP sending was successful
                 if (otpResponse.status === 0) {
                     // Failed to send OTP via WhatsApp, return the error message from the API
