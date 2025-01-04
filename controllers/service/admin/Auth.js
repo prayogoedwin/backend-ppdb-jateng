@@ -288,6 +288,7 @@ export const verifikasiOtp = async (req, res) => {
                 nama: user.nama,
                 role: user.role_,
                 sekolah_id: user.sekolah_id,
+                kabkota_id: user.kabkota_id,
                 accessToken,
                 refreshToken
             }
