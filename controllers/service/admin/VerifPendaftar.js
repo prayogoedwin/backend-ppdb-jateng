@@ -846,7 +846,7 @@ export const updatePendaftar = async (req, res) => {
     }
 }
 
-export const updatePendaftarCapil = async (req, res) => {
+export const updatePendaftarCapilBAK = async (req, res) => {
     const { 
         
         id,
@@ -950,6 +950,88 @@ export const updatePendaftarCapil = async (req, res) => {
         });
     }
 }
+
+export const updatePendaftarCapil = async (req, res) => {
+    const { 
+        id,
+        verifikasikan_disdukcapil,
+        dari_dukcapil,
+        is_verified_disdukcapil,
+        tanggal_kedatangan,
+        tanggal_kedatangan_ibu,
+        tanggal_kedatangan_ayah
+    } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
+    }
+
+    let decodedId;
+    try {
+        decodedId = decodeId(id);
+        if (!decodedId) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+    } catch (err) {
+        console.error('Error decoding ID:', err);
+        return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+    }
+
+    try {
+        const resData = await DataPendaftars.findOne({
+            where: {
+                id: decodedId,
+                is_delete: 0
+            }
+        });
+
+        if (!resData) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // Buat objek data update
+        const updateData = {
+            verifikasikan_disdukcapil,
+            is_verified_disdukcapil,
+            disdukcapil_at: new Date(),
+            disdukcapil_by: req.user.userId,
+        };
+
+        // Tambahkan tanggal hanya jika tidak null
+        if (tanggal_kedatangan !== null) {
+            updateData.tanggal_kedatangan = tanggal_kedatangan;
+        }
+        if (tanggal_kedatangan_ibu !== null) {
+            updateData.tanggal_kedatangan_ibu = tanggal_kedatangan_ibu;
+        }
+        if (tanggal_kedatangan_ayah !== null) {
+            updateData.tanggal_kedatangan_ayah = tanggal_kedatangan_ayah;
+        }
+
+        await DataPendaftars.update(updateData, {
+            where: {
+                id: decodedId,
+                [Op.or]: [
+                    { is_delete: 0 }, // Entri yang belum dihapus
+                    { is_delete: null } // Entri yang belum diatur
+                ]
+            }
+        });
+
+        await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+
+        res.status(200).json({
+            status: 1,
+            message: 'Berhasil perbaharui data',
+        });
+    } catch (error) {
+        console.error('Error updating data:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
 
 //     const {
 //         id,
