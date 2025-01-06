@@ -300,14 +300,22 @@ export const getDataPendaftarByWhere = async (req, res) => {
             if (dataAdminNya.role_ != 101) {
                 const kirimDukcapil = req.query.kirim_dukcapil;
                 const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+                const verifikasiAdmin = req.query.verifikasi_admin;
 
                 if (kirimDukcapil != 1) {
                     whereFor.verifikasikan_disdukcapil = {
                         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
                     };
                 }
+
                 if (verifikasiDukcapil != 1) {
                     whereFor.is_verified_disdukcapil = {
+                        [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+                    };
+                }
+
+                if (verifikasiAdmin != 1) {
+                    whereFor.is_verified = {
                         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
                     };
                 }
@@ -317,6 +325,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 const verifikasiDukcapil = req.query.verifikasi_dukcapil;
 
                 whereFor.verifikasikan_disdukcapil =  1;
+                whereFor.is_verified !=  1;
                 whereFor.kabkota_id = dataAdminNya.kabkota_id;
                 if (verifikasiDukcapil != 1) {
                     whereFor.is_verified_disdukcapil = {
