@@ -300,7 +300,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
             if (dataAdminNya.role_ != 101) {
                 const kirimDukcapil = req.query.kirim_dukcapil;
                 const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-                const verifikasiAdmin = req.query.verifikasi_admin;
+                const verifikasiAdmin = req.query.is_verified;
 
                 // if (kirimDukcapil != 1) {
                 //     whereFor.verifikasikan_disdukcapil = {
