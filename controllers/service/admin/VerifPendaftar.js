@@ -189,7 +189,7 @@ export const getDataPendaftarForVerifPagination = async (req, res) => {
             }
 
             if (nama) {
-                whereFor.nama_lengkap = nama; // Tambahkan kondisi pencarian berdasarkan NISN
+                whereFor.nama_lengkap = { [Op.like]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
             }
             
 
