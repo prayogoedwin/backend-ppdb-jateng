@@ -959,7 +959,8 @@ export const updatePendaftarCapil = async (req, res) => {
         is_verified_disdukcapil,
         tanggal_kedatangan,
         tanggal_kedatangan_ibu,
-        tanggal_kedatangan_ayah
+        tanggal_kedatangan_ayah,
+        keterangan_dukcapil,
     } = req.body;
 
     if (!id) {
@@ -995,6 +996,7 @@ export const updatePendaftarCapil = async (req, res) => {
             is_verified_disdukcapil,
             disdukcapil_at: new Date(),
             disdukcapil_by: req.user.userId,
+            keterangan_dukcapil,
         };
 
         // Tambahkan tanggal hanya jika tidak null
