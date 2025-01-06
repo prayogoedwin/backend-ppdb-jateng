@@ -293,6 +293,8 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 ]
             };
 
+           
+
           
 
             if (dataAdminNya.role_ != 101) {
@@ -326,11 +328,15 @@ export const getDataPendaftarByWhere = async (req, res) => {
             }
 
           
-            // Parameter pencarian opsional
-            const { nisn } = req.query;
-            if (nisn) {
-                whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
-            }
+             // Parameter pencarian opsional
+             const { nisn, nama } = req.query;
+             if (nisn) {
+                 whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
+             }
+ 
+             if (nama) {
+                 whereFor.nama_lengkap = { [Op.like]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
+             }
 
             // Pagination logic
             const page = parseInt(req.query.page) || 1; // Default page is 1
