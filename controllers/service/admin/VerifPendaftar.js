@@ -309,7 +309,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 // }
 
                 if (kirimDukcapil) {
-                    whereFor.verifikasikan_disdukcapil = verifikasiDukcapil;
+                    whereFor.verifikasikan_disdukcapil = kirimDukcapil;
                 }
 
                 // if (verifikasiDukcapil != 1) {
