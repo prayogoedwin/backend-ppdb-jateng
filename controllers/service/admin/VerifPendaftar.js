@@ -305,9 +305,9 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 );
             }
  
-             if (nama) {
-                 whereFor.nama_lengkap = { [Op.like]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
-             }
+            //  if (nama) {
+            //      whereFor.nama_lengkap = { [Op.like]: `${nama}%` }; // Add LIKE condition for nama_lengkap
+            //  }
 
            
 
