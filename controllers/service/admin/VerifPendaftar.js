@@ -319,6 +319,10 @@ export const getDataPendaftarByWhere = async (req, res) => {
                         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
                     };
                 }
+
+                if (verifikasiAdmin) {
+                    whereFor.is_verified = verifikasiAdmin;
+                }
             }
 
             if (dataAdminNya.role_ == 101) {
