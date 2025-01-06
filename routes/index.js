@@ -195,9 +195,9 @@ router.post('/admin-api/master/sekolah_tujuan_update', ipWhitelistMiddleware, ap
 //menu menu & action admin
 
 // menu pendaftaran
-// router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerif);
-// router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByWhere);
-router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
+router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerif);
+router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByWhere);
+// router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
