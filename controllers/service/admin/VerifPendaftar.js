@@ -308,6 +308,10 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 //     };
                 // }
 
+                if (verifikasiAdmin) {
+                    whereFor.is_verified = verifikasiAdmin;
+                }
+
                 if (kirimDukcapil) {
                     whereFor.verifikasikan_disdukcapil = kirimDukcapil;
                 }
@@ -328,9 +332,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 //     };
                 // }
 
-                if (verifikasiAdmin) {
-                    whereFor.is_verified = verifikasiAdmin;
-                }
+               
             }
 
             if (dataAdminNya.role_ == 101) {
