@@ -314,11 +314,11 @@ export const getDataPendaftarByWhere = async (req, res) => {
                     };
                 }
 
-                if (verifikasiAdmin != 1) {
-                    whereFor.is_verified = {
-                        [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                    };
-                }
+                // if (verifikasiAdmin != 1) {
+                //     whereFor.is_verified = {
+                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+                //     };
+                // }
 
                 if (verifikasiAdmin) {
                     whereFor.is_verified = verifikasiAdmin;
