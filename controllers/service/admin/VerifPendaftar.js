@@ -533,6 +533,11 @@ export const getDataPendaftarById = async (req, res) => {
                         model: WilayahVerDapodik,
                         as: 'data_wilayah_prov',
                         attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: DataUsers,
+                        as: 'diverifikasi_oleh',
+                        attributes: ['id', 'nama']
                     }
                 ],
                 
