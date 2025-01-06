@@ -302,16 +302,24 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 const verifikasiDukcapil = req.query.verifikasi_dukcapil;
                 const verifikasiAdmin = req.query.verifikasi_admin;
 
-                if (kirimDukcapil != 1) {
-                    whereFor.verifikasikan_disdukcapil = {
-                        [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                    };
+                // if (kirimDukcapil != 1) {
+                //     whereFor.verifikasikan_disdukcapil = {
+                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+                //     };
+                // }
+
+                if (kirimDukcapil) {
+                    whereFor.verifikasikan_disdukcapil = verifikasiDukcapil;
                 }
 
-                if (verifikasiDukcapil != 1) {
-                    whereFor.is_verified_disdukcapil = {
-                        [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                    };
+                // if (verifikasiDukcapil != 1) {
+                //     whereFor.is_verified_disdukcapil = {
+                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+                //     };
+                // }
+
+                if (verifikasiDukcapil) {
+                    whereFor.is_verified_disdukcapil = verifikasiDukcapil;
                 }
 
                 // if (verifikasiAdmin != 1) {
