@@ -293,6 +293,22 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 ]
             };
 
+             // Parameter pencarian opsional
+             const { nisn, nama } = req.query;
+            //  if (nisn) {
+            //      whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
+            //  }
+             if (nisn) {
+                whereFor[Op.or].push(
+                    { nisn: nisn }, // Search by NISN
+                    { nik: nisn }   // Search by NIK using the same parameter
+                );
+            }
+ 
+             if (nama) {
+                 whereFor.nama_lengkap = { [Op.like]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
+             }
+
            
 
           
@@ -356,21 +372,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
             }
 
           
-             // Parameter pencarian opsional
-             const { nisn, nama } = req.query;
-            //  if (nisn) {
-            //      whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
-            //  }
-             if (nisn) {
-                whereFor[Op.or].push(
-                    { nisn: nisn }, // Search by NISN
-                    { nik: nisn }   // Search by NIK using the same parameter
-                );
-            }
- 
-             if (nama) {
-                 whereFor.nama_lengkap = { [Op.like]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
-             }
+            
 
             // Pagination logic
             const page = parseInt(req.query.page) || 1; // Default page is 1
