@@ -183,18 +183,15 @@ export const getDataPendaftarForVerifPagination = async (req, res) => {
             }
 
             // Parameter pencarian opsional
-            // const { nisn } = req.query;
-            // if (nisn) {
-            //     whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
-            // }
-            // Parameter pencarian opsional
-             const { nisn } = req.query;
-             if (nisn) {
-                 whereFor[Op.or].push(
-                     { nisn: nisn }, // Add condition for NISN
-                     { nama_lengkap: { [Op.like]: `%${nisn}%` } } // Add condition for nama
-                 );
-             }
+            const { nisn, nama } = req.query;
+            if (nisn) {
+                whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
+            }
+
+            if (nama) {
+                whereFor.nama_lengkap = nama; // Tambahkan kondisi pencarian berdasarkan NISN
+            }
+            
 
             // Pagination logic
             const page = parseInt(req.query.page) || 1; // Default page is 1
