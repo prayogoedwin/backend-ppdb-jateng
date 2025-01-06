@@ -303,7 +303,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    keterangan_dukcapil: {
+    keterangan_dukcapl: {
         type: DataTypes.STRING,
         allowNull: true,
     },
