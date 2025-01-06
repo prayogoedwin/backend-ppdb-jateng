@@ -275,8 +275,8 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 data: JSON.parse(cacheNya)
             });
         } else {
-            // const adminNya = req.user.userId;
-            const adminNya = 19;
+            const adminNya = req.user.userId;
+            // const adminNya = 19;
 
             const dataAdminNya = await DataUsers.findOne({
                 where: {
