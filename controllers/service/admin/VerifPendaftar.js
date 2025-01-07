@@ -293,25 +293,23 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 ]
             };
 
-             // Parameter pencarian opsional
-             const { nisn, nama } = req.query;
+            // Parameter pencarian opsional
+            const { nisn, nama } = req.query;
             //  if (nisn) {
             //      whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
             //  }
-             if (nisn) {
+            if (nisn) {
                 whereFor[Op.or].push(
                     { nisn: nisn }, // Search by NISN
                     { nik: nisn }   // Search by NIK using the same parameter
                 );
             }
+            
  
-            //  if (nama) {
-            //      whereFor.nama_lengkap = { [Op.like]: `${nama}%` }; // Add LIKE condition for nama_lengkap
-            //  }
+             if (nama) {
+                 whereFor.nama_lengkap = { [Op.like]: `${nama}%` }; // Add LIKE condition for nama_lengkap
+             }
 
-           
-
-          
 
             if (dataAdminNya.role_ != 101) {
                 const kirimDukcapil = req.query.kirim_dukcapil;

@@ -1,6 +1,8 @@
 import axios from 'axios';
 import FormData from 'form-data';
 import nodemailer from 'nodemailer';
+import EzSekolahTujuans from '../models/master/EzSekolahTujuansModel.js'; // Adjusted path to EzSekolahTujuans model
+import EzWilayahVerDapodiks from '../models/master/WilayahVerDapodikModel.js'; // Adjusted path to WilayahVerDapodik model
 
 export async function sendOtpToWhatsapp(phone, message) {
     const url = 'https://nusagateway.com/api/send-message.php';

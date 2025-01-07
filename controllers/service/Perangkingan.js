@@ -453,43 +453,44 @@ export const getPerangkingan = async (req, res) => {
                     });
                 }
         }else{
-                   //Jalur Afirmasi SMK Terdekat
-                    const resData = await DataPerangkingans.findAll({
-                    where: {
-                        jalur_pendaftaran_id,
-                        sekolah_tujuan_id,
-                        is_delete: 0
-                    }, order: [
-                        ['jarak', 'ASC'], //nilai tertinggi
-                        ['umur', 'DESC'], //umur tertua
-                        ['created_at', 'ASC'] // daftar sekolah terawal
-                    ]
-                   
+            
+                //Jalur Afirmasi SMK Terdekat
+                const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0
+                }, order: [
+                    ['jarak', 'ASC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] // daftar sekolah terawal
+                ]
+                
+                });
+                if (resData && resData.length > 0) {
+                    // res.status(200).json({
+                    //     'status': 1,
+                    //     'message': 'Data berhasil ditemukan',
+                    //     'data': resData // Return the found data
+                    // });
+                    const modifiedData = resData.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        return { ...rest, id: encodeId(id) };
                     });
-                    if (resData && resData.length > 0) {
-                        // res.status(200).json({
-                        //     'status': 1,
-                        //     'message': 'Data berhasil ditemukan',
-                        //     'data': resData // Return the found data
-                        // });
-                        const modifiedData = resData.map(item => {
-                            const { id_pendaftar, id, ...rest } = item.toJSON();
-                            return { ...rest, id: encodeId(id) };
-                        });
-        
-                        res.status(200).json({
-                            'status': 1,
-                            'message': 'Data berhasil ditemukan',
-                            'data': modifiedData // Return the found data
-                        });
-                    } else {
-                        res.status(200).json({
-                            'status': 0,
-                            'message': 'Data kosong',
-                            'data': [] // Return null or an appropriate value when data is not found
-                        });
-                    }
+    
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData // Return the found data
+                    });
+                } else {
+                    res.status(200).json({
+                        'status': 0,
+                        'message': 'Data kosong',
+                        'data': [] // Return null or an appropriate value when data is not found
+                    });
                 }
+            }
 
    
 
