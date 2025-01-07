@@ -8,13 +8,13 @@ dotenv.config();
 const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: process.env.DB_DRIVER,
-    pool: {  
-        max: 5, // Maksimum koneksi  
-        min: 0,  // Minimum koneksi  
-        acquire: 30000, // Waktu maksimum untuk mendapatkan koneksi  
-        idle: 10000 // Waktu maksimum koneksi idle sebelum dilepaskan  
-    }  
+    dialect: process.env.DB_DRIVER
+    // pool: {  
+    //     max: 5, // Maksimum koneksi  
+    //     min: 0,  // Minimum koneksi  
+    //     acquire: 30000, // Waktu maksimum untuk mendapatkan koneksi  
+    //     idle: 10000 // Waktu maksimum koneksi idle sebelum dilepaskan  
+    // }  
 });
 
 export default db;
