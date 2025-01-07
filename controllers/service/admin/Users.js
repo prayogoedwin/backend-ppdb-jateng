@@ -346,7 +346,7 @@ export const addUser = async (req, res) => {
         console.error('Gagal tambah pengguna:', error);
         res.status(500).json({
             status: 0,
-            message: error.message
+            message: error.message+'a'
         });
     }
 };
