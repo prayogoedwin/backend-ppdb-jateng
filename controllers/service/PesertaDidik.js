@@ -38,29 +38,41 @@ const getPesertaDidikByNisn = async (nisn) => {
         });
 
         if (!pesertaDidik) {
-            pesertaDidik = await DataPesertaDidiks.findOne({
-                where: { nik: identifier },
-                include: [
-                    {
-                        model: Sekolah,
-                        as: 'data_sekolah', // Tambahkan alias di sini
-                        attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
-                        include: [{
-                            model: BentukPendidikan,
-                            as: 'bentuk_pendidikan',
-                            attributes: ['id','nama']
-                        }]
-                    },
-                    {
-                        model: WilayahVerDapodik,
-                        as: 'data_wilayah',
-                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
-                    }
-                ],
-            });
+
+            // res.status(200).json({
+            //     status: 0,
+            //     message: 'NISN tidak ditemukan',
+            // });
+            return false;
+
         }
 
         return pesertaDidik;
+
+        // if (!pesertaDidik) {
+        //     pesertaDidik = await DataPesertaDidiks.findOne({
+        //         where: { nik: nik },
+        //         include: [
+        //             {
+        //                 model: Sekolah,
+        //                 as: 'data_sekolah', // Tambahkan alias di sini
+        //                 attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
+        //                 include: [{
+        //                     model: BentukPendidikan,
+        //                     as: 'bentuk_pendidikan',
+        //                     attributes: ['id','nama']
+        //                 }]
+        //             },
+        //             {
+        //                 model: WilayahVerDapodik,
+        //                 as: 'data_wilayah',
+        //                 attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+        //             }
+        //         ],
+        //     });
+        // }
+
+      
         
     } catch (error) {
         console.error(error);
@@ -97,7 +109,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         if (!pesertaDidik) {
             return res.status(200).json({
                 status: 0,
-                message: 'Peserta didik tidak ditemukan'
+                message: 'NISN tidak ditemukan'
             });
         }
 
