@@ -52,7 +52,7 @@ const uploadFiles = upload.fields([
 
 //Generate Verification Code
 const generateVerificationCode = async () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ3456789';
     let code;
     let exists = true;
 
