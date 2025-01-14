@@ -539,7 +539,7 @@ export const getDataPendaftarCount = async (req, res) => {
 };
 
 
-export const getDataPendaftarById = async (req, res) => {
+export const getDataPendaftarById_BAK = async (req, res) => {
         const { id } = req.params; // Ambil id dari params URL
         try {
             const resData = await DataPendaftars.findOne({
@@ -655,6 +655,121 @@ export const getDataPendaftarById = async (req, res) => {
         
 }
 
+export const getDataPendaftarById = async (req, res) => {  
+    const { id } = req.params; // Ambil id dari params URL  
+    try {  
+        const resData = await DataPendaftars.findOne({  
+            where: {  
+                id: decodeId(id),  
+                is_delete: 0  
+            },  
+            include: [  
+                {  
+                    model: WilayahVerDapodik,  
+                    as: 'data_wilayah',  
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                },  
+                {  
+                    model: WilayahVerDapodik,  
+                    as: 'data_wilayah_kec',  
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                },  
+                {  
+                    model: WilayahVerDapodik,  
+                    as: 'data_wilayah_kot',  
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                },  
+                {  
+                    model: WilayahVerDapodik,  
+                    as: 'data_wilayah_prov',  
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                },  
+                {  
+                    model: DataUsers,  
+                    as: 'diverifikasi_oleh',  
+                    attributes: ['id', 'nama']  
+                }  
+            ],  
+        });  
+  
+        if (resData != null) {  
+            // Check if opened_by is not 0  
+            if (resData.opened_by !== 0) {  
+                // Fetch the admin's name using opened_by  
+                const adminData = await DataUsers.findOne({  
+                    where: { id: resData.opened_by },  
+                    attributes: ['nama'] // Get only the name  
+                });  
+  
+                // Check if the current user is the one who opened the data  
+                if (req.user.userId !== resData.opened_by) {  
+                    const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
+                    return res.status(200).json({  
+                        status: 0,  
+                        message: `Data Sedang Diverifikasi Oleh Admin: ${adminName}`,  
+                        data: resData // Return the data for reference  
+                    });  
+                }  
+            }  
+  
+            // Update the opened_by column  
+            await DataPendaftars.update(  
+                { opened_by: req.user.userId }, // Set the opened_by field  
+                { where: { id: decodeId(id) } } // Condition to find the correct record  
+            );  
+  
+            const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+  
+            const data = {  
+                id_: id,  
+                ...resData.toJSON(), // Convert Sequelize instance to plain object  
+            };  
+            delete data.id; // Remove original ID from the response  
+  
+            // Custom value for dok_piagam and dok_kk  
+            if (data.dok_kk) {  
+                data.dok_kk = baseUrl + data.dok_kk;  
+            }  
+            if (data.dok_pakta_integritas) {  
+                data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+            }  
+            if (data.dok_suket_nilai_raport) {  
+                data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+            }  
+            if (data.dok_piagam) {  
+                data.dok_piagam = baseUrl + data.dok_piagam;  
+            }  
+  
+            // Proses file tambahan dengan downloadable URL  
+            if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                data.file_tambahan = data.file_tambahan.map(file => {  
+                    return {  
+                        ...file,  
+                        downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                    };  
+                });  
+            }  
+  
+            res.status(200).json({  
+                status: 1,  
+                message: 'Data berhasil ditemukan',  
+                data: data  
+            });  
+  
+        } else {  
+            res.status(200).json({  
+                'status': 0,  
+                'message': 'Data tidak ditemukan',  
+            });  
+        }  
+    } catch (error) {  
+        res.status(500).json({  
+            status: 0,  
+            message: error.message,  
+        });  
+    }  
+}  
+
 export const verifikasiPendaftar = async (req, res) => {
         const { id, is_verified } = req.body;
 
@@ -694,6 +809,7 @@ export const verifikasiPendaftar = async (req, res) => {
                     updated_by: req.user.userId, // Extracted from token
                     verified_at: new Date(), // Set the current date and time
                     verified_by: req.user.userId, // Extracted from token
+                    opened_by: 0 // Set opened_by to 0  
                 },
                 {
                     where: {
@@ -845,6 +961,7 @@ export const updatePendaftar = async (req, res) => {
                 updated_at: new Date(),
                 updated_by: req.user.userId,
                 verifikasikan_disdukcapil,
+                opened_by: 0 // Set opened_by to 0  
 
             },
             {
