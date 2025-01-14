@@ -298,11 +298,10 @@ export const getDataPendaftarByWhere = async (req, res) => {
             //  if (nisn) {
             //      whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
             //  }
+            
+
             if (nisn) {
-                whereFor[Op.or].push(
-                    { nisn: nisn }, // Search by NISN
-                    { nik: nisn }   // Search by NIK using the same parameter
-                );
+                whereFor.nama_lengkap = nisn;
             }
             
  
@@ -340,8 +339,6 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 if (kirimDukcapil) {
                     whereFor.verifikasikan_disdukcapil = kirimDukcapil;
                 }
-
-               
 
                 if (verifikasiDukcapil) {
                     whereFor.is_verified_disdukcapil = verifikasiDukcapil;
