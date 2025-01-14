@@ -301,7 +301,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
             
 
             if (nisn) {
-                whereFor.nama_lengkap = nisn;
+                whereFor.nisn = nisn;
             }
             
  
