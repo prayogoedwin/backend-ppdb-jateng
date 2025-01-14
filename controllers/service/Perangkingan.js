@@ -238,7 +238,7 @@ export const getPerangkingan = async (req, res) => {
                 },
                 order: [
                     // ['jarak', 'ASC'], //jarak terendah
-                    // [fn('CAST', col('jarak'), 'FLOAT'), 'ASC'], // Mengonversi jarak ke FLOAT dan mengurutkan dari yang terkecil ke yang terbesar  
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ]
