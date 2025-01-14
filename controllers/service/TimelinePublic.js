@@ -18,7 +18,7 @@ export const getTimelinePublic = async (req, res) => {
         }else{
 
             const resData = await Timelines.findAll({
-                 attributes:['id','nama','keterangan','icon','tanggal_buka','tanggal_tutup','status'], 
+                 attributes:['id','nama','keterangan','icon','tanggal_buka','tanggal_tutup','status', 'url_route'], 
                  order: [
                     ['id', 'ASC']
                 ]       
