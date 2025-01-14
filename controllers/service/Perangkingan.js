@@ -522,6 +522,15 @@ export const cekPerangkingan = async (req, res) => {
                 nisn,
             } = req.body;
 
+            const resTm = await Timelines.findOne({  
+                where: { id: 4 }, // Find the timeline by ID  
+                attributes: ['id', 'nama', 'status']  
+            });  
+
+            if (resTm.status != 1) {  
+                return res.status(200).json({ status: 0, message: 'Pendaftaran Belum Dibuka' });
+            }
+
             const cariDtSekolah = await SekolahTujuan.findOne({
             where: {
                 id: sekolah_tujuan_id,

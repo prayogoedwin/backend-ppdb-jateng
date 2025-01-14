@@ -680,7 +680,7 @@ export const getBatasWlayah = async (req, res) => {
       });
     }
 
-    const redis_key = 'BatasWilayah'+req.body.keluraha;
+    const redis_key = 'BatasWilayah'+req.body.kelurahan;
     const cacheNya = await redisGet(redis_key);
 
       if (cacheNya) {
