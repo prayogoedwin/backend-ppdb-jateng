@@ -690,8 +690,9 @@ export const getDataPendaftarById = async (req, res) => {
         });  
   
         if (resData != null) {  
+
             // Check if opened_by is not 0  
-            if (resData.opened_by !== 0) {  
+            if (resData.opened_by != 0) {  
                 // Fetch the admin's name using opened_by  
                 const adminData = await DataUsers.findOne({  
                     where: { id: resData.opened_by },  
@@ -699,7 +700,7 @@ export const getDataPendaftarById = async (req, res) => {
                 });  
   
                 // Check if the current user is the one who opened the data  
-                if (req.user.userId !== resData.opened_by) {  
+                if (req.user.userId != resData.opened_by) {  
                     const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
                     return res.status(200).json({  
                         status: 0,  

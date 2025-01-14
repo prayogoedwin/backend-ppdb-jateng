@@ -307,6 +307,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    opened_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 
     
     
