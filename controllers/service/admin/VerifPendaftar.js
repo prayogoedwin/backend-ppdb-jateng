@@ -705,7 +705,7 @@ export const getDataPendaftarById = async (req, res) => {
                     return res.status(200).json({  
                         status: 0,  
                         message: `Data Sedang Diverifikasi Oleh Admin: ${adminName}`,  
-                        data: resData // Return the data for reference  
+                        data: [] // Return the data for reference  
                     });  
                 }  
             }  
