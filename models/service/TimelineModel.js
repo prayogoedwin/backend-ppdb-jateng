@@ -52,6 +52,10 @@ const Timelines = db.define('ez_timeline', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    url_route: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 },{
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps

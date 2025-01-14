@@ -98,6 +98,7 @@ export const updateTimeline = [
             tanggal_tutup,
             status,
             icon,
+            url_route,
         } = req.body;
 
 
@@ -120,7 +121,8 @@ export const updateTimeline = [
                 status,
                 updatedAt: new Date(), // Set the current date and time
                 updatedby: req.user.userId, // Use user ID from token
-                icon
+                icon,
+                url_route
             }, {
                 where: {
                     id
