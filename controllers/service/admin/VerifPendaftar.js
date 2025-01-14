@@ -691,6 +691,16 @@ export const getDataPendaftarById = async (req, res) => {
   
         if (resData != null) {  
 
+            if (resData.verified_by == 1) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Data Sudah Diverifikasi Oleh Admin Lainnya`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
             // Check if opened_by is not 0  
             if (resData.opened_by != 0) {  
                 // Fetch the admin's name using opened_by  
