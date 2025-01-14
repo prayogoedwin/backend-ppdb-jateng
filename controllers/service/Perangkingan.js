@@ -14,7 +14,7 @@ import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
-import { Op, fn, col } from 'sequelize';
+import { Op, literal } from 'sequelize';
 
 
 //Generate Verification Code
