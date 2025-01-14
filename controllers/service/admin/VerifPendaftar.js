@@ -1172,6 +1172,7 @@ export const updatePendaftarCapil = async (req, res) => {
             disdukcapil_at: new Date(),
             disdukcapil_by: req.user.userId,
             keterangan_dukcapl,
+            opened_by: 0 // Set opened_by to 0  
         };
 
         // Tambahkan tanggal hanya jika tidak null
