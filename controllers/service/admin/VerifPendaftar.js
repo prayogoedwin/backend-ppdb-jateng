@@ -691,7 +691,7 @@ export const getDataPendaftarById = async (req, res) => {
   
         if (resData != null) {  
 
-            if (resData.verified_by == 1) {  
+            if (resData.is_verified == 1) {  
 
                 return res.status(200).json({  
                     status: 0,  
