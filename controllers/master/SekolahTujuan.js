@@ -199,7 +199,7 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {  
                         id_sekolah_tujuan: formattedResData.map(school => school.id) // Get the ids of the schools  
                     },  
-                    attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                        attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
                 });  
   
                 // Format jurusan data  
@@ -321,4 +321,3 @@ export const getSekolahTujuanJurusanPublik = async (req, res) => {
         }
 
 }
-
