@@ -923,10 +923,10 @@ export const getPerangkingan = async (req, res) => {
                     jurusan_id,
                     is_delete: 0,
                     [Op.or]: [  
-                        { is_anak_panti: { [Op.ne]: 0 } },  // Check if is_anak_panti is not equal to 0  
-                        { is_anak_keluarga_tidak_mampu: { [Op.ne]: 0 } },  // Check if is_anak_keluarga_tidak_mampu is not equal to 0  
-                        { is_pip: { [Op.ne]: 0 } }  // Check if is_pip is not equal to 0  
-                    ]                      
+                        { is_anak_panti: { [Op.ne]: '0' } },  // Check if is_anak_panti is not equal to '0'  
+                        { is_anak_keluarga_tidak_mampu: { [Op.ne]: '0' } },  // Check if is_anak_keluarga_tidak_mampu is not equal to '0'  
+                        { is_pip: { [Op.ne]: '0' } }  // Check if is_pip is not equal to '0'  
+                    ]                     
                 }, order: [
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
