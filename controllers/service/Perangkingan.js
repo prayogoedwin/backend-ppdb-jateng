@@ -1344,41 +1344,50 @@ export const cekPerangkingan = async (req, res) => {
             }
             });
 
-            if(jalur_pendaftaran_id == 2){
+            // if(jalur_pendaftaran_id == 2){
 
-                const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
-                if(zonasi_khusus < 1){
-                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-                }
+            //     const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
+            //     if(zonasi_khusus < 1){
+            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+            //     }
 
-            }
+            // }
 
-            if(jalur_pendaftaran_id == 4){
+            // if(jalur_pendaftaran_id == 2){
 
-                const pto = cariDtSekolah.kuota_pto_persentase;
-                if(pto < 1){
-                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-                }
+            //     const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
+            //     if(zonasi_khusus < 1){
+            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+            //     }
 
-            }
+            // }
 
-            if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
+            // if(jalur_pendaftaran_id == 4){
 
-                const afirmasi = cariDtSekolah.kuota_afirmasi_persentase;
-                if(afirmasi < 1){
-                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-                }
+            //     const pto = cariDtSekolah.kuota_pto_persentase;
+            //     if(pto < 1){
+            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+            //     }
 
-            }
+            // }
 
-            if(jalur_pendaftaran_id == 8){
+            // if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
 
-                const pk = cariDtSekolah.kuota_prestasi_khusus_persentase;
-                if(pk < 1){
-                    return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-                }
+            //     const afirmasi = cariDtSekolah.kuota_afirmasi_persentase;
+            //     if(afirmasi < 1){
+            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+            //     }
 
-            }
+            // }
+
+            // if(jalur_pendaftaran_id == 8){
+
+            //     const pk = cariDtSekolah.kuota_prestasi_khusus_persentase;
+            //     if(pk < 1){
+            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
+            //     }
+
+            // }
 
 
             // Retrieve data from DataPendaftarModel
