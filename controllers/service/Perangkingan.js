@@ -623,6 +623,15 @@ export const getPerangkingan = async (req, res) => {
 
         }else if(jalur_pendaftaran_id == 3){
              //Jalur Prestasi SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_prestasi = resSek.kuota_prestasi;
+
              const resData = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
@@ -633,7 +642,8 @@ export const getPerangkingan = async (req, res) => {
                     ['nilai_akhir', 'DESC'], //nilai tertinggi
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] // daftar sekolah terawal
-                ]
+                ],
+                limit: kuota_prestasi
                
             });
 
@@ -664,13 +674,27 @@ export const getPerangkingan = async (req, res) => {
 
         }else if(jalur_pendaftaran_id == 4){
             //Jalur PTO SMA
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_pto = resSek.kuota_pto;
+
             const resData = await DataPerangkingans.findAll({
                where: {
                    jalur_pendaftaran_id,
                    sekolah_tujuan_id,
+                   is_anak_guru_jateng: 1,
                    is_delete: 0
                },
-               
+               order: [
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] //daftar sekolah terawal
+                  ],
+                limit: kuota_pto
            });
 
            if (resData && resData.length > 0) {
@@ -699,12 +723,27 @@ export const getPerangkingan = async (req, res) => {
 
         }else if(jalur_pendaftaran_id == 5){
         //Jalur Afirmasi SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_afirmasi = resSek.kuota_afirmasi;
+
             const resData = await DataPerangkingans.findAll({
             where: {
                 jalur_pendaftaran_id,
                 sekolah_tujuan_id,
                 is_delete: 0
             },
+            order: [
+                [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                ['umur', 'DESC'], //umur tertua
+                ['created_at', 'ASC'] //daftar sekolah terawal
+            ],
+            limit: kuota_afirmasi
            
             });
             if (resData) { // Check if resData is not null
