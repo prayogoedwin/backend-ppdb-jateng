@@ -31,7 +31,7 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         allowNull: true
     },
     jurusan_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     nisn: {
