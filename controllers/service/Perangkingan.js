@@ -5,6 +5,7 @@ import Zonasis from "../../models/service/ZonasiModel.js";
 import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
 import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
+import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import StatusDomisilis from '../../models/master/StatusDomisiliModel.js';
@@ -520,6 +521,15 @@ export const getPerangkingan = async (req, res) => {
         if(jalur_pendaftaran_id == 1){
  
             //Jalur Zonasi Reguler SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_zonasi = resSek.kuota_zonasi;
+
             const resData = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
@@ -531,7 +541,9 @@ export const getPerangkingan = async (req, res) => {
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
-                ]
+                ],
+                limit: kuota_zonasi
+
                 
             });
 
@@ -557,6 +569,16 @@ export const getPerangkingan = async (req, res) => {
 
         }else if(jalur_pendaftaran_id == 2){
             //Jalur Zonasi KHUSUS SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
+
+
             const resData = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
@@ -564,10 +586,12 @@ export const getPerangkingan = async (req, res) => {
                     is_delete: 0
                 },
                 order: [
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
                     ['nilai_akhir', 'DESC'], //jarak terendah
                     ['created_at', 'ASC'] //daftar sekolah terawal
-                ]
+                ],
+                limit: kuota_zonasi_khusus
             });
 
             if (resData) { // Check if resData is not null
@@ -708,6 +732,16 @@ export const getPerangkingan = async (req, res) => {
             }
         }else if(jalur_pendaftaran_id == 6){
             //Jalur SMK Terdekat
+
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
+
                 const resData = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
@@ -718,7 +752,8 @@ export const getPerangkingan = async (req, res) => {
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] // daftar sekolah terawal
-                ]               
+                ],
+                limit: kuota_jarak_terdekat
                 });
                 if (resData && resData.length > 0) {
                     // res.status(200).json({
@@ -743,27 +778,33 @@ export const getPerangkingan = async (req, res) => {
                         'data': [] // Return null or an appropriate value when data is not found
                     });
                 }
-        }else{
-            
-                //Jalur Afirmasi SMK Terdekat
+        }else if(jalur_pendaftaran_id == 7){
+            //Jalur SMK Prestasi
+
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_prestasi = resJurSek.kuota_prestasi;
+
                 const resData = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
+                    jurusan_id,
                     is_delete: 0
                 }, order: [
-                    ['jarak', 'ASC'], //nilai tertinggi
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] // daftar sekolah terawal
-                ]
-                
+                ],
+                limit: kuota_prestasi
                 });
                 if (resData && resData.length > 0) {
-                    // res.status(200).json({
-                    //     'status': 1,
-                    //     'message': 'Data berhasil ditemukan',
-                    //     'data': resData // Return the found data
-                    // });
+                   
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
                         return { ...rest, id: encodeId(id) };
@@ -781,7 +822,144 @@ export const getPerangkingan = async (req, res) => {
                         'data': [] // Return null or an appropriate value when data is not found
                     });
                 }
-            }
+        }else if(jalur_pendaftaran_id == 8){
+            //Jalur SMK Prestasi Khusus
+
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_prestasi_khusus = resJurSek.kuota_prestasi_khusus;
+
+                const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id,
+                    is_delete: 0
+                }, order: [
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_prestasi_khusus
+                });
+                if (resData && resData.length > 0) {
+                   
+                    const modifiedData = resData.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        return { ...rest, id: encodeId(id) };
+                    });
+    
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData // Return the found data
+                    });
+                } else {
+                    res.status(200).json({
+                        'status': 0,
+                        'message': 'Data kosong',
+                        'data': [] // Return null or an appropriate value when data is not found
+                    });
+                }
+        }else if(jalur_pendaftaran_id == 9){
+            //Jalur SMK Afirmasi
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_afirmasi = resJurSek.kuota_afirmasi;
+
+                const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id,
+                    is_delete: 0,
+                    [Op.or]: [  
+                        { is_anak_panti: { [Op.ne]: 0 } },  // Check if is_anak_panti is not equal to 0  
+                        { is_anak_keluarga_tidak_mampu: { [Op.ne]: 0 } },  // Check if is_anak_keluarga_tidak_mampu is not equal to 0  
+                        { is_pip: { [Op.ne]: 0 } }  // Check if is_pip is not equal to 0  
+                    ]                      
+                }, order: [
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_afirmasi
+                });
+                if (resData && resData.length > 0) {
+                   
+                    const modifiedData = resData.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        return { ...rest, id: encodeId(id) };
+                    });
+    
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData // Return the found data
+                    });
+                } else {
+                    res.status(200).json({
+                        'status': 0,
+                        'message': 'Data kosong',
+                        'data': [] // Return null or an appropriate value when data is not found
+                    });
+                }
+
+        }else{
+            
+            res.status(200).json({
+                'status': 0,
+                'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
+                'data': [] // Return null or an appropriate value when data is not found
+            });
+            
+                //Jalur Afirmasi SMK Terdekat
+                // const resData = await DataPerangkingans.findAll({
+                // where: {
+                //     jalur_pendaftaran_id,
+                //     sekolah_tujuan_id,
+                //     is_delete: 0
+                // }, order: [
+                //     ['jarak', 'ASC'], //nilai tertinggi
+                //     ['umur', 'DESC'], //umur tertua
+                //     ['created_at', 'ASC'] // daftar sekolah terawal
+                // ]
+                
+                // });
+                // if (resData && resData.length > 0) {
+                //     // res.status(200).json({
+                //     //     'status': 1,
+                //     //     'message': 'Data berhasil ditemukan',
+                //     //     'data': resData // Return the found data
+                //     // });
+                //     const modifiedData = resData.map(item => {
+                //         const { id_pendaftar, id, ...rest } = item.toJSON();
+                //         return { ...rest, id: encodeId(id) };
+                //     });
+    
+                //     res.status(200).json({
+                //         'status': 1,
+                //         'message': 'Data berhasil ditemukan',
+                //         'data': modifiedData // Return the found data
+                //     });
+                // } else {
+                //     res.status(200).json({
+                //         'status': 0,
+                //         'message': 'Data kosong',
+                //         'data': [] // Return null or an appropriate value when data is not found
+                //     });
+                // }
+        }
 
    
 
