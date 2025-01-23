@@ -517,6 +517,11 @@ export const getPerangkingan = async (req, res) => {
             nisn,
         } = req.body;
         
+        const resTimeline = await Timelines.findOne({
+            where: {
+                id: 6,
+            },
+        });
         
         if(jalur_pendaftaran_id == 1){
  
@@ -549,11 +554,7 @@ export const getPerangkingan = async (req, res) => {
 
             if (resData && resData.length > 0) {
 
-                const resTimeline = await Timelines.findOne({
-                    where: {
-                        id: 6,
-                    },
-                });
+               
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -607,12 +608,6 @@ export const getPerangkingan = async (req, res) => {
                 //     'message': 'Data berhasil ditemukan',
                 //     'data': resData // Return the found data
                 // });
-
-                const resTimeline = await Timelines.findOne({
-                    where: {
-                        id: 6,
-                    },
-                });
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -668,12 +663,6 @@ export const getPerangkingan = async (req, res) => {
                 //     'data': resData // Return the found data
                 // });
 
-                const resTimeline = await Timelines.findOne({
-                    where: {
-                        id: 6,
-                    },
-                });
-
                 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -727,12 +716,6 @@ export const getPerangkingan = async (req, res) => {
                 //     'data': resData // Return the found data
                 // });
 
-                const resTimeline = await Timelines.findOne({
-                    where: {
-                        id: 6,
-                    },
-                });
-
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -785,14 +768,6 @@ export const getPerangkingan = async (req, res) => {
                 //     'data': resData // Return the found data
                 // });
 
-                const resTimeline = await Timelines.findOne({
-                    where: {
-                        id: 6,
-                    },
-                });
-
-
-
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id) };
@@ -843,14 +818,6 @@ export const getPerangkingan = async (req, res) => {
                     //     'data': resData // Return the found data
                     // });
 
-                    const resTimeline = await Timelines.findOne({
-                        where: {
-                            id: 6,
-                        },
-                    });
-
-                    
-
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
                         return { ...rest, id: encodeId(id) };
@@ -895,12 +862,6 @@ export const getPerangkingan = async (req, res) => {
                 limit: kuota_prestasi
                 });
                 if (resData && resData.length > 0) {
-
-                    const resTimeline = await Timelines.findOne({
-                        where: {
-                            id: 6,
-                        },
-                    });
     
                    
                     const modifiedData = resData.map(item => {
@@ -947,13 +908,6 @@ export const getPerangkingan = async (req, res) => {
                 limit: kuota_prestasi_khusus
                 });
                 if (resData && resData.length > 0) {
-
-                    const resTimeline = await Timelines.findOne({
-                        where: {
-                            id: 6,
-                        },
-                    });
-    
                    
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -1003,13 +957,6 @@ export const getPerangkingan = async (req, res) => {
                 limit: kuota_afirmasi
                 });
                 if (resData && resData.length > 0) {
-                   
-                    const resTimeline = await Timelines.findOne({
-                        where: {
-                            id: 6,
-                        },
-                    });
-
                     
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -1086,6 +1033,79 @@ export const getPerangkingan = async (req, res) => {
         });
     }
 }
+
+export const getInfoParam = async (req, res) => {
+
+    try {
+
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+        } = req.body;
+
+        const resJalur = await JalurPendaftarans.findOne({
+            where: {
+                id: jalur_pendaftaran_id,
+            },
+        });
+        
+        const resSekolah = await SekolahTujuan.findOne({
+            where: {
+                id: sekolah_tujuan_id,
+            },
+        });
+
+        const resJurusan = await SekolahTujuan.findOne({
+            where: {
+                id: jurusan_id,
+            },
+        });
+
+         // Memeriksa apakah data ditemukan  
+         if (!resJalur) {  
+            return res.status(404).json({  
+                status: 0,  
+                message: 'Jalur pendaftaran tidak ditemukan',  
+            });  
+        }  
+  
+        if (!resSekolah) {  
+            return res.status(404).json({  
+                status: 0,  
+                message: 'Sekolah tujuan tidak ditemukan',  
+            });  
+        }  
+  
+        if (!resJurusan) {  
+            return res.status(404).json({  
+                status: 0,  
+                message: 'Jurusan tidak ditemukan',  
+            });  
+        }  
+  
+        // Jika semua data ditemukan, kirimkan respons dengan data  
+        res.status(200).json({  
+            status: 1,  
+            message: 'Data berhasil ditemukan',  
+            data: {  
+                jalur: resJalur,  
+                sekolah: resSekolah,  
+                jurusan: resJurusan,  
+            },  
+        });
+
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({ // Use 500 for server error
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+ 
 
 export const getPerangkinganHasil = async (req, res) => {
 
