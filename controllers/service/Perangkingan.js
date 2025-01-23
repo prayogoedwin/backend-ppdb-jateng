@@ -1060,7 +1060,7 @@ export const getInfoParam = async (req, res) => {
             attributes: ['id', 'npsn','nama'] // Ambil atribut yang diperlukan
         });
 
-        const resJurusan = await SekolahTujuan.findOne({
+        const resJurusan = await SekolahJurusan.findOne({
             where: {
                 id: jurusan_id,
             },
