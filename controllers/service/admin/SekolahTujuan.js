@@ -371,3 +371,63 @@ export const getSekolahTujuanJurusanAdminById = async (req, res) => {
 
     
 }
+
+// Uverif pendaftart
+export const updateSekolahTujuanJurusanAdmin = [
+    async (req, res) => {
+        const { 
+            id, 
+            daya_tampung, 
+            kuota_jarak_terdekat,
+            kuota_jarak_terdekat_persentase,
+            kuota_afirmasi,
+            kuota_afirmasi_persentase,
+            kuota_prestasi,
+            kuota_prestasi_persentase,
+            kuota_prestasi_khusus,
+            kuota_prestasi_khusus_persentase,
+        } = req.body;
+
+
+        try {
+            const resData = await SekolahJurusan.findOne({
+                where: {
+                    id
+                }
+            });
+
+            if (!resData) {
+                return res.status(400).json({ status: 0, message: 'Invalid id' });
+            }
+
+            await SekolahJurusan.update({
+                daya_tampung, 
+                kuota_jarak_terdekat_persentase,
+                kuota_jarak_terdekat,
+                kuota_afirmasi_persentase,
+                kuota_afirmasi,
+                kuota_prestasi_persentase,
+                kuota_prestasi,
+                kuota_prestasi_khusus_persentase,
+                kuota_prestasi_khusus,
+                updated_at: new Date(), // Set the current date and time
+                updated_by: req.user.userId, // Use user ID from token
+                updated_by_ip: req.ip
+            }, {
+                where: {
+                    id
+                }
+            });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Update berhasil',
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
