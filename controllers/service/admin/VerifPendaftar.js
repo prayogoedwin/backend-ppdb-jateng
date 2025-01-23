@@ -800,7 +800,7 @@ export const updatePassworPendaftar = async (req, res) => {
             );  
 
             res.status(200).json({    
-                'status': 0,    
+                'status': 1,    
                 'message': 'Berhasil update password menjadi P@ssw0rd',    
             });  
   
