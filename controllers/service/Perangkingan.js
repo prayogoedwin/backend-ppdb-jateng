@@ -1971,7 +1971,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
             }
         });
 
-        if (!perangkingan2) {
+        if (perangkingan2) {
             return res.status(200).json({ status: 0, message: 'Anda sudah pernah melakukan daftar ulang, daftar ulang hanya bisa di lakukan 1 kali' });
         }
 
