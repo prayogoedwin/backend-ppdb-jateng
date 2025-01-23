@@ -208,7 +208,7 @@ router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);
-router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePassworPendaftar);
+router.get('/admin-api/data/pendaftar_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePassworPendaftar);
 
 
 router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByIdKhususAfterVerif);
