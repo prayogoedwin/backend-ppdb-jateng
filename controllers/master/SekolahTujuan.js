@@ -35,7 +35,7 @@ export const getSekolahTujuanPublik = async (req, res) => {
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                 },
-                attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'kuota_zonasi_persentase', 'kuota_zonasi_khusus_persentase', 'kuota_afrmasi_persentase', 'kuota_prestasi_persentase', 'kuota_pto_persentase', 'alamat_jalan'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'kuota_zonasi_persentase', 'kuota_zonasi_khusus_persentase', 'kuota_afirmasi_persentase', 'kuota_prestasi_persentase', 'kuota_pto_persentase', 'alamat_jalan'] // Specify the attributes to retrieve
             });
 
              // Tambahkan properti nama_npsn ke setiap item dalam resData
@@ -300,7 +300,7 @@ export const getSekolahTujuanJurusanPublik = async (req, res) => {
                 id_sekolah_tujuan: req.body.id_sekolah_tujuan, // Filter dari EzSekolahTujuans
             },
             // attributes: ['id', 'npsn' ,'nama_jurusan', 'id_jurusan', 'daya_tampung'], // Ambil atribut hanya dari EzSekolahJurusan
-            attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_afrmasi_persentase', 'kuota_prestasi_persentase', 'kuota_prestasi_khusus_persentase'] // Specify the attributes to retrieve
+            attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_afirmasi_persentase', 'kuota_prestasi_persentase', 'kuota_prestasi_khusus_persentase'] // Specify the attributes to retrieve
         });
 
 
