@@ -133,10 +133,11 @@ export const createPendaftar = async (req, res) => {
                 const existingPendaftar = await DataPendaftars.findOne({
                     where: {
                         nisn,
-                        [Op.or]: [
-                            { is_delete: 0 }, // Entri yang belum dihapus
-                            { is_delete: null } // Entri yang belum diatur
-                        ]
+                        is_delete: 0
+                        // [Op.or]: [
+                        //     { is_delete: 0 }, // Entri yang belum dihapus
+                        //     { is_delete: null } // Entri yang belum diatur
+                        // ]
                     }
                 });
 
