@@ -50,7 +50,7 @@ import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp } from '../c
 import { getDataPendaftarForVerif, 
     getDataPendaftarForVerifPagination, 
     getDataPendaftarById, 
-    getDataPendaftarByIdKhususAfterVerif
+    getDataPendaftarByIdKhususAfterVerif,
     verifikasiPendaftar, 
     updatePendaftar,
     updatePendaftarCapil,
