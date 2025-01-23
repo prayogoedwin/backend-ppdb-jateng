@@ -903,7 +903,7 @@ export const getPerangkingan = async (req, res) => {
                         jurusan_id,
                         is_delete: 0  
                     },
-                    limit: resSek.kuota_jarak_terdekat
+                    limit: resJurSek.kuota_jarak_terdekat
                 });
 
                 //hitung total pendaftar afirmasi smk dulu,
@@ -914,7 +914,7 @@ export const getPerangkingan = async (req, res) => {
                         jurusan_id,
                         is_delete: 0  
                     },
-                    limit: resSek.kuota_jarak_terdekat
+                    limit: resJurSek.kuota_jarak_terdekat
                 });
 
                 // let kuota_prestasi = resJurSek.kuota_prestasi;
