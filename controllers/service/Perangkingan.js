@@ -1060,12 +1060,17 @@ export const getInfoParam = async (req, res) => {
             attributes: ['id', 'npsn','nama'] // Ambil atribut yang diperlukan
         });
 
-        const resJurusan = await SekolahJurusan.findOne({
-            where: {
-                id: jurusan_id,
-            },
-            attributes: ['id','nama_jurusan'] // Ambil atribut yang diperlukan
-        });
+        if(jurusan_id != null){
+            const resJurusan = await SekolahJurusan.findOne({
+                where: {
+                    id: jurusan_id,
+                },
+                attributes: ['id','nama_jurusan'] // Ambil atribut yang diperlukan
+            });
+        }else{
+            const resJurusan = null;
+        }
+       
 
          // Memeriksa apakah data ditemukan  
          if (!resJalur) {  
