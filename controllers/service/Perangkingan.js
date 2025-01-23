@@ -1620,7 +1620,7 @@ export const cekPerangkingan = async (req, res) => {
                 is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
                 is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
                 is_pip: pendaftar.is_pip,
-
+                file_tambahan: pendaftar.file_tambahan,
                 created_by: id_pendaftar,
                 created_by_ip: req.ip
             };
