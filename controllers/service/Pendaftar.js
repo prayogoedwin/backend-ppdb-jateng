@@ -143,6 +143,8 @@ export const createPendaftar = async (req, res) => {
 
                 if (existingPendaftar) {
                     return res.status(400).json({ status: 0, message: 'NISN sudah terdaftar' });
+                }else{
+                  return res.status(200).json({ status: 1, message: 'NISN bisa daftar' });
                 }
 
                 let nilai_raport = {
