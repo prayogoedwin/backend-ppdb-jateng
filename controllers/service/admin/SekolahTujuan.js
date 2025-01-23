@@ -299,3 +299,75 @@ export const updateSekolahTujuanAdmin = [
         }
     }
 ];
+
+
+export const getSekolahTujuanJurusanAdmin = async (req, res) => {  
+    const sekolah_id = req.body.sekolah_id;  
+  
+    try {  
+        
+            const resData = await SekolahJurusan.findAll({  
+                where: {  
+                    id_sekolah_tujuan: sekolah_id
+                }
+            }); 
+  
+            if (resData.length > 0) {  
+                
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Data Jurusan',  
+                    'data': resData  
+                });  
+
+            } else {  
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Data kosong',  
+                    'data': null  
+                });  
+            }  
+        
+    } catch (err) {  
+        console.error('Error fetching data:', err); // Log the error for debugging  
+        res.status(500).json({  
+            'status': 0,  
+            'message': 'Terjadi kesalahan pada server',  
+            'data': ''  
+        });  
+    }  
+}  
+
+export const getSekolahTujuanJurusanAdminById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const resData = await SekolahJurusan.findOne({
+            where: {
+                id
+            }
+        });
+        if(resData != null ){
+           
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': resData
+            });
+
+        }else{
+
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+            });
+
+        }
+    }catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+
+    
+}

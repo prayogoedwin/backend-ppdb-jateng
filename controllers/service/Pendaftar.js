@@ -113,7 +113,7 @@ export const createPendaftar = async (req, res) => {
                     tanggal_sertifikat,
                     umur_sertifikat,
                     nomor_sertifikat,
-                    // nilai_raport,
+                    nilai_raport,
                     nilai_raport_rata,
                     nilai_prestasi,
                     is_tidak_sekolah,
@@ -145,19 +145,19 @@ export const createPendaftar = async (req, res) => {
                     return res.status(400).json({ status: 0, message: 'NISN sudah terdaftar' });
                 }
 
-                let nilai_raport = {
-                    "pendidikan_agama": 85,
-                    "pkn": 78,
-                    "bahasa_indonesia": 82,
-                    "matematika": 82,
-                    "ipa":90,
-                    "ips": 90,
-                    "bahasa_inggris": 78,
-                    "pjok": 80,
-                    "seni_budaya": 80
-                  }
+                // let nilai_raport = {
+                //     "pendidikan_agama": 85,
+                //     "pkn": 78,
+                //     "bahasa_indonesia": 82,
+                //     "matematika": 82,
+                //     "ipa":90,
+                //     "ips": 90,
+                //     "bahasa_inggris": 78,
+                //     "pjok": 80,
+                //     "seni_budaya": 80
+                //   }
 
-                nilai_raport = JSON.stringify(nilai_raport);
+                // nilai_raport = JSON.stringify(nilai_raport);
 
                 // Menghasilkan kode verifikasi unik
                 const kode_verifikasi = await generateVerificationCode();
