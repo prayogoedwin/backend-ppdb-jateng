@@ -835,7 +835,7 @@ export const getPerangkingan = async (req, res) => {
                         id : jurusan_id,
                     }
                 });
-
+                
                 let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
 
                 const resData = await DataPerangkingans.findAll({
@@ -886,20 +886,54 @@ export const getPerangkingan = async (req, res) => {
                     }
                 });
 
-                let kuota_prestasi = resJurSek.kuota_prestasi;
+                let kuota_prestasi_max = resJurSek.daya_tampung;
+                let kuota_prestasi_min = resJurSek.kuota_prestasi;
+    
+                //hitung total pendaftar domisili terdekat smk dulu,
+                const countTerdekat = await DataPerangkingans.count({  
+                    where: {  
+                        jalur_pendaftaran_id: 6,
+                        sekolah_tujuan_id,  
+                        jurusan_id,
+                        is_delete: 0  
+                    },
+                    limit: resSek.kuota_jarak_terdekat
+                });
+
+                //hitung total pendaftar afirmasi smk dulu,
+                const countAfirmasi = await DataPerangkingans.count({  
+                    where: {  
+                        jalur_pendaftaran_id: 9,
+                        sekolah_tujuan_id,  
+                        jurusan_id,
+                        is_delete: 0  
+                    },
+                    limit: resSek.kuota_jarak_terdekat
+                });
+
+                // let kuota_prestasi = resJurSek.kuota_prestasi;
+                let kuota_prestasi = kuota_prestasi_max - countTerdekat - countAfirmasi;
+
+            
+                let kuota_prestasi_akhir; // Menggunakan let untuk scope blok  
+                if(kuota_prestasi >= kuota_prestasi_min){
+                    kuota_prestasi_akhir = kuota_prestasi;
+                }else{
+                    kuota_prestasi_akhir = kuota_prestasi_min;
+                }
 
                 const resData = await DataPerangkingans.findAll({
                 where: {
-                    jalur_pendaftaran_id,
-                    sekolah_tujuan_id,
-                    jurusan_id,
-                    is_delete: 0
-                }, order: [
-                    ['nilai_akhir', 'DESC'], //nilai tertinggi
-                    ['umur', 'DESC'], //umur tertua
-                    ['created_at', 'ASC'] // daftar sekolah terawal
-                ],
-                limit: kuota_prestasi
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0
+                    }, order: [
+                        ['nilai_akhir', 'DESC'], //nilai tertinggi
+                        ['umur', 'DESC'], //umur tertua
+                        ['created_at', 'ASC'] // daftar sekolah terawal
+                    ],
+                    limit: kuota_prestasi_akhir
                 });
                 if (resData && resData.length > 0) {
     
