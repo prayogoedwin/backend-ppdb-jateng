@@ -1067,43 +1067,78 @@ export const getInfoParam = async (req, res) => {
                 },
                 attributes: ['id','nama_jurusan'] // Ambil atribut yang diperlukan
             });
-        }else{
-            const resJurusan = null;
-        }
-       
 
-         // Memeriksa apakah data ditemukan  
-         if (!resJalur) {  
+              // Memeriksa apakah data ditemukan  
+              if (!resJalur) {  
+                return res.status(404).json({  
+                    status: 0,  
+                    message: 'Jalur pendaftaran tidak ditemukan',  
+                });  
+                }  
+        
+                if (!resSekolah) {  
+                    return res.status(404).json({  
+                        status: 0,  
+                        message: 'Sekolah tujuan tidak ditemukan',  
+                    });  
+                }  
+
+                if (!resJurusan) {  
+                    return res.status(404).json({  
+                        status: 0,  
+                        message: 'Jurusan tujuan tidak ditemukan',  
+                    });  
+                }  
+    
+                 // Jika semua data ditemukan, kirimkan respons dengan data  
+                res.status(200).json({  
+                    status: 1,  
+                    message: 'Data berhasil ditemukan',  
+                    data: {  
+                        jalur: resJalur,  
+                        sekolah: resSekolah,  
+                        jurusan: resJurusan,  
+                    },  
+                });
+    
+
+        }else{
+
+              // Memeriksa apakah data ditemukan  
+            if (!resJalur) {  
             return res.status(404).json({  
                 status: 0,  
                 message: 'Jalur pendaftaran tidak ditemukan',  
             });  
-        }  
+            }  
+    
+            if (!resSekolah) {  
+                return res.status(404).json({  
+                    status: 0,  
+                    message: 'Sekolah tujuan tidak ditemukan',  
+                });  
+            }  
+
+             // Jika semua data ditemukan, kirimkan respons dengan data  
+            res.status(200).json({  
+                status: 1,  
+                message: 'Data berhasil ditemukan',  
+                data: {  
+                    jalur: resJalur,  
+                    sekolah: resSekolah,  
+                    jurusan: null,  
+                },  
+            });
+
+
+        }
+       
+
+       
   
-        if (!resSekolah) {  
-            return res.status(404).json({  
-                status: 0,  
-                message: 'Sekolah tujuan tidak ditemukan',  
-            });  
-        }  
+        
   
-        if (!resJurusan) {  
-            return res.status(404).json({  
-                status: 0,  
-                message: 'Jurusan tidak ditemukan',  
-            });  
-        }  
-  
-        // Jika semua data ditemukan, kirimkan respons dengan data  
-        res.status(200).json({  
-            status: 1,  
-            message: 'Data berhasil ditemukan',  
-            data: {  
-                jalur: resJalur,  
-                sekolah: resSekolah,  
-                jurusan: resJurusan,  
-            },  
-        });
+       
 
     } catch (err) {
         console.error('Error fetching data:', err);
