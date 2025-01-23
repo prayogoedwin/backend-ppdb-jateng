@@ -771,7 +771,6 @@ export const getPerangkingan = async (req, res) => {
             }
         }else if(jalur_pendaftaran_id == 6){
             //Jalur SMK Terdekat
-
                 const resJurSek = await SekolahJurusan.findOne({
                     where: {
                         id_sekolah_tujuan : sekolah_tujuan_id,
