@@ -738,7 +738,7 @@ export const getPerangkingan = async (req, res) => {
                where: {
                    jalur_pendaftaran_id,
                    sekolah_tujuan_id,
-                   is_anak_guru_jateng: 1,
+                   is_anak_guru_jateng: '1',
                    is_delete: 0
                },
                order: [
