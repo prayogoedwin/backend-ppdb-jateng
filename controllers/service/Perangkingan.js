@@ -549,6 +549,12 @@ export const getPerangkingan = async (req, res) => {
 
             if (resData && resData.length > 0) {
 
+                const resTimeline = await Timelines.findOne({
+                    where: {
+                        id: 6,
+                    },
+                });
+
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id) };
@@ -557,7 +563,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': modifiedData // Return the found data
+                    'data': modifiedData, // Return the found data
+                    'timeline' : resTimeline
                 });
             } else {
                 res.status(200).json({
@@ -601,6 +608,12 @@ export const getPerangkingan = async (req, res) => {
                 //     'data': resData // Return the found data
                 // });
 
+                const resTimeline = await Timelines.findOne({
+                    where: {
+                        id: 6,
+                    },
+                });
+
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id) };
@@ -609,7 +622,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': modifiedData // Return the found data
+                    'data': modifiedData,
+                    'timeline': resTimeline// Return the found data
                 });
 
 
@@ -653,6 +667,14 @@ export const getPerangkingan = async (req, res) => {
                 //     'message': 'Data berhasil ditemukan',
                 //     'data': resData // Return the found data
                 // });
+
+                const resTimeline = await Timelines.findOne({
+                    where: {
+                        id: 6,
+                    },
+                });
+
+                
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id) };
@@ -661,7 +683,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': modifiedData // Return the found data
+                    'data': modifiedData,
+                    'timeline': resTimeline // Return the found data
                 });
             } else {
                 res.status(200).json({
@@ -703,6 +726,14 @@ export const getPerangkingan = async (req, res) => {
                 //     'message': 'Data berhasil ditemukan',
                 //     'data': resData // Return the found data
                 // });
+
+                const resTimeline = await Timelines.findOne({
+                    where: {
+                        id: 6,
+                    },
+                });
+
+
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id) };
@@ -711,7 +742,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': modifiedData // Return the found data
+                    'data': modifiedData,
+                    'timeline': resTimeline // Return the found data
                 });
             } else {
                 res.status(200).json({
@@ -752,6 +784,15 @@ export const getPerangkingan = async (req, res) => {
                 //     'message': 'Data berhasil ditemukan',
                 //     'data': resData // Return the found data
                 // });
+
+                const resTimeline = await Timelines.findOne({
+                    where: {
+                        id: 6,
+                    },
+                });
+
+
+
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id) };
@@ -760,8 +801,10 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
-                    'data': modifiedData // Return the found data
+                    'data': modifiedData, // Return the found data
+                    'time': resTimeline
                 });
+
             } else {
                 res.status(200).json({
                     'status': 0,
@@ -799,6 +842,15 @@ export const getPerangkingan = async (req, res) => {
                     //     'message': 'Data berhasil ditemukan',
                     //     'data': resData // Return the found data
                     // });
+
+                    const resTimeline = await Timelines.findOne({
+                        where: {
+                            id: 6,
+                        },
+                    });
+
+                    
+
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
                         return { ...rest, id: encodeId(id) };
@@ -807,7 +859,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 1,
                         'message': 'Data berhasil ditemukan',
-                        'data': modifiedData // Return the found data
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
                     });
                 } else {
                     res.status(200).json({
@@ -842,6 +895,13 @@ export const getPerangkingan = async (req, res) => {
                 limit: kuota_prestasi
                 });
                 if (resData && resData.length > 0) {
+
+                    const resTimeline = await Timelines.findOne({
+                        where: {
+                            id: 6,
+                        },
+                    });
+    
                    
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -851,7 +911,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 1,
                         'message': 'Data berhasil ditemukan',
-                        'data': modifiedData // Return the found data
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
                     });
                 } else {
                     res.status(200).json({
@@ -886,6 +947,13 @@ export const getPerangkingan = async (req, res) => {
                 limit: kuota_prestasi_khusus
                 });
                 if (resData && resData.length > 0) {
+
+                    const resTimeline = await Timelines.findOne({
+                        where: {
+                            id: 6,
+                        },
+                    });
+    
                    
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
@@ -895,7 +963,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 1,
                         'message': 'Data berhasil ditemukan',
-                        'data': modifiedData // Return the found data
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
                     });
                 } else {
                     res.status(200).json({
@@ -935,6 +1004,13 @@ export const getPerangkingan = async (req, res) => {
                 });
                 if (resData && resData.length > 0) {
                    
+                    const resTimeline = await Timelines.findOne({
+                        where: {
+                            id: 6,
+                        },
+                    });
+
+                    
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
                         return { ...rest, id: encodeId(id) };
@@ -943,7 +1019,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 1,
                         'message': 'Data berhasil ditemukan',
-                        'data': modifiedData // Return the found data
+                        'data': modifiedData ,// Return the found data
+                        'timeline': resTimeline,
                     });
                 } else {
                     res.status(200).json({
@@ -1865,7 +1942,7 @@ export const cetakBuktiPerangkingan = async (req, res) => {
     }
 }
 
-// Function to handle DELETE request
+// Function to handle  request
 export const daftarUlangPerangkingan = async (req, res) => {
     try {
         const { id_perangkingan } = req.body;
