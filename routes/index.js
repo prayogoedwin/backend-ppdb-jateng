@@ -50,6 +50,7 @@ import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp } from '../c
 import { getDataPendaftarForVerif, 
     getDataPendaftarForVerifPagination, 
     getDataPendaftarById, 
+    getDataPendaftarByIdKhususAfterVerif
     verifikasiPendaftar, 
     updatePendaftar,
     updatePendaftarCapil,
@@ -202,6 +203,8 @@ router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);
+router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByIdKhususAfterVerif);
+
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/pendaftar_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftar);
 router.post('/admin-api/data/capil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarCapil);
