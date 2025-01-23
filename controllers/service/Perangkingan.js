@@ -817,7 +817,7 @@ export const getPerangkingan = async (req, res) => {
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
                     'data': modifiedData, // Return the found data
-                    'time': resTimeline
+                    'timeline': resTimeline
                 });
 
             } else {
