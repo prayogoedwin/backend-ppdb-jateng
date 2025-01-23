@@ -300,7 +300,7 @@ export const getSekolahTujuanJurusanPublik = async (req, res) => {
                 id_sekolah_tujuan: req.body.id_sekolah_tujuan, // Filter dari EzSekolahTujuans
             },
             // attributes: ['id', 'npsn' ,'nama_jurusan', 'id_jurusan', 'daya_tampung'], // Ambil atribut hanya dari EzSekolahJurusan
-            attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_terdekat_persentase', 'kuota_afrmasi_persentase', 'kuota_prestasi_persentase', 'kuota_prestasi_khusus_persentase'] // Specify the attributes to retrieve
+            attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_afrmasi_persentase', 'kuota_prestasi_persentase', 'kuota_prestasi_khusus_persentase'] // Specify the attributes to retrieve
         });
 
 
