@@ -1050,18 +1050,21 @@ export const getInfoParam = async (req, res) => {
             where: {
                 id: jalur_pendaftaran_id,
             },
+            attributes: ['id', 'nama'] // Ambil atribut yang diperlukan
         });
         
         const resSekolah = await SekolahTujuan.findOne({
             where: {
                 id: sekolah_tujuan_id,
             },
+            attributes: ['id', 'npsn','nama'] // Ambil atribut yang diperlukan
         });
 
         const resJurusan = await SekolahTujuan.findOne({
             where: {
                 id: jurusan_id,
             },
+            attributes: ['id','nama_jurusan'] // Ambil atribut yang diperlukan
         });
 
          // Memeriksa apakah data ditemukan  
