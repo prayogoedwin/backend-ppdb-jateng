@@ -791,7 +791,6 @@ export const updatePassworPendaftar = async (req, res) => {
     
         if (resData != null) {    
             // Update password_ field with hashed password  
-            const bcrypt = require('bcrypt');  
             const defaultPassword = 'P@ssw0rd';  
             const hashedPassword = await bcrypt.hash(defaultPassword, 10);  
   
