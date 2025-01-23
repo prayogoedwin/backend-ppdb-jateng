@@ -611,7 +611,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': [] // Return null or an appropriate value when data is not found
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
                 });
             }
 
@@ -666,7 +667,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': [] // Return null or an appropriate value when data is not found
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
                 });
             }
 
@@ -719,7 +721,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': [] // Return null or an appropriate value when data is not found
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
                 });
             }
 
@@ -772,7 +775,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': [] // Return null or an appropriate value when data is not found
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
                 });
             }
 
@@ -824,7 +828,8 @@ export const getPerangkingan = async (req, res) => {
                 res.status(200).json({
                     'status': 0,
                     'message': 'Data kosong',
-                    'data': [] // Return null or an appropriate value when data is not found
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
                 });
             }
         }else if(jalur_pendaftaran_id == 6){
@@ -873,7 +878,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 0,
                         'message': 'Data kosong',
-                        'data': [] // Return null or an appropriate value when data is not found
+                        'data': [], // Return null or an appropriate value when data is not found
+                        'timeline': resTimeline // Return the found data
                     });
                 }
         }else if(jalur_pendaftaran_id == 7){
@@ -953,7 +959,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 0,
                         'message': 'Data kosong',
-                        'data': [] // Return null or an appropriate value when data is not found
+                        'data': [], // Return null or an appropriate value when data is not found
+                        'timeline': resTimeline // Return the found data
                     });
                 }
         }else if(jalur_pendaftaran_id == 8){
@@ -998,7 +1005,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 0,
                         'message': 'Data kosong',
-                        'data': [] // Return null or an appropriate value when data is not found
+                        'data': [], // Return null or an appropriate value when data is not found
+                        'timeline': resTimeline // Return the found data
                     });
                 }
         }else if(jalur_pendaftaran_id == 9){
@@ -1047,7 +1055,8 @@ export const getPerangkingan = async (req, res) => {
                     res.status(200).json({
                         'status': 0,
                         'message': 'Data kosong',
-                        'data': [] // Return null or an appropriate value when data is not found
+                        'data': [], // Return null or an appropriate value when data is not found
+                        'timeline': resTimeline // Return the found data
                     });
                 }
 
@@ -1056,7 +1065,8 @@ export const getPerangkingan = async (req, res) => {
             res.status(200).json({
                 'status': 0,
                 'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
-                'data': [] // Return null or an appropriate value when data is not found
+                'data': [], // Return null or an appropriate value when data is not found
+                'timeline': null // Return the found data
             });
             
                 //Jalur Afirmasi SMK Terdekat
