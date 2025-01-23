@@ -533,7 +533,48 @@ export const getPerangkingan = async (req, res) => {
                 }
             });
 
-            let kuota_zonasi = resSek.kuota_zonasi;
+            let kuota_zonasi_max = resSek.daya_tampung;
+            let kuota_zonasi_min = resSek.kuota_zonasi;
+
+            //hitung total pendaftar prestasi dulu
+            const countPrestasi = await DataPerangkingans.count({  
+                where: {  
+                    jalur_pendaftaran_id: 3,
+                    sekolah_tujuan_id,  
+                    is_delete: 0  
+                },
+                limit: resSek.kuota_prestasi
+            });
+
+             //hitung total pendaftar afirmasi dulu
+             const countAfirmasi = await DataPerangkingans.count({  
+                where: {  
+                    jalur_pendaftaran_id: 5,
+                    sekolah_tujuan_id,  
+                    is_delete: 0  
+                },
+                limit: resSek.kuota_afirmasi
+            });
+
+             //hitung total pendaftar pto dulu
+             const countPto = await DataPerangkingans.count({  
+                where: {  
+                    jalur_pendaftaran_id: 4,
+                    sekolah_tujuan_id,  
+                    is_delete: 0  
+                },
+                limit: resSek.kuota_afirmasi
+            });
+
+            let kuota_zonasi = kuota_zonasi_max - countPrestasi - countAfirmasi - countPto;
+
+            
+            let kuota_zonasi_akhir; // Menggunakan let untuk scope blok  
+            if(kuota_zonasi >= kuota_zonasi_min){
+                kuota_zonasi_akhir = kuota_zonasi;
+            }else{
+                kuota_zonasi_akhir = kuota_zonasi_min;
+            }
 
             const resData = await DataPerangkingans.findAll({
                 where: {
@@ -547,8 +588,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
-                limit: kuota_zonasi
-
+                limit: kuota_zonasi_akhir
                 
             });
 
