@@ -54,6 +54,7 @@ import { getDataPendaftarForVerif,
     verifikasiPendaftar, 
     updatePendaftar,
     updatePendaftarCapil,
+    updatePassworPendaftar,
 
 
     getDataPendaftarByWhere,
@@ -207,6 +208,9 @@ router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);
+router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePassworPendaftar);
+
+
 router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByIdKhususAfterVerif);
 
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);

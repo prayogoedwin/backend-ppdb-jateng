@@ -8,6 +8,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { Sequelize, Op } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 import { fileURLToPath } from 'url';
 
@@ -776,6 +777,48 @@ export const getDataPendaftarById = async (req, res) => {
             message: error.message,  
         });  
     }  
+} 
+
+export const updatePassworPendaftar = async (req, res) => {    
+    const { id } = req.params; // Ambil id dari params URL    
+    try {    
+        const resData = await DataPendaftars.findOne({    
+            where: {    
+                id: decodeId(id),    
+                is_delete: 0    
+            }
+        });    
+    
+        if (resData != null) {    
+            // Update password_ field with hashed password  
+            const bcrypt = require('bcrypt');  
+            const defaultPassword = 'P@ssw0rd';  
+            const hashedPassword = await bcrypt.hash(defaultPassword, 10);  
+  
+            await DataPendaftars.update(  
+                { password_: hashedPassword }, // Set the password_ field  
+                { where: { id: decodeId(id) } } // Condition to find the correct record  
+            );  
+
+            res.status(200).json({    
+                'status': 0,    
+                'message': 'Berhasil update password menjadi P@ssw0rd',    
+            });  
+  
+            // Additional logic remains unchanged...  
+            // (The rest of your existing logic for handling verification and response)  
+        } else {    
+            res.status(200).json({    
+                'status': 0,    
+                'message': 'Data tidak ditemukan',    
+            });    
+        }    
+    } catch (error) {    
+        res.status(500).json({    
+            status: 0,    
+            message: error.message,    
+        });    
+    }    
 }  
 
 export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {  
