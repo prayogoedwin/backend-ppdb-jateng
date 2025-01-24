@@ -58,7 +58,7 @@ const generateVerificationCode = async () => {
 
     while (exists) {
         code = '';
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 8; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length);
             code += characters[randomIndex];
         }
