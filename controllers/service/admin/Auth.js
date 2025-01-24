@@ -109,12 +109,16 @@ export const loginAdmin = async (req, res) => {
                 ],
                 is_active: 1,
                 is_delete: 0,
-                is_login: { [Sequelize.Op.ne]: 1 } // Ensure is_login is not equal to 1
             }
         });
 
         if (!user) {
             return res.status(200).json({ status: 0, message: 'User / Password Salah 1' });
+        }
+
+
+        if(user.is_login == 1){
+            return res.status(200).json({ status: 0, message: 'Akun sedang digunakan oleh perangkat lain' });
         }
 
         // Compare password
