@@ -147,7 +147,7 @@ export const loginAdmin = async (req, res) => {
         // user.access_token = otpCode; // Store OTP in access_token field
         // user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
         // await user.save({ fields: ['access_token', 'otp_expiration', 'updated_at'] });
-        const login_ip = req.ip || req.connection.remoteAddress; 
+      
         const otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
         const now = Date.now();
             // await user.save({ fields: ['access_token', 'otp_expiration'] });
@@ -270,6 +270,7 @@ export const verifikasiOtp = async (req, res) => {
 
          // Check if OTP has expired
         const currentTime = new Date();
+        const login_ip = req.ip || req.connection.remoteAddress; 
         //  if (user.otp_expiration && user.otp_expiration < currentTime) {
         //      return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
         //  }
