@@ -11,10 +11,11 @@ export const authenticateToken = async (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        // console.log('Decoded Token:', decoded); // Log payload token
-        req.user = decoded;
-        next();
+        return res.status(403).json({ status: 0, message: 'Access token expired' });
+        // const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        // // console.log('Decoded Token:', decoded); // Log payload token
+        // req.user = decoded;
+        // next();
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
             return res.status(403).json({ status: 0, message: 'Access token expired' });
