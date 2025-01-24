@@ -456,6 +456,8 @@ export const aktivasiAkunPendaftar2 = async (req, res) => {
                 return res.status(400).json({ status: 0, message: 'Invalid nisn or kode_verifikasi' });
             }
 
+            
+
              // Generate tokens
              const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
              const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
@@ -502,6 +504,10 @@ export const aktivasiAkunPendaftar = async (req, res) => {
 
             if (!resData) {
                 return res.status(200).json({ status: 0, message: 'Data aktivasi salah, atau belum diverifikasi' });
+            }
+
+            if (resData.is_active == 1) {
+              return res.status(200).json({ status: 0, message: 'Akun sudah di aktivasi sebelumnya, silahkan langsung login' });
             }
 
             await DataPendaftars.update({
