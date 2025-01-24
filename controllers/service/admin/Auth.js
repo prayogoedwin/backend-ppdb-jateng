@@ -108,7 +108,8 @@ export const loginAdmin = async (req, res) => {
                     { whatsapp: username },
                 ],
                 is_active: 1,
-                is_delete: 0
+                is_delete: 0,
+                is_login: { [Sequelize.Op.ne]: 1 } // Ensure is_login is not equal to 1
             }
         });
 
@@ -146,14 +147,18 @@ export const loginAdmin = async (req, res) => {
         // user.access_token = otpCode; // Store OTP in access_token field
         // user.otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
         // await user.save({ fields: ['access_token', 'otp_expiration', 'updated_at'] });
-
+        const login_ip = req.ip || req.connection.remoteAddress; 
         const otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
+        const now = Date.now();
             // await user.save({ fields: ['access_token', 'otp_expiration'] });
             // Save tokens to user record with where clause (based on user id)
             await DataUsers.update(
                 {
                     access_token: otpCode,
                     otp_expiration: otp_expiration,
+                    // is_login: 1,
+                    // login_at: now,
+                    // login_ip: login_ip
                 },
                 {
                     where: {
@@ -264,7 +269,7 @@ export const verifikasiOtp = async (req, res) => {
         // }
 
          // Check if OTP has expired
-         const currentTime = new Date();
+        const currentTime = new Date();
         //  if (user.otp_expiration && user.otp_expiration < currentTime) {
         //      return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
         //  }
@@ -276,7 +281,13 @@ export const verifikasiOtp = async (req, res) => {
         // Save tokens to user record
         user.access_token = accessToken;
         user.access_token_refresh = refreshToken;
-        await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+
+        user.is_login = 1;
+        user.login_at = currentTime;
+        user.login_ip = login_ip;
+
+        await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
+        // await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
         
 
         res.status(200).json({
@@ -311,7 +322,10 @@ export const logoutAdmin = async (req, res) => {
                 where: {
                     id: decodeId(userId),
                     is_active: 1,
-                    is_delete: 0
+                    is_delete: 0,
+                    is_login: 0,
+                    login_at: null,
+                    login_ip: null
                 }
             });
 

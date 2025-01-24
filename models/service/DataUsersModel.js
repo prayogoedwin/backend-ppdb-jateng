@@ -108,6 +108,19 @@ const DataUsers = db.define('ez_users', {
         allowNull: true,      // Sesuaikan dengan kebutuhan Anda
         defaultValue: null    // Atur defaultValue jika diperlukan
     },
+    is_login: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+    },
+    login_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
+    login_ip: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     
 }, {
     freezeTableName: true,

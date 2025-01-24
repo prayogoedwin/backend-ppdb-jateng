@@ -136,14 +136,18 @@ export const loginUser = [
 
             }
         
-
+            const login_ip = req.ip || req.connection.remoteAddress; 
             const otp_expiration = new Date(Date.now() + 10 * 60000); // OTP valid for 10 minutes
+            const now = Date.now();
             // await user.save({ fields: ['access_token', 'otp_expiration'] });
             // Save tokens to user record with where clause (based on user id)
             await DataPendaftars.update(
                 {
                     access_token: otpCode,
                     otp_expiration: otp_expiration,
+                    // is_login: 1,
+                    // login_at: now,
+                    // login_ip: login_ip
                 },
                 {
                     where: {
@@ -211,10 +215,18 @@ export const verifikasiOtpUser = [
             const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
             const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
 
+            const login_ip = req.ip || req.connection.remoteAddress; 
+            const now = Date.now();
+
             // Save tokens to user record
             user.access_token = accessToken;
             user.access_token_refresh = refreshToken;
-            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+            
+            user.is_login = 1;
+            user.login_at = currentTime;
+            user.login_ip = login_ip;
+
+            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
 
             res.status(200).json({
                 status: 1,
@@ -310,6 +322,10 @@ export const logoutUser = [
             // Invalidate tokens
             user.access_token = null;
             user.access_token_refresh = null;
+            user.is_login = 0;
+            user.login_at = null;
+            user.login_ip = null;
+
             await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
 
             res.status(200).json({
