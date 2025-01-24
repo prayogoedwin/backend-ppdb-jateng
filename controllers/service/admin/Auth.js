@@ -322,10 +322,7 @@ export const logoutAdmin = async (req, res) => {
                 where: {
                     id: decodeId(userId),
                     is_active: 1,
-                    is_delete: 0,
-                    is_login: 0,
-                    login_at: null,
-                    login_ip: null
+                    is_delete: 0
                 }
             });
 
@@ -336,7 +333,12 @@ export const logoutAdmin = async (req, res) => {
             // Invalidate tokens
             user.access_token = null;
             user.access_token_refresh = null;
-            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+            user.is_login = 0;
+            user.login_at = null;
+            user.login_ip = null;
+
+
+            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip'] });
 
             res.status(200).json({
                 status: 1,
