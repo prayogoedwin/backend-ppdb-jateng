@@ -73,8 +73,8 @@ export const getPerangkinganSaya = async (req, res) => {
                 },
                 {
                     model: SekolahJurusan,
-                    as: 'sekolah_tujuan_jurusan',
-                    attributes: ['id', 'nama']
+                    as: 'sekolah_jurusan',
+                    attributes: ['id', 'nama_jurusan']
                 },
                 {
                     model: JalurPendaftarans,
