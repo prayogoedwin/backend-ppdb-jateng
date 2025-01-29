@@ -981,6 +981,66 @@ export const verifikasiPendaftar = async (req, res) => {
         }
 }
 
+export const verifikasiPendaftarTidakJadi = async (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
+    }
+
+    let decodedId;
+    try {
+        decodedId = decodeId(id);
+        if (!decodedId) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+    } catch (err) {
+        console.error('Error decoding ID:', err);
+        return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+    }
+
+    console.log('Decoded ID:', decodedId); // For debugging
+
+    try {
+        const resData = await DataPendaftars.findOne({
+            where: {
+                id: decodedId,
+                is_delete: 0
+            }
+        });
+
+        if (!resData) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        await DataPendaftars.update(
+            {
+                opened_by: 0 // Set opened_by to 0  
+            },
+            {
+                where: {
+                    id: decodedId,
+                    is_delete: 0
+                }
+            }
+        );
+
+        await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+
+        res.status(200).json({
+            status: 1,
+            message: 'Berhasil perbaharui data',
+        });
+    } catch (error) {
+        console.error('Error updating data:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+}
+
+
 export const updatePendaftar = async (req, res) => {
     const { 
         

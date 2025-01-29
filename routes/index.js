@@ -8,10 +8,11 @@ router.use(cors());
 
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
-import appKeyMiddleware from '../middleware/AppKey.js';
+import { appKeyMiddleware, appKeynyaIntegrator} from '../middleware/AppKey.js';
 import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
 import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.js';
-import { logAccess, logAccessAdmin } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
+import { authenticateTokenClient, authenticateRefreshTokenClient } from '../middleware/AuthClient.js';
+import { logAccess, logAccessAdmin, logAccessClient } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
 
 
 //konfigurasi cache
@@ -41,6 +42,9 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambaha
 //akun siswa
 import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser } from '../controllers/service/AuthPublic.js';
 
+//akun client api
+import { loginClient, logoutClient } from '../controllers/service/integration/Auth.js';
+
 
 //Admin
 //Auth
@@ -52,6 +56,7 @@ import { getDataPendaftarForVerif,
     getDataPendaftarById, 
     getDataPendaftarByIdKhususAfterVerif,
     verifikasiPendaftar, 
+    verifikasiPendaftarTidakJadi, 
     updatePendaftar,
     updatePendaftarCapil,
     updatePassworPendaftar,
@@ -72,6 +77,10 @@ import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDel
 
 //roles
 import { getRoles } from "../controllers/service/admin/Role.js";
+
+//roles
+import { getSertifikats, insertSertifikat } from "../controllers/service/integration/Sertifikat.js";
+
 
 //rekap
 import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
@@ -218,6 +227,7 @@ router.get('/admin-api/data/pendaftar_reset_password/:id', ipWhitelistMiddleware
 router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByIdKhususAfterVerif);
 
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
+router.post('/admin-api/data/pendaftar_verifikasi_no_action', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftarTidakJadi);
 router.post('/admin-api/data/pendaftar_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftar);
 router.post('/admin-api/data/capil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarCapil);
 
@@ -241,8 +251,25 @@ router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appK
 //role
 router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
 
+
+
 //daftar ulang & perangkingan
 router.post('/admin-api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkingan);
+
+
+// ============================ API UNTUK EXTERNAL ==============================//
+
+//Auth
+router.post('/client-api/auth/signin', ipWhitelistMiddleware, appKeynyaIntegrator, logAccessClient, loginClient);
+router.post('/client-api/auth/signout', ipWhitelistMiddleware, appKeynyaIntegrator, logAccessClient, logoutClient);
+
+
+//sertfikat
+router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKejuaraan);
+router.get('/client-api/external/sertifkat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
+router.post('/client-api/external/insert_sertifkat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
+
+
 
 
 
