@@ -61,12 +61,24 @@ export const insertSertifikat = async (req, res) => {
             created_at: new Date(),
             created_by: userId,
         };
-        DataSertifikats.create(newSertifikatData);
-        res.status(201).json({
-            status: 1,
-            message: 'Daftar berhasil dibuat',
-            data: newSertifikatData
-        });
+        const resData = DataSertifikats.create(newSertifikatData);
+        if (resData.length > 0) { // Check if resData has any results
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': newSertifikatData
+            });
+        } else {
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+            });
+        }
+        // res.status(201).json({
+        //     status: 1,
+        //     message: 'Daftar berhasil dibuat',
+        //     data: newSertifikatData
+        // });
 
     } catch (error) {
         console.error('Error daftar:', error);
