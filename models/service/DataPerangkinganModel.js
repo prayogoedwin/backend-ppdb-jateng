@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import db from "../../config/Database.js";
 import SekolahTujuan from '../master/SekolahTujuanModel.js';
+import SekolahJurusan from '../master/SekolahJurusanModel.js';
 import JalurPendaftarans from '../master/JalurPendaftaranModel.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 
@@ -173,6 +174,7 @@ export default PerangkinganModels;
 PerangkinganModels.belongsTo(SekolahTujuan, { as: 'sekolah_tujuan', foreignKey: 'sekolah_tujuan_id' });
 PerangkinganModels.belongsTo(JalurPendaftarans, { as: 'jalur_pendaftaran', foreignKey: 'jalur_pendaftaran_id' });
 PerangkinganModels.belongsTo(DataPendaftars, { as: 'data_pendaftar', foreignKey: 'id_pendaftar' });
+PerangkinganModels.belongsTo(SekolahJurusan, { as: 'sekolah_jurusan', foreignKey: 'jurusan_id' });
 
 
 
