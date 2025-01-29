@@ -266,7 +266,7 @@ router.post('/client-api/auth/signout', ipWhitelistMiddleware, appKeynyaIntegrat
 
 //sertfikat
 router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKejuaraan);
-router.get('/client-api/external/sertifkat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
+router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
 router.post('/client-api/external/insert_sertifkat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
 
 
