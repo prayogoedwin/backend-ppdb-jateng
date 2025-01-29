@@ -635,9 +635,8 @@ export const getPerangkingan = async (req, res) => {
                     is_delete: 0
                 },
                 order: [
-                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
-                    ['nilai_akhir', 'DESC'], //jarak terendah
+                    ['nilai_akhir', 'DESC'], //jarak terendah  
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
                 limit: kuota_zonasi_khusus
@@ -851,6 +850,7 @@ export const getPerangkingan = async (req, res) => {
                     is_delete: 0
                 }, order: [
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] // daftar sekolah terawal
                 ],
@@ -1028,11 +1028,11 @@ export const getPerangkingan = async (req, res) => {
                     is_delete: 0,
                     [Op.or]: [  
                         { is_anak_panti: { [Op.ne]: '0' } },  // Check if is_anak_panti is not equal to '0'  
-                        { is_anak_keluarga_tidak_mampu: { [Op.ne]: '0' } },  // Check if is_anak_keluarga_tidak_mampu is not equal to '0'  
-                        { is_pip: { [Op.ne]: '0' } }  // Check if is_pip is not equal to '0'  
+                        { is_anak_keluarga_tidak_mampu: { [Op.ne]: '0' } },  // Check if is_anak_keluarga_tidak_mampu is not equal to '0'   di di view is_dtks
+                        // { is_pip: { [Op.ne]: '0' } }  // Check if is_pip is not equal to '0'  
                     ]                     
                 }, order: [
-                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] // daftar sekolah terawal
                 ],
@@ -1567,6 +1567,26 @@ export const cekPerangkingan = async (req, res) => {
             }
             });
 
+            if(jalur_pendaftaran_id == 1){
+
+                if(pendaftar.status_domisili == 2){
+                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut tidak diperbolehkan mendaftar jalur zonasi' });
+                }
+
+                if(pendaftar.status_domisili == 4){
+                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Domisili Panti Asuhan (Dinas Sosial)" status domisili tersebut tidak diperbolehkan mendaftar jalur zonasi' });
+                }
+                
+            }
+
+            if(jalur_pendaftaran_id == 6){
+
+                if(pendaftar.status_domisili != 1){
+                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda tidak menggunakan "Sesuai KK" status domisili selain "Sesuai KK" tidak diperbolehkan mendaftar seleksi domisili terdekat' });
+                }
+                
+            }
+
             // if(jalur_pendaftaran_id == 2){
 
             //     const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
@@ -1640,6 +1660,8 @@ export const cekPerangkingan = async (req, res) => {
                 return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
             }
 
+          
+
              // Count existing entries with the same NISN that are not deleted
             const cari = await DataPerangkingans.findOne({
             where: {
@@ -1662,6 +1684,7 @@ export const cekPerangkingan = async (req, res) => {
 
                 //cari zonasi untuk SMA
                 if(jalur_pendaftaran_id == 1){
+
 
 
                     const kecPendaftar = pendaftar.kecamatan_id.toString();

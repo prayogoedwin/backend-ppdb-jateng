@@ -507,7 +507,7 @@ export const aktivasiAkunPendaftar = async (req, res) => {
             }
 
             if (resData.is_active == 1) {
-              return res.status(200).json({ status: 0, message: 'Akun sudah di aktivasi sebelumnya, silahkan langsung login' });
+              return res.status(200).json({ status: 0, message: 'Akun sudah diaktivasi sebelumnya, silahkan langsung login' });
             }
 
             await DataPendaftars.update({

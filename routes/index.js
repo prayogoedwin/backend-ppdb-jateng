@@ -172,7 +172,7 @@ router.post('/api/servis/perangkingan_detail', ipWhitelistMiddleware, appKeyMidd
 
 router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
 
-router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware, daftarUlangPerangkingan);
+// router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware, daftarUlangPerangkingan);
 
 
 
@@ -193,25 +193,25 @@ router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, 
 
 
 //master data admin
-router.post('/admin-api/master/sekolah_tujuan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getSekolahTujuanAdmin);
-router.get('/admin-api/master/sekolah_tujuan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getSekolahTujuanAdminById);
+router.post('/admin-api/master/sekolah_tujuan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanAdmin);
+router.get('/admin-api/master/sekolah_tujuan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,getSekolahTujuanAdminById);
 router.post('/admin-api/master/sekolah_tujuan_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateSekolahTujuanAdmin);
 
-router.post('/admin-api/master/sekolah_tujuan_jurusan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getSekolahTujuanJurusanAdmin);
-router.get('/admin-api/master/sekolah_tujuan_jurusan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getSekolahTujuanJurusanAdminById);
+router.post('/admin-api/master/sekolah_tujuan_jurusan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanJurusanAdmin);
+router.get('/admin-api/master/sekolah_tujuan_jurusan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanJurusanAdminById);
 router.post('/admin-api/master/sekolah_tujuan_jurusan_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateSekolahTujuanJurusanAdmin);
 
 
 //menu menu & action admin
 
 // menu pendaftaran
-router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerif);
-router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByWhere);
+router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarForVerif);
+router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhere);
 // router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 
-router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarForVerifPagination);
-router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarById);
+router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarForVerifPagination);
+router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarById);
 router.get('/admin-api/data/pendaftar_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePassworPendaftar);
 
 
@@ -222,24 +222,27 @@ router.post('/admin-api/data/pendaftar_update', ipWhitelistMiddleware, appKeyMid
 router.post('/admin-api/data/capil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarCapil);
 
 //menu timeline
-router.get('/admin-api/setting/timeline', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getTimeline);
-router.get('/admin-api/setting/timeline_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getTimelineById);
+router.get('/admin-api/setting/timeline', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getTimeline);
+router.get('/admin-api/setting/timeline_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getTimelineById);
 router.post('/admin-api/setting/timeline_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateTimeline);
 
 //menu user
 // router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getUsers);
-router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getUsersPagination);
-router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getUserById);
+router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUsersPagination);
+router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUserById);
 router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, addUser);
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUser);
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, softDeleteUser);
 router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetPasswordById);
 
 //rekap
-router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, countPendaftar);
+router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
 
 //role
-router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getRoles);
+router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
+
+//daftar ulang & perangkingan
+router.post('/admin-api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkingan);
 
 
 
