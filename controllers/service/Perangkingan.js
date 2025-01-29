@@ -1573,25 +1573,7 @@ export const cekPerangkingan = async (req, res) => {
             }
             });
 
-            if(jalur_pendaftaran_id == 1){
-
-                if(pendaftar.status_domisili == 2){
-                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut tidak diperbolehkan mendaftar jalur zonasi' });
-                }
-
-                if(pendaftar.status_domisili == 4){
-                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Domisili Panti Asuhan (Dinas Sosial)" status domisili tersebut tidak diperbolehkan mendaftar jalur zonasi' });
-                }
-                
-            }
-
-            if(jalur_pendaftaran_id == 6){
-
-                if(pendaftar.status_domisili != 1){
-                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda tidak menggunakan "Sesuai KK" status domisili selain "Sesuai KK" tidak diperbolehkan mendaftar seleksi domisili terdekat' });
-                }
-                
-            }
+            
 
             // if(jalur_pendaftaran_id == 2){
 
@@ -1649,6 +1631,26 @@ export const cekPerangkingan = async (req, res) => {
 
             if (!pendaftar) {
                 return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
+            }
+
+            if(jalur_pendaftaran_id == 1){
+
+                if(pendaftar.status_domisili == 2){
+                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut tidak diperbolehkan mendaftar jalur zonasi' });
+                }
+
+                if(pendaftar.status_domisili == 4){
+                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Domisili Panti Asuhan (Dinas Sosial)" status domisili tersebut tidak diperbolehkan mendaftar jalur zonasi' });
+                }
+                
+            }
+
+            if(jalur_pendaftaran_id == 6){
+
+                if(pendaftar.status_domisili != 1){
+                    return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda tidak menggunakan "Sesuai KK" status domisili selain "Sesuai KK" tidak diperbolehkan mendaftar seleksi domisili terdekat' });
+                }
+                
             }
 
             // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
