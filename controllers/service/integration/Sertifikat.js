@@ -65,7 +65,7 @@ export const insertSertifikat = async (req, res) => {
         if (resData) { // Check if resData has any results
             res.status(200).json({
                 'status': 1,
-                'message': 'Data berhasil ditemukan',
+                'message': 'Data berhasil ditambahkan',
                 'data': newSertifikatData
             });
         } else {
