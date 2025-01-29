@@ -2,6 +2,7 @@
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
+import DataAnakGurus from '../../models/service/DataAnakGuruModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
@@ -156,7 +157,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
 //get anak miskin, get anak panti, get anak pondok by NIK
 export const getDataDukungByNIK = async (req, res) => {
-    const { nik } = req.body;
+    const { nik, nisn } = req.body;
     try {
         if (!nik) {
             return res.status(400).json({
@@ -169,10 +170,16 @@ export const getDataDukungByNIK = async (req, res) => {
         const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
+        const anakGuru = await DataAnakPantis.DataAnakGurus.findOne(
+            { 
+                where: { nisn }
+            });
+        
 
         let dataAnakMiskin = {};
         let dataAnakPanti = {};
         let dataAnakPondok = {};
+        let dataAnakGuru = {};
 
         if (anakMiskin) {
             dataAnakMiskin = {
@@ -207,6 +214,18 @@ export const getDataDukungByNIK = async (req, res) => {
             dataAnakPondok = {
                 anak_pondok: 0,
                 data_anak_pondok: []
+            };
+        }
+
+        if (anakGuru) {
+            dataAnakGuru = {
+                anak_guru: 1,
+                data_anak_guru: anakGuru.toJSON()
+            };
+        } else {
+            dataAnakGuru = {
+                anak_guru: 0,
+                data_anak_guru: []
             };
         }
 
