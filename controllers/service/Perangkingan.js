@@ -70,7 +70,13 @@ export const getPerangkinganSaya = async (req, res) => {
                     model: SekolahTujuan,
                     as: 'sekolah_tujuan',
                     attributes: ['npsn', 'nama']
-                },{
+                },
+                {
+                    model: SekolahJurusan,
+                    as: 'sekolah_tujuan_jurusan',
+                    attributes: ['id', 'nama']
+                },
+                {
                     model: JalurPendaftarans,
                     as: 'jalur_pendaftaran',
                     attributes: ['bentuk_pendidikan_id', 'nama']
