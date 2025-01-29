@@ -2,7 +2,7 @@
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
-import DataAnakGurus from '../../models/service/DataAnakGuruModel.js';
+import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
@@ -170,10 +170,7 @@ export const getDataDukungByNIK = async (req, res) => {
         const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
-        const anakGuru = await DataAnakPantis.DataAnakGurus.findOne(
-            { 
-                where: { nisn }
-            });
+        const anakGuru = await DataAnakGuru.findOne({  where: { nisn } });
         
 
         let dataAnakMiskin = {};
