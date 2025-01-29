@@ -170,7 +170,7 @@ export const getDataDukungByNIK = async (req, res) => {
         const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
-        const anakGuru = await DataAnakGuru.findOne({  where: { nisn } });
+        const anakGuru = await DataAnakGuru.findOne({  where: { nisn_cpd: nisn } });
         
 
         let dataAnakMiskin = {};
