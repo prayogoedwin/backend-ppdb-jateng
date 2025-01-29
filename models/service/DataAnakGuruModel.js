@@ -45,7 +45,7 @@ const DataAnakGurus = db.define('anak_asn_gtt_ptt', {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      nsin_cpd: {
+      nisn_cpd: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
