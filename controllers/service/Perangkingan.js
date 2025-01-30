@@ -2000,9 +2000,18 @@ export const createPerangkingan = async (req, res) => {
             }
         });
 
-        if (count >= 2) {
-            return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
+        if(bentuk_pendidikan_id == 13){
+            if (count >= 2) {
+                return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
+            }
         }
+
+        if(bentuk_pendidikan_id == 15){
+            if (count >= 4) {
+                return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 4 kali (2 sekolah, 4 jurusan)' });
+            }
+        }
+        
 
         const no_pendaftaran = await generatePendaftaranNumber();
 
