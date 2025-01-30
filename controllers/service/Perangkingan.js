@@ -1647,7 +1647,7 @@ export const cekPerangkingan = async (req, res) => {
                     }
                 });
 
-                if(countSklJur > 1){
+                if(countSklJur >= 1){
                     return res.status(200).json({ status: 0, message: 'Anda sudah pernah mendaftar pada jurusan ini' });
                 }
 
