@@ -1620,6 +1620,11 @@ export const cekPerangkingan = async (req, res) => {
 
             if(bentuk_pendidikan_id == 13){
 
+                //hanya boleh daftar 1 sekolah di masing2 jalur
+                if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
+                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 sekolah di masing-masing jalur' });
+                }
+
                 //tidak boleh sama jalur
                 if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
                     return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
@@ -1787,18 +1792,15 @@ export const cekPerangkingan = async (req, res) => {
 
                 }
     
-                //hanya boleh daftar 1 sekolah di masing2 jalur
-                if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
-                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 sekolah di masing-masing jalur' });
-                }
+                
     
 
                 //hanya boleh daftar 1 jurusan saja untuk SMK
-                if (bentuk_pendidikan_id == 15) {
-                    if(cari.jurusan_id != 0 && cari.jurusan_id == jurusan_id){
-                        return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jurusan di masing-masing jurusan' });
-                    }
-                }   
+                // if (bentuk_pendidikan_id == 15) {
+                //     if(cari.jurusan_id != 0 && cari.jurusan_id == jurusan_id){
+                //         return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jurusan di masing-masing jurusan' });
+                //     }
+                // }   
 
 
             }
