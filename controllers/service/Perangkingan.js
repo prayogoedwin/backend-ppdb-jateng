@@ -1638,8 +1638,8 @@ export const cekPerangkingan = async (req, res) => {
                     return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
                 }
                 // return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
-                if (count >= 2) {
-                    return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
+                if (count > 2) {
+                    return res.status(200).json({ status: 0, message: 'NISN sudah tidak bisa daftar jalur/sekolah ini' });
                 }
             }
 

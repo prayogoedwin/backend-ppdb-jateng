@@ -1,8 +1,10 @@
 // Import model Product
 import SekolahTujuans from "../../models/master/SekolahTujuanModel.js";
+import SekolahZonasis from "../../models/master/SekolahZonasiModel.js";
 import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
+import { Sequelize, Op } from "sequelize";
 
 
 // Get semua product
@@ -175,15 +177,38 @@ export const getSekolahTujuan = async (req, res) => {
                     nisn: req.body.nisn,  
                     is_delete: 0  
                 },  
-            });  
-  
+            }); 
+            
+            // Fetch npsn values from SekolahZonasis
+            const resDataZ = await SekolahZonasis.findAll({  
+                where: {  
+                    kode_wilayah_kec: cekPendaftar.kecamatan_id  
+                },  
+                attributes: ['npsn']  
+            });
+            // console.log("test:"+resDataZ);
+
+            // Extract npsn values from resDataZ
+            // const npsnList = resDataZ.map(s => s.npsn); // Assuming resDataZ is an array of objects
+            const npsnList = resDataZ.map(s => s.npsn).filter(npsn => npsn !== null); // Filter out null values
+
+            // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
             const resData = await SekolahTujuans.findAll({  
                 where: {  
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
-                    kode_wilayah_kec: cekPendaftar.kecamatan_id  
+                    // //kode_wilayah_kec: cekPendaftar.kecamatan_id,
+                    npsn: { [Op.in]: npsnList } // Use Op.in to filter by npsn
                 },  
                 attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan']  
-            });  
+            });
+  
+            // const resData = await SekolahTujuans.findAll({  
+            //     where: {  
+            //         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
+            //         kode_wilayah_kec: cekPendaftar.kecamatan_id  
+            //     },  
+            //     attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan']  
+            // });  
   
             // Tambahkan properti nama_npsn ke setiap item dalam resData  
             const formattedResData = resData.map(school => {  
