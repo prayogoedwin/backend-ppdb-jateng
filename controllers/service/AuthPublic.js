@@ -234,6 +234,7 @@ export const verifikasiOtpUser = [
                 data: {
                     userId: encodeId(user.id),
                     nisn: user.nisn,
+                    nama: nama_lengkap,
                     accessToken,
                     refreshToken
                 }
