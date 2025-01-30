@@ -15,7 +15,7 @@ import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
-import { Op, literal } from 'sequelize';
+import { Sequelize, Op, literal } from 'sequelize';
 
 
 //Generate Verification Code
@@ -1664,8 +1664,39 @@ export const cekPerangkingan = async (req, res) => {
                 }
             });
 
-            if (count >= 2) {
-                return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar lebih dari 2 kali' });
+            if(bentuk_pendidikan_id == 13 && count >= 2){
+                return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
+                // if (count >= 2) {
+                //     return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
+                // }
+            }
+
+            if(bentuk_pendidikan_id == 15){
+
+                // Query to count unique sekolah_id for the given nisn
+                const hitungSMK = await DataPerangkingans.findAll({
+                    attributes: [
+                        'sekolah_id',
+                        [Sequelize.fn('COUNT', Sequelize.col('sekolah_id')), 'count']
+                    ],
+                    where: {
+                        nisn,
+                        is_delete: 0
+                    },
+                    group: ['sekolah_id'],
+                    raw: true
+                });
+
+                if (uniqueCount <= 2) {
+
+                // Extract unique sekolah_id from the result
+                const uniqueSekolahIds = hitungSMK.map(row => row.sekolah_id);
+                const uniqueCount = uniqueSekolahIds.length;
+
+                if (uniqueCount > 2) {
+                    return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
+                }
+
             }
 
           
