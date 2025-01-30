@@ -1687,11 +1687,11 @@ export const cekPerangkingan = async (req, res) => {
                     raw: true
                 });
 
-                if (uniqueCount <= 2) {
-
                 // Extract unique sekolah_id from the result
                 const uniqueSekolahIds = getPrSmk.map(row => row.sekolah_tujuan_id);
                 const uniqueCount = uniqueSekolahIds.length;
+
+                if (uniqueCount <= 2) {
 
                     if (uniqueCount > 2) {
                         return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
