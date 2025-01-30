@@ -1676,6 +1676,8 @@ export const cekPerangkingan = async (req, res) => {
                  // Extract unique sekolah_id from the result
                  const uniqueJalurIds = getPrSmk1.map(row => row.jalur_pendaftaran_id);
                  const uniqueCountJ = uniqueJalurIds.length;
+
+                //  console.log('uniqcount jalur pendaaftaran id:'+uniqueCountJ);
  
                  if (uniqueCountJ > 2) {
                     return res.status(200).json({ status: 0, message: 'Maksimal daftar di 2 jalur yang berbeda' });
@@ -1701,8 +1703,13 @@ export const cekPerangkingan = async (req, res) => {
                 const uniqueSekolahIds = getPrSmk2.map(row => row.sekolah_tujuan_id);
                 const uniqueCount = uniqueSekolahIds.length;
 
-                if (uniqueCount > 2) {
-                    return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
+                // console.log('uniqcount sekolah id:'+uniqueCount);
+
+                if (uniqueCount >= 2) {
+                    if(count >= 4){
+                        return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
+                    }
+                  
                 }
 
 
@@ -1725,7 +1732,7 @@ export const cekPerangkingan = async (req, res) => {
                 const uniqueSekolahJurIds = getPrSmk3.map(row => row.jurusan_id);
                 const uniqueCountJur = uniqueSekolahJurIds.length;
 
-                if (uniqueCountJur > 2) {
+                if (uniqueCountJur >= 2) {
                     return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 jurusan di 1 sekolah' });
                 }
             }
