@@ -1647,7 +1647,7 @@ export const cekPerangkingan = async (req, res) => {
                 });
 
                  // Extract unique sekolah_id from the result
-                 const uniqueJalurIds = getPrSmk2.map(row => row.jalur_pendaftaran_id);
+                 const uniqueJalurIds = getPrSmk1.map(row => row.jalur_pendaftaran_id);
                  const uniqueCountJ = uniqueJalurIds.length;
  
                  if (uniqueCountJ > 2) {
