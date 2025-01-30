@@ -280,6 +280,8 @@ export const verifikasiOtp = async (req, res) => {
         //      return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
         //  }
 
+        const sekolah_id = user.sekolah_id;
+
         // Generate tokens
         const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
         const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
@@ -295,17 +297,19 @@ export const verifikasiOtp = async (req, res) => {
         await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
         // await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
         
-        const bentuk_pendidikan_id = '';
+        let bentuk_pendidikan_id;
         if(user.sekolah_id != null){
 
             const resData = await SekolahTujuans.findOne({
                 where: {
-                    id: user.sekolah_id
+                    id: sekolah_id
                 }
             });
 
             bentuk_pendidikan_id = resData.bentuk_pendidikan_id
 
+        }else{
+            bentuk_pendidikan_id = null;
         }
 
         res.status(200).json({
