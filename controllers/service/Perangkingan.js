@@ -1573,6 +1573,14 @@ export const cekPerangkingan = async (req, res) => {
             }
             });
 
+             // Count existing entries with the same NISN that are not deleted
+             const cari = await DataPerangkingans.findOne({
+                where: {
+                    nisn,
+                    is_delete: 0
+                }
+                });
+
 
 
             // Retrieve data from DataPendaftarModel
@@ -1724,13 +1732,7 @@ export const cekPerangkingan = async (req, res) => {
 
           
 
-             // Count existing entries with the same NISN that are not deleted
-            const cari = await DataPerangkingans.findOne({
-            where: {
-                nisn,
-                is_delete: 0
-            }
-            });
+            
 
             if(cari != null){
 
