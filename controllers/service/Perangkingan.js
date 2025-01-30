@@ -1637,6 +1637,20 @@ export const cekPerangkingan = async (req, res) => {
 
             if(bentuk_pendidikan_id == 15){
 
+                // Count existing entries with the same NISN that are not deleted
+                const countSklJur = await DataPerangkingans.count({
+                    where: {
+                        nisn,
+                        sekolah_tujuan_id: sekolah_tujuan_id,
+                        jurusan_id: jurusan_id,
+                        is_delete: 0
+                    }
+                });
+
+                if(countSklJur > 1){
+                    return res.status(200).json({ status: 0, message: 'Anda sudah pernah mendaftar pada jurusan ini' });
+                }
+
                 // Query to count unique sekolah_id for the given nisn
                 const getPrSmk1 = await DataPerangkingans.findAll({
                     attributes: [
