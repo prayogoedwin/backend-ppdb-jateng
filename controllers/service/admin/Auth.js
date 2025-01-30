@@ -1,5 +1,6 @@
 import DataUsers from '../../../models/service/DataUsersModel.js';
 import { encodeId, decodeId } from '../../../middleware/EncodeDecode.js';
+import SekolahTujuans from '../../../models/master/SekolahTujuanModel.js'
 import { sendOtpToWhatsapp } from '../../../helpers/HelpHelper.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -294,6 +295,18 @@ export const verifikasiOtp = async (req, res) => {
         await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
         // await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
         
+        const bentuk_pendidikan_id = '';
+        if(user.sekolah_id == null){
+
+            const resData = await SekolahTujuans.findOne({
+                where: {
+                    id: user.sekolah_id
+                }
+            });
+
+            bentuk_pendidikan_id = resData.bentuk_pendidikan_id
+
+        }
 
         res.status(200).json({
             status: 1,
@@ -305,6 +318,7 @@ export const verifikasiOtp = async (req, res) => {
                 role: user.role_,
                 sekolah_id: user.sekolah_id,
                 kabkota_id: user.kabkota_id,
+                bentuk_pendidikan_id: bentuk_pendidikan_id,
                 accessToken,
                 refreshToken
             }
