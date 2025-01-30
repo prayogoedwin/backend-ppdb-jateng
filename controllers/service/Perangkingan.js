@@ -1573,52 +1573,6 @@ export const cekPerangkingan = async (req, res) => {
             }
             });
 
-            
-
-            // if(jalur_pendaftaran_id == 2){
-
-            //     const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
-            //     if(zonasi_khusus < 1){
-            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-            //     }
-
-            // }
-
-            // if(jalur_pendaftaran_id == 2){
-
-            //     const zonasi_khusus = cariDtSekolah.kuota_zonasi_khusus_persentase;
-            //     if(zonasi_khusus < 1){
-            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-            //     }
-
-            // }
-
-            // if(jalur_pendaftaran_id == 4){
-
-            //     const pto = cariDtSekolah.kuota_pto_persentase;
-            //     if(pto < 1){
-            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-            //     }
-
-            // }
-
-            // if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
-
-            //     const afirmasi = cariDtSekolah.kuota_afirmasi_persentase;
-            //     if(afirmasi < 1){
-            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-            //     }
-
-            // }
-
-            // if(jalur_pendaftaran_id == 8){
-
-            //     const pk = cariDtSekolah.kuota_prestasi_khusus_persentase;
-            //     if(pk < 1){
-            //         return res.status(200).json({ status: 0, message: 'Jalur Pendaftaran Sedang Tidak Dibuka' });
-            //     }
-
-            // }
 
 
             // Retrieve data from DataPendaftarModel
@@ -1664,17 +1618,46 @@ export const cekPerangkingan = async (req, res) => {
                 }
             });
 
-            if(bentuk_pendidikan_id == 13 && count >= 2){
-                return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
-                // if (count >= 2) {
-                //     return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
-                // }
+            if(bentuk_pendidikan_id == 13){
+
+                //tidak boleh sama jalur
+                if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
+                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
+                }
+                // return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
+                if (count >= 2) {
+                    return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
+                }
             }
 
             if(bentuk_pendidikan_id == 15){
 
                 // Query to count unique sekolah_id for the given nisn
-                const getPrSmk = await DataPerangkingans.findAll({
+                const getPrSmk1 = await DataPerangkingans.findAll({
+                    attributes: [
+                        'jalur_pendaftaran_id',
+                        [Sequelize.fn('COUNT', Sequelize.col('jalur_pendaftaran_id')), 'count']
+                    ],
+                    where: {
+                        nisn,
+                        is_delete: 0
+                    },
+                    group: ['jalur_pendaftaran_id'],
+                    raw: true
+                });
+
+                 // Extract unique sekolah_id from the result
+                 const uniqueJalurIds = getPrSmk2.map(row => row.jalur_pendaftaran_id);
+                 const uniqueCountJ = uniqueJalurIds.length;
+ 
+                 if (uniqueCountJ > 2) {
+                    return res.status(200).json({ status: 0, message: 'Maksimal daftar di 2 jalur yang berbeda' });
+                 }
+
+
+
+                // Query to count unique sekolah_id for the given nisn
+                const getPrSmk2 = await DataPerangkingans.findAll({
                     attributes: [
                         'sekolah_tujuan_id',
                         [Sequelize.fn('COUNT', Sequelize.col('sekolah_tujuan_id')), 'count']
@@ -1688,15 +1671,35 @@ export const cekPerangkingan = async (req, res) => {
                 });
 
                 // Extract unique sekolah_id from the result
-                const uniqueSekolahIds = getPrSmk.map(row => row.sekolah_tujuan_id);
+                const uniqueSekolahIds = getPrSmk2.map(row => row.sekolah_tujuan_id);
                 const uniqueCount = uniqueSekolahIds.length;
 
-                if (uniqueCount <= 2) {
+                if (uniqueCount > 2) {
+                    return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
+                }
 
-                    if (uniqueCount > 2) {
-                        return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
-                    }
 
+                // Query to count unique sekolah_id for the given nisn
+                const getPrSmk3 = await DataPerangkingans.findAll({
+                    attributes: [
+                        'jurusan_id',
+                        [Sequelize.fn('COUNT', Sequelize.col('jurusan_id')), 'count']
+                    ],
+                    where: {
+                        nisn,
+                        sekolah_tujuan_id: sekolah_tujuan_id,
+                        is_delete: 0
+                    },
+                    group: ['jurusan_id'],
+                    raw: true
+                });
+
+                // Extract unique sekolah_id from the result
+                const uniqueSekolahJurIds = getPrSmk3.map(row => row.jurusan_id);
+                const uniqueCountJur = uniqueSekolahJurIds.length;
+
+                if (uniqueCountJur > 2) {
+                    return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 jurusan di 1 sekolah' });
                 }
             }
 
@@ -1717,10 +1720,7 @@ export const cekPerangkingan = async (req, res) => {
                     return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jenjang yang sama (Jika sebelumnya sudah mendaftar SMA maka tidak di perbolehkan mendaftar SMK, begitu juga sebaliknya)' });
                 }
 
-                //tidak boleh sama jalur
-                if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
-                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
-                }
+                
 
                 //cari zonasi untuk SMA
                 if(jalur_pendaftaran_id == 1){
