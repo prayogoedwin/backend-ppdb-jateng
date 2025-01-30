@@ -8,6 +8,7 @@ import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import { Op } from 'sequelize';
 
 
 // import getDataWilayah from '../service/WilayahService.js';
