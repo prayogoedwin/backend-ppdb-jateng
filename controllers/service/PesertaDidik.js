@@ -241,7 +241,8 @@ export const getDataDukungByNIK = async (req, res) => {
             data: {
                 ...dataAnakMiskin,
                 ...dataAnakPanti,
-                ...dataAnakPondok
+                ...dataAnakPondok,
+                ...dataAnakGuru
             }
         });
     } catch (err) {

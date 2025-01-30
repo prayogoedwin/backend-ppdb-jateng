@@ -89,7 +89,7 @@ import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
 // router.use(logAccessMiddleware);
 
 // Define the version as a constant
-const VERSION = '1.15.2';
+const VERSION = '1.15.3';
 const APPNAME = 'backend_ppdb';
 
 // Create a GET route at '/' that sends the version as a JSON response
