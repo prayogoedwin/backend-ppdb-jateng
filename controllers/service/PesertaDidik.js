@@ -173,7 +173,7 @@ export const getDataDukungByNIK = async (req, res) => {
             where: {
                 [Op.or]: [
                     { nik: nisn }, // Condition where nik equals nisn
-                    { nik: specificNik } // Condition where nik equals a specific nik
+                    { nik: nik } // Condition where nik equals a specific nik
                 ]
             }
         });
