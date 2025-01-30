@@ -1674,7 +1674,7 @@ export const cekPerangkingan = async (req, res) => {
             if(bentuk_pendidikan_id == 15){
 
                 // Query to count unique sekolah_id for the given nisn
-                const hitungSMK = await DataPerangkingans.findAll({
+                const getPrSmk = await DataPerangkingans.findAll({
                     attributes: [
                         'sekolah_id',
                         [Sequelize.fn('COUNT', Sequelize.col('sekolah_id')), 'count']
@@ -1690,13 +1690,14 @@ export const cekPerangkingan = async (req, res) => {
                 if (uniqueCount <= 2) {
 
                 // Extract unique sekolah_id from the result
-                const uniqueSekolahIds = hitungSMK.map(row => row.sekolah_id);
+                const uniqueSekolahIds = getPrSmk.map(row => row.sekolah_id);
                 const uniqueCount = uniqueSekolahIds.length;
 
-                if (uniqueCount > 2) {
-                    return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
-                }
+                    if (uniqueCount > 2) {
+                        return res.status(200).json({ status: 0, message: 'NISN maksimal daftar di 2 sekolah' });
+                    }
 
+                }
             }
 
           
