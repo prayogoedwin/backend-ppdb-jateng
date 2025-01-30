@@ -118,9 +118,9 @@ export const loginAdmin = async (req, res) => {
         }
 
 
-        if(user.is_login == 1){
-            return res.status(200).json({ status: 0, message: 'Akun sedang digunakan oleh perangkat lain' });
-        }
+        // if(user.is_login == 1){
+        //     return res.status(200).json({ status: 0, message: 'Akun sedang digunakan oleh perangkat lain' });
+        // }
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password_);

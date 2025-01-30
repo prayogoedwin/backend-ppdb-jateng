@@ -88,6 +88,14 @@ import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
 // // Terapkan logAccessMiddleware ke semua route
 // router.use(logAccessMiddleware);
 
+// Define the version as a constant
+const VERSION = '1.15.0';
+
+// Create a GET route at '/' that sends the version as a JSON response
+router.get('/', (req, res) => {
+    res.json({ version: VERSION });
+});
+
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
