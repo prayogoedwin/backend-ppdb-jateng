@@ -1676,21 +1676,21 @@ export const cekPerangkingan = async (req, res) => {
                 // Query to count unique sekolah_id for the given nisn
                 const getPrSmk = await DataPerangkingans.findAll({
                     attributes: [
-                        'sekolah_id',
-                        [Sequelize.fn('COUNT', Sequelize.col('sekolah_id')), 'count']
+                        'sekolah_tujuan_id',
+                        [Sequelize.fn('COUNT', Sequelize.col('sekolah_tujuan_id')), 'count']
                     ],
                     where: {
                         nisn,
                         is_delete: 0
                     },
-                    group: ['sekolah_id'],
+                    group: ['sekolah_tujuan_id'],
                     raw: true
                 });
 
                 if (uniqueCount <= 2) {
 
                 // Extract unique sekolah_id from the result
-                const uniqueSekolahIds = getPrSmk.map(row => row.sekolah_id);
+                const uniqueSekolahIds = getPrSmk.map(row => row.sekolah_tujuan_id);
                 const uniqueCount = uniqueSekolahIds.length;
 
                     if (uniqueCount > 2) {
