@@ -167,7 +167,15 @@ export const getDataDukungByNIK = async (req, res) => {
         }
 
         // Fetch data anak miskin and data anak panti by NIK
-        const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
+        // const //anakMiskin = await DataAnakMiskins.findOne({ where: { nik: nisn } });
+        const anakMiskin = await DataAnakMiskins.findOne({
+            where: {
+                [Op.or]: [
+                    { nik: nisn }, // Condition where nik equals nisn
+                    { nik: specificNik } // Condition where nik equals a specific nik
+                ]
+            }
+        });
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
         const anakGuru = await DataAnakGuru.findOne({  where: { nisn_cpd: nisn } });
