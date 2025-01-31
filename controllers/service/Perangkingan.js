@@ -2200,6 +2200,15 @@ export const daftarUlangPerangkingan = async (req, res) => {
         // Decode the ID
         const id_perangkingan_decode = decodeId(id_perangkingan);
 
+        const resTm = await Timelines.findOne({  
+            where: { id: 6 }, // Find the timeline by ID  
+            attributes: ['id', 'nama', 'status']  
+        });  
+
+        if (resTm.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka Bu Guru, Pak Guru' });
+        }
+
         // Find the record to be updated
         const perangkingan = await DataPerangkingans.findOne({
             where: {
