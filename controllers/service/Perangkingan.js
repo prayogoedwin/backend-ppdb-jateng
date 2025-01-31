@@ -1633,13 +1633,15 @@ export const cekPerangkingan = async (req, res) => {
                     if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
                         return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 sekolah di masing-masing jalur' });
                     }
+
+                    //tidak boleh sama jalur
+                    if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
+                        return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
+                    }
                 }
                
 
-                //tidak boleh sama jalur
-                if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
-                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 jalur pendaftaran di masing-masing jalur pendaftaran' });
-                }
+                
                 // return res.status(200).json({ status: 0, message: 'NISN sudah terdaftar 2 kali' });
                 if (count > 2) {
                     return res.status(200).json({ status: 0, message: 'NISN sudah tidak bisa daftar jalur/sekolah ini' });
