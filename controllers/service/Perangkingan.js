@@ -1859,7 +1859,7 @@ export const cekPerangkingan = async (req, res) => {
                       if (!cariZonasis) {
                         return res.status(200).json({
                           status: 0,
-                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
+                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
                         });
                       }
 
