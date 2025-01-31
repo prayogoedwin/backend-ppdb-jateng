@@ -1628,10 +1628,13 @@ export const cekPerangkingan = async (req, res) => {
 
             if(bentuk_pendidikan_id == 13){
 
-                //hanya boleh daftar 1 sekolah di masing2 jalur
-                if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
-                    return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 sekolah di masing-masing jalur' });
+                if(count > 0){
+                     //hanya boleh daftar 1 sekolah di masing2 jalur
+                    if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
+                        return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 sekolah di masing-masing jalur' });
+                    }
                 }
+               
 
                 //tidak boleh sama jalur
                 if (cari.jalur_pendaftaran_id == jalur_pendaftaran_id) {
