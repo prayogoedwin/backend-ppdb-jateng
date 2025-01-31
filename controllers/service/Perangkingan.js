@@ -1841,37 +1841,14 @@ export const cekPerangkingan = async (req, res) => {
                     const kecPendaftar = pendaftar.kecamatan_id.toString();
 
                     //tidak boleh jika tidak dalam zonasi
-                    const cariZonasis = await SekolahZonasis.findAll({
+                    const cariZonasis = await SekolahZonasis.findOne({
                         where: {
-                          sekolah_id: sekolah_tujuan_id
+                          sekolah_id: sekolah_tujuan_id,
+                          kode_wilayah_kec: kecPendaftar,
                         }
                       });
                 
                     //   let isInZonasis = false;
-
-                      // Check if cariZonasis is empty
-                        if (cariZonasis.length === 0) {
-                            return res.status(200).json({
-                                status: 0,
-                                message: "Tidak ada data zonasi untuk sekolah yang dipilih.",
-                            });
-                        }
-
-                        let isInZonasis = false;
-
-                        cariZonasis.forEach(zonasi => {
-                            console.log(`Comparing zonasi.kode_wilayah_kec: ${zonasi.kode_wilayah_kec} with kecPendaftar: ${kecPendaftar}`);
-                            if (zonasi.kode_wilayah_kec === kecPendaftar) { // Use strict equality
-                                isInZonasis = true;
-                            }
-                        });
-
-                        if (!isInZonasis) {
-                            return res.status(200).json({
-                                status: 0,
-                                message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
-                            });
-                        }
                       
                     //   cariZonasis.forEach(zonasi => {
                     //     if (zonasi.kode_wilayah_kec == kecPendaftar) {
@@ -1879,12 +1856,12 @@ export const cekPerangkingan = async (req, res) => {
                     //     }
                     //   });
                 
-                    //   if (!isInZonasis) {
-                    //     return res.status(200).json({
-                    //       status: 0,
-                    //       message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
-                    //     });
-                    //   }
+                      if (!cariZonasis) {
+                        return res.status(200).json({
+                          status: 0,
+                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
+                        });
+                      }
 
 
                      // Get all zonasi for the pendaftar's kecamatan
