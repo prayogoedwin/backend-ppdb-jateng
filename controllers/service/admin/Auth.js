@@ -298,7 +298,7 @@ export const verifikasiOtp = async (req, res) => {
         // await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
         
         let bentuk_pendidikan_id;
-        if(user.sekolah_id != null || user.sekolah_id != '' ){
+        if(user.sekolah_id != null){
 
             const resData = await SekolahTujuans.findOne({
                 where: {
@@ -307,26 +307,42 @@ export const verifikasiOtp = async (req, res) => {
             });
 
             bentuk_pendidikan_id = resData.bentuk_pendidikan_id
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil masuk',
+                data: {
+                    userId: encodeId(user.id),
+                    username: user.username,
+                    nama: user.nama,
+                    role: user.role_,
+                    sekolah_id: user.sekolah_id,
+                    kabkota_id: user.kabkota_id,
+                    bentuk_pendidikan_id: bentuk_pendidikan_id,
+                    accessToken,
+                    refreshToken
+                }
+            });
 
         }else{
-            bentuk_pendidikan_id = null;
+          
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil masuk',
+                data: {
+                    userId: encodeId(user.id),
+                    username: user.username,
+                    nama: user.nama,
+                    role: user.role_,
+                    sekolah_id: user.sekolah_id,
+                    kabkota_id: user.kabkota_id,
+                    bentuk_pendidikan_id: 0,
+                    accessToken,
+                    refreshToken
+                }
+            });
         }
 
-        res.status(200).json({
-            status: 1,
-            message: 'Berhasil masuk',
-            data: {
-                userId: encodeId(user.id),
-                username: user.username,
-                nama: user.nama,
-                role: user.role_,
-                sekolah_id: user.sekolah_id,
-                kabkota_id: user.kabkota_id,
-                bentuk_pendidikan_id: bentuk_pendidikan_id,
-                accessToken,
-                refreshToken
-            }
-        });
+        
     } catch (error) {
         res.status(500).json({
             status: 0,
