@@ -298,7 +298,7 @@ export const verifikasiOtp = async (req, res) => {
         // await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
         
         let bentuk_pendidikan_id;
-        if(user.sekolah_id != null){
+        if(user.sekolah_id != null || user.sekolah_id != '' ){
 
             const resData = await SekolahTujuans.findOne({
                 where: {
