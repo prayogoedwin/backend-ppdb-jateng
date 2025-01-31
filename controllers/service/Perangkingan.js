@@ -1780,7 +1780,7 @@ export const cekPerangkingan = async (req, res) => {
                       if (!isInZonasis) {
                         return res.status(200).json({
                             status: 0,
-                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. Z",
+                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar.",
                         });
                       }
 
@@ -1847,20 +1847,44 @@ export const cekPerangkingan = async (req, res) => {
                         }
                       });
                 
-                      let isInZonasis = false;
-                      
-                      cariZonasis.forEach(zonasi => {
-                        if (zonasi.kode_wilayah_kec == kecPendaftar) {
-                          isInZonasis = true;
+                    //   let isInZonasis = false;
+
+                      // Check if cariZonasis is empty
+                        if (cariZonasis.length === 0) {
+                            return res.status(200).json({
+                                status: 0,
+                                message: "Tidak ada data zonasi untuk sekolah yang dipilih.",
+                            });
                         }
-                      });
-                
-                      if (!isInZonasis) {
-                        return res.status(200).json({
-                          status: 0,
-                          message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
+
+                        let isInZonasis = false;
+
+                        cariZonasis.forEach(zonasi => {
+                            console.log(`Comparing zonasi.kode_wilayah_kec: ${zonasi.kode_wilayah_kec} with kecPendaftar: ${kecPendaftar}`);
+                            if (zonasi.kode_wilayah_kec === kecPendaftar) { // Use strict equality
+                                isInZonasis = true;
+                            }
                         });
-                      }
+
+                        if (!isInZonasis) {
+                            return res.status(200).json({
+                                status: 0,
+                                message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
+                            });
+                        }
+                      
+                    //   cariZonasis.forEach(zonasi => {
+                    //     if (zonasi.kode_wilayah_kec == kecPendaftar) {
+                    //       isInZonasis = true;
+                    //     }
+                    //   });
+                
+                    //   if (!isInZonasis) {
+                    //     return res.status(200).json({
+                    //       status: 0,
+                    //       message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. A",
+                    //     });
+                    //   }
 
 
                      // Get all zonasi for the pendaftar's kecamatan
