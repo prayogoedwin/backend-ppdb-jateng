@@ -199,7 +199,8 @@ export const getSekolahTujuan = async (req, res) => {
                     // //kode_wilayah_kec: cekPendaftar.kecamatan_id,
                     npsn: { [Op.in]: npsnList } // Use Op.in to filter by npsn
                 },  
-                attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan']  
+                attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
+                group: ['npsn']  
             });
   
             // const resData = await SekolahTujuans.findAll({  
