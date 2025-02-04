@@ -72,7 +72,7 @@ export const getPerangkinganSaya = async (req, res) => {
                     // attributes: ['npsn', 'nama']
                     attributes: [
                         'npsn', 
-                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'] // Use aggregate function for nama
+                        [Sequelize.fn('MIN', Sequelize.col('nama'))] // Use aggregate function for nama
                     ]
                     
                 },
@@ -82,7 +82,7 @@ export const getPerangkinganSaya = async (req, res) => {
                     // attributes: ['id', 'nama_jurusan']
                     attributes: [
                         'id', 
-                        [Sequelize.fn('MIN', Sequelize.col('nama_jurusan')), 'nama_jurusan'] // Use aggregate function for nama_jurusan
+                        [Sequelize.fn('MIN', Sequelize.col('nama_jurusan'))] // Use aggregate function for nama_jurusan
                     ]
                 },
                 {
@@ -91,7 +91,7 @@ export const getPerangkinganSaya = async (req, res) => {
                     // attributes: ['bentuk_pendidikan_id', 'nama']
                     attributes: [
                         'bentuk_pendidikan_id', 
-                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'] // Use aggregate function for nama
+                        [Sequelize.fn('MIN', Sequelize.col('nama'))] // Use aggregate function for nama
                     ]
                 }
             ],
