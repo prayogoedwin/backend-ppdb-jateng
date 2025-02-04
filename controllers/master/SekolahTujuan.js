@@ -37,7 +37,24 @@ export const getSekolahTujuanPublik = async (req, res) => {
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
                 },
-                attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'kuota_zonasi_persentase', 'kuota_zonasi_khusus_persentase', 'kuota_afirmasi_persentase', 'kuota_prestasi_persentase', 'kuota_pto_persentase', 'alamat_jalan'] // Specify the attributes to retrieve
+                // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'kuota_zonasi_persentase', 'kuota_zonasi_khusus_persentase', 'kuota_afirmasi_persentase', 'kuota_prestasi_persentase', 'kuota_pto_persentase', 'alamat_jalan'] // Specify the attributes to retrieve
+                attributes: [
+                    'npsn', 
+                    [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi_persentase')), 'kuota_zonasi_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi_khusus_persentase')), 'kuota_zonasi_khusus_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_afirmasi_persentase')), 'kuota_afirmasi_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_prestasi_persentase')), 'kuota_prestasi_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_pto_persentase')), 'kuota_pto_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum capacity for each npsn
+                   
+                ],  
+                group: ['npsn']  
+                
             });
 
              // Tambahkan properti nama_npsn ke setiap item dalam resData
