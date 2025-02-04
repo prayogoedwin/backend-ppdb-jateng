@@ -69,7 +69,7 @@ export const getPerangkinganSaya = async (req, res) => {
                 {
                     model: SekolahTujuan,
                     as: 'sekolah_tujuan',
-                    attributes: ['npsn', 'nama']
+                    attributes: ['id' ,'npsn', 'nama']
                 },
                 {
                     model: SekolahJurusan,
