@@ -4,6 +4,7 @@ import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis func
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
 import DataUsers from '../../../models/service/DataUsersModel.js';
+import Timelines from "../../../models/service/TimelineModel.js";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -933,6 +934,15 @@ export const verifikasiPendaftar = async (req, res) => {
         } catch (err) {
             console.error('Error decoding ID:', err);
             return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        const resTm = await Timelines.findOne({  
+            where: { id: 2 }, // Find the timeline by ID  
+            attributes: ['id', 'nama', 'status']  
+        });  
+
+        if (resTm.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka :)' });
         }
 
         console.log('Decoded ID:', decodedId); // For debugging

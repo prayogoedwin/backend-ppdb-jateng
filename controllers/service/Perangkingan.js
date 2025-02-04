@@ -2210,7 +2210,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
         });  
 
         if (resTm.status != 1) {  
-            return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka Bu Guru, Pak Guru' });
+            return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka :)' });
         }
 
         // Find the record to be updated
