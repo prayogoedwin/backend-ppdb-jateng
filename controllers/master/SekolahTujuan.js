@@ -234,7 +234,17 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {  
                         id_sekolah_tujuan: formattedResData.map(school => school.id) // Get the ids of the schools  
                     },  
-                        attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                        // attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                        attributes: [
+                            'npsn', 
+                            [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                        ],  
+                        group: ['npsn']  
                 });  
   
                 // Format jurusan data  
