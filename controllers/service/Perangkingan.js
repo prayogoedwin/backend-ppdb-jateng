@@ -84,7 +84,7 @@ export const getPerangkinganSaya = async (req, res) => {
             ],
             // order: [['id', 'ASC']],
             // group: ['ez_perangkingan.id']  
-            group: ['ez_perangkingan.id', 'sekolah_tujuan.id', 'sekolah_tujuan.npsn', 'sekolah_jurusan.id', 'jalur_pendaftaran.id']
+            group: ['ez_perangkingan.id', 'sekolah_tujuan.id', 'sekolah_tujuan.npsn', 'sekolah_tujuan.nama', 'sekolah_jurusan.id', 'sekolah_jurusan.nama_jurusan', 'jalur_pendaftaran.id']
         });
 
         const resDatas = resData.map(item => {
