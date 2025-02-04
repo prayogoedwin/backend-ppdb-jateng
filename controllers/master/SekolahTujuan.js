@@ -234,17 +234,7 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {  
                         id_sekolah_tujuan: formattedResData.map(school => school.id) // Get the ids of the schools  
                     },  
-                        // attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
-                        attributes: [
-                            'npsn', 
-                            [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
-                            [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
-                            [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
-                            [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
-                            [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                            [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
-                        ],  
-                        group: ['npsn']  
+                        attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
                 });  
   
                 // Format jurusan data  
@@ -280,7 +270,17 @@ export const getSekolahTujuan = async (req, res) => {
                 where: {  
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id  
                 },  
-                attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan']  
+                // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
+                attributes: [
+                    'npsn', 
+                    [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                ],  
+                group: ['npsn']   
             });  
   
             // Tambahkan properti nama_npsn ke setiap item dalam resData  
