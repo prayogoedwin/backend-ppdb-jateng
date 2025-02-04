@@ -82,8 +82,8 @@ export const getPerangkinganSaya = async (req, res) => {
                     attributes: ['bentuk_pendidikan_id', 'nama']
                 }
             ],
-            order: [['ez_perangkingan.id', 'ASC']],
-            group: ['ez_perangkingan.id']  
+            order: [['id', 'ASC']],
+            group: ['id']  
         });
 
         const resDatas = resData.map(item => {
