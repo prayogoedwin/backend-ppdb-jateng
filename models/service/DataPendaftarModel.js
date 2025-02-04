@@ -311,6 +311,12 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    is_big_unregistered: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+
+    
 
     
     

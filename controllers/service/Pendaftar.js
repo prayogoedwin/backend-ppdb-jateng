@@ -401,7 +401,7 @@ export const getPendaftarDetail = async (req, res) => {
 }
 
 // User aktivasi
-export const aktivasiAkunPendaftar2 = async (req, res) => {
+export const aktivasiAkunPendaftar_BAK = async (req, res) => {
 
         const { nisn, kode_verifkasi, password } = req.body;
 
@@ -457,6 +457,15 @@ export const aktivasiAkunPendaftar = async (req, res) => {
         const { nisn, kode_verifikasi, password } = req.body;
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const resTm = await Timelines.findOne({  
+          where: { id: 3 }, // Find the timeline by ID  
+          attributes: ['id', 'nama', 'status']  
+        });  
+
+        if (resTm.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Aktivasi Belum Dibuka :)' });
+        }
 
         try {
             const resData = await DataPendaftars.findOne({
