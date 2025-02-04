@@ -125,10 +125,36 @@ export const updateTimeline = [
 
             }
 
+
+            if(resData.id == 5 && status == 0){
+
+                await Timelines.update({
+                    status: 1
+                }, {
+                    where: {
+                        id:4
+                    }
+                });
+
+            }
+
+
             if(resData.id == 4 && status == 1){
 
                 await Timelines.update({
                     status: 0
+                }, {
+                    where: {
+                        id:5
+                    }
+                });
+
+            }
+
+            if(resData.id == 4 && status == 0){
+
+                await Timelines.update({
+                    status: 1
                 }, {
                     where: {
                         id:5
