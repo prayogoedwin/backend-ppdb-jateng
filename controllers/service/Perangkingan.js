@@ -96,7 +96,8 @@ export const getPerangkinganSaya = async (req, res) => {
                 }
             ],
             order: [['id', 'ASC']],
-            group: ['id']  
+            // group: ['id']  
+            group: ['DataPerangkingans.id'] // Group by id of DataPerangkingans
         });
 
         const resDatas = resData.map(item => {
