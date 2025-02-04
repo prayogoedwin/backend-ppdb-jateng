@@ -66,7 +66,7 @@ export const getPerangkinganSaya = async (req, res) => {
                 is_delete: 0
             },
             // group: ['id'], // Group by id of DataPerangkingans
-            group: ['ez_perangkingan.id', 'sekolah_tujuan.npsn', 'sekolah_tujuan.nama', 'sekolah_jurusan.id', 'sekolah_jurusan.nama_jurusan', 'jalur_pendaftaran.bentuk_pendidikan_id', 'jalur_pendaftaran.nama'], // Kelompokkan berdasarkan id
+            group: ['ez_perangkingan.id'], // Kelompokkan berdasarkan id
             order: [['id', 'ASC']],
             include: [
                 {
