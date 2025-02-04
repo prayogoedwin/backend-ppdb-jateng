@@ -127,7 +127,8 @@ export const createPendaftar = async (req, res) => {
                     is_saved,
                     no_urut,
                     is_diterima,
-                    email
+                    email,
+                    is_big_unregistered
                 } = req.body;
 
                 // Cek apakah NISN sudah terdaftar dan belum dihapus
@@ -162,7 +163,7 @@ export const createPendaftar = async (req, res) => {
 
                 // Menghasilkan kode verifikasi unik
                 const kode_verifikasi = await generateVerificationCode();
-                const hashedPassword = await bcrypt.hash('Admin123#=', 10);
+                const hashedPassword = await bcrypt.hash('CPD123#=', 10);
 
                 // Get file paths
                 const files = req.files;
@@ -214,7 +215,8 @@ export const createPendaftar = async (req, res) => {
                     kode_verifikasi,
                     created_by: req.ip,
                     password_:hashedPassword,
-                    email
+                    email,
+                    is_big_unregistered
                 });
 
                 // Menyaring data yang akan dikirim sebagai respons
