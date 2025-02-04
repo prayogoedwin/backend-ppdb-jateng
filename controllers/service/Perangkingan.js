@@ -69,7 +69,7 @@ export const getPerangkinganSaya = async (req, res) => {
                 {
                     model: SekolahTujuan,
                     as: 'sekolah_tujuan',
-                    attributes: ['id' ,'npsn', 'nama']
+                    attributes: ['npsn', 'nama']
                 },
                 {
                     model: SekolahJurusan,
@@ -83,7 +83,8 @@ export const getPerangkinganSaya = async (req, res) => {
                 }
             ],
             // order: [['id', 'ASC']],
-            group: ['ez_perangkingan.id']  
+            // group: ['ez_perangkingan.id']  
+            group: ['ez_perangkingan.id', 'sekolah_tujuan.id', 'sekolah_jurusan.id', 'jalur_pendaftaran.id']
         });
 
         const resDatas = resData.map(item => {
