@@ -69,17 +69,30 @@ export const getPerangkinganSaya = async (req, res) => {
                 {
                     model: SekolahTujuan,
                     as: 'sekolah_tujuan',
-                    attributes: ['npsn', 'nama']
+                    // attributes: ['npsn', 'nama']
+                    attributes: [
+                        'npsn', 
+                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'] // Use aggregate function for nama
+                    ]
+                    
                 },
                 {
                     model: SekolahJurusan,
                     as: 'sekolah_jurusan',
-                    attributes: ['id', 'nama_jurusan']
+                    // attributes: ['id', 'nama_jurusan']
+                    attributes: [
+                        'id', 
+                        [Sequelize.fn('MIN', Sequelize.col('nama_jurusan')), 'nama_jurusan'] // Use aggregate function for nama_jurusan
+                    ]
                 },
                 {
                     model: JalurPendaftarans,
                     as: 'jalur_pendaftaran',
-                    attributes: ['bentuk_pendidikan_id', 'nama']
+                    // attributes: ['bentuk_pendidikan_id', 'nama']
+                    attributes: [
+                        'bentuk_pendidikan_id', 
+                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'] // Use aggregate function for nama
+                    ]
                 }
             ],
             order: [['id', 'ASC']],
