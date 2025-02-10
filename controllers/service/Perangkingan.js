@@ -60,44 +60,59 @@ export const getPerangkinganSaya = async (req, res) => {
         const decodedIdPendaftar = decodeId(id_pendaftar);
 
         // Fetch the data
-        const resData = await DataPerangkingans.findAll({
+
+        const cekApakahSudahDaftar = await DataPerangkingans.findOne({
             where: {
-                id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
-                is_delete: 0
+                id_pendaftar: decodedIdPendaftar,
             },
-            include: [
-                {
-                    model: SekolahTujuan,
-                    as: 'sekolah_tujuan',
-                    attributes: ['npsn', 'nama']
-                },
-                {
-                    model: SekolahJurusan,
-                    as: 'sekolah_jurusan',
-                    attributes: ['id', 'nama_jurusan']
-                },
-                {
-                    model: JalurPendaftarans,
-                    as: 'jalur_pendaftaran',
-                    attributes: ['bentuk_pendidikan_id', 'nama']
-                }
-            ],
-            // order: [['id', 'ASC']],
-            // group: ['ez_perangkingan.id']  
-            group: ['ez_perangkingan.id', 'sekolah_tujuan.id', 
-                'sekolah_tujuan.npsn', 'sekolah_tujuan.nama', 'sekolah_jurusan.id', 
-                'sekolah_jurusan.nama_jurusan', 'jalur_pendaftaran.id' , 'jalur_pendaftaran.bentuk_pendidikan_id' , 'jalur_pendaftaran.nama']
         });
 
-        const resDatas = resData.map(item => {
-            const jsonItem = item.toJSON();
-            jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
-            jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
-            delete jsonItem.id; // Hapus kolom id dari output JSON
-            delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
-           
-            return jsonItem;
-        });
+        if(cekApakahSudahDaftar > 0){
+
+            const resData = await DataPerangkingans.findAll({
+                where: {
+                    id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
+                    is_delete: 0
+                },
+                include: [
+                    {
+                        model: SekolahTujuan,
+                        as: 'sekolah_tujuan',
+                        attributes: ['npsn', 'nama']
+                    },
+                    {
+                        model: SekolahJurusan,
+                        as: 'sekolah_jurusan',
+                        attributes: ['id', 'nama_jurusan']
+                    },
+                    {
+                        model: JalurPendaftarans,
+                        as: 'jalur_pendaftaran',
+                        attributes: ['bentuk_pendidikan_id', 'nama']
+                    }
+                ],
+                // order: [['id', 'ASC']],
+                // group: ['ez_perangkingan.id']  
+                group: ['ez_perangkingan.id', 'sekolah_tujuan.id', 
+                    'sekolah_tujuan.npsn', 'sekolah_tujuan.nama', 'sekolah_jurusan.id', 
+                    'sekolah_jurusan.nama_jurusan', 'jalur_pendaftaran.id' , 'jalur_pendaftaran.bentuk_pendidikan_id' , 'jalur_pendaftaran.nama']
+            });
+
+            const resDatas = resData.map(item => {
+                const jsonItem = item.toJSON();
+                jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
+                jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
+                delete jsonItem.id; // Hapus kolom id dari output JSON
+                delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
+            
+                return jsonItem;
+            });
+
+        }else{
+
+            const resDatas = array();
+
+        }
 
         const resTimeline = await Timelines.findOne({
             where: {
