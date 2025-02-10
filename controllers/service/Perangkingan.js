@@ -110,7 +110,7 @@ export const getPerangkinganSaya = async (req, res) => {
 
         }else{
 
-            const resDatas = array();
+            const resData = 0;
 
         }
 
