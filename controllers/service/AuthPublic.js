@@ -228,13 +228,18 @@ export const verifikasiOtpUser = [
 
             await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
 
+            const fullName =  user.nama_lengkap;
+            const nameParts = fullName.trim().split(' ');
+            // Mengambil kata pertama sebagai nama depan
+
             res.status(200).json({
                 status: 1,
                 message: 'Berhasil masuk',
                 data: {
                     userId: encodeId(user.id),
                     nisn: user.nisn,
-                    nama: user.nama_lengkap,
+                    nama: nameParts[0],
+                    nama_lengkap: fullName,
                     accessToken,
                     refreshToken
                 }
