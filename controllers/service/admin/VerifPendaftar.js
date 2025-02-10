@@ -438,6 +438,9 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 res.status(200).json({
                     status: 0,
                     message: 'Data kosong',
+                    currentPage: 0,
+                    totalPages: 0,
+                    totalItems: 0,
                     data: []
                 });
             }
