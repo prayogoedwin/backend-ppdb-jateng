@@ -67,7 +67,7 @@ export const getPerangkinganSaya = async (req, res) => {
             },
         });
 
-        if(cekApakahSudahDaftar > 0){
+        // if(cekApakahSudahDaftar > 0){
 
             const resData = await DataPerangkingans.findAll({
                 where: {
@@ -108,11 +108,11 @@ export const getPerangkinganSaya = async (req, res) => {
                 return jsonItem;
             });
 
-        }else{
+        // }else{
 
-            const resData = 0;
+        //     const resData = 0;
 
-        }
+        // }
 
         const resTimeline = await Timelines.findOne({
             where: {
