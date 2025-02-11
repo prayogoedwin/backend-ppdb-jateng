@@ -43,18 +43,18 @@ export const logAccessAdmin = async (req, res, next) => {
     const akun = req.user && req.user.userId ? req.user.userId : req.body.username;
 
     try {
-        const logData = {
-            url: req.originalUrl,
-            akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
-            json_data:  req.body, // Ambil data JSON dari body
-            created_at: new Date(),
-            created_by: req.body.username,
-            created_by_ip: req.ip // Alamat IP pengguna
-        };
+        // const logData = {
+        //     url: req.originalUrl,
+        //     akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
+        //     json_data:  req.body, // Ambil data JSON dari body
+        //     created_at: new Date(),
+        //     created_by: req.body.username,
+        //     created_by_ip: req.ip // Alamat IP pengguna
+        // };
 
-        // Simpan ke dalam database
-        await AccessLogAdmin.create(logData);
-        console.log("Log entry created:", logData); // 
+        // // Simpan ke dalam database
+        // await AccessLogAdmin.create(logData);
+        // console.log("Log entry created:", logData); // 
         next(); // Lanjutkan ke handler berikutnya
 
     } catch (error) {
@@ -75,18 +75,18 @@ export const logAccessClient = async (req, res, next) => {
     const akun = req.user && req.user.userId ? req.user.userId : req.body.username;
 
     try {
-        const logData = {
-            url: req.originalUrl,
-            akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
-            json_data:  '',
-            created_at: new Date(),
-            created_by: req.body.username,
-            created_by_ip: req.ip // Alamat IP pengguna
-        };
+        // const logData = {
+        //     url: req.originalUrl,
+        //     akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
+        //     json_data:  '',
+        //     created_at: new Date(),
+        //     created_by: req.body.username,
+        //     created_by_ip: req.ip // Alamat IP pengguna
+        // };
 
-        // Simpan ke dalam database
-        await AccessLogClient.create(logData);
-        console.log("Log entry created:", logData); // 
+        // // Simpan ke dalam database
+        // await AccessLogClient.create(logData);
+        // console.log("Log entry created:", logData); // 
         next(); // Lanjutkan ke handler berikutnya
 
     } catch (error) {
