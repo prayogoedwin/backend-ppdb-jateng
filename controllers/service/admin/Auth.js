@@ -1,4 +1,5 @@
 import DataUsers from '../../../models/service/DataUsersModel.js';
+import EzRoles from "../../../models/service/RolesModel.js";
 import { encodeId, decodeId } from '../../../middleware/EncodeDecode.js';
 import SekolahTujuans from '../../../models/master/SekolahTujuanModel.js'
 import { sendOtpToWhatsapp } from '../../../helpers/HelpHelper.js';
