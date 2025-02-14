@@ -18,6 +18,22 @@ export const authenticateToken = async (req, res, next) => {
         next();
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
+
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+            req.user = decoded;
+
+            user = req.user.userId;
+
+            const user = await DataUsers.findOne({
+                where: {
+                    id: user
+                }
+            });
+
+            const updateData = {
+                is_login: 0
+            };
+            await user.update(updateData);
             return res.status(403).json({ status: 0, message: 'Access token expired' });
         } else {
             return res.status(403).json({ status: 0, message: 'Invalid access token' });
