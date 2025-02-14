@@ -262,7 +262,14 @@ export const verifikasiOtp = async (req, res) => {
                 // access_token: otp,
                 is_active: 1,
                 is_delete: 0
-            }
+            },
+            include: [
+                {
+                    model: EzRoles,
+                    as: 'data_role', // Pastikan alias ini sesuai dengan yang Anda definisikan di model
+                    attributes: ['id', 'role_name'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
+                }
+            ]
         });
 
         if (!user) {
@@ -315,6 +322,7 @@ export const verifikasiOtp = async (req, res) => {
                     username: user.username,
                     nama: user.nama,
                     role: user.role_,
+                    data_role: user.data_role,
                     sekolah_id: user.sekolah_id,
                     kabkota_id: user.kabkota_id,
                     bentuk_pendidikan_id: bentuk_pendidikan_id,
