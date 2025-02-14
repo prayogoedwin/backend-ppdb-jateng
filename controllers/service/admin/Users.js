@@ -499,7 +499,7 @@ export const resetLoggedInById = async (req, res) => {
 
             res.status(200).json({
                 status: 1,
-                message: 'Berhasil reset login user berhasil'
+                message: 'Berhasil reset login user'
             });
 
         
