@@ -73,7 +73,7 @@ import { getTimeline, getTimelineById, updateTimeline } from "../controllers/ser
 import { getSekolahTujuanAdmin, getSekolahTujuanAdminById, updateSekolahTujuanAdmin, getSekolahTujuanJurusanAdmin, getSekolahTujuanJurusanAdminById, updateSekolahTujuanJurusanAdmin } from "../controllers/service/admin/SekolahTujuan.js";
 
 //users
-import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById } from "../controllers/service/admin/Users.js";
+import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById, resetLoggedInById } from "../controllers/service/admin/Users.js";
 
 //roles
 import { getRoles } from "../controllers/service/admin/Role.js";
@@ -244,6 +244,9 @@ router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddl
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUser);
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, softDeleteUser);
 router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetPasswordById);
+router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetLoggedInById);
+
+
 
 //rekap
 router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);

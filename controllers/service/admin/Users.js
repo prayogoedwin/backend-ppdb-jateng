@@ -464,6 +464,55 @@ export const resetPasswordById = async (req, res) => {
     
 }
 
+export const resetLoggedInById = async (req, res) => {
+    const { id } = req.params; // Ambil id dari params URL
+    try {
+        const user = await DataUsers.findOne({
+            where: {
+                id: decodeId(id),
+                is_delete: 0
+            },
+            
+        });
+
+        if (!user) {
+            return res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan'
+            });
+        }
+            
+
+            const updateData = {
+                is_login: 0,
+                updated_at: new Date(),
+                updated_by: req.user.userId, // Use user ID from token
+            };
+
+
+            // const updateData = {
+            //     password : hashedPassword
+            // };
+    
+            await user.update(updateData);
+           
+
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil reset login user berhasil'
+            });
+
+        
+    }catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message+'a',
+        });
+    }
+
+    
+}
+
 export const softDeleteUser = async (req, res) => {
     const { id } = req.params; // Ambil id dari params URL
     try {
