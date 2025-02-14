@@ -268,7 +268,7 @@ export const verifikasiOtp = async (req, res) => {
                 {
                     model: EzRoles,
                     as: 'data_role', // Pastikan alias ini sesuai dengan yang Anda definisikan di model
-                    attributes: ['id', 'role_name'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
+                    attributes: ['id', 'nama'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
                 }
             ]
         });
