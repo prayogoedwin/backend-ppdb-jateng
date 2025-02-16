@@ -530,7 +530,7 @@ export const getPerangkinganBAK = async (req, res) => {
     }
 }
 
-export const getPerangkingan = async (req, res) => {
+export const getPerangkinganAsli = async (req, res) => {
 
     try {
 
@@ -1142,6 +1142,395 @@ export const getPerangkingan = async (req, res) => {
         });
     }
 }
+
+export const getPerangkingan = async (req, res) => {
+    try {
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+        } = req.body;
+
+        const resTimeline = await Timelines.findOne({
+            where: {
+                id: 6,
+            },
+        });
+
+        let resData;
+        let kuota;
+        let countPrestasi;
+        let countAfirmasi;
+        let countPto;
+        let countTerdekat;
+        let kuota_zonasi_max;
+        let kuota_zonasi_min;
+        let kuota_zonasi_khusus;
+        let kuota_prestasi;
+        let kuota_prestasi_max;
+        let kuota_prestasi_min;
+        let kuota_pto;
+        let kuota_jarak_terdekat;
+        let kuota_prestasi_khusus;
+        let kuota_afirmasi;
+
+        switch (jalur_pendaftaran_id) {
+            case 1:
+                // Jalur Zonasi Reguler SMA
+                const resSek1 = await SekolahTujuan.findOne({
+                    where: {
+                        id: sekolah_tujuan_id,
+                    },
+                });
+
+                countPrestasi = await DataPerangkingans.count({
+                    where: {
+                        jalur_pendaftaran_id: 3,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    limit: resSek1.kuota_prestasi,
+                });
+
+                countAfirmasi = await DataPerangkingans.count({
+                    where: {
+                        jalur_pendaftaran_id: 5,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    limit: resSek1.kuota_afirmasi,
+                });
+
+                countPto = await DataPerangkingans.count({
+                    where: {
+                        jalur_pendaftaran_id: 4,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    limit: resSek1.kuota_afirmasi,
+                });
+
+                kuota_zonasi_max = resSek1.daya_tampung;
+                kuota_zonasi_min = resSek1.kuota_zonasi;
+
+                kuota = Math.max(kuota_zonasi_min, kuota_zonasi_max - countPrestasi - countAfirmasi - countPto);
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 2:
+                // Jalur Zonasi KHUSUS SMA
+                const resSek2 = await SekolahTujuan.findOne({
+                    where: {
+                        id: sekolah_tujuan_id,
+                    },
+                });
+
+                kuota_zonasi_khusus = resSek2.kuota_zonasi_khusus;
+
+                kuota = kuota_zonasi_khusus;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        ['umur', 'DESC'],
+                        ['nilai_akhir', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 3:
+                // Jalur Prestasi SMA
+                const resSek3 = await SekolahTujuan.findOne({
+                    where: {
+                        id: sekolah_tujuan_id,
+                    },
+                });
+
+                kuota_prestasi = resSek3.kuota_prestasi;
+
+                kuota = kuota_prestasi;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        ['nilai_akhir', 'DESC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 4:
+                // Jalur PTO SMA
+                const resSek4 = await SekolahTujuan.findOne({
+                    where: {
+                        id: sekolah_tujuan_id,
+                    },
+                });
+
+                kuota_pto = resSek4.kuota_pto;
+
+                kuota = kuota_pto;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_anak_guru_jateng: '1',
+                        is_delete: 0,
+                    },
+                    order: [
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 5:
+                // Jalur Afirmasi SMA
+                const resSek5 = await SekolahTujuan.findOne({
+                    where: {
+                        id: sekolah_tujuan_id,
+                    },
+                });
+
+                kuota_afirmasi = resSek5.kuota_afirmasi;
+
+                kuota = kuota_afirmasi;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 6:
+                // Jalur SMK Terdekat
+                const resJurSek6 = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan: sekolah_tujuan_id,
+                        id: jurusan_id,
+                    },
+                });
+
+                kuota_jarak_terdekat = resJurSek6.kuota_jarak_terdekat;
+
+                kuota = kuota_jarak_terdekat;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        ['nilai_akhir', 'DESC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 7:
+                // Jalur SMK Prestasi
+                const resJurSek7 = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan: sekolah_tujuan_id,
+                        id: jurusan_id,
+                    },
+                });
+
+                countTerdekat = await DataPerangkingans.count({
+                    where: {
+                        jalur_pendaftaran_id: 6,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                    },
+                    limit: resJurSek7.kuota_jarak_terdekat,
+                });
+
+                countAfirmasi = await DataPerangkingans.count({
+                    where: {
+                        jalur_pendaftaran_id: 9,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                    },
+                    limit: resJurSek7.kuota_jarak_terdekat,
+                });
+
+                kuota_prestasi_max = resJurSek7.daya_tampung;
+                kuota_prestasi_min = resJurSek7.kuota_prestasi;
+
+                kuota = Math.max(kuota_prestasi_min, kuota_prestasi_max - countTerdekat - countAfirmasi);
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        ['nilai_akhir', 'DESC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 8:
+                // Jalur SMK Prestasi Khusus
+                const resJurSek8 = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan: sekolah_tujuan_id,
+                        id: jurusan_id,
+                    },
+                });
+
+                kuota_prestasi_khusus = resJurSek8.kuota_prestasi_khusus;
+
+                kuota = kuota_prestasi_khusus;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                    },
+                    order: [
+                        ['nilai_akhir', 'DESC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            case 9:
+                // Jalur SMK Afirmasi
+                const resJurSek9 = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan: sekolah_tujuan_id,
+                        id: jurusan_id,
+                    },
+                });
+
+                kuota_afirmasi = resJurSek9.kuota_afirmasi;
+
+                kuota = kuota_afirmasi;
+
+                resData = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                        [Op.or]: [
+                            { is_anak_panti: { [Op.ne]: '0' } },
+                            { is_anak_keluarga_tidak_mampu: { [Op.ne]: '0' } },
+                        ],
+                    },
+                    order: [
+                        ['nilai_akhir', 'DESC'],
+                        ['umur', 'DESC'],
+                        ['created_at', 'ASC'],
+                    ],
+                    limit: kuota,
+                });
+                break;
+
+            default:
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
+                    'data': [],
+                    'timeline': null,
+                });
+                return;
+        }
+
+        if (resData && resData.length > 0) {
+            const nisnMap = new Map();
+            resData.forEach(item => {
+                const { nisn, id, ...rest } = item.toJSON();
+                if (!nisnMap.has(nisn) || id < nisnMap.get(nisn).id) {
+                    nisnMap.set(nisn, { id, ...rest });
+                }
+            });
+
+            const modifiedData = Array.from(nisnMap.values()).map(item => ({
+                ...item,
+                id: encodeId(item.id),
+            }));
+
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan',
+                'data': modifiedData,
+                'timeline': resTimeline,
+            });
+        } else {
+            res.status(200).json({
+                'status': 0,
+                'message': 'Data kosong',
+                'data': [],
+                'timeline': resTimeline,
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            'status': 0,
+            'message': 'Error',
+        });
+    }
+};
+
+
 
 export const getInfoParam = async (req, res) => {
 
