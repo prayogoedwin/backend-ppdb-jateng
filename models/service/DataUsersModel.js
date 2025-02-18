@@ -48,7 +48,7 @@ const DataUsers = db.define('ez_users', {
         allowNull: true,
     },
     sekolah_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: true,
     },
     cabdin_id: {
@@ -130,7 +130,8 @@ const DataUsers = db.define('ez_users', {
 });
 
 DataUsers.belongsTo(EzRoles, { as: 'data_role', foreignKey: 'role_'});
-DataUsers.belongsTo(SekolahTujuanModel, { as: 'sekolah', foreignKey: 'sekolah_id' });
+DataUsers.belongsTo(SekolahTujuanModel, { as: 'asal_sekolah_verifikator', foreignKey: 'sekolah_id', targetKey: 'id'});
+DataUsers.belongsTo(SekolahTujuanModel, { as: 'asal_sekolah_admin', foreignKey: 'sekolah_id', targetKey: 'id'});
 export default DataUsers;
 
 

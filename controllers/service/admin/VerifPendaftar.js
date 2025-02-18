@@ -412,10 +412,12 @@ export const getDataPendaftarByWhere = async (req, res) => {
                         include: [
                             {
                                 model: SekolahTujuanModel,
-                                as: 'sekolah',
-                                attributes: ['id', 'nama_sekolah'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                                as: 'asal_sekolah_verifikator',
+                                attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
                             }
-                        ]
+                            
+                        ],
+                        
                     },
                     {
                         model: DataUsers,
@@ -424,10 +426,12 @@ export const getDataPendaftarByWhere = async (req, res) => {
                         include: [
                             {
                                 model: SekolahTujuanModel,
-                                as: 'sekolah',
-                                attributes: ['id', 'nama_sekolah'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                                as: 'asal_sekolah_admin',
+                                attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
                             }
+                           
                         ]
+                        
                     }
                 ],
                 where: whereFor,
