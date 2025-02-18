@@ -1150,7 +1150,7 @@ export const getPerangkingan = async (req, res) => {
             jalur_pendaftaran_id,
             sekolah_tujuan_id,
             jurusan_id,
-            nisn,
+            // nisn,
         } = req.body;
 
         const resTimeline = await Timelines.findOne({
@@ -1498,17 +1498,20 @@ export const getPerangkingan = async (req, res) => {
         }
 
         if (resData && resData.length > 0) {
+
+             // Mengelompokkan data berdasarkan NISN dan memilih ID terkecil
             const nisnMap = new Map();
             resData.forEach(item => {
                 const { nisn, id, ...rest } = item.toJSON();
-                if (!nisnMap.has(nisn) || id < nisnMap.get(nisn).id) {
+                if (!nisnMap.has(nisn) || nisnMap.get(nisn).id > id) {
                     nisnMap.set(nisn, { id, ...rest });
                 }
             });
 
-            const modifiedData = Array.from(nisnMap.values()).map(item => ({
-                ...item,
-                id: encodeId(item.id),
+            // Mengubah Map menjadi array untuk respons
+            const modifiedData = Array.from(nisnMap.entries()).map(([nisn, data]) => ({
+                nisn,
+                ...data,
             }));
 
             res.status(200).json({
@@ -1533,7 +1536,6 @@ export const getPerangkingan = async (req, res) => {
         });
     }
 };
-
 
 
 export const getInfoParam = async (req, res) => {
