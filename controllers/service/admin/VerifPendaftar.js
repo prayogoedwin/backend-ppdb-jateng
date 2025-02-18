@@ -710,11 +710,39 @@ export const getDataPendaftarById = async (req, res) => {
                     as: 'data_wilayah_prov',  
                     attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
                 },  
-                {  
-                    model: DataUsers,  
-                    as: 'diverifikasi_oleh',  
-                    attributes: ['id', 'nama']  
-                }  
+                // {  
+                //     model: DataUsers,  
+                //     as: 'diverifikasi_oleh',  
+                //     attributes: ['id', 'nama']  
+                // }  
+                {
+                    model: DataUsers,
+                    as: 'diverifikasi_oleh',
+                    attributes: ['id', 'nama', 'sekolah_id'],
+                    include: [
+                        {
+                            model: SekolahTujuanModel,
+                            as: 'asal_sekolah_verifikator',
+                            attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                        }
+                        
+                    ],
+                    
+                },
+                {
+                    model: DataUsers,
+                    as: 'sedang_diproses_oleh',
+                    attributes: ['id', 'nama', 'sekolah_id'],
+                    include: [
+                        {
+                            model: SekolahTujuanModel,
+                            as: 'asal_sekolah_admin',
+                            attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                        }
+                       
+                    ]
+                    
+                }
             ],  
         });  
   
