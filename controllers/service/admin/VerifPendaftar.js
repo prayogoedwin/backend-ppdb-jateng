@@ -3,6 +3,7 @@ import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
+import SekolahTujuanModel from '../../../models/master/SekolahTujuanModel.js';
 import DataUsers from '../../../models/service/DataUsersModel.js';
 import Timelines from "../../../models/service/TimelineModel.js";
 import multer from "multer";
@@ -407,7 +408,26 @@ export const getDataPendaftarByWhere = async (req, res) => {
                     {
                         model: DataUsers,
                         as: 'diverifikasi_oleh',
-                        attributes: ['id', 'nama']
+                        attributes: ['id', 'nama', 'sekolah_id'],
+                        include: [
+                            {
+                                model: SekolahTujuanModel,
+                                as: 'sekolah',
+                                attributes: ['id', 'nama_sekolah'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                            }
+                        ]
+                    },
+                    {
+                        model: DataUsers,
+                        as: 'sedang_diproses_oleh',
+                        attributes: ['id', 'nama', 'sekolah_id'],
+                        include: [
+                            {
+                                model: SekolahTujuanModel,
+                                as: 'sekolah',
+                                attributes: ['id', 'nama_sekolah'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                            }
+                        ]
                     }
                 ],
                 where: whereFor,

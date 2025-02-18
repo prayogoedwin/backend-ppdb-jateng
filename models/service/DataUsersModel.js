@@ -1,6 +1,8 @@
 import { Sequelize} from "sequelize";
 import db from "../../config/Database.js";
 import EzRoles from '../service/RolesModel.js';
+import SekolahTujuanModel from '../master/SekolahTujuanModel.js';
+
 
 const { DataTypes } = Sequelize;
 
@@ -128,6 +130,7 @@ const DataUsers = db.define('ez_users', {
 });
 
 DataUsers.belongsTo(EzRoles, { as: 'data_role', foreignKey: 'role_'});
+DataUsers.belongsTo(SekolahTujuanModel, { as: 'sekolah', foreignKey: 'sekolah_id' });
 export default DataUsers;
 
 

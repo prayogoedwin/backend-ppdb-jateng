@@ -1520,6 +1520,8 @@ export const getPerangkingan = async (req, res) => {
                 'data': modifiedData,
                 'timeline': resTimeline,
             });
+
+            
         } else {
             res.status(200).json({
                 'status': 0,

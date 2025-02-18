@@ -332,6 +332,7 @@ DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kot', fore
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_prov', foreignKey: 'provinsi_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(StatusDomisilis, { as: 'status_domisili_name', foreignKey: 'status_domisili', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(DataUsers, { as: 'diverifikasi_oleh', foreignKey: 'verified_by', targetKey: 'id' });
+DataPesertaDidiks.belongsTo(DataUsers, { as: 'sedang_diproses_oleh', foreignKey: 'opened_by', targetKey: 'id' });
 
 
 export default DataPesertaDidiks;
