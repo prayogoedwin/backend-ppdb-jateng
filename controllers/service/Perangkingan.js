@@ -1492,7 +1492,7 @@ export const getPerangkingan = async (req, res) => {
                     'status': 0,
                     'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
                     'data': [],
-                    'timeline': null,
+                    'timeline': resTimeline,
                 });
                 return;
         }
