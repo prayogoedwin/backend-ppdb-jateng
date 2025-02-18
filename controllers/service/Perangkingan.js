@@ -1236,7 +1236,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 2:
+            case '2':
                 // Jalur Zonasi KHUSUS SMA
                 const resSek2 = await SekolahTujuan.findOne({
                     where: {
@@ -1263,7 +1263,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 3:
+            case '3':
                 // Jalur Prestasi SMA
                 const resSek3 = await SekolahTujuan.findOne({
                     where: {
@@ -1290,7 +1290,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 4:
+            case '4':
                 // Jalur PTO SMA
                 const resSek4 = await SekolahTujuan.findOne({
                     where: {
@@ -1318,7 +1318,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 5:
+            case '5':
                 // Jalur Afirmasi SMA
                 const resSek5 = await SekolahTujuan.findOne({
                     where: {
@@ -1345,7 +1345,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 6:
+            case '6':
                 // Jalur SMK Terdekat
                 const resJurSek6 = await SekolahJurusan.findOne({
                     where: {
@@ -1375,7 +1375,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 7:
+            case '7':
                 // Jalur SMK Prestasi
                 const resJurSek7 = await SekolahJurusan.findOne({
                     where: {
@@ -1425,7 +1425,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 8:
+            case '8':
                 // Jalur SMK Prestasi Khusus
                 const resJurSek8 = await SekolahJurusan.findOne({
                     where: {
@@ -1454,7 +1454,7 @@ export const getPerangkingan = async (req, res) => {
                 });
                 break;
 
-            case 9:
+            case '9':
                 // Jalur SMK Afirmasi
                 const resJurSek9 = await SekolahJurusan.findOne({
                     where: {
