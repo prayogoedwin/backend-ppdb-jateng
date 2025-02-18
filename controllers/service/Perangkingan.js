@@ -1184,6 +1184,8 @@ export const getPerangkingan = async (req, res) => {
                         id: sekolah_tujuan_id,
                     },
                 });
+                console.log('kuota')
+                console.log(resSek1.kuota_zonasi);
 
                 countPrestasi = await DataPerangkingans.count({
                     where: {
@@ -1216,6 +1218,8 @@ export const getPerangkingan = async (req, res) => {
                 kuota_zonasi_min = resSek1.kuota_zonasi;
 
                 kuota = Math.max(kuota_zonasi_min, kuota_zonasi_max - countPrestasi - countAfirmasi - countPto);
+                console.log('kuota by perhitungan')
+                console.log(kuota)
 
                 resData = await DataPerangkingans.findAll({
                     where: {
