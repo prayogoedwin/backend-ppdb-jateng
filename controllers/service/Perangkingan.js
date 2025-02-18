@@ -1177,7 +1177,7 @@ export const getPerangkingan = async (req, res) => {
         let kuota_afirmasi;
 
         switch (jalur_pendaftaran_id) {
-            case 1:
+            case '1':
                 // Jalur Zonasi Reguler SMA
                 const resSek1 = await SekolahTujuan.findOne({
                     where: {
