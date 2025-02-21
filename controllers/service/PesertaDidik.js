@@ -89,10 +89,10 @@ const getPesertaDidikByNisnTgkNamaIbu = async (nisn, tgl_lahir, nama_ibu) => {
             where: {
                         nisn: nisn,
                         tanggal_lahir: tgl_lahir,
-                        nama_ibu_kandung: nama_ibu,
-                        // nama_ibu_kandung: {
-                        //     [Op.ilike]: nama_ibu
-                        // },
+                        // nama_ibu_kandung: nama_ibu,
+                        nama_ibu_kandung: {
+                            [Op.iLike]: nama_ibu
+                        },
                         // is_delete: 0
                     },
             include: [
