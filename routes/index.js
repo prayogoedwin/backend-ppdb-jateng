@@ -35,7 +35,7 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 
 //Service
-import { getPesertaDidikByNisnHandler, getDataDukungByNIK } from '../controllers/service/PesertaDidik.js';
+import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, getPerangkinganDetail, getInfoParam } from '../controllers/service/Perangkingan.js';
 
@@ -129,6 +129,8 @@ router.post('/api/master/kelurahan', getKelurahan);
 router.get('/api/beranda/timeline', getTimelinePublic);
 
 
+//API CEK CEK SAJA
+router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnNamaNamaNamaIbuHandler);
 
 
 

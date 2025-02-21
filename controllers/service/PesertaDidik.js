@@ -155,6 +155,97 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
     }
 };
 
+export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
+    const { nisn, tgl_lahir, nama_ibu } = req.body;
+    try {
+        if (!nisn) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NISN wajib diisi',
+            });
+        }
+
+        if (!tgl_lahir) {
+            return res.status(400).json({
+                status: 0,
+                message: 'Tanggal Lahir wajib di isi',
+            });
+        }
+
+        if (!nama_ibu) {
+            return res.status(400).json({
+                status: 0,
+                message: 'Nama ibu wajib di isi',
+            });
+        }
+
+        const cekPendaftar = await DataPendaftars.findOne({
+            where: {
+                nisn: nisn,
+                tanggal_lahir: tgl_lahir,
+                nama_ibu_kandung: {
+                    [Op.ilike]: nama_ibu
+                },
+                is_delete: 0
+            },
+        });
+
+        if (cekPendaftar) {
+            return res.status(200).json({
+                status: 2,
+                message: 'NISN Sudah Terdaftar Sebelumnya'
+            });
+        }
+
+        const pesertaDidik = await getPesertaDidikByNisn(nisn);
+
+        if (!pesertaDidik) {
+            return res.status(200).json({
+                status: 0,
+                message: 'NISN tidak ditemukan'
+            });
+        }
+
+        // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
+
+        let dataKec = {};
+        let dataKabKota = {};
+        let dataProvinsi = {};
+
+        if (pesertaDidik.data_wilayah) {
+            dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        }
+
+        if (dataKec.mst_kode_wilayah) {
+            dataKabKota = await getKabupatenKota(dataKec.mst_kode_wilayah);
+        }
+
+        if (dataKabKota.mst_kode_wilayah) {
+            dataProvinsi = await getProvinsi(dataKabKota.mst_kode_wilayah);
+        }
+        
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil ditemukan',
+            // ss: dataKec,
+            data: {
+                ...pesertaDidik.toJSON(),
+                data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
+                data_wilayah_kabkota: dataKabKota, // Masukkan data wilayah ke dalam respons
+                data_wilayah_provinsi: dataProvinsi // Masukkan data wilayah ke dalam respons
+            }
+        });
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: err.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+};
+
 
 //get anak miskin, get anak panti, get anak pondok by NIK
 export const getDataDukungByNIK = async (req, res) => {
