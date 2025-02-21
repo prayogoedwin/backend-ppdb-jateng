@@ -183,9 +183,10 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
             where: {
                 nisn: nisn,
                 tanggal_lahir: tgl_lahir,
-                nama_ibu_kandung: {
-                    [Op.ilike]: nama_ibu
-                },
+                nama_ibu_kandung: nama_ibu,
+                // nama_ibu_kandung: {
+                //     [Op.ilike]: nama_ibu
+                // },
                 is_delete: 0
             },
         });
