@@ -82,6 +82,82 @@ const getPesertaDidikByNisn = async (nisn) => {
     }
 };
 
+const getPesertaDidikByNisnTgkNamaIbu = async (nisn, tgl_lahir, nama_ibu) => {
+    try {
+        const pesertaDidik = await DataPesertaDidiks.findOne({
+
+            where: {
+                        nisn: nisn,
+                        tanggal_lahir: tgl_lahir,
+                        // nama_ibu_kandung: nama_ibu,
+                        nama_ibu_kandung: {
+                            [Op.ilike]: nama_ibu
+                        },
+                        is_delete: 0
+                    },
+            include: [
+                {
+                model: Sekolah,
+                as: 'data_sekolah', // Tambahkan alias di sini
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
+                include: [{
+                    model: BentukPendidikan,
+                    as: 'bentuk_pendidikan',
+                    attributes: ['id','nama']
+                }]
+            },
+            {
+                model: WilayahVerDapodik,
+                as: 'data_wilayah',
+                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+            }
+            ],
+         
+        });
+
+        if (!pesertaDidik) {
+
+            // res.status(200).json({
+            //     status: 0,
+            //     message: 'NISN tidak ditemukan',
+            // });
+            return false;
+
+        }
+
+        return pesertaDidik;
+
+        // if (!pesertaDidik) {
+        //     pesertaDidik = await DataPesertaDidiks.findOne({
+        //         where: { nik: nik },
+        //         include: [
+        //             {
+        //                 model: Sekolah,
+        //                 as: 'data_sekolah', // Tambahkan alias di sini
+        //                 attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
+        //                 include: [{
+        //                     model: BentukPendidikan,
+        //                     as: 'bentuk_pendidikan',
+        //                     attributes: ['id','nama']
+        //                 }]
+        //             },
+        //             {
+        //                 model: WilayahVerDapodik,
+        //                 as: 'data_wilayah',
+        //                 attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+        //             }
+        //         ],
+        //     });
+        // }
+
+      
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
 export const getPesertaDidikByNisnHandler = async (req, res) => {
     const { nisn } = req.body;
     try {
@@ -179,26 +255,26 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
             });
         }
 
-        const cekPendaftar = await DataPendaftars.findOne({
-            where: {
-                nisn: nisn,
-                tanggal_lahir: tgl_lahir,
-                nama_ibu_kandung: nama_ibu,
-                // nama_ibu_kandung: {
-                //     [Op.ilike]: nama_ibu
-                // },
-                is_delete: 0
-            },
-        });
+        // const cekPendaftar = await DataPendaftars.findOne({
+        //     where: {
+        //         nisn: nisn,
+        //         tanggal_lahir: tgl_lahir,
+        //         nama_ibu_kandung: nama_ibu,
+        //         // nama_ibu_kandung: {
+        //         //     [Op.ilike]: nama_ibu
+        //         // },
+        //         is_delete: 0
+        //     },
+        // });
 
-        if (cekPendaftar) {
-            return res.status(200).json({
-                status: 2,
-                message: 'NISN Sudah Terdaftar Sebelumnya'
-            });
-        }
+        // if (cekPendaftar) {
+        //     return res.status(200).json({
+        //         status: 2,
+        //         message: 'NISN Sudah Terdaftar Sebelumnya'
+        //     });
+        // }
 
-        const pesertaDidik = await getPesertaDidikByNisn(nisn);
+        const pesertaDidik = await getPesertaDidikByNisnTgkNamaIbu(nisn, tgl_lahir, nama_ibu);
 
         if (!pesertaDidik) {
             return res.status(200).json({
