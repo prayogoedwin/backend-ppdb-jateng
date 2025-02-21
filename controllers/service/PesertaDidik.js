@@ -89,10 +89,10 @@ const getPesertaDidikByNisnTgkNamaIbu = async (nisn, tgl_lahir, nama_ibu) => {
             where: {
                         nisn: nisn,
                         tanggal_lahir: tgl_lahir,
-                        // nama_ibu_kandung: nama_ibu,
-                        nama_ibu_kandung: {
-                            [Op.ilike]: nama_ibu
-                        },
+                        nama_ibu_kandung: nama_ibu,
+                        // nama_ibu_kandung: {
+                        //     [Op.ilike]: nama_ibu
+                        // },
                         is_delete: 0
                     },
             include: [
@@ -158,31 +158,52 @@ const getPesertaDidikByNisnTgkNamaIbu = async (nisn, tgl_lahir, nama_ibu) => {
     }
 };
 
-export const getPesertaDidikByNisnHandler = async (req, res) => {
-    const { nisn } = req.body;
+
+
+export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
+    const { nisn, tgl_lahir, nama_ibu } = req.body;
     try {
         if (!nisn) {
             return res.status(400).json({
                 status: 0,
-                message: 'NISN is required',
+                message: 'NISN wajib diisi',
             });
         }
 
-        const cekPendaftar = await DataPendaftars.findOne({
-            where: {
-                nisn: nisn,
-                is_delete: 0
-            },
-        });
-
-        if (cekPendaftar) {
-            return res.status(200).json({
-                status: 2,
-                message: 'NISN Sudah Terdaftar Sebelumnya'
+        if (!tgl_lahir) {
+            return res.status(400).json({
+                status: 0,
+                message: 'Tanggal Lahir wajib di isi',
             });
         }
 
-        const pesertaDidik = await getPesertaDidikByNisn(nisn);
+        if (!nama_ibu) {
+            return res.status(400).json({
+                status: 0,
+                message: 'Nama ibu wajib di isi',
+            });
+        }
+
+        // const cekPendaftar = await DataPendaftars.findOne({
+        //     where: {
+        //         nisn: nisn,
+        //         tanggal_lahir: tgl_lahir,
+        //         nama_ibu_kandung: nama_ibu,
+        //         // nama_ibu_kandung: {
+        //         //     [Op.ilike]: nama_ibu
+        //         // },
+        //         is_delete: 0
+        //     },
+        // });
+
+        // if (cekPendaftar) {
+        //     return res.status(200).json({
+        //         status: 2,
+        //         message: 'NISN Sudah Terdaftar Sebelumnya'
+        //     });
+        // }
+
+        const pesertaDidik = await getPesertaDidikByNisnTgkNamaIbu(nisn, tgl_lahir, nama_ibu);
 
         if (!pesertaDidik) {
             return res.status(200).json({
@@ -231,50 +252,31 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
     }
 };
 
-export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
-    const { nisn, tgl_lahir, nama_ibu } = req.body;
+export const getPesertaDidikByNisnHandler = async (req, res) => {
+    const { nisn } = req.body;
     try {
         if (!nisn) {
             return res.status(400).json({
                 status: 0,
-                message: 'NISN wajib diisi',
+                message: 'NISN is required',
             });
         }
 
-        if (!tgl_lahir) {
-            return res.status(400).json({
-                status: 0,
-                message: 'Tanggal Lahir wajib di isi',
+        const cekPendaftar = await DataPendaftars.findOne({
+            where: {
+                nisn: nisn,
+                is_delete: 0
+            },
+        });
+
+        if (cekPendaftar) {
+            return res.status(200).json({
+                status: 2,
+                message: 'NISN Sudah Terdaftar Sebelumnya'
             });
         }
 
-        if (!nama_ibu) {
-            return res.status(400).json({
-                status: 0,
-                message: 'Nama ibu wajib di isi',
-            });
-        }
-
-        // const cekPendaftar = await DataPendaftars.findOne({
-        //     where: {
-        //         nisn: nisn,
-        //         tanggal_lahir: tgl_lahir,
-        //         nama_ibu_kandung: nama_ibu,
-        //         // nama_ibu_kandung: {
-        //         //     [Op.ilike]: nama_ibu
-        //         // },
-        //         is_delete: 0
-        //     },
-        // });
-
-        // if (cekPendaftar) {
-        //     return res.status(200).json({
-        //         status: 2,
-        //         message: 'NISN Sudah Terdaftar Sebelumnya'
-        //     });
-        // }
-
-        const pesertaDidik = await getPesertaDidikByNisnTgkNamaIbu(nisn, tgl_lahir, nama_ibu);
+        const pesertaDidik = await getPesertaDidikByNisn(nisn);
 
         if (!pesertaDidik) {
             return res.status(200).json({
