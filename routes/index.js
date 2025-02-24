@@ -12,7 +12,7 @@ import { appKeyMiddleware, appKeynyaIntegrator} from '../middleware/AppKey.js';
 import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
 import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.js';
 import { authenticateTokenClient, authenticateRefreshTokenClient } from '../middleware/AuthClient.js';
-import { logAccess, logAccessAdmin, logAccessClient } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
+import { logAccess, logAccessAdmin, logAccessClient, logAccessPub } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
 
 
 //konfigurasi cache
@@ -130,7 +130,7 @@ router.get('/api/beranda/timeline', getTimelinePublic);
 
 
 //API CEK CEK SAJA
-router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnNamaNamaNamaIbuHandler);
+router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, getPesertaDidikByNisnNamaNamaNamaIbuHandler);
 
 
 
