@@ -443,6 +443,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 const resDatas = rows.map(item => {
                     const jsonItem = item.toJSON();
                     jsonItem.id_ = encodeId(item.id); // Add the encoded ID to the response
+                    jsonItem.opened_by_generated = encodeId(item.opened_by); // Add the encoded ID to the response
                     delete jsonItem.id; // Hapus kolom id dari output JSON
                     return jsonItem;
                 });
