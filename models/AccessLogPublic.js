@@ -4,7 +4,7 @@ import db2 from "../config/Database2.js";
 
 const { DataTypes } = Sequelize;
 
-const AccessLogPub = db.define('AccessLogPub', {
+const AccessLogPub = db2.define('AccessLogPub', {
     id: {
         type: DataTypes.INTEGER,
         // autoIncrement: true,
