@@ -1298,8 +1298,9 @@ export const getPerangkingan = async (req, res) => {
                                             index + 1,
                                             item.no_pendaftaran,
                                             item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                             item.jarak,
-                                            item.nilai_akhir,
+                                        
 
                                         ])
                                     ]
@@ -1415,8 +1416,8 @@ export const getPerangkingan = async (req, res) => {
                                             index + 1,
                                             item.no_pendaftaran,
                                             item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                             item.jarak,
-                                            item.nilai_akhir,
 
                                         ])
                                     ]
@@ -1534,8 +1535,8 @@ export const getPerangkingan = async (req, res) => {
                                             index + 1,
                                             item.no_pendaftaran,
                                             item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                             item.jarak,
-                                            item.nilai_akhir,
 
                                         ])
                                     ]
@@ -1651,8 +1652,8 @@ export const getPerangkingan = async (req, res) => {
                                             index + 1,
                                             item.no_pendaftaran,
                                             item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                             item.jarak,
-                                            item.nilai_akhir,
 
                                         ])
                                     ]
@@ -1766,8 +1767,8 @@ export const getPerangkingan = async (req, res) => {
                                             index + 1,
                                             item.no_pendaftaran,
                                             item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                             item.jarak,
-                                            item.nilai_akhir,
 
                                         ])
                                     ]
@@ -1881,9 +1882,8 @@ export const getPerangkingan = async (req, res) => {
                                                 index + 1,
                                                 item.no_pendaftaran,
                                                 item.nama_lengkap,
+                                                item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                                 item.jarak,
-                                                item.nilai_akhir,
-
                                             ])
                                         ]
                                     }
@@ -2028,8 +2028,8 @@ export const getPerangkingan = async (req, res) => {
                                                 index + 1,
                                                 item.no_pendaftaran,
                                                 item.nama_lengkap,
+                                                item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                                 item.jarak,
-                                                item.nilai_akhir,
 
                                             ])
                                         ]
@@ -2137,8 +2137,8 @@ export const getPerangkingan = async (req, res) => {
                                                 index + 1,
                                                 item.no_pendaftaran,
                                                 item.nama_lengkap,
+                                                item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                                 item.jarak,
-                                                item.nilai_akhir,
 
                                             ])
                                         ]
@@ -2252,8 +2252,8 @@ export const getPerangkingan = async (req, res) => {
                                                 index + 1,
                                                 item.no_pendaftaran,
                                                 item.nama_lengkap,
+                                                item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
                                                 item.jarak,
-                                                item.nilai_akhir,
 
                                             ])
                                         ]
