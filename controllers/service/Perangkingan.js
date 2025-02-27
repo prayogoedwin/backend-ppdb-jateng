@@ -2670,13 +2670,31 @@ export const daftarUlangPerangkingan = async (req, res) => {
 
 
         // Update the record to set is_delete to 1
-        await DataPerangkingans.update(
+        const perangkingan3 = await DataPerangkingans.update(
             { 
                 is_daftar_ulang: 1,
                 daftar_ulang_at: new Date(),
              },
             { where: { id: id_perangkingan_decode } }
         );
+
+        if (perangkingan3) {
+            const perangkingan4 = await DataPerangkingans.findAll({
+                where: {
+                    nisn: nisn, // Condition for specific NISN
+                    id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+                    is_delete: 0 // Condition for is_delete being 0
+                }
+            });
+
+            await DataPerangkingans.update(
+                { 
+                    is_daftar_ulang: 2,
+                    daftar_ulang_at: new Date(),
+                 },
+                { where: { id: id_perangkingan_decode } }
+            );
+        }
 
         res.status(200).json({
             status: 1,
