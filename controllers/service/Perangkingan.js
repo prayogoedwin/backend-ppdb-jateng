@@ -1635,18 +1635,28 @@ export const getPerangkingan = async (req, res) => {
                         // return { ...rest, id: encodeId(id) };
                     });
 
+                    const currentDateTime = new Date().toLocaleString("id-ID", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit"
+                    });
+
                     if (is_pdf === 1) {
                         // Generate PDF
                         const docDefinition = {
                             content: [
                                 { text: 'Perangkingan Pendaftaran', style: 'header' },
                                 { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                                { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
                                 { text: 'Data Perangkingan:', style: 'subheader' },
                                 {
                                     table: {
                                         widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
-                                            ['No', 'ID Pendaftar', 'Nama', 'Nilai Akhir', 'Umur', 'Tanggal Daftar'],
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak', 'Umur', 'Tanggal Daftar'],
                                             ...modifiedData.map((item, index) => [
                                                 index + 1,
                                                 item.no_pendaftaran,
