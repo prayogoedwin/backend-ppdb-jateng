@@ -1330,15 +1330,24 @@ export const getPerangkingan = async (req, res) => {
                         res.send(buffer);
                     });
 
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
                 }
 
 
-                res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': modifiedData, // Return the found data
-                    'timeline' : resTimeline
-                });
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData, // Return the found data
+                //     'timeline' : resTimeline
+                // });
             } else {
                 res.status(200).json({
                     'status': 0,
@@ -1438,15 +1447,24 @@ export const getPerangkingan = async (req, res) => {
                         res.send(buffer);
                     });
 
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
                 }
 
 
-                res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': modifiedData,
-                    'timeline': resTimeline// Return the found data
-                });
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData,
+                //     'timeline': resTimeline// Return the found data
+                // });
 
 
             } else {
@@ -1548,15 +1566,24 @@ export const getPerangkingan = async (req, res) => {
                         res.send(buffer);
                     });
 
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
                 }
 
 
-                res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': modifiedData,
-                    'timeline': resTimeline // Return the found data
-                });
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData,
+                //     'timeline': resTimeline // Return the found data
+                // });
             } else {
                 res.status(200).json({
                     'status': 0,
@@ -1656,15 +1683,24 @@ export const getPerangkingan = async (req, res) => {
                         res.send(buffer);
                     });
 
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
                 }
 
 
-                res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': modifiedData,
-                    'timeline': resTimeline // Return the found data
-                });
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData,
+                //     'timeline': resTimeline // Return the found data
+                // });
             } else {
                 res.status(200).json({
                     'status': 0,
@@ -1762,15 +1798,24 @@ export const getPerangkingan = async (req, res) => {
                         res.send(buffer);
                     });
 
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
                 }
 
 
-                res.status(200).json({
-                    'status': 1,
-                    'message': 'Data berhasil ditemukan',
-                    'data': modifiedData, // Return the found data
-                    'timeline': resTimeline
-                });
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData, // Return the found data
+                //     'timeline': resTimeline
+                // });
 
             } else {
                 res.status(200).json({
@@ -1868,15 +1913,24 @@ export const getPerangkingan = async (req, res) => {
                             res.send(buffer);
                         });
 
+                    }else{
+
+                        res.status(200).json({
+                            'status': 1,
+                            'message': 'Data berhasil ditemukan',
+                            'data': modifiedData, // Return the found data
+                            'timeline': resTimeline
+                        });
+
                     }
 
     
-                    res.status(200).json({
-                        'status': 1,
-                        'message': 'Data berhasil ditemukan',
-                        'data': modifiedData, // Return the found data
-                        'timeline': resTimeline
-                    });
+                    // res.status(200).json({
+                    //     'status': 1,
+                    //     'message': 'Data berhasil ditemukan',
+                    //     'data': modifiedData, // Return the found data
+                    //     'timeline': resTimeline
+                    // });
                 } else {
                     res.status(200).json({
                         'status': 0,
@@ -2006,14 +2060,18 @@ export const getPerangkingan = async (req, res) => {
                             res.send(buffer);
                         });
 
+                    }else{
+
+                        res.status(200).json({
+                            'status': 1,
+                            'message': 'Data berhasil ditemukan',
+                            'data': modifiedData, // Return the found data
+                            'timeline': resTimeline
+                        });
+
                     }
 
-                    res.status(200).json({
-                        'status': 1,
-                        'message': 'Data berhasil ditemukan',
-                        'data': modifiedData, // Return the found data
-                        'timeline': resTimeline
-                    });
+                    
 
                     
                     
@@ -2111,15 +2169,26 @@ export const getPerangkingan = async (req, res) => {
                             res.send(buffer);
                         });
 
+                    }else{
+
+                        res.status(200).json({
+                            'status': 1,
+                            'message': 'Data berhasil ditemukan',
+                            'data': modifiedData, // Return the found data
+                            'timeline': resTimeline
+                        });
+
                     }
+                    
 
     
-                    res.status(200).json({
-                        'status': 1,
-                        'message': 'Data berhasil ditemukan',
-                        'data': modifiedData, // Return the found data
-                        'timeline': resTimeline
-                    });
+                    // res.status(200).json({
+                    //     'status': 1,
+                    //     'message': 'Data berhasil ditemukan',
+                    //     'data': modifiedData, // Return the found data
+                    //     'timeline': resTimeline
+                    // });
+
                 } else {
                     res.status(200).json({
                         'status': 0,
@@ -2215,15 +2284,24 @@ export const getPerangkingan = async (req, res) => {
                             res.send(buffer);
                         });
 
+                    }else{
+
+                        res.status(200).json({
+                            'status': 1,
+                            'message': 'Data berhasil ditemukan',
+                            'data': modifiedData, // Return the found data
+                            'timeline': resTimeline
+                        });
+
                     }
 
     
-                    res.status(200).json({
-                        'status': 1,
-                        'message': 'Data berhasil ditemukan',
-                        'data': modifiedData ,// Return the found data
-                        'timeline': resTimeline,
-                    });
+                    // res.status(200).json({
+                    //     'status': 1,
+                    //     'message': 'Data berhasil ditemukan',
+                    //     'data': modifiedData ,// Return the found data
+                    //     'timeline': resTimeline,
+                    // });
                 } else {
                     res.status(200).json({
                         'status': 0,
