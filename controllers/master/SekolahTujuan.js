@@ -35,7 +35,8 @@ export const getSekolahTujuanPublik = async (req, res) => {
 
             const resData = await SekolahTujuans.findAll({
                 where: {
-                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id
+                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                    kode_wilayah_kot: req.body.kabkota,
                 },
                 // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'kuota_zonasi_persentase', 'kuota_zonasi_khusus_persentase', 'kuota_afirmasi_persentase', 'kuota_prestasi_persentase', 'kuota_pto_persentase', 'alamat_jalan'] // Specify the attributes to retrieve
                 attributes: [
