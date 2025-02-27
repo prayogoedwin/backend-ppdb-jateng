@@ -530,7 +530,7 @@ export const getPerangkinganBAK = async (req, res) => {
     }
 }
 
-export const getPerangkinganAsli = async (req, res) => {
+export const getPerangkingan = async (req, res) => {
 
     try {
 
@@ -623,7 +623,7 @@ export const getPerangkinganAsli = async (req, res) => {
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
-                    return { ...rest, id: encodeId(id) };
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                 });
 
                 res.status(200).json({
@@ -676,7 +676,8 @@ export const getPerangkinganAsli = async (req, res) => {
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
-                    return { ...rest, id: encodeId(id) };
+                    // return { ...rest, id: encodeId(id) };
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                 });
 
                 res.status(200).json({
@@ -732,7 +733,8 @@ export const getPerangkinganAsli = async (req, res) => {
                 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
-                    return { ...rest, id: encodeId(id) };
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
                 });
 
                 res.status(200).json({
@@ -786,7 +788,8 @@ export const getPerangkinganAsli = async (req, res) => {
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
-                    return { ...rest, id: encodeId(id) };
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
                 });
 
                 res.status(200).json({
@@ -838,7 +841,8 @@ export const getPerangkinganAsli = async (req, res) => {
 
                 const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
-                    return { ...rest, id: encodeId(id) };
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
                 });
 
                 res.status(200).json({
@@ -890,7 +894,8 @@ export const getPerangkinganAsli = async (req, res) => {
 
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
-                        return { ...rest, id: encodeId(id) };
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                        // return { ...rest, id: encodeId(id) };
                     });
     
                     res.status(200).json({
@@ -971,7 +976,8 @@ export const getPerangkinganAsli = async (req, res) => {
                    
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
-                        return { ...rest, id: encodeId(id) };
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                        // return { ...rest, id: encodeId(id) };
                     });
     
                     res.status(200).json({
@@ -1017,7 +1023,9 @@ export const getPerangkinganAsli = async (req, res) => {
                    
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
-                        return { ...rest, id: encodeId(id) };
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                        // return { ...rest, id: encodeId(id) };
+                        
                     });
     
                     res.status(200).json({
@@ -1067,7 +1075,8 @@ export const getPerangkinganAsli = async (req, res) => {
                     
                     const modifiedData = resData.map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
-                        return { ...rest, id: encodeId(id) };
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                        // return { ...rest, id: encodeId(id) };
                     });
     
                     res.status(200).json({
@@ -1143,7 +1152,7 @@ export const getPerangkinganAsli = async (req, res) => {
     }
 }
 
-export const getPerangkingan = async (req, res) => {
+export const getPerangkinganTes = async (req, res) => {
     try {
         const {
             bentuk_pendidikan_id,
@@ -1538,7 +1547,6 @@ export const getPerangkingan = async (req, res) => {
         });
     }
 };
-
 
 export const getInfoParam = async (req, res) => {
 
