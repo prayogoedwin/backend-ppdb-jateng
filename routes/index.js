@@ -199,7 +199,7 @@ router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddl
 //API Khusus Admin
 
 //cek log siswa
-router.get('/admin-api/log/cpd', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogSiswaLoggedIn);
+router.post('/admin-api/log/cpd', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogSiswaLoggedIn);
 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
