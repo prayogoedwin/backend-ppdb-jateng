@@ -1,14 +1,14 @@
 // models/AccessLog.js
 import { Sequelize } from "sequelize";
-import db from "../config/Database.js";
+import db2 from "../config/Database2.js";
 
 const { DataTypes } = Sequelize;
 
-const AccessLog = db.define('AccessLog', {
+const AccessLog = db2.define('AccessLog', {
     id: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+        // autoIncrement: true,
+        // primaryKey: true
     },
     url: {
         type: DataTypes.STRING,
