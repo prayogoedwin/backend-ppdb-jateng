@@ -1293,7 +1293,7 @@ export const getPerangkingan = async (req, res) => {
                                 table: {
                                     // widths: ['auto', '*', '*', '*', '*', '*'],
                                     body: [
-                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                         ...modifiedData.map((item, index) => [
                                             index + 1,
                                             item.no_pendaftaran,
@@ -1411,7 +1411,7 @@ export const getPerangkingan = async (req, res) => {
                                 table: {
                                     // widths: ['auto', '*', '*', '*', '*', '*'],
                                     body: [
-                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                         ...modifiedData.map((item, index) => [
                                             index + 1,
                                             item.no_pendaftaran,
@@ -1530,7 +1530,7 @@ export const getPerangkingan = async (req, res) => {
                                 table: {
                                     // widths: ['auto', '*', '*', '*', '*', '*'],
                                     body: [
-                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                         ...modifiedData.map((item, index) => [
                                             index + 1,
                                             item.no_pendaftaran,
@@ -1647,7 +1647,7 @@ export const getPerangkingan = async (req, res) => {
                                 table: {
                                     // widths: ['auto', '*', '*', '*', '*', '*'],
                                     body: [
-                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                         ...modifiedData.map((item, index) => [
                                             index + 1,
                                             item.no_pendaftaran,
@@ -1762,7 +1762,7 @@ export const getPerangkingan = async (req, res) => {
                                 table: {
                                     // widths: ['auto', '*', '*', '*', '*', '*'],
                                     body: [
-                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                         ...modifiedData.map((item, index) => [
                                             index + 1,
                                             item.no_pendaftaran,
@@ -1877,7 +1877,7 @@ export const getPerangkingan = async (req, res) => {
                                     table: {
                                         // widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
-                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                             ...modifiedData.map((item, index) => [
                                                 index + 1,
                                                 item.no_pendaftaran,
@@ -2023,7 +2023,7 @@ export const getPerangkingan = async (req, res) => {
                                     table: {
                                         // widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
-                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                             ...modifiedData.map((item, index) => [
                                                 index + 1,
                                                 item.no_pendaftaran,
@@ -2132,7 +2132,7 @@ export const getPerangkingan = async (req, res) => {
                                     table: {
                                         // widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
-                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                             ...modifiedData.map((item, index) => [
                                                 index + 1,
                                                 item.no_pendaftaran,
@@ -2247,7 +2247,7 @@ export const getPerangkingan = async (req, res) => {
                                     table: {
                                         // widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
-                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
                                             ...modifiedData.map((item, index) => [
                                                 index + 1,
                                                 item.no_pendaftaran,
