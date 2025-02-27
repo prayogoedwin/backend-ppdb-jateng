@@ -1654,7 +1654,7 @@ export const getPerangkingan = async (req, res) => {
                                 { text: 'Data Perangkingan:', style: 'subheader' },
                                 {
                                     table: {
-                                        widths: ['auto', '*', '*', '*', '*', '*'],
+                                        // widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
                                             ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak', 'Umur', 'Tanggal Daftar'],
                                             ...modifiedData.map((item, index) => [
