@@ -1189,6 +1189,18 @@ export const getPerangkingan = async (req, res) => {
                 id: 6,
             },
         });
+
+        //hitung total pendaftar domisili terdekat smk dulu,
+        const countTerdekat = await DataPerangkingans.count({  
+            where: {  
+                jalur_pendaftaran_id: 6,
+                sekolah_tujuan_id,  
+                jurusan_id,
+                is_delete: 0  ,
+                is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+            },
+            limit: resJurSek.kuota_jarak_terdekat
+        });
         
         if(jalur_pendaftaran_id == 1){
  
@@ -1889,17 +1901,7 @@ export const getPerangkingan = async (req, res) => {
                 let kuota_prestasi_max = resJurSek.daya_tampung;
                 let kuota_prestasi_min = resJurSek.kuota_prestasi;
     
-                //hitung total pendaftar domisili terdekat smk dulu,
-                const countTerdekat = await DataPerangkingans.count({  
-                    where: {  
-                        jalur_pendaftaran_id: 6,
-                        sekolah_tujuan_id,  
-                        jurusan_id,
-                        is_delete: 0  ,
-                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
-                    },
-                    limit: resJurSek.kuota_jarak_terdekat
-                });
+                
 
                 //hitung total pendaftar afirmasi smk dulu,
                 const countAfirmasi = await DataPerangkingans.count({  
