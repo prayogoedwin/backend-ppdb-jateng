@@ -289,12 +289,31 @@ router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, app
 const VERSION = '1.20.1';
 const APPNAME = 'Backend PPDB';
 
-// Create a GET route at '/' that sends the version as a JSON response
-router.get('/version', (req, res) => {
-    res.json({
-         app_name: APPNAME,
-         app_version: VERSION 
-        });
+// // Create a GET route at '/' that sends the version as a JSON response
+// router.get('/version', (req, res) => {
+//     res.json({
+//          app_name: APPNAME,
+//          app_version: VERSION 
+//         });
+// });
+
+// Buat rute GET di '/version' yang mengirimkan HTML sebagai respons
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Version Info</title>
+        </head>
+        <body>
+            <h1>Application Version</h1>
+            <p><strong>App Name:</strong> ${APPNAME}</p>
+            <p><strong>App Version:</strong> ${VERSION}</p>
+        </body>
+        </html>
+    `);
 });
 
 
