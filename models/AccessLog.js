@@ -8,7 +8,7 @@ const AccessLog = db2.define('AccessLog', {
     id: {
         type: DataTypes.INTEGER,
         // autoIncrement: true,
-        // primaryKey: true
+        primaryKey: true
     },
     url: {
         type: DataTypes.STRING,

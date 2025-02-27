@@ -8,7 +8,7 @@ const AccessLogPub = db.define('AccessLogPub', {
     id: {
         type: DataTypes.INTEGER,
         // autoIncrement: true,
-        // primaryKey: true
+        primaryKey: true
     },
     url: {
         type: DataTypes.STRING,

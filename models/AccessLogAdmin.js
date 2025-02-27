@@ -8,7 +8,7 @@ const AccessLogAdmin = db2.define('AccessLogAdmin', {
     id: {
         type: DataTypes.INTEGER,
         // autoIncrement: true,
-        // primaryKey: true
+        primaryKey: true
     },
     url: {
         type: DataTypes.STRING,
