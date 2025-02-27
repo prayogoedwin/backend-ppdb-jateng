@@ -6,7 +6,7 @@ export const LogSiswaLoggedIn = async (req, res) => {
         
         const resData = await AccessLog.findAll({
             where: {
-                akun: nisn
+                akun: req.body.nisn
             }
         });
 
@@ -49,7 +49,7 @@ export const LogAdminLoggedIn = async (req, res) => {
         
         const resData = await AccessLog.findAll({
             where: {
-                akun: nisn
+                akun: req.body.nisn
             }
         });
 
