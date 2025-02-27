@@ -2681,7 +2681,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
         if (perangkingan3) {
             const perangkingan4 = await DataPerangkingans.findAll({
                 where: {
-                    nisn: nisn, // Condition for specific NISN
+                    nisn: perangkingan.nisn, // Condition for specific NISN
                     id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
                     is_delete: 0 // Condition for is_delete being 0
                 }

@@ -23,7 +23,7 @@ import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValu
 import { downloadFile, viewFile } from '../middleware/Donlod.js'; 
 
 // Log Data
-import { LogSiswaLoggedIn } from "../controllers/log/LogLog.js";
+import { LogSiswaLoggedIn, LogAdminLoggedIn } from "../controllers/log/LogLog.js";
 
 // Master Data
 import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
@@ -200,6 +200,8 @@ router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddl
 
 //cek log siswa
 router.post('/admin-api/log/cpd', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogSiswaLoggedIn); 
+// log admin dan operator
+router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogAdminLoggedIn); 
 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);

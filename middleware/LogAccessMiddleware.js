@@ -8,6 +8,9 @@ import AccessLogPub from '../models/AccessLogPublic.js';
 export const logAccess = async (req, res, next) => {
 
     const akun = req.user && req.user.userId ? req.user.userId : req.body.nisn;
+    if(akun == ''){
+        akun = req.body.nisn
+    }
 
     try {
         const logData = {
@@ -44,6 +47,9 @@ export const logAccess = async (req, res, next) => {
 export const logAccessAdmin = async (req, res, next) => {
 
     const akun = req.user && req.user.userId ? req.user.userId : req.body.username;
+    if(akun == ''){
+        akun = req.body.username
+    }
 
     try {
         const logData = {
