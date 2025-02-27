@@ -1641,8 +1641,6 @@ export const getPerangkingan = async (req, res) => {
                             content: [
                                 { text: 'Perangkingan Pendaftaran', style: 'header' },
                                 { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
-                                { text: `Sekolah Tujuan: ${resSek ? resSek.nama_sekolah : 'N/A'}`, style: 'subheader' },
-                                { text: `Jurusan: ${resJurSek ? resJurSek.nama_jurusan : 'N/A'}`, style: 'subheader' },
                                 { text: 'Data Perangkingan:', style: 'subheader' },
                                 {
                                     table: {
