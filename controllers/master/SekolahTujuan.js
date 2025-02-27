@@ -20,8 +20,8 @@ import { Sequelize, Op } from "sequelize";
 export const getSekolahTujuanPublik = async (req, res) => {
     const redis_key = 'SekolahTujuansPublik'+req.body.bentuk_pendidikan_id;
     try {
-        const cacheNya = await redisGet(redis_key);
-        // const cacheNya = false;
+        // const cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
         if (cacheNya) {
 
             res.status(200).json({
