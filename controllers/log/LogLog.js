@@ -1,6 +1,7 @@
 import AccessLog from '../../models/AccessLog.js';
 import AccessLogPub from '../../models/AccessLogPublic.js';
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
+import { Sequelize, Op } from 'sequelize';
 
 export const LogSiswaLoggedIn = async (req, res) => {
     try {
