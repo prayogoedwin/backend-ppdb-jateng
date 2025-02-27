@@ -1,12 +1,19 @@
 import AccessLog from '../../models/AccessLog.js';
 import AccessLogPub from '../../models/AccessLogPublic.js';
+import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 
 export const LogSiswaLoggedIn = async (req, res) => {
     try {
         
         const resData = await AccessLog.findAll({
+            // where: {
+            //     akun: req.body.nisn
+            // }
             where: {
-                akun: req.body.nisn
+                [Op.or]: [
+                    { akun: req.body.nisn },
+                    { akun: decodeId(req.body.id_pendaftar) }
+                ]
             }
         });
 
