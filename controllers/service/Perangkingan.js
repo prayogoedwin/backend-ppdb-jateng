@@ -577,7 +577,8 @@ export const getPerangkingan = async (req, res) => {
                 where: {  
                     jalur_pendaftaran_id: 5,
                     sekolah_tujuan_id,  
-                    is_delete: 0  
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition   
                 },
                 limit: resSek.kuota_afirmasi
             });
@@ -587,7 +588,8 @@ export const getPerangkingan = async (req, res) => {
                 where: {  
                     jalur_pendaftaran_id: 4,
                     sekolah_tujuan_id,  
-                    is_delete: 0  
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition    
                 },
                 limit: resSek.kuota_afirmasi
             });
@@ -606,7 +608,8 @@ export const getPerangkingan = async (req, res) => {
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
-                    is_delete: 0
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
                 },
                 order: [
                     // ['jarak', 'ASC'], //jarak terendah
@@ -950,7 +953,8 @@ export const getPerangkingan = async (req, res) => {
                         jalur_pendaftaran_id: 9,
                         sekolah_tujuan_id,  
                         jurusan_id,
-                        is_delete: 0  
+                        is_delete: 0 ,
+                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition   
                     },
                     limit: resJurSek.kuota_jarak_terdekat
                 });
@@ -971,7 +975,8 @@ export const getPerangkingan = async (req, res) => {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
                         jurusan_id,
-                        is_delete: 0
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
                     }, order: [
                         ['nilai_akhir', 'DESC'], //nilai tertinggi
                         ['umur', 'DESC'], //umur tertua
