@@ -1,5 +1,5 @@
-import AccessLog from '../../../models/AccessLog.js';
-import AccessLogPub from '../../../models/AccessLogPublic.js';
+import AccessLog from '../../models/AccessLog.js';
+import AccessLogPub from '../../models/AccessLogPublic.js';
 
 export const LogSiswaLoggedIn = async (req, res) => {
     try {
