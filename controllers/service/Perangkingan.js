@@ -1642,22 +1642,22 @@ export const getPerangkingan = async (req, res) => {
                                 { text: 'Perangkingan Pendaftaran', style: 'header' },
                                 { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
                                 { text: 'Data Perangkingan:', style: 'subheader' },
-                                {
-                                    table: {
-                                        widths: ['auto', '*', '*', '*', '*', '*'],
-                                        body: [
-                                            ['No', 'ID Pendaftar', 'Nama', 'Nilai Akhir', 'Umur', 'Tanggal Daftar'],
-                                            ...modifiedData.map((item, index) => [
-                                                index + 1,
-                                                item.id_pendaftar,
-                                                item.nama, // Assuming 'nama' is a field in your data
-                                                item.nilai_akhir,
-                                                item.umur,
-                                                item.created_at
-                                            ])
-                                        ]
-                                    }
-                                }
+                                // {
+                                //     table: {
+                                //         widths: ['auto', '*', '*', '*', '*', '*'],
+                                //         body: [
+                                //             ['No', 'ID Pendaftar', 'Nama', 'Nilai Akhir', 'Umur', 'Tanggal Daftar'],
+                                //             ...modifiedData.map((item, index) => [
+                                //                 index + 1,
+                                //                 item.id_pendaftar,
+                                //                 item.nama, // Assuming 'nama' is a field in your data
+                                //                 item.nilai_akhir,
+                                //                 item.umur,
+                                //                 item.created_at
+                                //             ])
+                                //         ]
+                                //     }
+                                // }
                             ],
                             styles: {
                                 header: {
