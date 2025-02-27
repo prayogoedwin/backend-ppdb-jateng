@@ -1272,6 +1272,58 @@ export const getPerangkingan = async (req, res) => {
                     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                 });
 
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.jarak,
+                                            item.nilai_akhir,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }
+
+
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
@@ -1327,6 +1379,58 @@ export const getPerangkingan = async (req, res) => {
                     // return { ...rest, id: encodeId(id) };
                     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                 });
+
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.jarak,
+                                            item.nilai_akhir,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }
+
 
                 res.status(200).json({
                     'status': 1,
@@ -1386,6 +1490,58 @@ export const getPerangkingan = async (req, res) => {
                     // return { ...rest, id: encodeId(id) };
                 });
 
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.jarak,
+                                            item.nilai_akhir,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }
+
+
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
@@ -1442,6 +1598,58 @@ export const getPerangkingan = async (req, res) => {
                     // return { ...rest, id: encodeId(id) };
                 });
 
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.jarak,
+                                            item.nilai_akhir,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }
+
+
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
@@ -1496,6 +1704,58 @@ export const getPerangkingan = async (req, res) => {
                     // return { ...rest, id: encodeId(id) };
                 });
 
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.jarak,
+                                            item.nilai_akhir,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }
+
+
                 res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan',
@@ -1549,6 +1809,58 @@ export const getPerangkingan = async (req, res) => {
                         return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                         // return { ...rest, id: encodeId(id) };
                     });
+
+                    if (is_pdf === 1) {
+                        // Generate PDF
+                        const docDefinition = {
+                            content: [
+                                { text: 'Perangkingan Pendaftaran', style: 'header' },
+                                { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                                { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                                { text: 'Data Perangkingan:', style: 'subheader' },
+                                {
+                                    table: {
+                                        // widths: ['auto', '*', '*', '*', '*', '*'],
+                                        body: [
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ...modifiedData.map((item, index) => [
+                                                index + 1,
+                                                item.no_pendaftaran,
+                                                item.nama_lengkap,
+                                                item.jarak,
+                                                item.nilai_akhir,
+
+                                            ])
+                                        ]
+                                    }
+                                }
+                            ],
+                            styles: {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    margin: [0, 0, 0, 10]
+                                },
+                                subheader: {
+                                    fontSize: 14,
+                                    bold: true,
+                                    margin: [0, 10, 0, 5]
+                                }
+                            }
+                        };
+                    
+                        const pdfDoc = pdfMake.createPdf(docDefinition);
+                    
+                        // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                        pdfDoc.getBase64((data) => {
+                            const buffer = Buffer.from(data, 'base64');
+                            res.setHeader('Content-Type', 'application/pdf');
+                            res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                            res.send(buffer);
+                        });
+
+                    }
+
     
                     res.status(200).json({
                         'status': 1,
@@ -1656,15 +1968,14 @@ export const getPerangkingan = async (req, res) => {
                                     table: {
                                         // widths: ['auto', '*', '*', '*', '*', '*'],
                                         body: [
-                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak', 'Umur', 'Tanggal Daftar'],
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
                                             ...modifiedData.map((item, index) => [
                                                 index + 1,
                                                 item.no_pendaftaran,
                                                 item.nama_lengkap,
                                                 item.jarak,
                                                 item.nilai_akhir,
-                                                item.umur,
-                                                item.created_at
+
                                             ])
                                         ]
                                     }
@@ -1694,16 +2005,16 @@ export const getPerangkingan = async (req, res) => {
                             res.send(buffer);
                         });
 
-                    }else{
-
-                        res.status(200).json({
-                            'status': 1,
-                            'message': 'Data berhasil ditemukan',
-                            'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
-                        });
-
                     }
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                    
                     
     
                    
@@ -1749,6 +2060,58 @@ export const getPerangkingan = async (req, res) => {
                         // return { ...rest, id: encodeId(id) };
                         
                     });
+
+                    if (is_pdf === 1) {
+                        // Generate PDF
+                        const docDefinition = {
+                            content: [
+                                { text: 'Perangkingan Pendaftaran', style: 'header' },
+                                { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                                { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                                { text: 'Data Perangkingan:', style: 'subheader' },
+                                {
+                                    table: {
+                                        // widths: ['auto', '*', '*', '*', '*', '*'],
+                                        body: [
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ...modifiedData.map((item, index) => [
+                                                index + 1,
+                                                item.no_pendaftaran,
+                                                item.nama_lengkap,
+                                                item.jarak,
+                                                item.nilai_akhir,
+
+                                            ])
+                                        ]
+                                    }
+                                }
+                            ],
+                            styles: {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    margin: [0, 0, 0, 10]
+                                },
+                                subheader: {
+                                    fontSize: 14,
+                                    bold: true,
+                                    margin: [0, 10, 0, 5]
+                                }
+                            }
+                        };
+                    
+                        const pdfDoc = pdfMake.createPdf(docDefinition);
+                    
+                        // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                        pdfDoc.getBase64((data) => {
+                            const buffer = Buffer.from(data, 'base64');
+                            res.setHeader('Content-Type', 'application/pdf');
+                            res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                            res.send(buffer);
+                        });
+
+                    }
+
     
                     res.status(200).json({
                         'status': 1,
@@ -1801,6 +2164,58 @@ export const getPerangkingan = async (req, res) => {
                         return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                         // return { ...rest, id: encodeId(id) };
                     });
+
+                    if (is_pdf === 1) {
+                        // Generate PDF
+                        const docDefinition = {
+                            content: [
+                                { text: 'Perangkingan Pendaftaran', style: 'header' },
+                                { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                                { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                                { text: 'Data Perangkingan:', style: 'subheader' },
+                                {
+                                    table: {
+                                        // widths: ['auto', '*', '*', '*', '*', '*'],
+                                        body: [
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak'],
+                                            ...modifiedData.map((item, index) => [
+                                                index + 1,
+                                                item.no_pendaftaran,
+                                                item.nama_lengkap,
+                                                item.jarak,
+                                                item.nilai_akhir,
+
+                                            ])
+                                        ]
+                                    }
+                                }
+                            ],
+                            styles: {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    margin: [0, 0, 0, 10]
+                                },
+                                subheader: {
+                                    fontSize: 14,
+                                    bold: true,
+                                    margin: [0, 10, 0, 5]
+                                }
+                            }
+                        };
+                    
+                        const pdfDoc = pdfMake.createPdf(docDefinition);
+                    
+                        // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                        pdfDoc.getBase64((data) => {
+                            const buffer = Buffer.from(data, 'base64');
+                            res.setHeader('Content-Type', 'application/pdf');
+                            res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                            res.send(buffer);
+                        });
+
+                    }
+
     
                     res.status(200).json({
                         'status': 1,
@@ -3200,6 +3615,7 @@ export const createPerangkingan = async (req, res) => {
             is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
             is_pip: pendaftar.is_pip,
+            created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
             created_by_ip: req.ip,
         };
