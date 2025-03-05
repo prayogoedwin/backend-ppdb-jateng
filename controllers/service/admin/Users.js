@@ -39,7 +39,7 @@ export const getUsers = async (req, res) => {
                 where: {
                     [Op.and]: [
                         { is_delete: 0 },
-                        { role_: { [Op.ne]: 77 } },
+                        // { role_: { [Op.ne]: 77 } },
                         { role_: { [Op.in]: [93, 94, 95] } },
                         { sekolah_id: user.sekolah_id },
                       
