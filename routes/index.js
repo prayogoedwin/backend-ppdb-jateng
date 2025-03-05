@@ -261,6 +261,7 @@ router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddlewa
 //rekap
 router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
 
+
 //role
 router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getRoles);
 

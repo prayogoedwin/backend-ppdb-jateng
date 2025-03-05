@@ -2,6 +2,8 @@
 import { Sequelize } from "sequelize";
 // import connection 
 import db from "../../config/Database.js";
+// import DataPerangkingans from '../service/DataPerangkinganModel.js';
+
  
 // init DataTypes
 const { DataTypes } = Sequelize;
@@ -27,6 +29,7 @@ const JalurPendaftarans = db.define('ez_jalur_pendaftaran', {
   // Freeze Table Name
   freezeTableName: true
 });
+
  
 // Export model Product
 export default JalurPendaftarans;

@@ -128,6 +128,7 @@ export const countPendaftar = async (req, res) => {
         //ini untuk perangkingan query manual
 
         let sekolahFilter = ""; // Default tanpa filter
+        let sekolahFilter2 = ""; // Default tanpa filter
 
         if (sekolah_id != 0) {
             sekolahFilter = `WHERE sekolah_tujuan_id = ${sekolah_id}`; 
@@ -150,13 +151,17 @@ export const countPendaftar = async (req, res) => {
         const [bentukPendidikan] = await db.query(querybentukPendidikan, { raw: true, type: db.QueryTypes.SELECT });
 
         //jalur
+
+        if (sekolah_id != 0) {
+          sekolahFilter2 = `AND sekolah_tujuan_id = ${sekolah_id}`; 
+         }
         const queryjaluePendaftaranSMA = `
             SELECT 
                 jp.id AS jalur_pendaftaran_id,
                 jp.nama,
                 COALESCE(COUNT(p.id), 0) AS jumlah_pendaftar
             FROM ez_jalur_pendaftaran jp
-            LEFT JOIN ez_perangkingan p ON jp.id = p.jalur_pendaftaran_id
+            LEFT JOIN ez_perangkingan p ON jp.id = p.jalur_pendaftaran_id  ${sekolahFilter2}
            WHERE jp.id IN (1, 2, 3, 4, 5)
             GROUP BY jp.id, jp. nama
             ORDER BY jp.id;
@@ -173,7 +178,7 @@ export const countPendaftar = async (req, res) => {
               jp.nama,
               COALESCE(COUNT(p.id), 0) AS jumlah_pendaftar
           FROM ez_jalur_pendaftaran jp
-          LEFT JOIN ez_perangkingan p ON jp.id = p.jalur_pendaftaran_id
+          LEFT JOIN ez_perangkingan p ON jp.id = p.jalur_pendaftaran_id  ${sekolahFilter2}
         WHERE jp.id IN (6, 7, 8, 9)
           GROUP BY jp.id, jp. nama
           ORDER BY jp.id;
