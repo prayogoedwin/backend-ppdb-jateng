@@ -298,7 +298,7 @@ const APPNAME = 'Backend PPDB';
 // });
 
 // Buat rute GET di '/version' yang mengirimkan HTML sebagai respons
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
         <html lang="en">
