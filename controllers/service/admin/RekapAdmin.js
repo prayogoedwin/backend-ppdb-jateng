@@ -32,19 +32,25 @@ export const countPendaftar = async (req, res) => {
         }
       });
 
-      const genderCounts = await DataPendaftars.findAll({
-        attributes: [
-            'jenis_kelamin',
-            [fn('COUNT', col('jenis_kelamin')), 'rekap_jenis_kelamin']
-        ],
-        where: {
-            [Op.or]: [
-                { is_delete: { [Op.is]: null } },
-                { is_delete: 0 }
-            ]
-        },
-        group: ['jenis_kelamin']
-    });
+      const genderCountsArray = await DataPendaftars.findAll({
+          attributes: [
+              'jenis_kelamin',
+              [fn('COUNT', col('jenis_kelamin')), 'rekap_jenis_kelamin']
+          ],
+          where: {
+              [Op.or]: [
+                  { is_delete: { [Op.is]: null } },
+                  { is_delete: 0 }
+              ]
+          },
+          group: ['jenis_kelamin'],
+          raw: true
+       });
+       // Konversi hasil array ke objek
+      const genderCounts = genderCountsArray.reduce((acc, item) => {
+        acc[item.jenis_kelamin] = item.rekap_jenis_kelamin;
+        return acc;
+      }, {});
 
       // Count the verified pendaftar
       const verifiedCount = await DataPendaftars.count({
@@ -134,7 +140,7 @@ export const countPendaftar = async (req, res) => {
             sekolahFilter = `WHERE sekolah_tujuan_id = ${sekolah_id}`; 
         }
 
-        const querybentukPendidikan = `
+        const queryJenjangPpendidikan = `
             SELECT 
                 SUM(CASE 
                     WHEN jalur_pendaftaran_id IN (1, 2, 3, 4, 5) THEN 1 
@@ -148,7 +154,7 @@ export const countPendaftar = async (req, res) => {
              ${sekolahFilter};
         `;
 
-        const [bentukPendidikan] = await db.query(querybentukPendidikan, { raw: true, type: db.QueryTypes.SELECT });
+        const [jenjangPpendidikan] = await db.query(queryJenjangPpendidikan, { raw: true, type: db.QueryTypes.SELECT });
 
         //jalur
 
@@ -198,7 +204,7 @@ export const countPendaftar = async (req, res) => {
         pendaftar_diverif_capil: verifDukcapilCount,
         daftar_sma: perangkinganSmaCount,
         daftar_smk: perangkinganSmkCount,
-        jenjang_pendidikan: bentukPendidikan,
+        jenjang_pendidikan: jenjangPpendidikan,
         jalur_pendaftaran_sma: jaluePendaftaranSMA, 
         jalur_pendaftaran_smk: jaluePendaftaranSMK
      
