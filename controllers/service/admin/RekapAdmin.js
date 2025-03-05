@@ -47,12 +47,19 @@ export const countPendaftar = async (req, res) => {
           raw: true
        });
        // Konversi hasil array ke objek
-      const genderCounts = genderCountsArray.reduce((acc, item) => {
-        acc[item.jenis_kelamin] = item.rekap_jenis_kelamin;
-        return acc;
-      }, {});
+      // const genderCounts = genderCountsArray.reduce((acc, item) => {
+      //   acc[item.jenis_kelamin] = item.rekap_jenis_kelamin;
+      //   return acc;
+      // }, {});
 
-      // Count the verified pendaftar
+      const genderCounts = genderCountsArray.reduce((acc, item) => {
+        const key = item.jenis_kelamin.trim(); // Hilangkan spasi dari jenis_kelamin
+        acc[key] = item.rekap_jenis_kelamin;
+        return acc;
+       }, {});
+
+      // Count the ve
+      // rified pendaftar
       const verifiedCount = await DataPendaftars.count({
         where: {
           [Op.or]: [
