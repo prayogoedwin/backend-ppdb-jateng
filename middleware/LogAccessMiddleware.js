@@ -7,10 +7,11 @@ import AccessLogPub from '../models/AccessLogPublic.js';
 // async function logAccess(req, res, next) {
 export const logAccess = async (req, res, next) => {
 
-    const akun = req.user && req.user.userId ? req.user.userId : req.body.nisn;
-    if(akun == ''){
-        akun = req.body.nisn
-    }
+    // const akun = req.user && req.user.userId ? req.user.userId : req.body.nisn;
+    // if(akun == ''){
+    //     akun = req.body.nisn
+    // }
+    const akun = req.body.nisn || (req.user?.userId || null);
 
     try {
         const logData = {
