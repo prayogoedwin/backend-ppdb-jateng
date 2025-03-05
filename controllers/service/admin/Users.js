@@ -61,7 +61,7 @@ export const getUsers = async (req, res) => {
             resData = await DataUsers.findAll({
                 where: {
                     is_delete: 0,
-                    // role_: { [Op.ne]: 77 }
+                    role_: { [Op.ne]: 77 }
         
                 },
                 include: [
