@@ -163,6 +163,7 @@ export const getDataPendaftarForVerifPagination = async (req, res) => {
                 data: JSON.parse(cacheNya)
             });
         } else {
+
             const adminNya = req.user.userId;
 
             const dataAdminNya = await DataUsers.findOne({
@@ -759,30 +760,45 @@ export const getDataPendaftarById = async (req, res) => {
 
             }
 
-            // Check if opened_by is not 0  
-            if (resData.opened_by != 0) {  
-                // Fetch the admin's name using opened_by  
-                const adminData = await DataUsers.findOne({  
-                    where: { id: resData.opened_by },  
-                    attributes: ['nama'] // Get only the name  
-                });  
-  
-                // Check if the current user is the one who opened the data  
-                if (req.user.userId != resData.opened_by) {  
-                    const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
-                    return res.status(200).json({  
-                        status: 0,  
-                        message: `Data Sedang Diverifikasi Oleh Admin: ${adminName}`,  
-                        data: [] // Return the data for reference  
+            const adminNya = req.user.userId;
+
+            const dataAdminNya = await DataUsers.findOne({
+                where: {
+                    id: adminNya,
+                    is_active: 1,
+                    is_delete: 0
+                }
+            });
+
+            if (dataAdminNya.role_ != 101) {
+            //jika buka dukcapil jalankan berikut, jika dukcapil abaikan
+
+                // Check if opened_by is not 0  
+                if (resData.opened_by != 0) {  
+                    // Fetch the admin's name using opened_by  
+                    const adminData = await DataUsers.findOne({  
+                        where: { id: resData.opened_by },  
+                        attributes: ['nama'] // Get only the name  
                     });  
+    
+                    // Check if the current user is the one who opened the data  
+                    if (req.user.userId != resData.opened_by) {  
+                        const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
+                        return res.status(200).json({  
+                            status: 0,  
+                            message: `Data Sedang Diverifikasi Oleh Admin: ${adminName}`,  
+                            data: [] // Return the data for reference  
+                        });  
+                    }  
                 }  
-            }  
-  
-            // Update the opened_by column  
-            await DataPendaftars.update(  
-                { opened_by: req.user.userId }, // Set the opened_by field  
-                { where: { id: decodeId(id) } } // Condition to find the correct record  
-            );  
+    
+                // Update the opened_by column  
+                await DataPendaftars.update(  
+                    { opened_by: req.user.userId }, // Set the opened_by field  
+                    { where: { id: decodeId(id) } } // Condition to find the correct record  
+                );  
+
+            }
   
             const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
   
