@@ -25,7 +25,7 @@ export const LogSiswaLoggedIn = async (req, res) => {
         //     }
         // });
         
-        if(resData != null){
+        if (resData && resData.length > 0) { // Check if resData has data
 
             res.status(200).json({
                 'status': 1,
@@ -74,7 +74,7 @@ export const LogAdminLoggedIn = async (req, res) => {
         //     }
         // });
         
-        if(resData != null){
+        if (resData && resData.length > 0) { // Check if resData has data
 
             res.status(200).json({
                 'status': 1,
