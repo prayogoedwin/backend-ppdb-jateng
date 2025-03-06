@@ -229,8 +229,8 @@ export const createPendaftar = async (req, res) => {
                     is_big_unregistered,
               };
 
-              if (tanggal_kedatangan !== null) {
-                insertData.tanggal_kedatangan = tanggal_kedatangan;
+              if (tanggal_kedatangan !== 'null') {
+                  insertData.tanggal_kedatangan = tanggal_kedatangan;
               }
 
               const newPendaftar = await DataPendaftars.create(insertData);
