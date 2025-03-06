@@ -183,9 +183,8 @@ export const createPendaftar = async (req, res) => {
                 const dok_suket_nilai_raport = files.dok_suket_nilai_raport ? files.dok_suket_nilai_raport[0].filename : null;
                 const dok_piagam = files.dok_piagam ? files.dok_piagam[0].filename : null;
 
-                // Membuat entri baru dalam tabel ez_pendaftar
-                const newPendaftar = await DataPendaftars.create({
-                    nisn,
+                const insertData = {
+                  nisn,
                     sekolah_asal_id,
                     jenis_lulusan_id,
                     tahun_lulus,
@@ -228,8 +227,62 @@ export const createPendaftar = async (req, res) => {
                     password_:hashedPassword,
                     email,
                     is_big_unregistered,
-                    tanggal_kedatangan
-                });
+              };
+
+              if (tanggal_kedatangan !== null) {
+                insertData.tanggal_kedatangan = tanggal_kedatangan;
+              }
+
+              const newPendaftar = await DataPendaftars.create(insertData);
+      
+
+                // Membuat entri baru dalam tabel ez_pendaftar
+                // const newPendaftar = await DataPendaftars.create({
+                //     nisn,
+                //     sekolah_asal_id,
+                //     jenis_lulusan_id,
+                //     tahun_lulus,
+                //     nama_sekolah_asal,
+                //     nik,
+                //     nama_lengkap,
+                //     jenis_kelamin,
+                //     tanggal_lahir: new Date(tanggal_lahir),
+                //     tempat_lahir,
+                //     status_domisili,
+                //     alamat,
+                //     provinsi_id,
+                //     kabkota_id,
+                //     kecamatan_id,
+                //     kelurahan_id,
+                //     rt,
+                //     rw,
+                //     lat,
+                //     lng,
+                //     no_wa,
+                //     tanggal_cetak_kk: new Date(tanggal_cetak_kk),
+                //     kejuaraan_id: kejuaraan_id ? kejuaraan_id : 0,
+                //     nama_kejuaraan,
+                //     tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
+                //     umur_sertifikat: umur_sertifikat ? umur_sertifikat : 0,
+                //     nomor_sertifikat,
+                //     nilai_prestasi,
+                //     nilai_raport,
+                //     nilai_raport_rata,
+                //     dok_pakta_integritas,
+                //     dok_kk,
+                //     dok_suket_nilai_raport,
+                //     dok_piagam,
+                //     is_tidak_sekolah,
+                //     is_anak_panti,
+                //     is_anak_keluarga_tidak_mampu,
+                //     is_anak_guru_jateng,
+                //     kode_verifikasi,
+                //     created_by: req.ip,
+                //     password_:hashedPassword,
+                //     email,
+                //     is_big_unregistered,
+                //     tanggal_kedatangan
+                // });
 
                 // Menyaring data yang akan dikirim sebagai respons
                 const responseData = {
