@@ -132,6 +132,10 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
     tahun_data: {
         type: DataTypes.INTEGER,
         allowNull: true,
+    },
+    tanggal_kedatangan: {
+        type: DataTypes.DATE,
+        allowNull: true,
     }
 }, {
     freezeTableName: true,

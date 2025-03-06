@@ -138,7 +138,8 @@ export const createPendaftar = async (req, res) => {
                     no_urut,
                     is_diterima,
                     email,
-                    is_big_unregistered
+                    is_big_unregistered,
+                    tanggal_kedatangan
                 } = req.body;
 
                 // Cek apakah NISN sudah terdaftar dan belum dihapus
@@ -226,7 +227,8 @@ export const createPendaftar = async (req, res) => {
                     created_by: req.ip,
                     password_:hashedPassword,
                     email,
-                    is_big_unregistered
+                    is_big_unregistered,
+                    tanggal_kedatangan
                 });
 
                 // Menyaring data yang akan dikirim sebagai respons

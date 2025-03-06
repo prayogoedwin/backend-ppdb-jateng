@@ -1218,7 +1218,8 @@ export const getPerangkingan = async (req, res) => {
                     jalur_pendaftaran_id: 3,
                     sekolah_tujuan_id,  
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
+                    // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
+                    is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                 },
                 limit: resSek.kuota_prestasi
             });
@@ -1375,7 +1376,8 @@ export const getPerangkingan = async (req, res) => {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                     
                 },
                 order: [
@@ -1493,7 +1495,8 @@ export const getPerangkingan = async (req, res) => {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                 },
                 order: [
                     ['nilai_akhir', 'DESC'], //nilai tertinggi
@@ -1611,7 +1614,8 @@ export const getPerangkingan = async (req, res) => {
                    sekolah_tujuan_id,
                    is_anak_guru_jateng: '1',
                    is_delete: 0,
-                   is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                //    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                   is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                },
                order: [
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
@@ -1727,7 +1731,8 @@ export const getPerangkingan = async (req, res) => {
                 jalur_pendaftaran_id,
                 sekolah_tujuan_id,
                 is_delete: 0,
-                is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
             },
             order: [
                 [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
@@ -1843,7 +1848,8 @@ export const getPerangkingan = async (req, res) => {
                     sekolah_tujuan_id,
                     jurusan_id,
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                 }, order: [
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['nilai_akhir', 'DESC'], //nilai tertinggi
@@ -1971,7 +1977,8 @@ export const getPerangkingan = async (req, res) => {
                         sekolah_tujuan_id,  
                         jurusan_id,
                         is_delete: 0 ,
-                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition   
+                        // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition   
+                        is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                     },
                     limit: resJurSek.kuota_jarak_terdekat
                 });
@@ -2103,7 +2110,8 @@ export const getPerangkingan = async (req, res) => {
                     sekolah_tujuan_id,
                     jurusan_id,
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    // is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                 }, order: [
                     ['nilai_akhir', 'DESC'], //nilai tertinggi
                     ['umur', 'DESC'], //umur tertua
@@ -2214,7 +2222,8 @@ export const getPerangkingan = async (req, res) => {
                     sekolah_tujuan_id,
                     jurusan_id,
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                    // is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                    is_daftar_ulang: { [Op.notIn]: [2, 3] },// Updated condition to exclude 2 and 3
                     [Op.or]: [  
                         { is_anak_panti: { [Op.ne]: '0' } },  // Check if is_anak_panti is not equal to '0'  
                         { is_anak_keluarga_tidak_mampu: { [Op.ne]: '0' } },  // Check if is_anak_keluarga_tidak_mampu is not equal to '0'   di di view is_dtks
