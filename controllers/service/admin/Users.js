@@ -622,7 +622,6 @@ export const updateUserPassword = async (req, res) => {
             password_: password,
             updated_at: new Date(),
             updated_by: req.user.userId, // Use user ID from token
-            is_active
         };
 
 
