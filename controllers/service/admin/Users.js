@@ -556,3 +556,103 @@ export const softDeleteUser = async (req, res) => {
 };
 
 
+export const bulkUpdateIsLoginUsers = async (req, res) => {
+    const roles = [93, 94, 95, 101]; // Define the roles to update
+    const isLogin = 0; // Define the new is_login status
+
+    try {
+        // Perform the bulk update
+        const [updatedCount] = await DataUsers.update(
+            {
+                is_login: isLogin,
+                updated_at: new Date(),
+                updated_by: req.user.userId, // Assuming req.user.userId is available
+            },
+            {
+                where: {
+                    role: {
+                        [Op.in]: roles,
+                    },
+                    is_delete: 0, // Ensure only non-deleted users are updated
+                },
+            }
+        );
+
+        // Clear the relevant cache
+        await clearCacheByKeyFunction('DataUsersAllinAdmin');
+
+        // Return success response
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil diupdate',
+            data: {
+                updatedCount: updatedCount,
+            },
+        });
+    } catch (error) {
+        // Return error response
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
+
+export const updateUserPassword = async (req, res) => {
+    const { id, password } = req.body;
+
+    try {
+    
+        const decode_id = decodeId(id);
+        const user = await DataUsers.findOne({
+            where: {
+                id: decode_id,
+                is_delete: 0,
+            }
+        });
+
+        if (!user) {
+            return res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan'
+            });
+        }
+
+        const updateData = {
+            password_: password,
+            updated_at: new Date(),
+            updated_by: req.user.userId, // Use user ID from token
+            is_active
+        };
+
+
+        // if (password) {
+        //     // Hash the new password if provided
+        //     updateData.password_ = await bcrypt.hash(password, 10);
+        // }
+
+        await user.update(updateData);
+
+        const updatedUser = {
+            id_: encodeId(user.id), // Use the virtual id_ field which is already encoded
+            ...user.toJSON()
+        };
+        delete updatedUser.id; // Remove the original ID from the response
+        delete updatedUser.password_; // Remove the password from the response
+
+        await clearCacheByKeyFunction('DataUsersAllinAdmin');
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil diupdate',
+            data: updatedUser
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
+
+

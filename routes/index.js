@@ -76,7 +76,7 @@ import { getTimeline, getTimelineById, updateTimeline } from "../controllers/ser
 import { getSekolahTujuanAdmin, getSekolahTujuanAdminById, updateSekolahTujuanAdmin, getSekolahTujuanJurusanAdmin, getSekolahTujuanJurusanAdminById, updateSekolahTujuanJurusanAdmin } from "../controllers/service/admin/SekolahTujuan.js";
 
 //users
-import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById, resetLoggedInById } from "../controllers/service/admin/Users.js";
+import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById, resetLoggedInById, bulkUpdateIsLoginUsers, updateUserPassword } from "../controllers/service/admin/Users.js";
 
 //roles
 import { getRoles } from "../controllers/service/admin/Role.js";
@@ -252,9 +252,13 @@ router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, 
 router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUserById);
 router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, addUser);
 router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUser);
+router.post('/admin-api/setting/user_update_password', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUserPassword);
+router.post('/admin-api/setting/reset_is_login_masal', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, bulkUpdateIsLoginUsers);
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, softDeleteUser);
 router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetPasswordById);
 router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetLoggedInById);
+
+
 
 
 
