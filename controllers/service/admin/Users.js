@@ -643,7 +643,7 @@ export const updateUserPassword = async (req, res) => {
 
         res.status(200).json({
             status: 1,
-            message: 'Data berhasil diupdate',
+            message: 'Password berhasil diubah',
             data: updatedUser
         });
     } catch (error) {
