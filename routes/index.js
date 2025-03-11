@@ -103,10 +103,10 @@ router.get('/download/:nisn/:filename', viewFile);
 
 
 //konfigurasi cache
-router.delete('/uapi/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
-router.delete('/uapi/internal/clear_all_cache', clearAllCache); // Clear all cache
-router.get('/uapi/internal/cache/keys', getAllCacheKeys); // Get all cache keys
-router.get('/uapi/internal/cache/key_values', getAllCacheKeysAndValues); 
+router.delete('/api/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
+router.delete('/api/internal/clear_all_cache', clearAllCache); // Clear all cache
+router.get('/api/internal/cache/keys', getAllCacheKeys); // Get all cache keys
+router.get('/api/internal/cache/key_values', getAllCacheKeysAndValues); 
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);
@@ -300,7 +300,7 @@ const APPNAME = 'Backend PPDB';
 // });
 
 // Buat rute GET di '/version' yang mengirimkan HTML sebagai respons
-router.get('/', (req, res) => {
+router.get('/api/version', (req, res) => {
     res.send(`
         <!DOCTYPE html>
         <html lang="en">
