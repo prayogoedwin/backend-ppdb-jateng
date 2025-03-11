@@ -237,7 +237,7 @@ export const createPendaftar = async (req, res) => {
               // }
 
               if (req.body.tanggal_kedatangan != null) {
-                updateData.tanggal_kedatangan = tanggal_kedatangan;
+                insertData.tanggal_kedatangan = req.body.tanggal_kedatangan;
               }
 
               const newPendaftar = await DataPendaftars.create(insertData);
