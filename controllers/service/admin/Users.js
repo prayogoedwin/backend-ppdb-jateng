@@ -618,8 +618,11 @@ export const updateUserPassword = async (req, res) => {
             });
         }
 
+          // Hash the password before saving it to the database
+          const hashedPassword = await bcrypt.hash(password, 10);
+
         const updateData = {
-            password_: password,
+            password_: hashedPassword,
             updated_at: new Date(),
             updated_by: req.user.userId, // Use user ID from token
         };
