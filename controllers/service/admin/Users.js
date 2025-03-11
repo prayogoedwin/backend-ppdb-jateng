@@ -570,7 +570,7 @@ export const bulkUpdateIsLoginUsers = async (req, res) => {
             },
             {
                 where: {
-                    role: {
+                    role_: {
                         [Op.in]: roles,
                     },
                     is_delete: 0, // Ensure only non-deleted users are updated
