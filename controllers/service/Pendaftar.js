@@ -237,7 +237,7 @@ export const createPendaftar = async (req, res) => {
               //     insertData.tanggal_kedatangan = tanggal_kedatangan;
               // }
 
-              if (tanggal_kedatangan !== null) {
+              if (tanggal_kedatangan != null) {
                 updateData.tanggal_kedatangan = tanggal_kedatangan;
               }
 
