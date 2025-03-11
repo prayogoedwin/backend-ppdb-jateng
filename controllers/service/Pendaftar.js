@@ -229,16 +229,16 @@ export const createPendaftar = async (req, res) => {
               };
 
               //ini code kocak yak, tp ini untuk handla krn local sm server beda null wkwkwk
-              // if (tanggal_kedatangan == 'null' || tanggal_kedatangan == null) {
+              if (tanggal_kedatangan == 'null' || tanggal_kedatangan == null) {
 
-              // }else{
+              }else{
 
-              //     insertData.tanggal_kedatangan = tanggal_kedatangan;
-              // }
-
-              if (req.body.tanggal_kedatangan != null) {
-                insertData.tanggal_kedatangan = req.body.tanggal_kedatangan;
+                  insertData.tanggal_kedatangan = tanggal_kedatangan;
               }
+
+              // if (req.body.tanggal_kedatangan != null) {
+              //   insertData.tanggal_kedatangan = req.body.tanggal_kedatangan;
+              // }
 
               const newPendaftar = await DataPendaftars.create(insertData);
       
