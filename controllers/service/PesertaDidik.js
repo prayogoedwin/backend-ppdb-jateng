@@ -224,6 +224,21 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
             });
         }
 
+        // Update kolom no_pkh menjadi 1
+        await DataPesertaDidiks.update(
+            { no_pkh: 1 }, // Data yang akan diupdate
+            {
+                where: {
+                    nisn: nisn,
+                    nik: nik,
+                    tanggal_lahir: tgl_lahir,
+                    nama_ibu_kandung: {
+                        [Op.iLike]: nama_ibu
+                    }
+                }
+            }
+        );
+
         // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
         // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
 
