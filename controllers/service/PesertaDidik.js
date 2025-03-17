@@ -384,8 +384,8 @@ export const getDataDukungByNIK = async (req, res) => {
         // const username = process.env.API_USERNAME;
         // const password = process.env.API_PASSWORD;
 
-        const username = disdik;
-        const password = apidisdik;
+        const username = 'disdik';
+        const password = 'apidisdik';
 
 
         // Melakukan permintaan ke API untuk mendapatkan data anak miskin
