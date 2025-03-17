@@ -186,6 +186,7 @@ export const getPerangkinganDetail = async (req, res) => {
                   id: resData.id_pendaftar,
                   is_delete: 0
                 },
+                attributes: ['nisn', 'nama_lengkap', 'tempat_lahir', 'jenis_kelamin', 'tanggal_cetak_kk'],
                 include: [
                     {
                         model: StatusDomisilis,
