@@ -82,19 +82,24 @@ const getPesertaDidikByNisn = async (nisn) => {
     }
 };
 
-const getPesertaDidikByNisnTgkNamaIbu = async (nisn, tgl_lahir, nama_ibu) => {
+const getPesertaDidikByNisnTgkNamaIbu = async (nisn, nik, tgl_lahir, nama_ibu) => {
     try {
         const pesertaDidik = await DataPesertaDidiks.findOne({
 
             where: {
                         nisn: nisn,
+                        nik: nik,
                         tanggal_lahir: tgl_lahir,
                         // nama_ibu_kandung: nama_ibu,
                         nama_ibu_kandung: {
                             [Op.iLike]: nama_ibu
                         },
                         // is_delete: 0
-                    },
+            },
+            // attributes: ['nik', 'nisn'],
+            // attributes: {
+            //     exclude: ['nisn', 'nik', 'tanggal_lahir', 'nama_ibu_kandung']
+            // },
             include: [
                 {
                 model: Sekolah,
@@ -161,12 +166,19 @@ const getPesertaDidikByNisnTgkNamaIbu = async (nisn, tgl_lahir, nama_ibu) => {
 
 
 export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
-    const { nisn, tgl_lahir, nama_ibu } = req.body;
+    const { nisn, nik, tgl_lahir, nama_ibu } = req.body;
     try {
         if (!nisn) {
             return res.status(400).json({
                 status: 0,
                 message: 'NISN wajib diisi',
+            });
+        }
+
+        if (!nik) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NIK wajib diisi',
             });
         }
 
@@ -203,12 +215,12 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
         //     });
         // }
 
-        const pesertaDidik = await getPesertaDidikByNisnTgkNamaIbu(nisn, tgl_lahir, nama_ibu);
+        const pesertaDidik = await getPesertaDidikByNisnTgkNamaIbu(nisn, nik, tgl_lahir, nama_ibu);
 
         if (!pesertaDidik) {
             return res.status(200).json({
                 status: 0,
-                message: 'NISN tidak ditemukan'
+                message: 'Peserta Didik tidak ditemukan'
             });
         }
 
