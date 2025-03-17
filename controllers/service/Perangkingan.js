@@ -163,7 +163,7 @@ export const getPerangkinganDetail = async (req, res) => {
                 id: decodedIdPerangkingan, // Pastikan id_pendaftar adalah string
                 is_delete: 0
             },
-            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'tanggal_cetak_kk', 'jenis_kelamin', 'nilai_akhir', 'jalur_text', 'jarak'],
+            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jalur_text', 'jarak'],
             include: [
                 {
                     model: SekolahTujuan,
