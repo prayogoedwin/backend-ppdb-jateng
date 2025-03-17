@@ -218,13 +218,13 @@ export const getPerangkinganDetail = async (req, res) => {
 
              // Convert to JSON and remove the id from profil
              const jsonProfil = profil ? profil.toJSON() : null;
-             if (jsonProfil) {
-                 delete jsonProfil.id;
-             }
+            //  if (jsonProfil) {
+            //      delete jsonProfil.id;
+            //  }
 
             const jsonItem = resData.toJSON();
             // jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
-            // jsonItem.data_pendaftar = jsonProfil;
+            jsonItem.data_pendaftar = jsonProfil;
             // delete jsonItem.id; // Remove the original ID from the output
 
             res.status(200).json({
