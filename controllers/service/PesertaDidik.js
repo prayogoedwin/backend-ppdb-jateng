@@ -7,6 +7,8 @@ import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 
+import axios from 'axios';
+
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { Op } from 'sequelize';
 
@@ -369,14 +371,33 @@ export const getDataDukungByNIK = async (req, res) => {
 
         // Fetch data anak miskin and data anak panti by NIK
         // const //anakMiskin = await DataAnakMiskins.findOne({ where: { nik: nisn } });
-        const anakMiskin = await DataAnakMiskins.findOne({
-            where: {
-                [Op.or]: [
-                    { nik: nisn }, // Condition where nik equals nisn
-                    { nik: nik } // Condition where nik equals a specific nik
-                ]
+        // const anakMiskin = await DataAnakMiskins.findOne({
+        //     where: {
+        //         [Op.or]: [
+        //             { nik: nisn }, // Condition where nik equals nisn
+        //             { nik: nik } // Condition where nik equals a specific nik
+        //         ]
+        //     }
+        // });
+
+        // Mengambil username dan password dari variabel lingkungan
+        // const username = process.env.API_USERNAME;
+        // const password = process.env.API_PASSWORD;
+
+        const username = disdik;
+        const password = apidisdik;
+
+
+        // Melakukan permintaan ke API untuk mendapatkan data anak miskin
+        const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
+            nik: nik
+        }, {
+            auth: {
+                username: username,
+                password: password
             }
         });
+        
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
         const anakGuru = await DataAnakGuru.findOne({  where: { nisn_cpd: nisn } });
@@ -387,15 +408,29 @@ export const getDataDukungByNIK = async (req, res) => {
         let dataAnakPondok = {};
         let dataAnakGuru = {};
 
-        if (anakMiskin) {
-            dataAnakMiskin = {
-                anak_miskin: 1,
-                data_anak_miskin: anakMiskin.toJSON()
-            };
-        } else {
+        // if (anakMiskin) {
+        //     dataAnakMiskin = {
+        //         anak_miskin: 1,
+        //         data_anak_miskin: anakMiskin.toJSON()
+        //     };
+        // } else {
+        //     dataAnakMiskin = {
+        //         anak_miskin: 0,
+        //         data_anak_miskin: []
+        //     };
+        // }
+
+
+        // Memeriksa status respons dari API
+        if (response.data.status === false) {
             dataAnakMiskin = {
                 anak_miskin: 0,
                 data_anak_miskin: []
+            };
+        } else {
+            dataAnakMiskin = {
+                anak_miskin: 1,
+                data_anak_miskin: response.data // Mengambil data dari respons API
             };
         }
 
