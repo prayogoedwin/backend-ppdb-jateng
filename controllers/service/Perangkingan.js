@@ -163,7 +163,7 @@ export const getPerangkinganDetail = async (req, res) => {
                 id: decodedIdPerangkingan, // Pastikan id_pendaftar adalah string
                 is_delete: 0
             },
-            attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak'],
+            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak'],
             include: [
                 {
                     model: SekolahTujuan,
@@ -223,9 +223,9 @@ export const getPerangkinganDetail = async (req, res) => {
              }
 
             const jsonItem = resData.toJSON();
-            jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
-            jsonItem.data_pendaftar = jsonProfil;
-            delete jsonItem.id; // Remove the original ID from the output
+            // jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
+            // jsonItem.data_pendaftar = jsonProfil;
+            // delete jsonItem.id; // Remove the original ID from the output
 
             res.status(200).json({
                 status: 1,
