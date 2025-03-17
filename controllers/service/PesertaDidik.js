@@ -8,6 +8,7 @@ import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 
 import axios from 'axios';
+import https from 'https';
 
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { Op } from 'sequelize';
@@ -384,19 +385,15 @@ export const getDataDukungByNIK = async (req, res) => {
         // const username = process.env.API_USERNAME;
         // const password = process.env.API_PASSWORD;
 
-        const username = 'disdik';
-        const password = 'apidisdik';
-
 
         // Melakukan permintaan ke API untuk mendapatkan data anak miskin
         const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
-            nik: nik
-        }, {
-            auth: {
-                username: username,
-                password: password
-            }
+            username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
+            password: process.env.API_PASSWORD ,
+            nik: nik // Mengirimkan NIK dalam format JSON
         });
+
+        // exit();
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
