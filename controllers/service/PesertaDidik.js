@@ -226,7 +226,10 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
 
         // Update kolom no_pkh menjadi 1
         await DataPesertaDidiks.update(
-            { no_pkh: 1 }, // Data yang akan diupdate
+            { 
+                is_checked: 1, // Data yang akan diupdate
+                checked_at: new Date() // Menambahkan timestamp saat ini
+            },
             {
                 where: {
                     nisn: nisn,

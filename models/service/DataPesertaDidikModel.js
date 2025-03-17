@@ -136,7 +136,16 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
     tanggal_kedatangan: {
         type: DataTypes.DATE,
         allowNull: true,
+    },
+    is_checked: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    checked_at: {
+        type: DataTypes.DATE, // Tipe data untuk checked_at
+        allowNull: true, // Atur sesuai kebutuhan, bisa false jika wajib diisi
     }
+
 }, {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
