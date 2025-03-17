@@ -86,7 +86,7 @@ import { getSertifikats, insertSertifikat } from "../controllers/service/integra
 
 
 //rekap
-import { countPendaftar } from "../controllers/service/admin/RekapAdmin.js";
+import { countPendaftar, countCheckedPesertaDidiks, listCheckedPesertaDidiks } from "../controllers/service/admin/RekapAdmin.js";
 
 // // Terapkan logAccessMiddleware ke semua route
 // router.use(logAccessMiddleware);
@@ -265,6 +265,12 @@ router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddlewa
 //rekap
 router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
 router.get('/admin-api/rekap/pendaftar_dashboard/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, countPendaftar);
+
+router.get('/admin-api/rekap/cek_nisn', ipWhitelistMiddleware, appKeyMiddleware, countCheckedPesertaDidiks);
+
+router.get('/admin-api/rekap/cek_nisn_list', ipWhitelistMiddleware, appKeyMiddleware, listCheckedPesertaDidiks);
+
+
 
 
 //role

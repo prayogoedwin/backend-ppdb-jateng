@@ -133,6 +133,10 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    nama_sekolah: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     tanggal_kedatangan: {
         type: DataTypes.DATE,
         allowNull: true,

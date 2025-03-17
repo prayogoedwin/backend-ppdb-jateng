@@ -1,36 +1,39 @@
 import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../../models/service/DataPerangkinganModel.js";
-import JalurPendaftarans from "../../../models/master/JalurPendaftaranModel.js";
+import DataPesertaDidiks from '../../../models/service/DataPesertaDidikModel.js';
+import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
 import { redisGet, redisSet } from '../../../redis.js';
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import db from '../../../config/Database.js'; // Sesuaikan path berdasarkan struktur folder
 import { Op, fn, col, QueryTypes } from 'sequelize';
 
-export const countPendaftar = async (req, res) => {
-  const sekolah_id = req.params.sekolah_id
-  const redis_key = 'RekapAdminsAll'
+import { getProvinsi, getKabupatenKota, getKecamatan, getDesaKelurahan } from '../../service/WilayahService.js';
+
+      export const countPendaftar = async (req, res) => {
+        const sekolah_id = req.params.sekolah_id
+        const redis_key = 'RekapAdminsAll'
 
   try {
-    // Check if the data is already in cache
-    // const cacheNya = await redisGet(redis_key);
-    const cacheNya = false;
-    if (cacheNya) {
-      // Return the cached data
-      res.status(200).json({
-        success: true,
-        message: 'Data di ambil dari cache',
-        data: JSON.parse(cacheNya)
-      });
-    } else {
-      // Count the total pendaftar
-      const pendaftarCount = await DataPendaftars.count({
-        where: {
-          [Op.or]: [
-            { is_delete: { [Op.is]: null } },
-            { is_delete: 0 }
-          ]
-        }
-      });
+          // Check if the data is already in cache
+          // const cacheNya = await redisGet(redis_key);
+          const cacheNya = false;
+          if (cacheNya) {
+            // Return the cached data
+            res.status(200).json({
+              success: true,
+              message: 'Data di ambil dari cache',
+              data: JSON.parse(cacheNya)
+            });
+          } else {
+            // Count the total pendaftar
+            const pendaftarCount = await DataPendaftars.count({
+              where: {
+                [Op.or]: [
+                  { is_delete: { [Op.is]: null } },
+                  { is_delete: 0 }
+                ]
+              }
+        });
 
       const genderCountsArray = await DataPendaftars.findAll({
           attributes: [
@@ -234,6 +237,94 @@ export const countPendaftar = async (req, res) => {
       message: "Error hitung data",
       error: error.message
     });
+  }
+};
+
+export const countCheckedPesertaDidiks = async (req, res) => {
+  try {
+      const count = await DataPesertaDidiks.count({
+          where: {
+              is_checked: 1
+          }
+      });
+      // Return the result
+      res.status(200).json({
+        success: true,
+        message: "Berhasil hitung data",
+        data: count
+      });
+  } catch (error) {
+      console.error("Error hitung data:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error hitung data",
+        error: error.message
+      });
+  }
+};
+
+export const listCheckedPesertaDidiks = async (req, res) => {
+  try {
+      const pesertaDidiks = await DataPesertaDidiks.findAll({
+          where: {
+              is_checked: 1
+          },
+          attributes: ['nisn', 'nama', 'nama_sekolah', 'checked_at'],
+          include: [
+              {
+                  model: WilayahVerDapodik,
+                  as: 'data_wilayah',
+                  attributes: ['mst_kode_wilayah', 'nama'] // Ambil mst_kode_wilayah dan nama wilayah
+              }
+          ]
+      });
+
+      // Inisialisasi array untuk menyimpan data lengkap
+      const result = [];
+
+      for (const pesertaDidik of pesertaDidiks) {
+          let dataKec = {};
+          let dataKabKota = {};
+          let dataProvinsi = {};
+
+          // Pengecekan wilayah
+          if (pesertaDidik.data_wilayah) {
+              dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+          }
+
+          if (dataKec.mst_kode_wilayah) {
+              dataKabKota = await getKabupatenKota(dataKec.mst_kode_wilayah);
+          }
+
+          if (dataKabKota.mst_kode_wilayah) {
+              dataProvinsi = await getProvinsi(dataKabKota.mst_kode_wilayah);
+          }
+
+          // Menyusun data hasil
+          result.push({
+              nisn: pesertaDidik.nisn,
+              nama: pesertaDidik.nama,
+              nama_sekolah: pesertaDidik.nama_sekolah,
+              checked_at: pesertaDidik.checked_at,
+              data_wilayah_kec: dataKec,
+              data_wilayah_kabkota: dataKabKota,
+              data_wilayah_provinsi: dataProvinsi
+          });
+      }
+
+      // Mengembalikan hasil
+      res.status(200).json({
+          success: true,
+          message: "Data peserta didik berhasil diambil",
+          data: result
+      });
+  } catch (error) {
+      console.error("Error mengambil data peserta didik:", error);
+      res.status(500).json({
+          success: false,
+          message: "Error mengambil data peserta didik",
+          error: error.message
+      });
   }
 };
 
