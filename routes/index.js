@@ -66,6 +66,7 @@ import { getDataPendaftarForVerif,
 
 
     getDataPendaftarByWhere,
+    getDataPendaftarByWhereNisn,
     getDataPendaftarCount
 } from "../controllers/service/admin/VerifPendaftar.js";
 
@@ -226,6 +227,8 @@ router.post('/admin-api/master/sekolah_tujuan_jurusan_update', ipWhitelistMiddle
 // menu pendaftaran
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarForVerif);
 router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhere);
+router.get('/admin-api/data/pendaftaran_data_nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereNisn);
+
 // router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
 

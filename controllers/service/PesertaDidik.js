@@ -392,8 +392,6 @@ export const getDataDukungByNIK = async (req, res) => {
             password: process.env.API_PASSWORD ,
             nik: nik // Mengirimkan NIK dalam format JSON
         });
-
-        // exit();
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;

@@ -480,6 +480,218 @@ export const getDataPendaftarByWhere = async (req, res) => {
     }
 };
 
+export const getDataPendaftarByWhereNisn = async (req, res) => {
+    // const redis_key = 'DataPendaftarAllinAdmin';
+    try {
+        // const cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
+        if (cacheNya) {
+            res.status(200).json({
+                status: 1,
+                message: 'Data diambil dari cache',
+                data: JSON.parse(cacheNya)
+            });
+        } else {
+            const adminNya = req.user.userId;
+            // const adminNya = 19;
+
+            const dataAdminNya = await DataUsers.findOne({
+                where: {
+                    id: adminNya,
+                    is_active: 1,
+                    is_delete: 0
+                }
+            });
+
+            let whereFor = {
+                [Op.or]: [
+                    { is_delete: { [Op.is]: null } },
+                    { is_delete: 0 }
+                ]
+            };
+
+            // Parameter pencarian opsional
+            const { nisn, nama } = req.query;
+            //  if (nisn) {
+            //      whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
+            //  }
+            
+
+            if (nisn) {
+                whereFor.nisn = nisn;
+            }
+            
+ 
+            //  if (nama) {
+            //      whereFor.nama_lengkap = { [Op.iLike]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
+            //  }
+
+
+            // if (dataAdminNya.role_ != 101) {
+            //     const kirimDukcapil = req.query.kirim_dukcapil;
+            //     const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+            //     const verifikasiAdmin = req.query.is_verified;
+
+            //     // if (kirimDukcapil != 1) {
+            //     //     whereFor.verifikasikan_disdukcapil = {
+            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+            //     //     };
+            //     // }
+            //     // if (verifikasiDukcapil != 1) {
+            //     //     whereFor.is_verified_disdukcapil = {
+            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+            //     //     };
+            //     // }
+
+            //     // if (verifikasiAdmin != 1) {
+            //     //     whereFor.is_verified = {
+            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+            //     //     };
+            //     // }
+
+            //     if (verifikasiAdmin) {
+            //         whereFor.is_verified = verifikasiAdmin;
+            //     }
+
+            //     if (kirimDukcapil) {
+            //         whereFor.verifikasikan_disdukcapil = kirimDukcapil;
+            //     }
+
+            //     if (verifikasiDukcapil) {
+            //         whereFor.is_verified_disdukcapil = verifikasiDukcapil;
+            //     }
+
+
+               
+            // }
+
+            // if (dataAdminNya.role_ == 101) {
+            //     const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+
+            //     whereFor.verifikasikan_disdukcapil =  1;
+            //     whereFor.is_verified !=  1;
+            //     whereFor.kabkota_id = dataAdminNya.kabkota_id;
+            //     // if (verifikasiDukcapil != 1) {
+            //     //     whereFor.is_verified_disdukcapil = {
+            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
+            //     //     };
+            //     // }
+            //     if (verifikasiDukcapil) {
+            //         whereFor.is_verified_disdukcapil = verifikasiDukcapil;
+            //     }
+                
+            // }
+
+          
+            
+
+            // Pagination logic
+            const page = parseInt(req.query.page) || 1; // Default page is 1
+            const limit = parseInt(req.query.limit) || 10; // Default limit is 10
+            const offset = (page - 1) * limit;
+
+            const { count, rows } = await DataPendaftars.findAndCountAll({
+                attributes: { exclude: ['password_'] },
+                include: [
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                    },
+                    {
+                        model: DataUsers,
+                        as: 'diverifikasi_oleh',
+                        attributes: ['id', 'nama', 'sekolah_id'],
+                        include: [
+                            {
+                                model: SekolahTujuanModel,
+                                as: 'asal_sekolah_verifikator',
+                                attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                            }
+                            
+                        ],
+                        
+                    },
+                    {
+                        model: DataUsers,
+                        as: 'sedang_diproses_oleh',
+                        attributes: ['id', 'nama', 'sekolah_id'],
+                        include: [
+                            {
+                                model: SekolahTujuanModel,
+                                as: 'asal_sekolah_admin',
+                                attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                            }
+                           
+                        ]
+                        
+                    }
+                ],
+                // where: whereFor,
+                // limit,
+                // offset
+            });
+
+            if (rows.length > 0) {
+                const resDatas = rows.map(item => {
+                    const jsonItem = item.toJSON();
+                    jsonItem.id_ = encodeId(item.id); // Add the encoded ID to the response
+                    jsonItem.opened_by_generated = encodeId(item.opened_by); // Add the encoded ID to the response
+                    delete jsonItem.id; // Hapus kolom id dari output JSON
+                    return jsonItem;
+                });
+
+                const newCacheNya = resDatas;
+                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
+
+                res.status(200).json({
+                    status: 1,
+                    message: 'Data berhasil ditemukan',
+                    currentPage: page,
+                    totalPages: Math.ceil(count / limit),
+                    totalItems: count,
+                    data: resDatas
+                });
+            } else {
+                res.status(200).json({
+                    status: 0,
+                    message: 'Data kosong',
+                    currentPage: 0,
+                    totalPages: 1,
+                    totalItems: 0,
+                    data: []
+                });
+            }
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err); // Log the error for debugging
+        res.status(404).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
 export const getDataPendaftarCount = async (req, res) => {
     const redis_key = 'DataPendaftarCountAdmin';
     try {
@@ -851,6 +1063,7 @@ export const getDataPendaftarById = async (req, res) => {
         });  
     }  
 } 
+
 
 export const updatePassworPendaftar = async (req, res) => {    
     const { id } = req.params; // Ambil id dari params URL    
