@@ -568,13 +568,17 @@ export const aktivasiAkunPendaftar = async (req, res) => {
                 where: {
                     nisn,
                     kode_verifikasi,
-                    is_verified: 1,
+                    // is_verified: 1,
                     is_delete: 0
                 }
             });
 
             if (!resData) {
-                return res.status(200).json({ status: 0, message: 'Data aktivasi salah, atau belum diverifikasi' });
+                return res.status(200).json({ status: 0, message: 'Data aktivasi salah' });
+            }
+
+            if (resData.is_verified != 1) {
+              return res.status(200).json({ status: 0, message: 'Akun belum di verifikasi, silahkan lakukan verifikasi akun ke sekolah' });
             }
 
             if (resData.is_active == 1) {
