@@ -388,11 +388,13 @@ export const getDataDukungByNIK = async (req, res) => {
 
 
         // Melakukan permintaan ke API untuk mendapatkan data anak miskin
-        const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
-            username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
-            password: process.env.API_PASSWORD ,
-            nik: nik // Mengirimkan NIK dalam format JSON
-        });
+        // const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
+        //     username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
+        //     password: process.env.API_PASSWORD ,
+        //     nik: nik // Mengirimkan NIK dalam format JSON
+        // });
+
+        const response = false;
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
