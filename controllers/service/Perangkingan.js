@@ -1567,6 +1567,7 @@ export const getPerangkingan = async (req, res) => {
             });
 
             let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
+            console.log(kuota_zonasi_nilai);
 
             //cari data rangking zonasi nilai
             const resData = await DataPerangkingans.findAll({
