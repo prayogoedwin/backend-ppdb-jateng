@@ -225,7 +225,8 @@ export const getPerangkinganDetail = async (req, res) => {
             const jsonItem = resData.toJSON();
             // jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
             jsonItem.data_pendaftar = jsonProfil;
-            // delete jsonItem.id; // Remove the original ID from the output
+            // jsonItem.id_pendaftar = encodeId(jsonItem.id_pendaftar);
+            delete jsonItem.id_pendaftar; // Remove the original ID from the output
 
             res.status(200).json({
                 status: 1,
