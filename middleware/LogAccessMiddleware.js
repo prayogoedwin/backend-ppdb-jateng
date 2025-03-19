@@ -18,7 +18,7 @@ export const logAccess = async (req, res, next) => {
             id:1,
             url: req.originalUrl,
             akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
-            json_data:  req.body, // Ambil data JSON dari body
+            json_data:  JSON.stringify(req.body), // Ambil data JSON dari body
             created_at: new Date(),
             created_by: req.body.nisn,
             created_by_ip: req.ip // Alamat IP pengguna

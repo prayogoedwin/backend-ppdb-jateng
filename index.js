@@ -21,7 +21,6 @@ dotenv.config(); // This will load variables from .env as well
 const app = express();
 // use express json
 app.use(express.json());
-
 //use form data
 app.use(express.urlencoded({ extended: true }));
 
