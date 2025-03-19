@@ -1566,8 +1566,14 @@ export const getPerangkingan = async (req, res) => {
                 limit: resSek.kuota_afirmasi
             });
 
-            let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
-            console.log(kuota_zonasi_nilai);
+            // let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
+            // let kuota_zonasi_nilai = kuota_zonasi_max - (totalZonasiReg + countZonasiKhusus) +  countPrestasi + countAfirmasi + countPto;
+
+            kuota_terpakai = totalZonasiReg + countZonasiKhusus +  countPrestasi + countAfirmasi + countPto;
+
+            kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+
+            // console.log(kuota_zonasi_nilai);
 
             //cari data rangking zonasi nilai
             const resData = await DataPerangkingans.findAll({
@@ -1584,7 +1590,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
-                limit: kuota_zonasi_max
+                limit: kuota_zonasi_nilai
                 
             });
 
