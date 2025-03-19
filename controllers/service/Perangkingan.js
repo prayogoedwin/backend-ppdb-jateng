@@ -1566,7 +1566,7 @@ export const getPerangkingan = async (req, res) => {
                 limit: resSek.kuota_afirmasi
             });
 
-            let kuota_zonasi_nilai = totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
+            let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
             console.log(kuota_zonasi_nilai);
 
             //cari data rangking zonasi nilai
@@ -1584,7 +1584,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
-                limit: kuota_zonasi_nilai
+                limit: kuota_zonasi_max
                 
             });
 
