@@ -8,7 +8,6 @@ import DataUsers from '../../../models/service/DataUsersModel.js';
 import Timelines from "../../../models/service/TimelineModel.js";
 import multer from "multer";
 import path from "path";
-import crypto from "crypto";
 import fs from "fs";
 import { Sequelize, Op } from 'sequelize';
 import bcrypt from 'bcrypt';
@@ -29,63 +28,15 @@ const storage = multer.diskStorage({
     }
 });
 
-// const upload = multer({ storage });
-const upload = multer({ storage }).single('file');
+const upload = multer({ storage });
 
-
-export const updateDokumen = async (req, res) => {
-    try {
-        upload(req, res, async (err) => {
-            if (err) {
-                return res.status(400).json({ success: false, message: 'File upload failed', error: err });
-            }
-
-            const { id_pendaftar, kolom } = req.body;
-
-            // Validasi input
-            if (!id_pendaftar || !kolom) {
-                return res.status(400).json({ success: false, message: 'ID pendaftar dan kolom diperlukan' });
-            }
-
-            // Daftar kolom yang diperbolehkan untuk update
-            const allowedColumns = ['dok_pakta_integritas', 'dok_kk', 'dok_suket_nilai_raport', 'dok_piagam'];
-            if (!allowedColumns.includes(kolom)) {
-                return res.status(400).json({ success: false, message: 'Kolom tidak valid' });
-            }
-
-            const id = decodeId(id_pendaftar);
-            // Cari data pendaftar
-            const pendaftar = await DataPendaftars.findByPk(id);
-            if (!pendaftar) {
-                return res.status(404).json({ success: false, message: 'Data pendaftar tidak ditemukan' });
-            }
-
-            // Hapus file lama jika ada
-            const oldFileName = pendaftar[kolom];
-            if (oldFileName) {
-                // const oldFilePath = path.join(__dirname, '../../upload/berkas', pendaftar.nisn, oldFileName);
-                const oldFilePath = path.resolve('upload/berkas', req.body.nisn, oldFileName);
-                if (fs.existsSync(oldFilePath)) {
-                    fs.unlinkSync(oldFilePath);
-                }
-            }
-
-            // Simpan file baru di database
-            pendaftar[kolom] = req.file.filename;
-            await pendaftar.save();
-
-            // res.json({ success: true, message: `Dokumen ${kolom} berhasil diperbarui`, data: pendaftar });
-            res.json({ success: true, message: `Dokumen ${kolom} berhasil diperbarui`, data:  req.file.filename });
-
-           
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Terjadi kesalahan', error: error.message });
-    }
-};
-
-
-
+// Middleware for handling file uploads
+const uploadFiles = upload.fields([
+    { name: 'dok_pakta_integritas', maxCount: 1 },
+    { name: 'dok_kk', maxCount: 1 },
+    { name: 'dok_suket_nilai_raport', maxCount: 1 },
+    { name: 'dok_piagam', maxCount: 1 }
+]);
 
 export const getDataPendaftarForVerif = async (req, res) => {
     const redis_key = 'DataPendaftarAllinAdmin';
