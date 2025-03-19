@@ -1512,7 +1512,7 @@ export const getPerangkingan = async (req, res) => {
             let zonasi_jarak = kuota_zonasi_min - countZonasiKhusus;
             //cari data rangking zonasi reguler (jarak)
             const resDataZonasi = await DataPerangkingans.findAndCountAll({
-                attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'], // Pilih kolom yang diambil
+                attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
@@ -1575,7 +1575,7 @@ export const getPerangkingan = async (req, res) => {
 
             const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
             const resData = await DataPerangkingans.findAll({
-                attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'],
+                attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
