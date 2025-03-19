@@ -71,9 +71,29 @@ const generateVerificationCode = async () => {
     return code;
 };
 
+export const createPendaftar = async (req, res) => {
+  const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Pendaftaran melebihi batas waktu 30 detik')), 30000)
+  );
+
+  try {
+      const result = await Promise.race([
+          handleCreatePendaftar(req, res),
+          timeoutPromise
+      ]);
+      return result;
+  } catch (error) {
+      console.error('Error pendaftaran:', error);
+      return res.status(500).json({
+          status: 0,
+          message: error.message || 'Terjadi kesalahan saat proses daftar'
+      });
+  }
+};
+
 
 // Fungsi untuk menangani permintaan POST
-export const createPendaftar = async (req, res) => {
+export const handleCreatePendaftar = async (req, res) => {
 
       const resTm = await Timelines.findOne({  
         where: { id: 1 }, // Find the timeline by ID  
