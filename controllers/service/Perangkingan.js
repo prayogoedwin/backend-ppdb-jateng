@@ -1590,7 +1590,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
-                limit: kuota_zonasi_nilai
+                limit: 50
                 
             });
 
