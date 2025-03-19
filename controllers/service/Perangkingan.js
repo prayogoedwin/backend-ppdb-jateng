@@ -1589,7 +1589,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], 
                     ['created_at', 'ASC'] 
                 ],
-                limit: 41
+                limit: countZonasiKhusus
             });
 
                
