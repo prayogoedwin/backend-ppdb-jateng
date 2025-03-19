@@ -1571,7 +1571,7 @@ export const getPerangkingan = async (req, res) => {
 
             let kuota_terpakai = totalZonasiReg + countZonasiKhusus +  countPrestasi + countAfirmasi + countPto;
 
-            let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+            let kuota_zonasi_nilai = kuota_zonasi_max - kuota_terpakai;
 
             const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
             const resData = await DataPerangkingans.findAll({
@@ -1589,7 +1589,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], 
                     ['created_at', 'ASC'] 
                 ],
-                limit: kuota_zonasi_nilai
+                limit: totalZonasiReg
             });
 
                
