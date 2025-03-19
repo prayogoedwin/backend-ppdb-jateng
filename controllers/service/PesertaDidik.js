@@ -16,6 +16,7 @@ import { Op } from 'sequelize';
 
 // import getDataWilayah from '../service/WilayahService.js';
 import { getProvinsi, getKabupatenKota, getKecamatan, getDesaKelurahan } from '../service/WilayahService.js';
+import { response } from 'express';
 
 // Service function
 const getPesertaDidikByNisn = async (nisn) => {
@@ -394,7 +395,7 @@ export const getDataDukungByNIK = async (req, res) => {
         //     nik: nik // Mengirimkan NIK dalam format JSON
         // });
 
-        const response = false;
+        const response = false
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
@@ -420,7 +421,8 @@ export const getDataDukungByNIK = async (req, res) => {
 
 
         // Memeriksa status respons dari API
-        if (response.data.status === false) {
+        // if (response.data.status === false) {
+        if (response === false) {
             dataAnakMiskin = {
                 anak_miskin: 0,
                 data_anak_miskin: []
