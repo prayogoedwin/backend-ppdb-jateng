@@ -495,21 +495,6 @@ export const getDataPendaftarByWhereNisn = async (req, res) => {
             const adminNya = req.user.userId;
             // const adminNya = 19;
 
-            const dataAdminNya = await DataUsers.findOne({
-                where: {
-                    id: adminNya,
-                    is_active: 1,
-                    is_delete: 0
-                }
-            });
-
-            let whereFor = {
-                [Op.or]: [
-                    { is_delete: { [Op.is]: null } },
-                    { is_delete: 0 }
-                ]
-            };
-
             // Parameter pencarian opsional
             const { nisn, nama } = req.query;
             //  if (nisn) {
@@ -520,70 +505,22 @@ export const getDataPendaftarByWhereNisn = async (req, res) => {
             if (nisn) {
                 whereFor.nisn = nisn;
             }
-            
- 
-            //  if (nama) {
-            //      whereFor.nama_lengkap = { [Op.iLike]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
-            //  }
 
 
-            // if (dataAdminNya.role_ != 101) {
-            //     const kirimDukcapil = req.query.kirim_dukcapil;
-            //     const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-            //     const verifikasiAdmin = req.query.is_verified;
+            const kirimDukcapil = req.query.kirim_dukcapil;
+                const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+                const verifikasiAdmin = req.query.is_verified;
+                if (verifikasiAdmin) {
+                    whereFor.is_verified = verifikasiAdmin;
+                }
 
-            //     // if (kirimDukcapil != 1) {
-            //     //     whereFor.verifikasikan_disdukcapil = {
-            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-            //     //     };
-            //     // }
-            //     // if (verifikasiDukcapil != 1) {
-            //     //     whereFor.is_verified_disdukcapil = {
-            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-            //     //     };
-            //     // }
+                if (kirimDukcapil) {
+                    whereFor.verifikasikan_disdukcapil = kirimDukcapil;
+                }
 
-            //     // if (verifikasiAdmin != 1) {
-            //     //     whereFor.is_verified = {
-            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-            //     //     };
-            //     // }
-
-            //     if (verifikasiAdmin) {
-            //         whereFor.is_verified = verifikasiAdmin;
-            //     }
-
-            //     if (kirimDukcapil) {
-            //         whereFor.verifikasikan_disdukcapil = kirimDukcapil;
-            //     }
-
-            //     if (verifikasiDukcapil) {
-            //         whereFor.is_verified_disdukcapil = verifikasiDukcapil;
-            //     }
-
-
-               
-            // }
-
-            // if (dataAdminNya.role_ == 101) {
-            //     const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-
-            //     whereFor.verifikasikan_disdukcapil =  1;
-            //     whereFor.is_verified !=  1;
-            //     whereFor.kabkota_id = dataAdminNya.kabkota_id;
-            //     // if (verifikasiDukcapil != 1) {
-            //     //     whereFor.is_verified_disdukcapil = {
-            //     //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-            //     //     };
-            //     // }
-            //     if (verifikasiDukcapil) {
-            //         whereFor.is_verified_disdukcapil = verifikasiDukcapil;
-            //     }
-                
-            // }
-
-          
-            
+                if (verifikasiDukcapil) {
+                    whereFor.is_verified_disdukcapil = verifikasiDukcapil;
+                }
 
             // Pagination logic
             const page = parseInt(req.query.page) || 1; // Default page is 1
@@ -591,7 +528,7 @@ export const getDataPendaftarByWhereNisn = async (req, res) => {
             const offset = (page - 1) * limit;
 
             const { count, rows } = await DataPendaftars.findAndCountAll({
-                attributes: { exclude: ['password_'] },
+                attributes: { exclude: ['password_', 'access_token', 'access_token_refresh', 'deleted_at', 'deleted_by'] },
                 include: [
                     {
                         model: WilayahVerDapodik,
