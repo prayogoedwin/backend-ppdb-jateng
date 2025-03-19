@@ -1576,22 +1576,42 @@ export const getPerangkingan = async (req, res) => {
             // console.log(kuota_zonasi_nilai);
 
             //cari data rangking zonasi nilai
+            // const resData = await DataPerangkingans.findAll({
+            //     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'], // Pilih kolom yang diambil
+            //     where: {
+            //         jalur_pendaftaran_id,
+            //         sekolah_tujuan_id,
+            //         is_delete: 0,
+            //         is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
+            //     },
+            //     order: [
+            //         // ['jarak', 'ASC'], //jarak terendah
+            //         ['nilai_akhir', 'DESC'], //nilai tertinggi
+            //         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+            //         ['umur', 'DESC'], //umur tertua
+            //         ['created_at', 'ASC'] //daftar sekolah terawal
+            //     ],
+            //     limit: 50
+                
+            // });
+
+            const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
             const resData = await DataPerangkingans.findAll({
-                attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'], // Pilih kolom yang diambil
+                attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'],
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
                     is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
+                    is_daftar_ulang: { [Op.ne]: 2 },
+                    id: { [Op.notIn]: resDataZonasiIds } // Hindari ID yang sudah ada di resDataZonasi
                 },
                 order: [
-                    // ['jarak', 'ASC'], //jarak terendah
-                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
-                    ['umur', 'DESC'], //umur tertua
-                    ['created_at', 'ASC'] //daftar sekolah terawal
+                    ['nilai_akhir', 'DESC'], 
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'],  
+                    ['umur', 'DESC'], 
+                    ['created_at', 'ASC'] 
                 ],
-                limit: 50
-                
+                limit: kuota_zonasi_nilai
             });
 
                
