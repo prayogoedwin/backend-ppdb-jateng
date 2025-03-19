@@ -75,12 +75,12 @@ export const updateDokumen = async (req, res) => {
             await pendaftar.save();
 
             // res.json({ success: true, message: `Dokumen ${kolom} berhasil diperbarui`, data: pendaftar });
-            res.json({ success: true, message: `Dokumen ${kolom} berhasil diperbarui`, data:  req.file.filename });
+            res.json({ status: 1, message: `Dokumen ${kolom} berhasil diperbarui`, data:  req.file.filename });
 
            
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Terjadi kesalahan', error: error.message });
+        res.status(500).json({ status: 0, message: 'Terjadi kesalahan', error: error.message });
     }
 };
 
