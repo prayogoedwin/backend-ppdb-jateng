@@ -1573,28 +1573,6 @@ export const getPerangkingan = async (req, res) => {
 
             let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
 
-            // console.log(kuota_zonasi_nilai);
-
-            //cari data rangking zonasi nilai
-            // const resData = await DataPerangkingans.findAll({
-            //     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'], // Pilih kolom yang diambil
-            //     where: {
-            //         jalur_pendaftaran_id,
-            //         sekolah_tujuan_id,
-            //         is_delete: 0,
-            //         is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
-            //     },
-            //     order: [
-            //         // ['jarak', 'ASC'], //jarak terendah
-            //         ['nilai_akhir', 'DESC'], //nilai tertinggi
-            //         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
-            //         ['umur', 'DESC'], //umur tertua
-            //         ['created_at', 'ASC'] //daftar sekolah terawal
-            //     ],
-            //     limit: 50
-                
-            // });
-
             const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
             const resData = await DataPerangkingans.findAll({
                 attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang'],
@@ -1611,7 +1589,7 @@ export const getPerangkingan = async (req, res) => {
                     ['umur', 'DESC'], 
                     ['created_at', 'ASC'] 
                 ],
-                limit: kuota_zonasi_nilai
+                limit: kuota_terpakai
             });
 
                
