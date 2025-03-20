@@ -204,7 +204,7 @@ export const createPendaftar = async (req, res) => {
                 const dok_piagam = files.dok_piagam ? files.dok_piagam[0].filename : null;
 
                 const insertData = {
-                  nisn,
+                    nisn,
                     sekolah_asal_id,
                     jenis_lulusan_id,
                     tahun_lulus,
@@ -361,7 +361,51 @@ export const createPendaftarTanpaFile = async (req, res) => {
       }
 
       // Cek apakah NISN sudah terdaftar
-      const { nisn, tanggal_kedatangan } = req.body;
+      const {
+          nisn,
+          sekolah_asal_id,
+          jenis_lulusan_id,
+          tahun_lulus,
+          nama_sekolah_asal,
+          nik,
+          nama_lengkap,
+          jenis_kelamin,
+          tanggal_lahir,
+          tempat_lahir,
+          status_domisili,
+          alamat,
+          provinsi_id,
+          kabkota_id,
+          kecamatan_id,
+          kelurahan_id,
+          rt,
+          rw,
+          lat,
+          lng,
+          no_wa,
+          tanggal_cetak_kk,
+          kejuaraan_id,
+          nama_kejuaraan,
+          tanggal_sertifikat,
+          umur_sertifikat,
+          nomor_sertifikat,
+          nilai_raport,
+          nilai_raport_rata,
+          nilai_prestasi,
+          is_tidak_sekolah,
+          is_anak_panti,
+          is_anak_keluarga_tidak_mampu,
+          is_anak_guru_jateng,
+          is_pip,
+          created_by,
+          saved_by,
+          is_saved,
+          no_urut,
+          is_diterima,
+          email,
+          is_big_unregistered,
+          tanggal_kedatangan
+      } = req.body;
 
       const existingPendaftar = await DataPendaftars.findOne({
           where: { nisn, is_delete: 0 },
@@ -376,34 +420,91 @@ export const createPendaftarTanpaFile = async (req, res) => {
       const hashedPassword = await bcrypt.hash("CPD123#=", 10);
 
       // Siapkan data untuk insert ke database
+      // const insertData = {
+      //     ...req.body,
+      //     kode_verifikasi,
+      //     password_: hashedPassword,
+      //     tanggal_lahir: new Date(req.body.tanggal_lahir),
+      //     tanggal_cetak_kk: new Date(req.body.tanggal_cetak_kk),
+      //     tanggal_sertifikat: req.body.tanggal_sertifikat ? new Date(req.body.tanggal_sertifikat) : null,
+      //     umur_sertifikat: req.body.umur_sertifikat ? req.body.umur_sertifikat : 0,
+      //     created_by: req.ip,
+      // };
       const insertData = {
-          ...req.body,
-          kode_verifikasi,
-          password_: hashedPassword,
-          tanggal_lahir: new Date(req.body.tanggal_lahir),
-          tanggal_cetak_kk: new Date(req.body.tanggal_cetak_kk),
-          tanggal_sertifikat: req.body.tanggal_sertifikat ? new Date(req.body.tanggal_sertifikat) : null,
-          umur_sertifikat: req.body.umur_sertifikat ? req.body.umur_sertifikat : 0,
-          created_by: req.ip,
+            nisn,
+            sekolah_asal_id,
+            jenis_lulusan_id,
+            tahun_lulus,
+            nama_sekolah_asal,
+            nik,
+            nama_lengkap,
+            jenis_kelamin,
+            tanggal_lahir: new Date(tanggal_lahir),
+            tempat_lahir,
+            status_domisili,
+            alamat,
+            provinsi_id,
+            kabkota_id,
+            kecamatan_id,
+            kelurahan_id,
+            rt,
+            rw,
+            lat,
+            lng,
+            no_wa,
+            tanggal_cetak_kk: new Date(tanggal_cetak_kk),
+            kejuaraan_id: kejuaraan_id ? kejuaraan_id : 0,
+            nama_kejuaraan,
+            tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
+            umur_sertifikat: umur_sertifikat ? umur_sertifikat : 0,
+            nomor_sertifikat,
+            nilai_prestasi,
+            nilai_raport,
+            nilai_raport_rata,
+            dok_pakta_integritas,
+            dok_kk,
+            dok_suket_nilai_raport,
+            dok_piagam,
+            is_tidak_sekolah,
+            is_anak_panti,
+            is_anak_keluarga_tidak_mampu,
+            is_anak_guru_jateng,
+            kode_verifikasi,
+            created_by: req.ip,
+            password_:hashedPassword,
+            email,
+            is_big_unregistered,
       };
 
       if (tanggal_kedatangan !== "null" && tanggal_kedatangan !== null) {
           insertData.tanggal_kedatangan = tanggal_kedatangan;
       }
+       //ini code kocak yak, tp ini untuk handla krn local sm server beda null wkwkwk
+      //  if (tanggal_kedatangan == 'null' || tanggal_kedatangan == null) {
+      //  }else{
+      //      insertData.tanggal_kedatangan = tanggal_kedatangan;
+      //  }
 
       // Simpan data pendaftar
       const newPendaftar = await DataPendaftars.create(insertData);
+
+      const responseData = {
+        nisn: newPendaftar.nisn,
+        nama_lengkap: newPendaftar.nama_lengkap,
+        kode_verifikasi: newPendaftar.kode_verifikasi,
+      };
 
       // Kembalikan ID dan NISN
       res.status(201).json({
           status: 1,
           message: "Pendaftaran berhasil.",
-          data: {
-              id: newPendaftar.id,
-              nisn: newPendaftar.nisn,
-              nama_lengkap: newPendaftar.nama_lengkap,
-              kode_verifikasi: newPendaftar.kode_verifikasi,
-          },
+          data: responseData
+          // data: {
+          //     id: newPendaftar.id,
+          //     nisn: newPendaftar.nisn,
+          //     nama_lengkap: newPendaftar.nama_lengkap,
+          //     kode_verifikasi: newPendaftar.kode_verifikasi,
+          // },
       });
   } catch (error) {
       console.error("Error pendaftaran:", error);
