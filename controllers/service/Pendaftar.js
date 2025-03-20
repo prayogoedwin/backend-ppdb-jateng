@@ -512,11 +512,21 @@ export const createPendaftarTanpaFile = async (req, res) => {
 export const uploadPendaftarFiles = async (req, res) => {
   // Jalankan middleware uploadFiles terlebih dahulu
   uploadFiles(req, res, async (err) => {
-      if (err) {
+
+        if (err) {
+          console.error("Multer Error:", err);
           return res.status(400).json({ status: 0, message: err.message });
       }
 
+      console.log("FILES RECEIVED:", req.files); // Cek apakah semua file diterima oleh multer
+
+      // if (err) {
+      //     return res.status(400).json({ status: 0, message: err.message });
+      // }
+
       try {
+
+
           // Periksa apakah ID dan NISN tersedia di dalam req.body
           const { id, nisn } = req.body;
           if (!id || !nisn) {
@@ -531,10 +541,10 @@ export const uploadPendaftarFiles = async (req, res) => {
 
           // Ambil file yang diunggah
           const files = req.files;
-          const dok_pakta_integritas = files.dok_pakta_integritas ? files.dok_pakta_integritas[0].filename : pendaftar.dok_pakta_integritas;
-          const dok_kk = files.dok_kk ? files.dok_kk[0].filename : pendaftar.dok_kk;
-          const dok_suket_nilai_raport = files.dok_suket_nilai_raport ? files.dok_suket_nilai_raport[0].filename : pendaftar.dok_suket_nilai_raport;
-          const dok_piagam = files.dok_piagam ? files.dok_piagam[0].filename : pendaftar.dok_piagam;
+          const dok_pakta_integritas = files?.dok_pakta_integritas?.[0]?.filename ?? null;
+          const dok_kk = files?.dok_kk?.[0]?.filename ?? null;
+          const dok_suket_nilai_raport = files?.dok_suket_nilai_raport?.[0]?.filename ?? null;
+          const dok_piagam = files?.dok_piagam?.[0]?.filename ?? null;
 
           // Update database dengan file baru
           await pendaftar.update({
