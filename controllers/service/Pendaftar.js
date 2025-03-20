@@ -510,23 +510,23 @@ export const createPendaftarTanpaFile = async (req, res) => {
 };
 
 export const uploadPendaftarFiles = async (req, res) => {
-  try {
-      // Periksa apakah ID dan NISN tersedia
-      const { id, nisn } = req.body;
-      if (!id || !nisn) {
-          return res.status(400).json({ status: 0, message: "ID dan NISN diperlukan." });
+  // Jalankan middleware uploadFiles terlebih dahulu
+  uploadFiles(req, res, async (err) => {
+      if (err) {
+          return res.status(400).json({ status: 0, message: err.message });
       }
 
-      // Periksa apakah pendaftar ada
-      const pendaftar = await DataPendaftars.findOne({ where: { id, nisn } });
-      if (!pendaftar) {
-          return res.status(404).json({ status: 0, message: "Pendaftar tidak ditemukan." });
-      }
+      try {
+          // Periksa apakah ID dan NISN tersedia di dalam req.body
+          const { id, nisn } = req.body;
+          if (!id || !nisn) {
+              return res.status(400).json({ status: 0, message: "ID dan NISN diperlukan." });
+          }
 
-      // Proses upload file
-      uploadFiles(req, res, async (err) => {
-          if (err) {
-              return res.status(400).json({ status: 0, message: err.message });
+          // Periksa apakah pendaftar ada
+          const pendaftar = await DataPendaftars.findOne({ where: { id, nisn } });
+          if (!pendaftar) {
+              return res.status(404).json({ status: 0, message: "Pendaftar tidak ditemukan." });
           }
 
           // Ambil file yang diunggah
@@ -554,13 +554,12 @@ export const uploadPendaftarFiles = async (req, res) => {
                   dok_piagam
               }
           });
-      });
-  } catch (error) {
-      console.error("Error upload file:", error);
-      res.status(500).json({ status: 0, message: "Terjadi kesalahan saat upload file." });
-  }
+      } catch (error) {
+          console.error("Error upload file:", error);
+          res.status(500).json({ status: 0, message: "Terjadi kesalahan saat upload file." });
+      }
+  });
 };
-
 
 export const getPendaftarforCetak = async (req, res) => {
     try {
