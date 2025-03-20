@@ -146,7 +146,7 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
-router.post("/api/servis/daftar_akun_spmb", ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
+router.post("/api/servis/daftar_akun_spmb", ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftarTanpaFile);
 router.post("/api/servis/upload_data_dukung", ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
 
 
