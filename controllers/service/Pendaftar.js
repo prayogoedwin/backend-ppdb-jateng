@@ -341,6 +341,127 @@ export const createPendaftar = async (req, res) => {
         });
 };
 
+//fungi untuk daftar akun tanpa upload file
+export const createPendaftarTanpaFile = async (req, res) => {
+  try {
+      // Cek apakah pendaftaran sudah dibuka
+      const resTm = await Timelines.findOne({
+          where: { id: 1 },
+          attributes: ["id", "nama", "status"],
+      });
+
+      if (resTm.status != 1) {
+          return res.status(400).json({ status: 0, message: "Pendaftaran belum dibuka." });
+      }
+
+      // Validasi input
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({ status: 0, errors: errors.array() });
+      }
+
+      // Cek apakah NISN sudah terdaftar
+      const { nisn, tanggal_kedatangan } = req.body;
+
+      const existingPendaftar = await DataPendaftars.findOne({
+          where: { nisn, is_delete: 0 },
+      });
+
+      if (existingPendaftar) {
+          return res.status(400).json({ status: 0, message: "NISN sudah terdaftar." });
+      }
+
+      // Generate kode verifikasi dan hash password
+      const kode_verifikasi = await generateVerificationCode();
+      const hashedPassword = await bcrypt.hash("CPD123#=", 10);
+
+      // Siapkan data untuk insert ke database
+      const insertData = {
+          ...req.body,
+          kode_verifikasi,
+          password_: hashedPassword,
+          tanggal_lahir: new Date(req.body.tanggal_lahir),
+          tanggal_cetak_kk: new Date(req.body.tanggal_cetak_kk),
+          tanggal_sertifikat: req.body.tanggal_sertifikat ? new Date(req.body.tanggal_sertifikat) : null,
+          umur_sertifikat: req.body.umur_sertifikat ? req.body.umur_sertifikat : 0,
+          created_by: req.ip,
+      };
+
+      if (tanggal_kedatangan !== "null" && tanggal_kedatangan !== null) {
+          insertData.tanggal_kedatangan = tanggal_kedatangan;
+      }
+
+      // Simpan data pendaftar
+      const newPendaftar = await DataPendaftars.create(insertData);
+
+      // Kembalikan ID dan NISN
+      res.status(201).json({
+          status: 1,
+          message: "Pendaftaran berhasil.",
+          data: {
+              id: newPendaftar.id,
+              nisn: newPendaftar.nisn,
+          },
+      });
+  } catch (error) {
+      console.error("Error pendaftaran:", error);
+      res.status(500).json({ status: 0, message: "Terjadi kesalahan saat pendaftaran." });
+  }
+};
+
+export const uploadPendaftarFiles = async (req, res) => {
+  try {
+      // Periksa apakah ID dan NISN tersedia
+      const { id, nisn } = req.body;
+      if (!id || !nisn) {
+          return res.status(400).json({ status: 0, message: "ID dan NISN diperlukan." });
+      }
+
+      // Periksa apakah pendaftar ada
+      const pendaftar = await DataPendaftars.findOne({ where: { id, nisn } });
+      if (!pendaftar) {
+          return res.status(404).json({ status: 0, message: "Pendaftar tidak ditemukan." });
+      }
+
+      // Proses upload file
+      uploadFiles(req, res, async (err) => {
+          if (err) {
+              return res.status(400).json({ status: 0, message: err.message });
+          }
+
+          // Ambil file yang diunggah
+          const files = req.files;
+          const dok_pakta_integritas = files.dok_pakta_integritas ? files.dok_pakta_integritas[0].filename : pendaftar.dok_pakta_integritas;
+          const dok_kk = files.dok_kk ? files.dok_kk[0].filename : pendaftar.dok_kk;
+          const dok_suket_nilai_raport = files.dok_suket_nilai_raport ? files.dok_suket_nilai_raport[0].filename : pendaftar.dok_suket_nilai_raport;
+          const dok_piagam = files.dok_piagam ? files.dok_piagam[0].filename : pendaftar.dok_piagam;
+
+          // Update database dengan file baru
+          await pendaftar.update({
+              dok_pakta_integritas,
+              dok_kk,
+              dok_suket_nilai_raport,
+              dok_piagam
+          });
+
+          res.status(200).json({
+              status: 1,
+              message: "Upload berhasil.",
+              data: {
+                  dok_pakta_integritas,
+                  dok_kk,
+                  dok_suket_nilai_raport,
+                  dok_piagam
+              }
+          });
+      });
+  } catch (error) {
+      console.error("Error upload file:", error);
+      res.status(500).json({ status: 0, message: "Terjadi kesalahan saat upload file." });
+  }
+};
+
+
 export const getPendaftarforCetak = async (req, res) => {
     try {
         const resData = await DataPendaftars.findOne({
