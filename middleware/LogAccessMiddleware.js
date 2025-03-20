@@ -52,14 +52,16 @@ export const logAccessAdmin = async (req, res, next) => {
         akun = req.body.username
     }
 
+    const usernya = req.body.nisn || req.params.nisn || req.query.nisn;
+
     try {
         const logData = {
             id:1,
             url: req.originalUrl,
-            akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
+            akun: usernya, // Jika menggunakan autentikasi
             json_data:  req.body, // Ambil data JSON dari body
             created_at: new Date(),
-            created_by: req.body.username,
+            created_by: akun,
             created_by_ip: req.ip // Alamat IP pengguna
         };
 

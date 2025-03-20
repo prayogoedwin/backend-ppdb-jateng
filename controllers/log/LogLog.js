@@ -19,6 +19,18 @@ export const LogSiswaLoggedIn = async (req, res) => {
             }
         });
 
+        const resData2 = await AccessLogAdmin.findAll({
+            // where: {
+            //     akun: req.body.nisn
+            // }
+            where: {
+                [Op.or]: [
+                    { akun: req.body.nisn }
+                ]
+            }
+        });
+
+
         // const resData2 = await AccessLogPub.findAll({
         //     where: {
         //         akun: nisn
@@ -31,6 +43,7 @@ export const LogSiswaLoggedIn = async (req, res) => {
                 'status': 1,
                 'message': 'Data berhasil ditemukan',
                 'data': resData,
+                'data_admin': resData2,
                 // 'other_data': resData2,
             });
 
