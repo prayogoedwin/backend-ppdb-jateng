@@ -18,17 +18,18 @@ export const LogSiswaLoggedIn = async (req, res) => {
                 ]
             }
         });
-
-        const resData2 = await AccessLogAdmin.findAll({
-            // where: {
-            //     akun: req.body.nisn
-            // }
-            where: {
-                [Op.or]: [
-                    { akun: req.body.nisn }
-                ]
-            }
-        });
+        
+        const resData2 = 1;
+        // const resData2 = await AccessLogAdmin.findAll({
+        //     // where: {
+        //     //     akun: req.body.nisn
+        //     // }
+        //     where: {
+        //         [Op.or]: [
+        //             { akun: req.body.nisn }
+        //         ]
+        //     }
+        // });
 
 
         // const resData2 = await AccessLogPub.findAll({
