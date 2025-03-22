@@ -77,6 +77,7 @@ export const LogAdminLoggedIn = async (req, res) => {
             where: {
                 [Op.or]: [
                     { created_by: req.body.username },
+                    { created_by: req.body.email },
                     { created_by: decodeId(req.body.user_id) }
                 ]
             }
