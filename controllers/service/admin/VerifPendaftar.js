@@ -84,9 +84,6 @@ export const updateDokumen = async (req, res) => {
     }
 };
 
-
-
-
 export const getDataPendaftarForVerif = async (req, res) => {
     const redis_key = 'DataPendaftarAllinAdmin';
     try {
@@ -764,7 +761,6 @@ export const getDataPendaftarCount = async (req, res) => {
     }
 };
 
-
 export const getDataPendaftarById_BAK = async (req, res) => {
         const { id } = req.params; // Ambil id dari params URL
         try {
@@ -1050,7 +1046,6 @@ export const getDataPendaftarById = async (req, res) => {
     }  
 } 
 
-
 export const updatePassworPendaftar = async (req, res) => {    
     const { id } = req.params; // Ambil id dari params URL    
     try {    
@@ -1320,7 +1315,6 @@ export const verifikasiPendaftarTidakJadi = async (req, res) => {
         });
     }
 }
-
 
 export const updatePendaftar = async (req, res) => {
     const { 
