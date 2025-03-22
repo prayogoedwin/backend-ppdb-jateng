@@ -76,8 +76,8 @@ export const LogAdminLoggedIn = async (req, res) => {
             // }
             where: {
                 [Op.or]: [
-                    { akun: req.body.username },
-                    { akun: decodeId(req.body.user_id) }
+                    { created_by: req.body.username },
+                    { created_by: decodeId(req.body.user_id) }
                 ]
             }
         });
