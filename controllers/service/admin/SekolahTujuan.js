@@ -241,7 +241,7 @@ export const updateSekolahTujuanProfil = async (req, res) => {
 
         if(countStatusZero > 0){
 
-            res.status(200).json({
+            return res.status(200).json({
                 status: 0,
                 message: 'Maaf sudah tidak bisa update data sekolah'
             });
@@ -275,8 +275,8 @@ export const updateSekolahTujuanProfil = async (req, res) => {
             await clearCacheByKeyFunction('SekolahTujuans13');
             await clearCacheByKeyFunction('SekolahTujuans15');
 
-            res.status(200).json({
-                status: 0,
+            return res.status(200).json({
+                status: 1,
                 message: 'Berhasil'
             });
 
