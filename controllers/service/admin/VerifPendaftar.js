@@ -74,8 +74,14 @@ export const updateDokumen = async (req, res) => {
             pendaftar[kolom] = req.file.filename;
             await pendaftar.save();
 
+            // const baseUrl = `${req.protocol}://${req.get('host')}`;
+            const baseUrl = `${process.env.BASE_URL}`;
+            const fileUrl = `${baseUrl}/upload/berkas/${req.body.nisn}/${req.file.filename}`;
+
             // res.json({ success: true, message: `Dokumen ${kolom} berhasil diperbarui`, data: pendaftar });
-            res.json({ status: 1, message: `Dokumen ${kolom} berhasil diperbarui`, data:  req.file.filename });
+           // res.json({ status: 1, message: `Dokumen ${kolom} berhasil diperbarui`, data:  req.file.filename });
+            res.json({ status: 1, message: `Dokumen ${kolom} berhasil diperbarui`, data:  fileUrl});
+            
 
            
         });
