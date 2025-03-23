@@ -242,7 +242,7 @@ export const updateSekolahTujuanProfil = [
 
             const countStatusZero = await Timelines.count({
                 where: {
-                    status: 0
+                    status: 1
                 }
             });
 
