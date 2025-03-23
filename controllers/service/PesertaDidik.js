@@ -263,7 +263,7 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
 };
 
 export const getPesertaDidikByNisnHandler = async (req, res) => {
-    const { nisn, nik } = req.body;
+    const {nisn,nik} = req.body;
     try {
         if (!nisn) {
             return res.status(400).json({
