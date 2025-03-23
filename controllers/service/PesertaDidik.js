@@ -410,7 +410,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 }  
         
                 return res.status(200).json({
-                    status: 1,
+                    status: 3,
                     message: 'NISN diperbolehkan untuk revisi data sementara',
                     data: data
                 });
@@ -419,7 +419,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             if(cekPendaftar.is_verified != 2){
                 return res.status(200).json({
-                    status: 0,
+                    status: 2,
                     message: 'NISN Sudah Terdaftar Sebelumnya',
                     data: cekPendaftar
                  });
