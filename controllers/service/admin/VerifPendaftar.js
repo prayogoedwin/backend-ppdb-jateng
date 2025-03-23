@@ -1519,6 +1519,155 @@ export const updatePendaftar = async (req, res) => {
     }
 }
 
+export const updatePendaftarByUser = async (req, res) => {
+    const { 
+        
+        id,
+        sekolah_asal_id,
+        jenis_lulusan_id,
+        tahun_lulus,
+        nama_sekolah_asal,
+        nik,
+        nama_lengkap,
+        jenis_kelamin,
+        tanggal_lahir,
+        tempat_lahir,
+        status_domisili,
+        alamat,
+        provinsi_id,
+        kabkota_id,
+        kecamatan_id,
+        kelurahan_id,
+        rt,
+        rw,
+        lat,
+        lng,
+        no_wa,
+        tanggal_cetak_kk,
+        kejuaraan_id,
+        nama_kejuaraan,
+        tanggal_sertifikat,
+        umur_sertifikat,
+        nomor_sertifikat,
+        nilai_prestasi,
+        nilai_raport,
+        nilai_raport_rata,
+        is_tidak_sekolah,
+        is_anak_panti,
+        is_anak_keluarga_tidak_mampu,
+        is_anak_guru_jateng,
+        is_pip,
+
+    } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
+    }
+
+    let decodedId;
+    try {
+        decodedId = decodeId(id);
+        if (!decodedId) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+    } catch (err) {
+        console.error('Error decoding ID:', err);
+        return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+    }
+
+    // console.log('Decoded ID:', decodedId); // For debugging
+
+    try {
+
+        let nilai_raport_def = {
+            "pendidikan_agama": '',
+            "pkn": '',
+            "bahasa_indonesia": '',
+            "matematika": '',
+            "ipa":'',
+            "ips": '',
+            "bahasa_inggris": '',
+            "pjok": '',
+            "seni_budaya": ''
+          }
+
+          nilai_raport_def = JSON.stringify(nilai_raport_def);
+        
+        const resData = await DataPendaftars.findOne({
+            where: {
+                id: decodedId,
+                is_delete: 0
+            }
+        });
+
+        if (!resData) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        await DataPendaftars.update(
+            {
+                sekolah_asal_id,
+                jenis_lulusan_id,
+                tahun_lulus,
+                nama_sekolah_asal,
+                nik,
+                nama_lengkap,
+                jenis_kelamin,
+                tanggal_lahir: new Date(tanggal_lahir),
+                tempat_lahir,
+                status_domisili,
+                alamat,
+                provinsi_id,
+                kabkota_id,
+                kecamatan_id,
+                kelurahan_id,
+                rt,
+                rw,
+                lat,
+                lng,
+                no_wa,
+                tanggal_cetak_kk: tanggal_cetak_kk ? new Date(tanggal_cetak_kk) : null,
+                kejuaraan_id: kejuaraan_id || 0,
+                nama_kejuaraan,
+                tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
+                umur_sertifikat: umur_sertifikat || 0,
+                nomor_sertifikat,
+                nilai_prestasi,
+                nilai_raport: nilai_raport || nilai_raport_def,
+                nilai_raport_rata,
+                is_tidak_sekolah,
+                is_anak_panti,
+                is_anak_keluarga_tidak_mampu,
+                is_anak_guru_jateng,
+                is_pip,
+                updated_at: new Date(),
+                updated_by: nisn,
+
+            },
+            {
+                where: {
+                    id: decodedId,
+                    [Op.or]: [
+                        { is_delete: 0 }, // Entri yang belum dihapus
+                        { is_delete: null } // Entri yang belum diatur
+                    ]
+                }
+            }
+        );
+
+        res.status(200).json({
+            status: 1,
+            message: 'Berhasil perbaharui data',
+        });
+    } catch (error) {
+        console.error('Error updating data:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+}
+
 export const updatePendaftarCapilBAK = async (req, res) => {
     const { 
         

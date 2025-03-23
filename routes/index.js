@@ -64,6 +64,7 @@ import { getDataPendaftarForVerif,
     updatePendaftarCapil,
     updateDokumen,
     updatePassworPendaftar,
+    updatePendaftarByUser,
 
 
     getDataPendaftarByWhere,
@@ -151,8 +152,8 @@ router.post("/api/servis/upload_data_dukung", ipWhitelistMiddleware, appKeyMiddl
 
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);
 
-router.post('/api/servis/revisi_data', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updatePendaftar);
-router.post('/api/servis/revisi_dokumen', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updateDokumen);
+router.post('/api/servis/revisi_data', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updatePendaftarByUser);
+// router.post('/api/servis/revisi_dokumen', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updateDokumen);
 
 
 //cari wilayah
