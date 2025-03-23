@@ -29,7 +29,8 @@ export const getJenisLulusan = async (req, res) => {
         }else{
 
             const resData = await JenisLulusans.findAll({
-                attributes: ['id', 'nama'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama'], // Specify the attributes to retrieve
+                order: [['id', 'ASC']] // Urutkan berdasarkan id secara ascending
             });
             if(resData.length > 0){
 
