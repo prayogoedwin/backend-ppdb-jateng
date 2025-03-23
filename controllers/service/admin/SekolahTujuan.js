@@ -248,7 +248,7 @@ export const updateSekolahTujuanProfil = [
 
             if(countStatusZero > 0){
 
-                res.status(500).json({
+                res.status(200).json({
                     status: 0,
                     message: 'Maaf sudah tidak bisa update data sekolah'
                 });
