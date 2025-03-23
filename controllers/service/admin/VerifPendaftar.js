@@ -954,6 +954,16 @@ export const getDataPendaftarById = async (req, res) => {
 
             }
 
+            if (resData.is_verified == 2) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Data Sudah Ditolak Oleh Admin Lainnya`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
             const adminNya = req.user.userId;
 
             const dataAdminNya = await DataUsers.findOne({
@@ -1185,7 +1195,7 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
 }  
 
 export const verifikasiPendaftar = async (req, res) => {
-        const { id, is_verified } = req.body;
+        const { id, is_verified, keterangan_verifikator} = req.body;
 
         if (!id) {
             return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
@@ -1228,6 +1238,7 @@ export const verifikasiPendaftar = async (req, res) => {
             await DataPendaftars.update(
                 {
                     is_verified,
+                    keterangan_verifikator,
                     updated_at: new Date(), // Set the current date and time
                     updated_by: req.user.userId, // Extracted from token
                     verified_at: new Date(), // Set the current date and time

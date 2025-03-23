@@ -315,9 +315,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-
-    
-
+    keterangan_verifikator: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
     
     
 }, {
