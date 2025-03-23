@@ -243,10 +243,11 @@ router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKey
 router.get('/admin-api/data/pendaftar_reset_password/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePassworPendaftar);
 
 
-router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, getDataPendaftarByIdKhususAfterVerif);
+router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByIdKhususAfterVerif);
 
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/tolak_ajuan_akun', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
+router.post('/admin-api/data/batalkan_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/pendaftar_verifikasi_no_action', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftarTidakJadi);
 router.post('/admin-api/data/pendaftar_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftar);
 router.post('/admin-api/data/capil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarCapil);

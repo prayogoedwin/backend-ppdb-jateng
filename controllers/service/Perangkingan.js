@@ -3124,7 +3124,7 @@ export const getPerangkinganHasil = async (req, res) => {
 }
 
 // Function to handle POST request
-export const cekPerangkingan = async (req, res) => {
+export const cekPerangkingan_BAK = async (req, res) => {
         // // Handle validation results
         // const errors = validationResult(req);
         // if (!errors.isEmpty()) {
@@ -3555,6 +3555,150 @@ export const cekPerangkingan = async (req, res) => {
                 message: error.message || 'Terjadi kesalahan saat proses pengecekan'
             });
         }
+}
+
+// Function to handle POST request
+export const cekPerangkingan = async (req, res) => {
+    // // Handle validation results
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return res.status(400).json({ status: 0, errors: errors.array() });
+    // }
+
+    try {
+        const {
+            id_pendaftar,
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+        } = req.body;
+
+        const resTm = await Timelines.findOne({  
+            where: { id: 4 }, // Find the timeline by ID  
+            attributes: ['id', 'nama', 'status']  
+        });  
+
+        if (resTm.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Pendaftaran Belum Dibuka' });
+        }
+        
+        const count = await DataPerangkingans.count({
+            where: {
+                nisn,
+                is_delete: 0
+            }
+        });
+        if(count > 1){
+            //hanya boleh daftar 1 sekolah di masing2 jalur
+           if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
+               return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
+           }
+        }
+
+         // Count existing entries with the same NISN that are not deleted
+         const cari = await DataPerangkingans.findOne({
+            where: {
+                nisn,
+                is_delete: 0
+            }
+         });
+
+
+        // Retrieve data from DataPendaftarModel
+        const pendaftar = await DataPendaftars.findOne({
+            where: {
+                id: decodeId(id_pendaftar),
+                is_delete: 0
+            },
+            attributes: ['id', 'status_domisili', 'kecamatan_id', 'nisn', 'nama_lengkap', 'lat', 'lng'] 
+        });
+
+        if (!pendaftar) {
+            return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
+        }
+
+       
+
+        //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka tidak boleh daftar 
+        if(pendaftar.status_domisili == 2){
+            if(pendaftar.jalur_pendaftaran_id != 4 || pendaftar.jalur_pendaftaran_id != 6){
+                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi' });
+            }
+        }
+
+         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka tidak boleh daftar 
+         if(pendaftar.status_domisili != 2){
+            if(pendaftar.jalur_pendaftaran_id != 4 || pendaftar.jalur_pendaftaran_id != 6){
+             return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi' });
+            }
+        }
+
+        if(jalur_pendaftaran_id == 5){
+            if(pendaftar.status_domisili != 1){
+
+            }
+        }
+
+        if(cari == null){
+            //cari zonasi untuk SMA
+            if(jalur_pendaftaran_id == 1){
+
+                const kecPendaftar = pendaftar.kecamatan_id.toString();
+
+                //tidak boleh jika tidak dalam zonasi
+                const cariZonasis = await SekolahZonasis.findOne({
+                    where: {
+                      id_sekolah: sekolah_tujuan_id,
+                      kode_wilayah_kec: kecPendaftar,
+                    }
+                  });
+            
+                  if (!cariZonasis) {
+                    return res.status(200).json({
+                      status: 0,
+                      message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
+                    });
+                  }
+
+            }
+
+        }
+
+        const data_file_tambahan = await FileTambahans.findAll({
+            where: {
+                id_jalur_pendaftaran: jalur_pendaftaran_id,
+                is_active: 1
+            }
+        });
+
+
+        const newPerangkingan = {
+            id_pendaftar,
+            nisn,
+        };
+
+        const data = {
+            id_: id_pendaftar, 
+            ...newPerangkingan, 
+            data_file_tambahan: data_file_tambahan // tambahkan properti baru
+        };
+
+        // Send success response
+        res.status(201).json({
+            status: 1,
+            message: 'Hasil pengecekan',
+            data: data
+        });
+
+    } catch (error) {
+        console.error('Error pengecekan:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat proses pengecekan'
+        });
+    }
 }
 
 // Function to handle POST request
