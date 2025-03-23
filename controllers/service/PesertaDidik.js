@@ -285,7 +285,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 nik: nik,
                 is_delete: 0
             },
-            attributes: ['id', 'kode_verifikasi', 'nisn'],
+            attributes: ['id', 'kode_verifikasi', 'nisn', 'is_verified'],
         });
 
         // console.log("Request body:", req.body);
