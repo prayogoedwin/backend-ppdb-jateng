@@ -1129,7 +1129,14 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
                 {  
                     model: DataUsers,  
                     as: 'diverifikasi_oleh',  
-                    attributes: ['id', 'nama']  
+                    attributes: ['id', 'nama'],
+                    include: [
+                        {
+                            model: SekolahTujuanModel,
+                            as: 'asal_sekolah_verifikator',
+                            attributes: ['id', 'nama', 'npsn']
+                        }
+                    ]
                 }  
             ],  
         });  
