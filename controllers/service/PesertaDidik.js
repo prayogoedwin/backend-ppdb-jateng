@@ -367,7 +367,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                     ]
                 });
 
-                const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
   
                 const data = {  
                     id_: id,  
