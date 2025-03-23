@@ -6,6 +6,8 @@ import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
+import SekolahTujuanModel from '../../models/master/SekolahTujuanModel.js';
+import DataUsers from '../../models/service/DataUsersModel.js';
 
 import axios from 'axios';
 import https from 'https';
@@ -19,10 +21,13 @@ import { getProvinsi, getKabupatenKota, getKecamatan, getDesaKelurahan } from '.
 import { response } from 'express';
 
 // Service function
-const getPesertaDidikByNisn = async (nisn) => {
+const getPesertaDidikByNisn = async (nisn, nik) => {
     try {
         const pesertaDidik = await DataPesertaDidiks.findOne({
-            where: { nisn },
+            where: { 
+                nisn,
+                nik, 
+            },
             include: [
                 {
                 model: Sekolah,
@@ -45,40 +50,11 @@ const getPesertaDidikByNisn = async (nisn) => {
 
         if (!pesertaDidik) {
 
-            // res.status(200).json({
-            //     status: 0,
-            //     message: 'NISN tidak ditemukan',
-            // });
             return false;
 
         }
 
         return pesertaDidik;
-
-        // if (!pesertaDidik) {
-        //     pesertaDidik = await DataPesertaDidiks.findOne({
-        //         where: { nik: nik },
-        //         include: [
-        //             {
-        //                 model: Sekolah,
-        //                 as: 'data_sekolah', // Tambahkan alias di sini
-        //                 attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
-        //                 include: [{
-        //                     model: BentukPendidikan,
-        //                     as: 'bentuk_pendidikan',
-        //                     attributes: ['id','nama']
-        //                 }]
-        //             },
-        //             {
-        //                 model: WilayahVerDapodik,
-        //                 as: 'data_wilayah',
-        //                 attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
-        //             }
-        //         ],
-        //     });
-        // }
-
-      
         
     } catch (error) {
         console.error(error);
@@ -287,29 +263,159 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
 };
 
 export const getPesertaDidikByNisnHandler = async (req, res) => {
-    const { nisn } = req.body;
+    const { nisn, nik } = req.body;
     try {
         if (!nisn) {
             return res.status(400).json({
                 status: 0,
-                message: 'NISN is required',
+                message: 'NISN wajib diisi',
+            });
+        }
+
+        if (!nik) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NIK wajib diisi',
             });
         }
 
         const cekPendaftar = await DataPendaftars.findOne({
+            attributes: ['id', 'kode_verifikasi', 'nisn'],
             where: {
                 nisn: nisn,
+                nik: nik,
                 is_delete: 0
             },
         });
 
+        // if (cekPendaftar.is_verified == 2) {
+        //     return res.status(200).json({
+        //         status: 2,
+        //         message: 'NISN Sudah Terdaftar Sebelumnya',
+        //         data: cekPendaftar.kode_verifikasi
+        //     });
+        // }
+
+
         if (cekPendaftar) {
-            return res.status(200).json({
-                status: 2,
-                message: 'NISN Sudah Terdaftar Sebelumnya',
-                data: cekPendaftar.kode_verifikasi
-            });
+            if(cekPendaftar.is_verified == 2){
+
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        }
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+  
+                const data = {  
+                    id_: id,  
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }  
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }  
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }  
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }  
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 1,
+                    message: 'NISN diperbolehkan untuk revisi data sementara',
+                    data: data
+                });
+
+            };
+
+            if(cekPendaftar.is_verified != 2){
+                return res.status(200).json({
+                    status: 0,
+                    message: 'NISN Sudah Terdaftar Sebelumnya',
+                    data: cekPendaftar.kode_verifikasi
+                 });
+            }
         }
+
+            
+
 
         const pesertaDidik = await getPesertaDidikByNisn(nisn);
 
@@ -317,6 +423,88 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             return res.status(200).json({
                 status: 0,
                 message: 'NISN tidak ditemukan'
+            });
+        }
+
+        // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
+
+        let dataKec = {};
+        let dataKabKota = {};
+        let dataProvinsi = {};
+
+        if (pesertaDidik.data_wilayah) {
+            dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        }
+
+        if (dataKec.mst_kode_wilayah) {
+            dataKabKota = await getKabupatenKota(dataKec.mst_kode_wilayah);
+        }
+
+        if (dataKabKota.mst_kode_wilayah) {
+            dataProvinsi = await getProvinsi(dataKabKota.mst_kode_wilayah);
+        }
+        
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil ditemukan',
+            // ss: dataKec,
+            data: {
+                ...pesertaDidik.toJSON(),
+                data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
+                data_wilayah_kabkota: dataKabKota, // Masukkan data wilayah ke dalam respons
+                data_wilayah_provinsi: dataProvinsi // Masukkan data wilayah ke dalam respons
+            }
+        });
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: err.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+};
+
+export const getPesertaDidikByNisnHandlerRevisi = async (req, res) => {
+    const { nisn, nik } = req.body;
+    try {
+        if (!nisn) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NISN wajib diisi',
+            });
+        }
+
+        if (!nik) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NIK wajib diisi',
+            });
+        }
+
+        const cekPendaftar = await DataPendaftars.findOne({
+            where: {
+                nisn: nisn,
+                nik: nik,
+                is_verified: 2,
+                is_delete: 0
+            },
+        });
+
+        if (!cekPendaftar) {
+            return res.status(200).json({
+                status: 2,
+                message: 'NISN tidak memiliki akses untuk update data saat ini',
+                data: cekPendaftar.kode_verifikasi
+            });
+        }
+
+        if (cekPendaftar) {
+            return res.status(200).json({
+                status: 2,
+                message: 'NISN ditemukan',
+                data: cekPendaftar.kode_verifikasi
             });
         }
 
@@ -388,14 +576,14 @@ export const getDataDukungByNIK = async (req, res) => {
         // const password = process.env.API_PASSWORD;
 
 
-        // Melakukan permintaan ke API untuk mendapatkan data anak miskin
-        // const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
-        //     username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
-        //     password: process.env.API_PASSWORD ,
-        //     nik: nik // Mengirimkan NIK dalam format JSON
-        // });
+        //Melakukan permintaan ke API untuk mendapatkan data anak miskin
+        const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
+            username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
+            password: process.env.API_PASSWORD ,
+            nik: nik // Mengirimkan NIK dalam format JSON
+        });
 
-        const response = false
+        // const response = false
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = null;
