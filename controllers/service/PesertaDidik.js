@@ -280,12 +280,12 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         }
 
         const cekPendaftar = await DataPendaftars.findOne({
-            attributes: ['id', 'kode_verifikasi', 'nisn'],
             where: {
                 nisn: nisn,
                 nik: nik,
                 is_delete: 0
             },
+            attributes: ['id', 'kode_verifikasi', 'nisn'],
         });
 
         // if (cekPendaftar.is_verified == 2) {
