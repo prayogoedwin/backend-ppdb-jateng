@@ -238,6 +238,23 @@ export const updateSekolahTujuanProfil = [
 
 
         try {
+
+            const countStatusZero = await Timelines.count({
+                where: {
+                    status: 0
+                }
+            });
+
+            if(countStatusZero > 0){
+
+                res.status(500).json({
+                    status: 0,
+                    message: 'Maaf sudah tidak bisa update data sekolah'
+                });
+
+            }
+
+            
             const resData = await SekolahTujuans.findOne({
                 where: {
                     id
