@@ -12,13 +12,13 @@ export const logAccess = async (req, res, next) => {
     //     akun = req.body.nisn
     // }
     // const akun = req.body?.nisn  || (req.user?.userId || null);
-    
+
     // const akun = req.user && req.user.userId ? req.user.userId : req.body.username;
     // if(akun == ''){
     //     akun = req.body.username
     // }
 
-    const akun = req.body.nisn || req.params.nisn || req.query.nisn || req.user.userId;
+    const akun = req.body.nisn || req.params.nisn || req.query.nisn || (req.user ? req.user.userId : null); // Hanya gunakan req.user.userId jika req.user ada
 
     try {
         const logData = {
