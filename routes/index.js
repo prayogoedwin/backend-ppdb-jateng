@@ -76,7 +76,7 @@ import { getDataPendaftarForVerif,
 import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
 
 //sekolah tujuan
-import { getSekolahTujuanAdmin, getSekolahTujuanAdminById, updateSekolahTujuanAdmin, getSekolahTujuanJurusanAdmin, getSekolahTujuanJurusanAdminById, updateSekolahTujuanJurusanAdmin } from "../controllers/service/admin/SekolahTujuan.js";
+import { getSekolahTujuanAdmin, getSekolahTujuanAdminById, updateSekolahTujuanAdmin, getSekolahTujuanJurusanAdmin, getSekolahTujuanJurusanAdminById, updateSekolahTujuanJurusanAdmin, updateSekolahTujuanProfil } from "../controllers/service/admin/SekolahTujuan.js";
 
 //users
 import { getUsers, getUsersPagination, getUserById, addUser, updateUser, softDeleteUser, resetPasswordById, resetLoggedInById, bulkUpdateIsLoginUsers, updateUserPassword } from "../controllers/service/admin/Users.js";
@@ -228,6 +228,9 @@ router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, 
 router.post('/admin-api/master/sekolah_tujuan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanAdmin);
 router.get('/admin-api/master/sekolah_tujuan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,getSekolahTujuanAdminById);
 router.post('/admin-api/master/sekolah_tujuan_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateSekolahTujuanAdmin);
+router.post('/admin-api/master/sekolah_profil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateSekolahTujuanProfil);
+
+
 
 router.post('/admin-api/master/sekolah_tujuan_jurusan', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanJurusanAdmin);
 router.get('/admin-api/master/sekolah_tujuan_jurusan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanJurusanAdminById);
