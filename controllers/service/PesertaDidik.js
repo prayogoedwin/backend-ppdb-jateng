@@ -288,6 +288,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             attributes: ['id', 'kode_verifikasi', 'nisn'],
         });
 
+        // console.log("Request body:", req.body);
+
         // if (cekPendaftar.is_verified == 2) {
         //     return res.status(200).json({
         //         status: 2,
@@ -417,7 +419,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             
 
 
-        const pesertaDidik = await getPesertaDidikByNisn(nisn);
+        const pesertaDidik = await getPesertaDidikByNisn(nisn, nik);
 
         if (!pesertaDidik) {
             return res.status(200).json({
