@@ -8,6 +8,7 @@ import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import SekolahTujuanModel from '../../models/master/SekolahTujuanModel.js';
 import DataUsers from '../../models/service/DataUsersModel.js';
+import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 
 import axios from 'axios';
 import https from 'https';
@@ -370,7 +371,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
   
                 const data = {  
-                    id_: id,  
+                    id_: encodeId(pendaftarDetail.id),    
                     ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
                 };  
                 delete data.id; // Remove original ID from the response  
