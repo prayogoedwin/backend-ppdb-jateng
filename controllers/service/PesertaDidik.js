@@ -324,22 +324,22 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                         {
                             model: WilayahVerDapodik,
                             as: 'data_wilayah',
-                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
                         },
                         {
                             model: WilayahVerDapodik,
                             as: 'data_wilayah_kec',
-                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
                         },
                         {
                             model: WilayahVerDapodik,
                             as: 'data_wilayah_kot',
-                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
                         },
                         {
                             model: WilayahVerDapodik,
                             as: 'data_wilayah_prov',
-                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
                         },
                         {
                             model: DataUsers,
