@@ -149,6 +149,9 @@ router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, 
 router.post("/api/servis/daftar_akun_spmb", ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftarTanpaFile);
 router.post("/api/servis/upload_data_dukung", ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
 
+router.post('/api/servis/revisi_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updatePendaftar);
+router.post('/api/servis/revisi_dokumen', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updateDokumen);
+
 
 //cari wilayah
 router.post('/api/servis/cari_batas_wilayah', ipWhitelistMiddleware, appKeyMiddleware, getBatasWlayah);

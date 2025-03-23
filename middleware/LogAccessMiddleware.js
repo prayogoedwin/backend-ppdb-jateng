@@ -11,7 +11,14 @@ export const logAccess = async (req, res, next) => {
     // if(akun == ''){
     //     akun = req.body.nisn
     // }
-    const akun = req.body?.nisn  || (req.user?.userId || null);
+    // const akun = req.body?.nisn  || (req.user?.userId || null);
+    
+    // const akun = req.user && req.user.userId ? req.user.userId : req.body.username;
+    // if(akun == ''){
+    //     akun = req.body.username
+    // }
+
+    const akun = req.body.nisn || req.params.nisn || req.query.nisn || req.user.userId;
 
     try {
         const logData = {

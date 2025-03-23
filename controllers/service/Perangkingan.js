@@ -3592,19 +3592,8 @@ export const cekPerangkingan = async (req, res) => {
         });
         if(count > 1){
             //hanya boleh daftar 1 sekolah di masing2 jalur
-           if (cari.sekolah_tujuan_id == sekolah_tujuan_id) {
-               return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
-           }
+            return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
         }
-
-         // Count existing entries with the same NISN that are not deleted
-         const cari = await DataPerangkingans.findOne({
-            where: {
-                nisn,
-                is_delete: 0
-            }
-         });
-
 
         // Retrieve data from DataPendaftarModel
         const pendaftar = await DataPendaftars.findOne({
@@ -3619,7 +3608,9 @@ export const cekPerangkingan = async (req, res) => {
             return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
         }
 
-       
+        if (!pendaftar.is_verified == 2) {
+            return res.status(200).json({ status: 0, message: 'Status anda sedang diminta untuk revisi, tidak dapat mendaftar sekolah sekarang!' });
+        }
 
         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili == 2){
@@ -3636,34 +3627,32 @@ export const cekPerangkingan = async (req, res) => {
             }
         }
 
-        if(jalur_pendaftaran_id == 5){
-            if(pendaftar.status_domisili != 1){
+        if(pendaftar.is_tidak_sekolah != 1 || pendaftar.is_anak_panti != 1 || pendaftar.is_anak_keluarga_tidak_mampu != 1){
 
+            if(pendaftar.jalur_pendaftaran_id == 5 || pendaftar.jalur_pendaftaran_id == 9){
+                return res.status(200).json({ status: 0, message: 'Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anaka Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
             }
+
         }
 
-        if(cari == null){
-            //cari zonasi untuk SMA
-            if(jalur_pendaftaran_id == 1){
+        if(jalur_pendaftaran_id == 1){
 
-                const kecPendaftar = pendaftar.kecamatan_id.toString();
+            const kecPendaftar = pendaftar.kecamatan_id.toString();
 
-                //tidak boleh jika tidak dalam zonasi
-                const cariZonasis = await SekolahZonasis.findOne({
-                    where: {
-                      id_sekolah: sekolah_tujuan_id,
-                      kode_wilayah_kec: kecPendaftar,
-                    }
-                  });
-            
-                  if (!cariZonasis) {
-                    return res.status(200).json({
-                      status: 0,
-                      message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
-                    });
-                  }
-
-            }
+            //tidak boleh jika tidak dalam zonasi
+            const cariZonasis = await SekolahZonasis.findOne({
+                where: {
+                  id_sekolah: sekolah_tujuan_id,
+                  kode_wilayah_kec: kecPendaftar,
+                }
+              });
+        
+              if (!cariZonasis) {
+                return res.status(200).json({
+                  status: 0,
+                  message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
+                });
+              }
 
         }
 
@@ -3704,6 +3693,134 @@ export const cekPerangkingan = async (req, res) => {
 
 // Function to handle POST request
 export const createPerangkingan = async (req, res) => {
+
+    try {
+        const {
+            id_pendaftar,
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            jarak,
+            nisn,
+        } = req.body;
+
+        let id_pendaftar_decode = decodeId(id_pendaftar);
+
+         // Retrieve data from DataPendaftarModel
+         const pendaftar = await DataPendaftars.findOne({
+            where: {
+                id: id_pendaftar_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!pendaftar) {
+            return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
+        }
+
+
+        if (!pendaftar.is_verified == 2) {
+            return res.status(200).json({ status: 0, message: 'Status anda sedang diminta untuk revisi, tidak dapat mendaftar sekolah sekarang!' });
+        }
+
+        //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
+        if(pendaftar.status_domisili == 2){
+            //tidak boleh daftar jalur selain jalur mutasi dan domisili terdekat di SMK
+            if(pendaftar.jalur_pendaftaran_id != 4 || pendaftar.jalur_pendaftaran_id != 6){
+                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi pada SMA dan domisili terdekat SMK' });
+            }
+        }
+
+         //jika status domisili bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
+         if(pendaftar.status_domisili != 2){
+            //tidak bisa daftar jalur pendaftaran afirmasi sma 4 atau smk 6
+            if(pendaftar.jalur_pendaftaran_id == 4 || pendaftar.jalur_pendaftaran_id == 6){
+             return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi pada SMA dan domisili terdekat SMK' });
+            }
+        }
+
+        if(pendaftar.is_tidak_sekolah != 1 || pendaftar.is_anak_panti != 1 || pendaftar.is_anak_keluarga_tidak_mampu != 1){
+
+            if(pendaftar.jalur_pendaftaran_id == 5 || pendaftar.jalur_pendaftaran_id == 9){
+                return res.status(200).json({ status: 0, message: 'Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (Anak tidak sekolah, anak panti, atau anak dari keluarga tidak mampu yang terdaftar  pada BDT Jateng)' });
+            }
+
+        }
+
+        // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
+        const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0);
+
+        // Count existing entries with the same NISN that are not deleted
+        const count = await DataPerangkingans.count({
+            where: {
+                nisn,
+                is_delete: 0
+            }
+        });   
+        
+        if(count > 1){
+               return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
+        }
+
+
+        const no_pendaftaran = await generatePendaftaranNumber();
+
+        const newPerangkinganData = {
+            id_pendaftar: id_pendaftar_decode,
+            no_pendaftaran,
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+            nik: pendaftar.nik,
+            nama_lengkap: pendaftar.nama_lengkap,
+            tanggal_lahir: new Date(pendaftar.tanggal_lahir),
+            umur: calculateAge(pendaftar.tanggal_lahir),
+            tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
+            umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
+            jarak,
+            nilai_raport: pendaftar.nilai_raport_rata,
+            nilai_prestasi: pendaftar.nilai_prestasi,
+            nilai_akhir,
+            is_tidak_sekolah: pendaftar.is_tidak_sekolah,
+            is_anak_panti: pendaftar.is_anak_panti,
+            is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
+            is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
+            is_pip: pendaftar.is_pip,
+            created_at: new Date(), // Set the current date and time
+            created_by: id_pendaftar_decode,
+            created_by_ip: req.ip,
+        };
+
+        const newPerangkingan = await DataPerangkingans.create(newPerangkinganData);
+
+        const datas = {
+            ...newPerangkinganData,
+            id_pendaftar_: id_pendaftar, // Menambahkan ID ke dalam data yang dikembalikan
+            id_perangkingan_: encodeId(newPerangkingan.id), // Menambahkan ID ke dalam data yang dikembalikan
+
+           
+        }
+        delete datas.id_pendaftar; 
+
+        res.status(201).json({
+            status: 1,
+            message: 'Daftar berhasil dibuat',
+            data: datas
+        });
+    } catch (error) {
+        console.error('Error daftar:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat proses daftar'
+        });
+    }
+}
+
+// Function to handle POST request
+export const createPerangkingan_BAK = async (req, res) => {
 
     try {
         const {
