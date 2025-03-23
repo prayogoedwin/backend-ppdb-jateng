@@ -411,7 +411,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 return res.status(200).json({
                     status: 0,
                     message: 'NISN Sudah Terdaftar Sebelumnya',
-                    data: cekPendaftar.kode_verifikasi
+                    data: cekPendaftar
                  });
             }
         }
