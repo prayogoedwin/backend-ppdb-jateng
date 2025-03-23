@@ -270,10 +270,10 @@ export const updateSekolahTujuanProfil = async (req, res) => {
                 }
             });
     
-            // await clearCacheByKeyFunction('SekolahTujuanAdmin13');
-            // await clearCacheByKeyFunction('SekolahTujuanAdmin15');
-            // await clearCacheByKeyFunction('SekolahTujuans13');
-            // await clearCacheByKeyFunction('SekolahTujuans15');
+            await clearCacheByKeyFunction('SekolahTujuanAdmin13');
+            await clearCacheByKeyFunction('SekolahTujuanAdmin15');
+            await clearCacheByKeyFunction('SekolahTujuans13');
+            await clearCacheByKeyFunction('SekolahTujuans15');
 
             res.status(200).json({
                 status: 0,
@@ -293,73 +293,6 @@ export const updateSekolahTujuanProfil = async (req, res) => {
     }
 }
 
-// Uverif pendaftart
-export const updateSekolahTujuanProfil_ = [
-    async (req, res) => {
-        const { 
-            id, 
-            lat, 
-            lng,
-        } = req.body;
-
-
-        try {
-
-            const countStatusZero = await Timelines.count({
-                where: {
-                    status: 1
-                }
-            });
-
-            if(countStatusZero > 0){
-
-                res.status(200).json({
-                    status: 0,
-                    message: 'Maaf sudah tidak bisa update data sekolah'
-                });
-
-            }
-
-            
-            const resData = await SekolahTujuans.findOne({
-                where: {
-                    id
-                }
-            });
-
-            if (!resData) {
-                return res.status(400).json({ status: 0, message: 'Invalid id' });
-            }
-
-            await SekolahTujuans.update({
-                lat, 
-                lng,
-                updated_at: new Date(), // Set the current date and time
-                updated_by: req.user.userId, // Use user ID from token
-                updated_by_ip: req.ip
-            }, {
-                where: {
-                    id
-                }
-            });
-
-            await clearCacheByKeyFunction('SekolahTujuanAdmin13');
-            await clearCacheByKeyFunction('SekolahTujuanAdmin15');
-            await clearCacheByKeyFunction('SekolahTujuans13');
-            await clearCacheByKeyFunction('SekolahTujuans15');
-
-            res.status(200).json({
-                status: 1,
-                message: 'Update berhasil',
-            });
-        } catch (error) {
-            res.status(500).json({
-                status: 0,
-                message: error.message,
-            });
-        }
-    }
-];
 
 // Uverif pendaftart
 export const updateSekolahTujuanAdmin = [
