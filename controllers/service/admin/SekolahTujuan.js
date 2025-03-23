@@ -270,10 +270,15 @@ export const updateSekolahTujuanProfil = async (req, res) => {
                 }
             });
     
-            await clearCacheByKeyFunction('SekolahTujuanAdmin13');
-            await clearCacheByKeyFunction('SekolahTujuanAdmin15');
-            await clearCacheByKeyFunction('SekolahTujuans13');
-            await clearCacheByKeyFunction('SekolahTujuans15');
+            // await clearCacheByKeyFunction('SekolahTujuanAdmin13');
+            // await clearCacheByKeyFunction('SekolahTujuanAdmin15');
+            // await clearCacheByKeyFunction('SekolahTujuans13');
+            // await clearCacheByKeyFunction('SekolahTujuans15');
+
+            res.status(200).json({
+                status: 0,
+                message: 'Berhasil'
+            });
 
         }
 
