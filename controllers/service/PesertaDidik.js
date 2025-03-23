@@ -364,7 +364,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                                     attributes: ['id', 'nama']
                                 }
                             ]
-                        }
+                        },
                     ]
                 });
 
@@ -373,6 +373,15 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 const data = {  
                     id_: encodeId(pendaftarDetail.id),    
                     ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
                 };  
                 delete data.id; // Remove original ID from the response  
       
@@ -456,8 +465,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             data: {
                 ...pesertaDidik.toJSON(),
                 data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
-                data_wilayah_kabkota: dataKabKota, // Masukkan data wilayah ke dalam respons
-                data_wilayah_provinsi: dataProvinsi // Masukkan data wilayah ke dalam respons
+                data_wilayah_kot: dataKabKota, // Masukkan data wilayah ke dalam respons
+                data_wilayah_prov: dataProvinsi // Masukkan data wilayah ke dalam respons
             }
         });
     } catch (err) {

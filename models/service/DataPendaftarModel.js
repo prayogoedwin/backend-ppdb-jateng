@@ -326,7 +326,8 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     timestamps: false, // Nonaktifkan timestamps
 });
 // 
-DataPesertaDidiks.belongsTo(EzSekolahs, { as: 'data_sekolah', foreignKey: 'sekolah_asal_id',  targetKey: 'kode_wilayah' });
+
+//DataPesertaDidiks.belongsTo(EzSekolahs, { as: 'data_sekolah', foreignKey: 'sekolah_asal_id',  targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah', foreignKey: 'kelurahan_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kec', foreignKey: 'kecamatan_id', targetKey: 'kode_wilayah' });
 DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kot', foreignKey: 'kabkota_id', targetKey: 'kode_wilayah' });
