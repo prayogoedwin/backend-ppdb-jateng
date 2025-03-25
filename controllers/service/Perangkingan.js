@@ -4874,7 +4874,7 @@ export const cekPerangkingan = async (req, res) => {
 
          //jika status domisili bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
          if(pendaftar.status_domisili != 2){
-            if(pendaftar.jalur_pendaftaran_id != 4 || pendaftar.jalur_pendaftaran_id != 6){
+            if(pendaftar.jalur_pendaftaran_id != 4 && pendaftar.jalur_pendaftaran_id != 6){
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi pada SMA dan domisili terdekat SMK' });
             }
         }
