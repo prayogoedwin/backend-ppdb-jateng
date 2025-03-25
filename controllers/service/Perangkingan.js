@@ -4867,21 +4867,21 @@ export const cekPerangkingan = async (req, res) => {
         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili == 2){
             //tidak boleh daftar jalur selain jalur mutasi dan domisili terdekat di SMK
-            if(pendaftar.jalur_pendaftaran_id != 4 || pendaftar.jalur_pendaftaran_id != 6){
+            if(jalur_pendaftaran_id != 4 || jalur_pendaftaran_id != 6){
                 return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi pada SMA dan domisili terdekat SMK' });
             }
         }
 
          //jika status domisili bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
          if(pendaftar.status_domisili != 2){
-            if(pendaftar.jalur_pendaftaran_id != 4){
+            if(jalur_pendaftaran_id != 4){
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi' });
             }
         }
 
         if(pendaftar.is_tidak_sekolah != 1 || pendaftar.is_anak_panti != 1 || pendaftar.is_anak_keluarga_tidak_mampu != 1){
 
-            if(pendaftar.jalur_pendaftaran_id == 5 || pendaftar.jalur_pendaftaran_id == 9){
+            if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
                 return res.status(200).json({ status: 0, message: 'Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anaka Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
             }
 
