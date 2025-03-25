@@ -162,7 +162,7 @@ export const createPendaftar = async (req, res) => {
                     is_big_unregistered,
                     tanggal_kedatangan,
                     is_buta_warna,
-                    cek_list_dok
+            
                 } = req.body;
 
                 // Cek apakah NISN sudah terdaftar dan belum dihapus
@@ -251,7 +251,7 @@ export const createPendaftar = async (req, res) => {
                     email,
                     is_big_unregistered,
                     is_buta_warna,
-                    cek_list_dok
+         
               };
 
               //ini code kocak yak, tp ini untuk handla krn local sm server beda null wkwkwk
