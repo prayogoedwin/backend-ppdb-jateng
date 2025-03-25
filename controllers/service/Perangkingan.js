@@ -4867,15 +4867,15 @@ export const cekPerangkingan = async (req, res) => {
         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili == 2){
             //tidak boleh daftar jalur selain jalur mutasi dan domisili terdekat di SMK
-            if(jalur_pendaftaran_id != 4 && jalur_pendaftaran_id != 6){
-                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi pada SMA dan domisili terdekat SMK' });
+            if(jalur_pendaftaran_id != 4){
+                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi' });
             }
         }
 
          //jika status domisili bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
          if(pendaftar.status_domisili != 2){
-            if(jalur_pendaftaran_id != 4){
-             return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi' });
+            if(jalur_pendaftaran_id == 4){
+             return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi' });
             }
         }
 
