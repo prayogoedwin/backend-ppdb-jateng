@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import FormData from 'form-data';
+import Timelines from "../../models/service/TimelineModel.js";
 
 // Fungsi untuk generate password acak 5 karakter dari A-Z, 1-9
 const generateRandomPassword = () => {
@@ -232,6 +233,13 @@ export const verifikasiOtpUser = [
             const nameParts = fullName.trim().split(' ');
             // Mengambil kata pertama sebagai nama depan
 
+            const resTimeline = await Timelines.findOne({
+                attributes: ['id', 'nama', 'status'],
+                where: {
+                    id: 4,
+                },
+            });
+
             res.status(200).json({
                 status: 1,
                 message: 'Berhasil masuk',
@@ -241,7 +249,8 @@ export const verifikasiOtpUser = [
                     nama: nameParts[0],
                     nama_lengkap: fullName,
                     accessToken,
-                    refreshToken
+                    refreshToken,
+                    timline_dafatar_sekolah: resTimeline
                 }
             });
         } catch (error) {
