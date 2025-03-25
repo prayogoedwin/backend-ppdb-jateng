@@ -4929,7 +4929,7 @@ export const cekPerangkingan = async (req, res) => {
         };
 
         // Send success response
-        res.status(201).json({
+        return res.status(201).json({
             status: 1,
             message: 'Hasil pengecekan',
             data: data
@@ -4937,7 +4937,7 @@ export const cekPerangkingan = async (req, res) => {
 
     } catch (error) {
         console.error('Error pengecekan:', error);
-        res.status(500).json({
+        return res.status(500).json({
             status: 0,
             message: error.message || 'Terjadi kesalahan saat proses pengecekan'
         });
