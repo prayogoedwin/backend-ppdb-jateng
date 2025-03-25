@@ -48,7 +48,7 @@ export const updateDokumen = async (req, res) => {
             }
 
             // Daftar kolom yang diperbolehkan untuk update
-            const allowedColumns = ['dok_pakta_integritas', 'dok_kk', 'dok_suket_nilai_raport', 'dok_piagam'];
+            const allowedColumns = ['dok_pakta_integritas', 'dok_kk', 'dok_suket_nilai_raport', 'dok_piagam', 'dok_pto'];
             if (!allowedColumns.includes(kolom)) {
                 return res.status(400).json({ success: false, message: 'Kolom tidak valid' });
             }

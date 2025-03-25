@@ -48,7 +48,8 @@ const uploadFiles = upload.fields([
     { name: 'dok_pakta_integritas', maxCount: 1 },
     { name: 'dok_kk', maxCount: 1 },
     { name: 'dok_suket_nilai_raport', maxCount: 1 },
-    { name: 'dok_piagam', maxCount: 1 }
+    { name: 'dok_piagam', maxCount: 1 },
+    { name: 'dok_pto', maxCount: 1 }
 ]);
 
 //Generate Verification Code
@@ -545,13 +546,15 @@ export const uploadPendaftarFiles = async (req, res) => {
           const dok_kk = files?.dok_kk?.[0]?.filename ?? null;
           const dok_suket_nilai_raport = files?.dok_suket_nilai_raport?.[0]?.filename ?? null;
           const dok_piagam = files?.dok_piagam?.[0]?.filename ?? null;
+          const dok_pto = files?.dok_pto?.[0]?.filename ?? null;
 
           // Update database dengan file baru
           await pendaftar.update({
               dok_pakta_integritas,
               dok_kk,
               dok_suket_nilai_raport,
-              dok_piagam
+              dok_piagam,
+              dok_pto
           });
 
           res.status(200).json({
@@ -561,7 +564,8 @@ export const uploadPendaftarFiles = async (req, res) => {
                   dok_pakta_integritas,
                   dok_kk,
                   dok_suket_nilai_raport,
-                  dok_piagam
+                  dok_piagam,
+                  dok_pto
               }
           });
       } catch (error) {

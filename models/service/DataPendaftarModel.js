@@ -154,6 +154,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    dok_pto: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     is_tidak_sekolah: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -318,7 +322,16 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     keterangan_verifikator: {
         type: DataTypes.STRING,
         allowNull: true,
-    }
+    },
+    is_buta_warna: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    cek_list_dok: {
+        type: DataTypes.JSON,
+        allowNull: true,
+    },
+
     
     
 }, {
