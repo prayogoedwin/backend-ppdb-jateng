@@ -4919,7 +4919,7 @@ export const cekPerangkingan = async (req, res) => {
         const newPerangkingan = {
             id_pendaftar,
             nisn,
-            nama_lengkap
+            nama_lengkap: pendaftar.nama_lengkap
         };
 
         const data = {
