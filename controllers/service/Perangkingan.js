@@ -4842,7 +4842,7 @@ export const cekPerangkingan = async (req, res) => {
                 is_delete: 0
             }
         });
-        if(count > 1){
+        if(count >= 1){
             //hanya boleh daftar 1 sekolah di masing2 jalur
             return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
         }
