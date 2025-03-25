@@ -2707,7 +2707,7 @@ export const getPerangkingan_BAKS = async (req, res) => {
 }
 
 
-export const getPerangkingan = async (req, res) => {
+export const getPerangkinganBEBAS = async (req, res) => {
 
     try {
 
@@ -3958,7 +3958,7 @@ export const getPerangkingan = async (req, res) => {
     }
 }
 
-export const getPerangkinganGOOD = async (req, res) => {
+export const getPerangkingan = async (req, res) => {
 
     try {
 
