@@ -4839,7 +4839,7 @@ export const cekPerangkingan = async (req, res) => {
         const count = await DataPerangkingans.count({
             where: {
                 nisn,
-                is_delete: 0
+                is_deleted: 0
             }
         });
         if(count > 1){
