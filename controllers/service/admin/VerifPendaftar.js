@@ -1634,7 +1634,7 @@ export const updatePendaftarByUser = async (req, res) => {
                 umur_sertifikat: umur_sertifikat || 0,
                 nomor_sertifikat,
                 nilai_prestasi,
-                nilai_raport: nilai_raport_def,
+                nilai_raport: nilai_raport || nilai_raport_def,
                 nilai_raport_rata,
                 is_tidak_sekolah,
                 is_anak_panti,
@@ -1643,7 +1643,7 @@ export const updatePendaftarByUser = async (req, res) => {
                 is_pip,
                 is_verified:0,
                 updated_at: new Date(),
-                updated_by: nisn,
+                updated_by: decodedId,
 
             },
             {
