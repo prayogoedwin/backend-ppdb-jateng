@@ -93,3 +93,44 @@ export async function sendOtpToEmail(email, message) {
         };
     }
 }
+
+//SMA
+export const afirmasiSmaHelper = (key) => {
+    const data = {
+        is_anak_keluarga_miskin: 30,
+        is_anak_panti: 5,
+        is_tidak_sekolah: 5
+    };
+
+    return data[key] || 0; // Jika key tidak ditemukan, return 0
+};
+
+export const DomiRegHelper = (key) => {
+    const data = {
+        murni: 30,
+        prestasi: 0,
+    };
+
+    return data[key] || 0; // Jika key tidak ditemukan, return 0
+};
+
+//===================================================//
+
+//SMK
+export const afirmasiSmkHelper = (key) => {
+    const data = {
+        is_anak_keluarga_miskin: 10,
+        is_anak_panti: 3,
+        is_tidak_sekolah: 2
+    };
+
+    return data[key] || 0; // Jika key tidak ditemukan, return 0
+};
+export const DomiSmkHelper = (key) => {
+    const data = {
+        terdekat: 8,
+        anak_guru: 2,
+    };
+
+    return data[key] || 0; // Jika key tidak ditemukan, return 0
+};
