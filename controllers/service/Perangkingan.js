@@ -274,7 +274,7 @@ export const getPerangkinganDetail = async (req, res) => {
     }
 };
 
-export const getPerangkingan = async (req, res) => {
+export const getPerangkinganBAK = async (req, res) => {
 
     try {
 
@@ -1039,10 +1039,1240 @@ export const getPerangkingan = async (req, res) => {
                 limit: kuota_dom_murni_akhir
                 });
 
+                const modifiedData = [...rowsResData2, ...resData].map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                });
+
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                            item.jarak,
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                }
+
+        }else if(jalur_pendaftaran_id == 7){
+            //Jalur SMK Prestasi
+
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_prestasi_max = resJurSek.daya_tampung;
+                let kuota_prestasi_min = resJurSek.kuota_prestasi;
+    
+                //hitung total pendaftar domisili terdekat smk dulu,
+                const countTerdekat = (await DataPerangkingans.findAll({  
+                    where: {  
+                        jalur_pendaftaran_id: 6,
+                        sekolah_tujuan_id,  
+                        jurusan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    },
+                    limit: resJurSek.kuota_jarak_terdekat
+                })).length;
+
+                //hitung total pendaftar afirmasi smk dulu,
+                const countAfirmasi = (await DataPerangkingans.findAll({  
+                    where: {  
+                        jalur_pendaftaran_id: 9,
+                        sekolah_tujuan_id,  
+                        jurusan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition   
+                        // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                    },
+                    limit: resJurSek.kuota_afirmasi
+                })).length;
+
+                 //hitung total pendaftar domisili terdekat smk dulu,
+                 const countPrestasiKhusus = (await DataPerangkingans.findAll({  
+                    where: {  
+                        jalur_pendaftaran_id: 8,
+                        sekolah_tujuan_id,  
+                        jurusan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    },
+                    limit: resJurSek.kuota_prestasi_khusus
+                })).length;
+
+                // let kuota_prestasi = resJurSek.kuota_prestasi;
+                let kuota_prestasi = kuota_prestasi_max - (countTerdekat + countAfirmasi + countPrestasiKhusus);
+
+            
+                let kuota_prestasi_akhir; // Menggunakan let untuk scope blok  
+                if(kuota_prestasi >= kuota_prestasi_min){
+                    kuota_prestasi_akhir = kuota_prestasi;
+                }else{
+                    kuota_prestasi_akhir = kuota_prestasi_min;
+                }
+
+                const resData = await DataPerangkingans.findAll({
+                where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition  
+                    }, order: [
+                        ['nilai_akhir', 'DESC'], //nilai tertinggi
+                        ['umur', 'DESC'], //umur tertua
+                        // ['created_at', 'ASC'] // daftar sekolah terawal
+                    ],
+                    limit: kuota_prestasi_akhir
+                });
+                if (resData && resData.length > 0) {
+    
+                   
+                    const modifiedData = resData.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                        // return { ...rest, id: encodeId(id) };
+                    });
+
+
+                    if (is_pdf === 1) {
+                        // Generate PDF
+                        const docDefinition = {
+                            content: [
+                                { text: 'Perangkingan Pendaftaran', style: 'header' },
+                                { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                                { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                                { text: 'Data Perangkingan:', style: 'subheader' },
+                                {
+                                    table: {
+                                        // widths: ['auto', '*', '*', '*', '*', '*'],
+                                        body: [
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                            ...modifiedData.map((item, index) => [
+                                                index + 1,
+                                                item.no_pendaftaran,
+                                                item.nama_lengkap,
+                                                item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                                item.jarak,
+
+                                            ])
+                                        ]
+                                    }
+                                }
+                            ],
+                            styles: {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    margin: [0, 0, 0, 10]
+                                },
+                                subheader: {
+                                    fontSize: 14,
+                                    bold: true,
+                                    margin: [0, 10, 0, 5]
+                                }
+                            }
+                        };
+                    
+                        const pdfDoc = pdfMake.createPdf(docDefinition);
+                    
+                        // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                        pdfDoc.getBase64((data) => {
+                            const buffer = Buffer.from(data, 'base64');
+                            res.setHeader('Content-Type', 'application/pdf');
+                            res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                            res.send(buffer);
+                        });
+
+                    }else{
+
+                        res.status(200).json({
+                            'status': 1,
+                            'message': 'Data berhasil ditemukan',
+                            'data': modifiedData, // Return the found data
+                            'timeline': resTimeline
+                        });
+
+                    }
+
+                    
+
+                    
+                    
+    
+                   
+                } else {
+                    res.status(200).json({
+                        'status': 0,
+                        'message': 'Data kosong',
+                        'data': [], // Return null or an appropriate value when data is not found
+                        'timeline': resTimeline // Return the found data
+                    });
+                }
+        }else if(jalur_pendaftaran_id == 8){
+            //Jalur SMK Prestasi Khusus
+
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_prestasi_khusus = resJurSek.kuota_prestasi_khusus;
+
+                const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                }, order: [
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
+                    // ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_prestasi_khusus
+                });
+                
+                const modifiedData = resData.map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
+                    
+                });
+
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                            item.jarak,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                }
+
+        }else if(jalur_pendaftaran_id == 9){
+            //Jalur SMK Afirmasi
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_afirmasi = resJurSek.kuota_afirmasi;
+
+                let miskin = afirmasiSmkHelper('is_anak_keluarga_miskin');
+                let panti = afirmasiSmkHelper('is_anak_panti');
+                let ats = afirmasiSmkHelper('is_tidak_sekolah');
+                let jml = miskin + panti + ats;
+
+                let kuota_panti = Math.round((panti / jml) * kuota_afirmasi) || 0;
+                let kuota_ats = Math.round((ats / jml) * kuota_afirmasi) || 0;
+
+                //ATS
+                const resDataAts = await DataPerangkingans.findAndCountAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                        is_tidak_sekolah: '1',         
+                        // [Op.or]: [
+                        //     { is_anak_keluarga_tidak_mampu: '1' },
+                        //     { is_tidak_sekolah: '1' },
+                        //     { is_anak_panti: '1' }
+                        // ]               
+                    }, order: [
+                        ['umur', 'DESC'], //umur tertua
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
+                        // ['created_at', 'ASC'] // daftar sekolah terawal
+                    ],
+                    limit: kuota_panti
+                });
+
+                const rowsAtsR = resDataAts.rows; // Data hasil query
+                const totalAtsL = resDataAts.length || 0; // Total jumlah data setelah limit
+
+                //panti
+                const resDataPanti = await DataPerangkingans.findAndCountAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        jurusan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                        is_anak_panti: '1',          
+                    }, order: [
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
+                        ['umur', 'DESC'], //umur tertua
+                        // ['created_at', 'ASC'] // daftar sekolah terawal
+                    ],
+                    limit: kuota_ats
+                });
+
+                const rowsPantiR = resDataPanti.rows; // Data hasil query
+                const totalPatntiL = resDataPanti.length || 0; // Total jumlah data setelah limit
+
+
+                let kuota_akhir_afirmasi = kuota_afirmasi - (totalPatntiL + totalAtsL)
+
+                const resAtsIds = (rowsAtsR.rows || []).map((item) => item.id);
+                const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
+
+                //afirmasi murni miskin
+                const resDataMiskin = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                    is_anak_keluarga_tidak_mampu: '1',  
+                    id: { [Op.notIn]: [...resAtsIds, ...resPantiIds] } // Gabungkan ID ATS & Panti
+                                
+                }, order: [
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
+                    // ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_akhir_afirmasi
+                });
+
+                    // const modifiedData = [...rowsAtsR, ...rowsPantiR, ...resDataMiskin,].map(item => {
+                    //     const { id_pendaftar, id, ...rest } = item.toJSON();
+                    //     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // });
+
+                    const modifiedData = [...(rowsAtsR || []), ...(rowsPantiR || []), ...(resDataMiskin || [])].map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    });
+
+                    if (is_pdf === 1) {
+                        // Generate PDF
+                        const docDefinition = {
+                            content: [
+                                { text: 'Perangkingan Pendaftaran', style: 'header' },
+                                { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                                { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                                { text: 'Data Perangkingan:', style: 'subheader' },
+                                {
+                                    table: {
+                                        // widths: ['auto', '*', '*', '*', '*', '*'],
+                                        body: [
+                                            ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                            ...modifiedData.map((item, index) => [
+                                                index + 1,
+                                                item.no_pendaftaran,
+                                                item.nama_lengkap,
+                                                item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                                item.jarak,
+
+                                            ])
+                                        ]
+                                    }
+                                }
+                            ],
+                            styles: {
+                                header: {
+                                    fontSize: 18,
+                                    bold: true,
+                                    margin: [0, 0, 0, 10]
+                                },
+                                subheader: {
+                                    fontSize: 14,
+                                    bold: true,
+                                    margin: [0, 10, 0, 5]
+                                }
+                            }
+                        };
+                    
+                        const pdfDoc = pdfMake.createPdf(docDefinition);
+                    
+                        // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                        pdfDoc.getBase64((data) => {
+                            const buffer = Buffer.from(data, 'base64');
+                            res.setHeader('Content-Type', 'application/pdf');
+                            res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                            res.send(buffer);
+                        });
+
+                    }else{
+
+                        res.status(200).json({
+                            'status': 1,
+                            'message': 'Data berhasil ditemukan',
+                            'data': modifiedData, // Return the found data
+                            'timeline': resTimeline
+                        });
+
+                    }
+
+        }else{
+            
+            res.status(200).json({
+                'status': 0,
+                'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
+                'data': [], // Return null or an appropriate value when data is not found
+                'timeline': null // Return the found data
+            });
+
+        }
+
+   
+
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({ // Use 500 for server error
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+
+export const getPerangkingan = async (req, res) => {
+
+    try {
+
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+            is_pdf // New parameter
+        } = req.body;
+        
+        const resTimeline = await Timelines.findOne({
+            where: {
+                id: 6,
+            },
+        });
+
+        const currentDateTime = new Date().toLocaleString("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        });
+        
+        if(jalur_pendaftaran_id == 1){
+ 
+            //Jalur Zonasi Reguler SMA
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_zonasi_max = resSek.daya_tampung;
+            let kuota_zonasi_min = resSek.kuota_zonasi;
+
+             //hitung total pendaftar zonasi khusus
+             const countZonasiKhusus = (await DataPerangkingans.findAll({  
+                attributes: ['nisn'], // Pilih kolom yang diambil
+                where: {  
+                    jalur_pendaftaran_id: 2,
+                    sekolah_tujuan_id,  
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // Tidak daftar ulang
+                },
+                limit: resSek.kuota_zonasi_khusus
+            })).length;
+
+            let zonasi_jarak = kuota_zonasi_min - countZonasiKhusus;
+            //cari data rangking zonasi reguler (jarak)
+            const resDataZonasi = await DataPerangkingans.findAndCountAll({
+                attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Exclude 2 and 3
+                },
+                order: [
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Jarak terendah
+                    ['umur', 'DESC'] // Umur tertua
+                ],
+                limit: zonasi_jarak
+            });
+            
+            const rowsZonasiReg = resDataZonasi.rows; // Data hasil query
+            const totalZonasiReg = rowsZonasiReg.length; // Total jumlah data setelah limit
+
+            //hitung total pendaftar prestasi dulu
+            const countPrestasi = (await DataPerangkingans.findAll({  
+                attributes: ['nisn'], // Pilih kolom yang diambil
+                where: {  
+                    jalur_pendaftaran_id: 3,
+                    sekolah_tujuan_id,  
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                },
+                limit: resSek.kuota_prestasi
+            })).length;
+
+             //hitung total pendaftar afirmasi dulu
+             const countAfirmasi = (await DataPerangkingans.findAll({  
+                where: {  
+                    jalur_pendaftaran_id: 5,
+                    sekolah_tujuan_id,  
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                },
+                limit: resSek.kuota_afirmasi
+            })).length;
+
+             //hitung total pendaftar pto dulu
+             const countPto = (await DataPerangkingans.findAll({  
+                where: {  
+                    jalur_pendaftaran_id: 4,
+                    sekolah_tujuan_id,  
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                },
+                limit: resSek.kuota_afirmasi
+            })).length;
+
+            // let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
+            // let kuota_zonasi_nilai = kuota_zonasi_max - (totalZonasiReg + countZonasiKhusus) +  countPrestasi + countAfirmasi + countPto;
+
+            let kuota_terpakai = totalZonasiReg + countZonasiKhusus +  countPrestasi + countAfirmasi + countPto;
+
+            // let kuota_zonasi_nilai = kuota_zonasi_max - kuota_terpakai;
+            let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+
+            // const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
+            const resDataZonasiIds = (resDataZonasi.rows || []).map((item) => item.id);
+            const resZonasiNilai = await DataPerangkingans.findAll({
+                attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 },  // dinyatakan tidak daftar ulang
+                    id: { [Op.notIn]: resDataZonasiIds } // Hindari ID yang sudah ada di resDataZonasi
+                },
+                order: [
+                    ['nilai_akhir', 'DESC'],
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                    // ['umur', 'DESC'], 
+                    // ['created_at', 'ASC'] 
+                ],
+                limit: kuota_zonasi_nilai
+            });
+
+               
+            const combinedData = [
+                ...(rowsZonasiReg ? rowsZonasiReg.map(item => ({
+                    ...item.toJSON(),
+                    order_berdasar: "1"
+                })) : []), // Jika null, gunakan array kosong
+            
+                ...(resZonasiNilai ? resZonasiNilai.map(item => ({
+                    ...item.toJSON(),
+                    order_berdasar: "2"
+                })) : []) // Jika null, gunakan array kosong
+            ];
+
+            const modifiedData = combinedData.map(item => {
+                const { id_pendaftar, id, ...rest } = item;
+                return { 
+                    ...rest, 
+                    id: encodeId(id), 
+                    id_pendaftar: encodeId(id_pendaftar) 
+                };
+            });
+            
+            if (is_pdf === 1) {
+                // Generate PDF
+                const docDefinition = {
+                    content: [
+                        { text: 'Perangkingan Pendaftaran', style: 'header' },
+                        { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                        { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                        { text: 'Data Perangkingan:', style: 'subheader' },
+                        {
+                            table: {
+                                // widths: ['auto', '*', '*', '*', '*', '*'],
+                                body: [
+                                    ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                    ...modifiedData.map((item, index) => [
+                                        index + 1,
+                                        item.no_pendaftaran,
+                                        item.nama_lengkap,
+                                        item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                        item.jarak,
+                                    
+
+                                    ])
+                                ]
+                            }
+                        }
+                    ],
+                    styles: {
+                        header: {
+                            fontSize: 18,
+                            bold: true,
+                            margin: [0, 0, 0, 10]
+                        },
+                        subheader: {
+                            fontSize: 14,
+                            bold: true,
+                            margin: [0, 10, 0, 5]
+                        }
+                    }
+                };
+            
+                const pdfDoc = pdfMake.createPdf(docDefinition);
+            
+                // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                pdfDoc.getBase64((data) => {
+                    const buffer = Buffer.from(data, 'base64');
+                    res.setHeader('Content-Type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                    res.send(buffer);
+                });
+
+            }else{
+
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan',
+                    'data': modifiedData, // Return the found data
+                    'timeline': resTimeline
+                });
+
+            }
+
+
+            // res.status(200).json({
+            //     'status': 1,
+            //     'message': 'Data berhasil ditemukan',
+            //     'data': modifiedData, // Return the found data
+            //     'timeline' : resTimeline
+            // });
+            
+
+        }else if(jalur_pendaftaran_id == 2){
+            //Jalur Zonasi KHUSUS SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
+
+
+            const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 }// dinyatakan tidak daftar ulang
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                    
+                },
+                order: [
+                    ['umur', 'DESC'], //umur tertua
+                    ['nilai_akhir', 'DESC'], //jarak terendah  
+                    // ['created_at', 'ASC'] //daftar sekolah terawal
+                ],
+                limit: kuota_zonasi_khusus
+            });
+
+            if (resData) { 
+                // Check if resData is not null
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': resData // Return the found data
+                // });
+
+                const modifiedData = resData.map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    // return { ...rest, id: encodeId(id) };
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                });
+
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                            item.jarak,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                }
+
+
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData,
+                //     'timeline': resTimeline// Return the found data
+                // });
+
+
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
+                });
+            }
+
+        }else if(jalur_pendaftaran_id == 3){
+             //Jalur Prestasi SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_prestasi = resSek.kuota_prestasi;
+
+             const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+                    // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                },
+                order: [
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                    // ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_prestasi
+               
+            });
+
+            if (resData && resData.length > 0) {
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': resData // Return the found data
+                // });
 
                 
+                const modifiedData = resData.map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
+                });
 
-                const modifiedData = [...rowsResData2, ...resData].map(item => {
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                            item.jarak,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                }
+
+
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData,
+                //     'timeline': resTimeline // Return the found data
+                // });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
+                });
+            }
+
+
+        }else if(jalur_pendaftaran_id == 4){
+            //Jalur PTO / MutasiSMA 
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_pto = resSek.kuota_pto;
+
+            const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 } // yang tidak daftar ulang
+                },
+                order: [
+                    [literal('is_anak_guru_jateng DESC')], // Prioritaskan yang is_anak_guru_jateng = 1
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
+                    // ['created_at', 'ASC'] // Urutkan berdasarkan waktu pendaftaran (tercepat lebih dulu)
+                ],
+                limit: kuota_pto
+            });
+
+           if (resData && resData.length > 0) {
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': resData // Return the found data
+                // });
+
+
+                const modifiedData = resData.map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
+                });
+
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                            item.jarak,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                }
+
+
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData,
+                //     'timeline': resTimeline // Return the found data
+                // });
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
+                });
+            }
+
+        }else if(jalur_pendaftaran_id == 5){
+        //Jalur Afirmasi SMA
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+
+            let kuota_afirmasi = resSek.kuota_afirmasi;
+
+            const resData = await DataPerangkingans.findAll({
+            where: {
+                jalur_pendaftaran_id,
+                sekolah_tujuan_id,
+                is_delete: 0,
+                is_daftar_ulang: { [Op.ne]: 2 }, // tidak daftar ulang
+                // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                [Op.or]: [
+                    { is_anak_keluarga_tidak_mampu: '1' },
+                    { is_tidak_sekolah: '1' },
+                    { is_anak_panti: '1' }
+                ]
+            },
+            order: [
+                [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                ['umur', 'DESC'], //umur tertua
+                // ['created_at', 'ASC'] //daftar sekolah terawal
+            ],
+            limit: kuota_afirmasi
+           
+            });
+            if (resData) { // Check if resData is not null
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': resData // Return the found data
+                // });
+
+                const modifiedData = resData.map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // return { ...rest, id: encodeId(id) };
+                });
+
+                if (is_pdf === 1) {
+                    // Generate PDF
+                    const docDefinition = {
+                        content: [
+                            { text: 'Perangkingan Pendaftaran', style: 'header' },
+                            { text: `Jalur Pendaftaran: ${jalur_pendaftaran_id}`, style: 'subheader' },
+                            { text: `Data Per Tanggal: ${currentDateTime}`, style: 'subheader' },
+                            { text: 'Data Perangkingan:', style: 'subheader' },
+                            {
+                                table: {
+                                    // widths: ['auto', '*', '*', '*', '*', '*'],
+                                    body: [
+                                        ['No', 'ID Pendaftar', 'Nama Lengkap', 'Nilai Akhir', 'Jarak (m)'],
+                                        ...modifiedData.map((item, index) => [
+                                            index + 1,
+                                            item.no_pendaftaran,
+                                            item.nama_lengkap,
+                                            item.nilai_akhir >= 100 ? `***` : item.nilai_akhir,
+                                            item.jarak,
+
+                                        ])
+                                    ]
+                                }
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            },
+                            subheader: {
+                                fontSize: 14,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                            }
+                        }
+                    };
+                
+                    const pdfDoc = pdfMake.createPdf(docDefinition);
+                
+                    // Menggunakan `getBase64` agar bisa dikirim sebagai response buffer
+                    pdfDoc.getBase64((data) => {
+                        const buffer = Buffer.from(data, 'base64');
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', 'attachment; filename=perangkingan.pdf');
+                        res.send(buffer);
+                    });
+
+                }else{
+
+                    res.status(200).json({
+                        'status': 1,
+                        'message': 'Data berhasil ditemukan',
+                        'data': modifiedData, // Return the found data
+                        'timeline': resTimeline
+                    });
+
+                }
+
+
+                // res.status(200).json({
+                //     'status': 1,
+                //     'message': 'Data berhasil ditemukan',
+                //     'data': modifiedData, // Return the found data
+                //     'timeline': resTimeline
+                // });
+
+            } else {
+                res.status(200).json({
+                    'status': 0,
+                    'message': 'Data kosong',
+                    'data': [], // Return null or an appropriate value when data is not found
+                    'timeline': resTimeline // Return the found data
+                });
+            }
+        }else if(jalur_pendaftaran_id == 6){
+            //Jalur SMK Domisili Terdekat
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
+
+                let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
+
+                // murni
+                const resData = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                }, order: [
+                    ['is_anak_guru', 'DESC'],
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['umur', 'DESC'], //umur tertua
+                    // ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_jarak_terdekat
+                });
+
+                const modifiedData = resData.map(item => {
                     const { id_pendaftar, id, ...rest } = item.toJSON();
                     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                 });
