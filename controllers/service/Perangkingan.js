@@ -2252,6 +2252,7 @@ export const getPerangkingan = async (req, res) => {
                         id : jurusan_id,
                     }
                 });
+                
 
                 let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
 

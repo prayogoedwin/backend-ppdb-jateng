@@ -325,7 +325,7 @@ router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, app
 
 
 // Define the version as a constant
-const VERSION = '1.20.10';
+const VERSION = '1.20.11';
 const APPNAME = 'Backend PPDB';
 
 // // Create a GET route at '/' that sends the version as a JSON response
