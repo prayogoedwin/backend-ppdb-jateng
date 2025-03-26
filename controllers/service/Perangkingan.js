@@ -2264,7 +2264,7 @@ export const getPerangkingan = async (req, res) => {
                     is_delete: 0,
                     is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                 }, order: [
-                    ['is_anak_guru', 'DESC'],
+                    ['is_anak_guru_jateng', 'DESC'],
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['umur', 'DESC'], //umur tertua
                     // ['created_at', 'ASC'] // daftar sekolah terawal
