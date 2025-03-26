@@ -1,4 +1,5 @@
 import { check, validationResult } from 'express-validator';
+import { DomiSmkHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
@@ -4076,7 +4077,8 @@ export const getPerangkingan = async (req, res) => {
             // let kuota_zonasi_nilai = kuota_zonasi_max - kuota_terpakai;
             let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
 
-            const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
+            // const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
+            const resDataZonasiIds = (resDataZonasi.rows || []).map((item) => item.id);
             const resZonasiNilai = await DataPerangkingans.findAll({
                 attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
                 where: {
@@ -5032,7 +5034,7 @@ export const getPerangkingan = async (req, res) => {
                     });
 
                 }
-                
+
         }else if(jalur_pendaftaran_id == 9){
             //Jalur SMK Afirmasi
                 const resJurSek = await SekolahJurusan.findOne({
@@ -5044,37 +5046,16 @@ export const getPerangkingan = async (req, res) => {
 
                 let kuota_afirmasi = resJurSek.kuota_afirmasi;
 
-                let miskin = DomiSmkHelper('is_anak_keluarga_miskin');
-                let panti = DomiSmkHelper('is_anak_panti');
-                let ats = DomiSmkHelper('is_tidak_sekolah');
+                let miskin = afirmasiSmkHelper('is_anak_keluarga_miskin');
+                let panti = afirmasiSmkHelper('is_anak_panti');
+                let ats = afirmasiSmkHelper('is_tidak_sekolah');
                 let jml = miskin + panti + ats;
 
-                let kuota_miskin =  Math.round((miskin / jml) * kuota_afirmasi);
-                let kuota_panti =  Math.round((panti / jml) * kuota_afirmasi);
-                let kuota_ats =  Math.round((ats / jml) * kuota_afirmasi);
-
-
-
-                //afirmasi murni miskin
-                const resData = await DataPerangkingans.findAll({
-                where: {
-                    jalur_pendaftaran_id,
-                    sekolah_tujuan_id,
-                    jurusan_id,
-                    is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
-                    is_anak_keluarga_tidak_mampu: '1',  
-                                
-                }, order: [
-                    ['nilai_akhir', 'DESC'], //nilai tertinggi
-                    ['umur', 'DESC'], //umur tertua
-                    // ['created_at', 'ASC'] // daftar sekolah terawal
-                ],
-                limit: kuota_miskin
-                });
+                let kuota_panti = Math.round((panti / jml) * kuota_afirmasi) || 0;
+                let kuota_ats = Math.round((ats / jml) * kuota_afirmasi) || 0;
 
                 //ATS
-                const resData2 = await DataPerangkingans.findAll({
+                const resDataAts = await DataPerangkingans.findAndCountAll({
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -5082,11 +5063,11 @@ export const getPerangkingan = async (req, res) => {
                         is_delete: 0,
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                         is_tidak_sekolah: '1',         
-                        [Op.or]: [
-                            { is_anak_keluarga_tidak_mampu: '1' },
-                            { is_tidak_sekolah: '1' },
-                            { is_anak_panti: '1' }
-                        ]               
+                        // [Op.or]: [
+                        //     { is_anak_keluarga_tidak_mampu: '1' },
+                        //     { is_tidak_sekolah: '1' },
+                        //     { is_anak_panti: '1' }
+                        // ]               
                     }, order: [
                         ['umur', 'DESC'], //umur tertua
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
@@ -5095,8 +5076,11 @@ export const getPerangkingan = async (req, res) => {
                     limit: kuota_panti
                 });
 
+                const rowsAtsR = resDataAts.rows; // Data hasil query
+                const totalAtsL = resDataAts.length || 0; // Total jumlah data setelah limit
+
                 //panti
-                const resData3 = await DataPerangkingans.findAll({
+                const resDataPanti = await DataPerangkingans.findAndCountAll({
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -5110,9 +5094,42 @@ export const getPerangkingan = async (req, res) => {
                         // ['created_at', 'ASC'] // daftar sekolah terawal
                     ],
                     limit: kuota_ats
-                    });
+                });
 
-                    const modifiedData = [...resData, ...resData2, ...resData3,].map(item => {
+                const rowsPantiR = resDataPanti.rows; // Data hasil query
+                const totalPatntiL = resDataPanti.length || 0; // Total jumlah data setelah limit
+
+
+                let kuota_akhir_afirmasi = kuota_afirmasi - (totalPatntiL + totalAtsL)
+
+                const resAtsIds = (rowsAtsR.rows || []).map((item) => item.id);
+                const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
+
+                //afirmasi murni miskin
+                const resDataMiskin = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                    is_anak_keluarga_tidak_mampu: '1',  
+                    id: { [Op.notIn]: [...resAtsIds, ...resPantiIds] } // Gabungkan ID ATS & Panti
+                                
+                }, order: [
+                    ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
+                    // ['created_at', 'ASC'] // daftar sekolah terawal
+                ],
+                limit: kuota_akhir_afirmasi
+                });
+
+                    // const modifiedData = [...rowsAtsR, ...rowsPantiR, ...resDataMiskin,].map(item => {
+                    //     const { id_pendaftar, id, ...rest } = item.toJSON();
+                    //     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // });
+
+                    const modifiedData = [...(rowsAtsR || []), ...(rowsPantiR || []), ...(resDataMiskin || [])].map(item => {
                         const { id_pendaftar, id, ...rest } = item.toJSON();
                         return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                     });
