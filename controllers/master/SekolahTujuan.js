@@ -187,6 +187,7 @@ export const getSekolahTujuanBAK = async (req, res) => {
 export const getSekolahTujuan = async (req, res) => {  
     const nins = req.body.nisn;  
     const jalur_pendaftaran_id = req.body.jalur_pendaftaran_id;  
+    const kabkota = req.body.kabkota; 
   
     try {  
         if (jalur_pendaftaran_id == 1) {  
@@ -214,7 +215,7 @@ export const getSekolahTujuan = async (req, res) => {
             const resData = await SekolahTujuans.findAll({  
                 where: {  
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
-                    // //kode_wilayah_kec: cekPendaftar.kecamatan_id,
+                    kode_wilayah_kot: kabkota,
                     npsn: { [Op.in]: npsnList } // Use Op.in to filter by npsn
                 },  
                 // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
