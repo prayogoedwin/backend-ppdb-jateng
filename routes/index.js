@@ -214,7 +214,7 @@ router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddl
 //API Khusus Admin
 
 //cek log siswa
-router.post('/admin-api/log/cpd', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogSiswaLoggedIn); 
+router.post('/admin-api/log/lihat_log_cm', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogSiswaLoggedIn); 
 // log admin dan operator
 router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogAdminLoggedIn); 
 
