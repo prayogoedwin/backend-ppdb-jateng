@@ -23,6 +23,18 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    kode_wilayah_kec: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    kode_wilayah_kot: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    kode_wilayah_prov: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     bentuk_pendidikan_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
