@@ -356,6 +356,62 @@ export const getSekolahTujuan = async (req, res) => {
     }  
 }  
 
+export const getSekolahTujuanKabkota = async (req, res) => {  
+    const nins = req.body.nisn;  
+    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+    const kabkota = req.body.kabkota; 
+  
+    try {  
+       
+        const resData = await SekolahTujuans.findAll({  
+            where: {  
+                bentuk_pendidikan_id: bentuk_pendidikan_id,
+                kode_wilayah_kot: kabkota
+            },  
+            // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
+            attributes: [
+                'npsn', 
+                [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+            ]
+        });  
+
+        // Tambahkan properti nama_npsn ke setiap item dalam resData  
+        const formattedResData = resData.map(school => {  
+            return {  
+                ...school.dataValues,  
+                nama_npsn: `${school.nama} ${school.npsn}`  
+            };  
+        });  
+
+        if (formattedResData.length > 0) {  
+            res.status(200).json({  
+                'status': 1,  
+                'message': 'Data berhasil ditemukan',  
+                'data': formattedResData  
+            });  
+        } else {  
+            res.status(200).json({  
+                'status': 0,  
+                'message': 'Data kosong',  
+                'data': ''  
+          
+            });
+        }
+    } catch (error) {  
+        console.error(error);  
+        res.status(500).json({  
+            'status': 0,  
+            'message': 'Terjadi kesalahan pada server',  
+            'data': ''  
+        });  
+    }  
+} 
+
 export const getSekolahTujuanJurusanPublik = async (req, res) => {
 
         const resData = await SekolahJurusan.findAll({
