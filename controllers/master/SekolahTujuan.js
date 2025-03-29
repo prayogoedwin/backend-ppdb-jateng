@@ -53,7 +53,8 @@ export const getSekolahTujuanPublik = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('kuota_pto_persentase')), 'kuota_pto_persentase'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum capacity for each npsn
                    
-                ],  
+                ],
+                order_by: id,
                 group: ['npsn']  
                 
             });
@@ -388,6 +389,30 @@ export const getSekolahTujuanKabkota = async (req, res) => {
                 nama_npsn: `${school.nama} ${school.npsn}`  
             };  
         });  
+
+        // If bentuk_pendidikan_id is 15, fetch jurusan data  
+        if (req.body.bentuk_pendidikan_id == 15) {  
+            const jurusanData = await SekolahJurusan.findAll({  
+                where: {  
+                    id_sekolah_tujuan: formattedResData.map(school => school.id)  
+                },  
+                attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+            });  
+
+            // Format jurusan data  
+            const formattedJurusanData = jurusanData.map(jurusan => {  
+                return {  
+                    ...jurusan.dataValues,  
+                    id_sekolah_tujuan: jurusan.id_sekolah_tujuan  
+                };  
+            });  
+
+            // Combine school and jurusan data  
+            formattedResData.forEach(school => {  
+                school.jurusan = formattedJurusanData.filter(jurusan => jurusan.id_sekolah_tujuan === school.id);  
+            });  
+        }  
+
 
         if (formattedResData.length > 0) {  
             res.status(200).json({  
