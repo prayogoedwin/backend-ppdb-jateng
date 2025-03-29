@@ -54,7 +54,6 @@ export const getSekolahTujuanPublik = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum capacity for each npsn
                    
                 ],
-                order_by: id,
                 group: ['npsn']  
                 
             });
