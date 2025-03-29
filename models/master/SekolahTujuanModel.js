@@ -21,19 +21,19 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
     },
     kode_wilayah: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     kode_wilayah_kec: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     kode_wilayah_kot: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     kode_wilayah_prov: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     bentuk_pendidikan_id: {
         type: DataTypes.INTEGER,
