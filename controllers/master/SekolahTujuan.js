@@ -202,7 +202,7 @@ export const getSekolahTujuan = async (req, res) => {
             const resDataZ = await SekolahZonasis.findAll({  
                 where: {  
                     kode_wilayah_kec: cekPendaftar.kecamatan_id  
-                },  
+                },
                 attributes: ['npsn']  
             });
             // console.log("test:"+resDataZ);
@@ -287,7 +287,8 @@ export const getSekolahTujuan = async (req, res) => {
         } else {  
             const resData = await SekolahTujuans.findAll({  
                 where: {  
-                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id  
+                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                    kode_wilayah_kot: kabkota,
                 },  
                 // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
                 attributes: [
@@ -299,7 +300,9 @@ export const getSekolahTujuan = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
                 ],  
-                group: ['npsn']   
+                order: ['id'],
+                group: ['npsn'] 
+                  
             });  
   
             // Tambahkan properti nama_npsn ke setiap item dalam resData  
@@ -316,7 +319,8 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {  
                         id_sekolah_tujuan: formattedResData.map(school => school.id)  
                     },  
-                    attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                    attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
+                    order: ['id'],
                 });  
   
                 // Format jurusan data  
