@@ -21,12 +21,18 @@ export const LogSiswaLoggedIn = async (req, res) => {
         
         // const resData2 = 1;
         const resData2 = await AccessLogAdmin.findAll({
-            // where: {
-            //     akun: req.body.nisn
-            // }
             where: {
-                [Op.or]: [
-                    { akun: req.body.nisn }
+                [Op.and]: [
+                    {
+                        [Op.or]: [
+                            { akun: req.body.nisn }
+                        ]
+                    },
+                    {
+                        url: {
+                            [Op.not]: '/admin-api/log/lihat_log_cm' // Menambahkan kondisi untuk mengecualikan URL
+                        }
+                    }
                 ]
             }
         });
