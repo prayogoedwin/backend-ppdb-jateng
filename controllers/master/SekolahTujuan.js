@@ -378,7 +378,8 @@ export const getSekolahTujuanKabkota = async (req, res) => {
                 [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
                 [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
                 [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
-            ],  
+            ],
+            order_by: ['id'],
             group: ['npsn']   
         });  
 
@@ -395,8 +396,10 @@ export const getSekolahTujuanKabkota = async (req, res) => {
             const jurusanData = await SekolahJurusan.findAll({  
                 where: {  
                     id_sekolah_tujuan: formattedResData.map(school => school.id)  
-                },  
-                attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                },
+                
+                attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
+                order_by: ['id'],
             });  
 
             // Format jurusan data  
