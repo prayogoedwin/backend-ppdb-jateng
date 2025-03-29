@@ -340,6 +340,10 @@ const APPNAME = 'Backend PPDB';
 
 // Buat rute GET di '/version' yang mengirimkan HTML sebagai respons
 router.get('/api/version', (req, res) => {
+    // Mengatur header untuk mencegah caching
+    res.set('Cache-Control', 'no-store');
+
+    // Mengirimkan HTML sebagai respons
     res.send(`
         <!DOCTYPE html>
         <html lang="en">
@@ -355,7 +359,7 @@ router.get('/api/version', (req, res) => {
         </body>
         </html>
     `);
-});
+});;
 
 
 
