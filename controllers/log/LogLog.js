@@ -38,8 +38,13 @@ export const LogSiswaLoggedIn = async (req, res) => {
         });
 
 
-        // Menggabungkan resData dan resData2
+       // Menggabungkan resData dan resData2
         const combinedData = [...resData, ...resData2];
+
+        // Mengurutkan combinedData berdasarkan created_at
+        combinedData.sort((a, b) => {
+            return new Date(a.created_at) - new Date(b.created_at); // Mengurutkan dalam urutan naik
+        });
 
         if (combinedData && combinedData.length > 0) { // Check if combinedData has data
             res.status(200).json({
@@ -53,24 +58,6 @@ export const LogSiswaLoggedIn = async (req, res) => {
                 'message': 'Data kosong',
             });
         }
-        
-        // if (resData && resData.length > 0) { // Check if resData has data
-
-        //     res.status(200).json({
-        //         'status': 1,
-        //         'message': 'Data berhasil ditemukan',
-        //         'data': resData,
-               
-        //     });
-
-        // }else{
-
-        //     res.status(200).json({
-        //         'status': 0,
-        //         'message': 'Data kosong',
-        //     });
-
-        // }
 
 
     } catch (err){
