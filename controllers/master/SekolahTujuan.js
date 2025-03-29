@@ -378,8 +378,9 @@ export const getSekolahTujuanKabkota = async (req, res) => {
                 [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
                 [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
             ],
-            order_by: ['id'],
-            group: ['npsn']   
+        
+            group: ['npsn'],  
+            order: ['id']
         });  
 
         // Tambahkan properti nama_npsn ke setiap item dalam resData  
@@ -398,7 +399,7 @@ export const getSekolahTujuanKabkota = async (req, res) => {
                 },
                 
                 attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
-                order_by: ['id'],
+                order: ['id']
             });  
 
             // Format jurusan data  
