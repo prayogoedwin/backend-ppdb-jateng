@@ -19,43 +19,52 @@ export const LogSiswaLoggedIn = async (req, res) => {
             }
         });
         
-        const resData2 = 1;
-        // const resData2 = await AccessLogAdmin.findAll({
-        //     // where: {
-        //     //     akun: req.body.nisn
-        //     // }
-        //     where: {
-        //         [Op.or]: [
-        //             { akun: req.body.nisn }
-        //         ]
-        //     }
-        // });
+        // const resData2 = 1;
+        const resData2 = await AccessLogAdmin.findAll({
+            // where: {
+            //     akun: req.body.nisn
+            // }
+            where: {
+                [Op.or]: [
+                    { akun: req.body.nisn }
+                ]
+            }
+        });
 
 
-        // const resData2 = await AccessLogPub.findAll({
-        //     where: {
-        //         akun: nisn
-        //     }
-        // });
-        
-        if (resData && resData.length > 0) { // Check if resData has data
+        // Menggabungkan resData dan resData2
+        const combinedData = [...resData, ...resData2];
 
+        if (combinedData && combinedData.length > 0) { // Check if combinedData has data
             res.status(200).json({
                 'status': 1,
                 'message': 'Data berhasil ditemukan',
-                'data': resData,
-                'data_admin': resData2,
-                // 'other_data': resData2,
+                'data': combinedData,
             });
-
-        }else{
-
+        } else {
             res.status(200).json({
                 'status': 0,
                 'message': 'Data kosong',
             });
-
         }
+        
+        // if (resData && resData.length > 0) { // Check if resData has data
+
+        //     res.status(200).json({
+        //         'status': 1,
+        //         'message': 'Data berhasil ditemukan',
+        //         'data': resData,
+               
+        //     });
+
+        // }else{
+
+        //     res.status(200).json({
+        //         'status': 0,
+        //         'message': 'Data kosong',
+        //     });
+
+        // }
 
 
     } catch (err){
