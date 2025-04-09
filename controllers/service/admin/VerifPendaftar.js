@@ -1161,9 +1161,12 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
   
             const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
   
+            const resDataPlain = resData.toJSON(); // Ubah ke plain object
+            resDataPlain.nik = '*'.repeat(16);     // Masking NIK jadi 16 bintang
+
             const data = {  
                 id_: id,  
-                ...resData.toJSON(), // Convert Sequelize instance to plain object  
+                ...resDataPlain.toJSON(), // Convert Sequelize instance to plain object  
             };  
             delete data.id; // Remove original ID from the response  
   
