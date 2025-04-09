@@ -477,6 +477,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
             password_:hashedPassword,
             email,
             is_big_unregistered,
+            created_at: new Date(), // Set the current date and time
       };
 
       if (tanggal_kedatangan !== "null" && tanggal_kedatangan !== null) {
