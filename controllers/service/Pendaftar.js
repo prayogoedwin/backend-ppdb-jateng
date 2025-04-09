@@ -611,12 +611,12 @@ export const getPendaftarforCetak = async (req, res) => {
                 },
                 {
                   model: SekolahAsalWilayah,
-                  as: 'data_wilayah_asal_sekolah',
+                  as: 'wilayah_sekolah_asal',
                   attributes: ['id','nama']
                 },
                 {
                   model: StatusDomisili,
-                  as: 'data_status_domisli',
+                  as: 'status_domisili_name',
                   attributes: ['id','nama']
                 },
             ],
