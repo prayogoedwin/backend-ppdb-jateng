@@ -3,6 +3,9 @@ import db from "../../config/Database.js";
 import EzSekolahs from '../master/SekolahModel.js';
 import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
 import StatusDomisilis from '../master/StatusDomisiliModel.js';
+import SekolahAsals from '../master/SekolahAsalModel.js';
+
+
 import { encodeId } from '../../middleware/EncodeDecode.js'; // Import fungsi encodeId
 import DataUsers from './DataUsersModel.js';
 
@@ -348,6 +351,7 @@ DataPesertaDidiks.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_prov', for
 DataPesertaDidiks.belongsTo(StatusDomisilis, { as: 'status_domisili_name', foreignKey: 'status_domisili', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(DataUsers, { as: 'diverifikasi_oleh', foreignKey: 'verified_by', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(DataUsers, { as: 'sedang_diproses_oleh', foreignKey: 'opened_by', targetKey: 'id' });
+DataPesertaDidiks.belongsTo(SekolahAsals, { as: 'wilayah_sekolah_asal', foreignKey: 'sekolah_asal_id', targetKey: 'id' });
 
 
 export default DataPesertaDidiks;

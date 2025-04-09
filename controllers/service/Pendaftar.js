@@ -2,6 +2,8 @@ import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import SekolahTujuan from "../../models/master/SekolahTujuanModel.js";
+import SekolahAsalWilayah from "../../models/master/SekolahAsalModel.js";
+import StatusDomisili from "../../models/master/StatusDomisiliModel.js";
 import GeoJsons from "../../models/master/GeoJsonModel.js";
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import { sendOtpToWhatsapp } from '../../helpers/HelpHelper.js';
@@ -606,7 +608,17 @@ export const getPendaftarforCetak = async (req, res) => {
                     model: WilayahVerDapodik,
                     as: 'data_wilayah_prov',
                     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
-                }
+                },
+                {
+                  model: SekolahAsalWilayah,
+                  as: 'wilayah_asal_sekolah',
+                  attributes: ['id','nama']
+                },
+                {
+                  model: StatusDomisili,
+                  as: 'wilayah_asal_sekolah',
+                  attributes: ['id','nama']
+                },
             ],
 
         });
