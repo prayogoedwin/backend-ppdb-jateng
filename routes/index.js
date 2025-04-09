@@ -65,6 +65,7 @@ import { getDataPendaftarForVerif,
     updateDokumen,
     updatePassworPendaftar,
     updatePendaftarByUser,
+    updatePendaftarToCapill,
 
 
     getDataPendaftarByWhere,
@@ -261,6 +262,7 @@ router.post('/admin-api/data/tolak_ajuan_akun', ipWhitelistMiddleware, appKeyMid
 router.post('/admin-api/data/batalkan_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/pendaftar_verifikasi_no_action', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftarTidakJadi);
 router.post('/admin-api/data/pendaftar_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftar);
+router.post('/admin-api/data/kirim_capil', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarToCapill);
 router.post('/admin-api/data/capil_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updatePendaftarCapil);
 
 router.post('/admin-api/data/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateDokumen);
