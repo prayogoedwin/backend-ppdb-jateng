@@ -44,10 +44,10 @@ const generatePendaftaranNumber_old = async () => {
     return code;
 };
 
-const generatePendaftaranNumber = async () => {
+const generatePendaftaranNumber = async (bentuk_pendidikan_id) => {
 
     let kodeProv = '03';
-    let kodeBentuk = '13';
+    let kodeBentuk = bentuk_pendidikan_id;
     const year = new Date().getFullYear().toString().slice(-2); // Ambil 2 digit terakhir tahun
     let code;
     let exists = true;
@@ -3374,7 +3374,7 @@ export const createPerangkingan = async (req, res) => {
                return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
         }
 
-        const no_pendaftaran = await generatePendaftaranNumber();
+        const no_pendaftaran = await generatePendaftaranNumber(bentuk_pendidikan_id);
 
         const newPerangkinganData = {
             id_pendaftar: id_pendaftar_decode,
