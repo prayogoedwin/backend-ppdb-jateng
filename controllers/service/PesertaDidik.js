@@ -436,6 +436,35 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             });
         }
 
+        let is_pondok;
+        is_pondok = false;
+
+        //jika peserta didik ada di pondok
+        // if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
+        // // if (pesertaDidik.bentuk_pendidikan_id == '56') {
+   
+        //     const sekolah_id = pesertaDidik.sekolah_id;
+        //     const cariPondok = await Sekolah.findOne({
+        //         attributes: ['id', 'npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
+        //         where: { 
+        //             sekolah_id
+        //         },
+        //     });
+
+        //     if (cariPondok) {
+        //         pesertaDidik.lat = cariPondok.lat;
+        //         pesertaDidik.lng = cariPondok.lng;
+        //         is_pondok = 1;
+        //     }else{
+        //         is_pondok = false;
+        //     }
+
+        // }else{
+
+        //     is_pondok = false;
+
+        // }
+
         // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
         // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
 
@@ -464,7 +493,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 ...pesertaDidik.toJSON(),
                 data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
                 data_wilayah_kot: dataKabKota, // Masukkan data wilayah ke dalam respons
-                data_wilayah_prov: dataProvinsi // Masukkan data wilayah ke dalam respons
+                data_wilayah_prov: dataProvinsi, // Masukkan data wilayah ke dalam respons
+                anak_pondok: is_pondok
             }
         });
     } catch (err) {
@@ -560,7 +590,7 @@ export const getPesertaDidikByNisnHandlerRevisi = async (req, res) => {
 
 //get anak miskin, get anak panti, get anak pondok by NIK
 export const getDataDukungByNIK = async (req, res) => {
-    const { nik, nisn } = req.body;
+    const { nik, nisn, anak_pondok } = req.body;
     try {
         if (!nik) {
             return res.status(400).json({
@@ -595,7 +625,7 @@ export const getDataDukungByNIK = async (req, res) => {
         // const response = false
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
-        const anakPondok = null;
+        const anakPondok = anak_pondok;
         const anakGuru = await DataAnakGuru.findOne({  where: { nisn_cpd: nisn } });
         
 
@@ -646,7 +676,7 @@ export const getDataDukungByNIK = async (req, res) => {
         if (anakPondok) {
             dataAnakPondok = {
                 anak_pondok: 1,
-                data_anak_pondok: anakPondok.toJSON()
+                data_anak_pondok: anakPondok
             };
         } else {
             dataAnakPondok = {

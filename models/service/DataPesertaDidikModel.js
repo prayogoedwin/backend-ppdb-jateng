@@ -148,7 +148,15 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
     checked_at: {
         type: DataTypes.DATE, // Tipe data untuk checked_at
         allowNull: true, // Atur sesuai kebutuhan, bisa false jika wajib diisi
-    }
+    },
+    bentuk_pendidikan_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    npsn: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 
 }, {
     freezeTableName: true,
