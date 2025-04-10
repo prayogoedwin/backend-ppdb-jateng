@@ -1,0 +1,20 @@
+{
+    "organisasi": [
+      {
+        "id": 1,
+        "nama_organisasi": "tidak ada organisasi",
+        "bobot": 0
+      },
+      {
+        "id": 2,
+        "nama_organisasi": "ketua osis",
+        "bobot": 1
+      },
+      {
+        "id": 3,
+        "nama_organisasi": "ketua pramuka / kepanduan",
+        "bobot": 0.5
+      }
+    ]
+  }
+  

@@ -144,8 +144,6 @@ const getPesertaDidikByNisnTgkNamaIbu = async (nisn, nik, tgl_lahir, nama_ibu) =
     }
 };
 
-
-
 export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
     const { nisn, nik, tgl_lahir, nama_ibu } = req.body;
     try {
@@ -368,7 +366,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                     ]
                 });
 
-                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
   
                 const data = {  
                     id_: encodeId(pendaftarDetail.id),    
@@ -560,7 +558,6 @@ export const getPesertaDidikByNisnHandlerRevisi = async (req, res) => {
     }
 };
 
-
 //get anak miskin, get anak panti, get anak pondok by NIK
 export const getDataDukungByNIK = async (req, res) => {
     const { nik, nisn } = req.body;
@@ -589,7 +586,7 @@ export const getDataDukungByNIK = async (req, res) => {
 
 
         //Melakukan permintaan ke API untuk mendapatkan data anak miskin
-        const response = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
+        const anakMiskin = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
             username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
             password: process.env.API_PASSWORD ,
             nik: nik // Mengirimkan NIK dalam format JSON
@@ -622,7 +619,7 @@ export const getDataDukungByNIK = async (req, res) => {
 
         // Memeriksa status respons dari API
         // if (response.data.status === false) {
-        if (response === false) {
+        if (anakMiskin === false) {
             dataAnakMiskin = {
                 anak_miskin: 0,
                 data_anak_miskin: []
@@ -630,7 +627,7 @@ export const getDataDukungByNIK = async (req, res) => {
         } else {
             dataAnakMiskin = {
                 anak_miskin: 1,
-                data_anak_miskin: response.data // Mengambil data dari respons API
+                data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
             };
         }
 

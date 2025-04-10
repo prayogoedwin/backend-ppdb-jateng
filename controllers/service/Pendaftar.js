@@ -164,6 +164,8 @@ export const createPendaftar = async (req, res) => {
                     is_big_unregistered,
                     tanggal_kedatangan,
                     is_buta_warna,
+                    organisasi_id,
+                    nilai_organisasi
             
                 } = req.body;
 
@@ -253,6 +255,8 @@ export const createPendaftar = async (req, res) => {
                     email,
                     is_big_unregistered,
                     is_buta_warna,
+                    organisasi_id,
+                    nilai_organisasi
          
               };
 
@@ -411,7 +415,9 @@ export const createPendaftarTanpaFile = async (req, res) => {
           is_diterima,
           email,
           is_big_unregistered,
-          tanggal_kedatangan
+          tanggal_kedatangan,
+          organisasi_id,
+          nilai_organisasi
       } = req.body;
 
       const existingPendaftar = await DataPendaftars.findOne({
@@ -477,6 +483,8 @@ export const createPendaftarTanpaFile = async (req, res) => {
             password_:hashedPassword,
             email,
             is_big_unregistered,
+            organisasi_id,
+            nilai_organisasi,
             created_at: new Date(), // Set the current date and time
       };
 
@@ -493,7 +501,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
       const newPendaftar = await DataPendaftars.create(insertData);
 
       const responseData = {
-        id: newPendaftar.id,
+        // id: newPendaftar.id,
         nisn: newPendaftar.nisn,
         nama_lengkap: newPendaftar.nama_lengkap,
         kode_verifikasi: newPendaftar.kode_verifikasi,

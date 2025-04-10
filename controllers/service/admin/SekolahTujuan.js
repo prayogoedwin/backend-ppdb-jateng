@@ -98,6 +98,58 @@ import Timelines from "../../../models/service/TimelineModel.js";
 //     }
 // }
 
+export const getSekolahTujuanByCabdin = async (req, res) => {  
+    const redis_key = 'SekolahTujuanCabdin' + req.body.cabdin_id;  
+    const cabdin_id = req.body.cabdin_id;  
+  
+    try {  
+        // const cacheNya = await redisGet(redis_key);  
+        const cacheNya = false; // Set to false for testing; replace with actual cache logic  
+  
+        if (cacheNya) {  
+            res.status(200).json({  
+                'status': 1,  
+                'message': 'Data diambil dari cache',  
+                'data': JSON.parse(cacheNya)  
+            });  
+        } else {  
+  
+            const resData = await SekolahTujuans.findAll({  
+                where: {  
+                    cabang_dinas: cabdin_id  
+                },  
+                attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan','cabang_dinas']  
+            });  
+  
+            if (resData.length > 0) {  
+
+                // Cache the new data  
+                await redisSet(redis_key, JSON.stringify(resData), process.env.REDIS_EXPIRE_TIME_MASTER);  
+
+                res.status(200).json({  
+                    'status': 1,  
+                    'message': 'Data berhasil ditemukan',  
+                    'data': resData  
+                });  
+
+            } else {  
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Data kosong',  
+                    'data': resData  
+                });  
+            }  
+        }  
+    } catch (err) {  
+        console.error('Error fetching data:', err); // Log the error for debugging  
+        res.status(500).json({  
+            'status': 0,  
+            'message': 'Terjadi kesalahan pada server',  
+            'data': ''  
+        });  
+    }  
+}  
+
 export const getSekolahTujuanAdmin = async (req, res) => {  
     const redis_key = 'SekolahTujuanAdmin' + req.body.bentuk_pendidikan_id;  
     const sekolah_id = req.body.sekolah_id;  

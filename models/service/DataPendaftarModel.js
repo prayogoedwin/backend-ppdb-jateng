@@ -334,6 +334,14 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.JSON,
         allowNull: true,
     },
+    organisasi_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    nilai_organisasi: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+    },
 
     
     
