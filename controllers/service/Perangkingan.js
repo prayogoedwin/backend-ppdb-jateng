@@ -143,10 +143,17 @@ export const getPerangkinganSaya = async (req, res) => {
 
         // }
 
-        const resTimeline = await Timelines.findOne({
+        // const resTimeline = await Timelines.findOne({
+        //     where: {
+        //         id: 6,
+        //     },
+        // });
+
+        const resTimeline = await Timelines.findAll({
             where: {
-                id: 6,
-            },
+                id: [4, 5, 6],
+                status: 1
+            }
         });
 
         // Check if data is found
