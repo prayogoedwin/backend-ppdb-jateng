@@ -171,9 +171,9 @@ export const getPerangkinganSaya = async (req, res) => {
                 status: 0,
                 message: 'Data kosong',
                 data: [],
-                timeline4: null,
-                timeline5: null,
-                timeline6: null
+                timeline4: timeline4 ? { id: timeline4.id, status: timeline4.status } : null,
+                timeline5: timeline5 ? { id: timeline5.id, status: timeline5.status } : null,
+                timeline6: timeline6 ? { id: timeline6.id, status: timeline6.status } : null
             });
         }
     } catch (err) {
