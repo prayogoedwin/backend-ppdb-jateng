@@ -501,7 +501,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
       const newPendaftar = await DataPendaftars.create(insertData);
 
       const responseData = {
-        // id: newPendaftar.id,
+        id: newPendaftar.id,
         nisn: newPendaftar.nisn,
         nama_lengkap: newPendaftar.nama_lengkap,
         kode_verifikasi: newPendaftar.kode_verifikasi,
