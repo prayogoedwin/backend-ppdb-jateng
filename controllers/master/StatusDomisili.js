@@ -30,7 +30,8 @@ export const getStatusDomisili = async (req, res) => {
         }else{
 
             const resData = await StatusDomisilis.findAll({
-                attributes: ['id', 'nama'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama'], // Specify the attributes to retrieve
+                order: [['id', 'ASC']]
             });
             if(resData.length > 0){
 
