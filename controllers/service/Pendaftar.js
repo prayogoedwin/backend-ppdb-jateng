@@ -632,15 +632,19 @@ export const getPendaftarforCetak = async (req, res) => {
 
         });
 
-        const data = {  
-          // id_: id,  
-          ...resData.toJSON(), // Convert Sequelize instance to plain object  
-        };  
-        // delete data.id; // Remove original ID from the response  
+  
         
-        data.nik = '*'.repeat(16); // Masking nik jadi 16 bintang
+      
 
-        if (data) { // Check if resData is not null
+        if (resData) { // Check if resData is not null
+
+            const data = {  
+              // id_: id,  
+              ...resData.toJSON(), // Convert Sequelize instance to plain object  
+            };  
+            // delete data.id; // Remove original ID from the response 
+
+            data.nik = '*'.repeat(16); // Masking nik jadi 16 bintang
             res.status(200).json({
                 'status': 1,
                 'message': 'Data berhasil ditemukan',
