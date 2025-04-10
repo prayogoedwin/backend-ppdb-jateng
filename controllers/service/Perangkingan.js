@@ -145,16 +145,16 @@ export const getPerangkinganSaya = async (req, res) => {
 
         // const resTimeline = await Timelines.findOne({
         //     where: {
-        //         id: 6,
+        //         id: 4,
         //     },
         // });
 
-        const resTimeline = await Timelines.findAll({
-            where: {
-                id: [4, 5, 6],
-                status: 1
-            }
-        });
+        const allTimelines = await Timelines.findAll();
+
+        const timeline4 = allTimelines.find(t => t.id === 4);
+        const timeline5 = allTimelines.find(t => t.id === 5);
+        const timeline6 = allTimelines.find(t => t.id === 6);
+
 
         // Check if data is found
         if (resData && resData.length > 0) {
@@ -162,14 +162,18 @@ export const getPerangkinganSaya = async (req, res) => {
                 status: 1,
                 message: 'Data berhasil ditemukan',
                 data: resDatas,
-                timeline: resTimeline
+                timeline4: timeline4 ? { id: timeline4.id, status: timeline4.status } : null,
+                timeline5: timeline5 ? { id: timeline5.id, status: timeline5.status } : null,
+                timeline6: timeline6 ? { id: timeline6.id, status: timeline6.status } : null
             });
         } else {
             res.status(200).json({
                 status: 0,
                 message: 'Data kosong',
                 data: [],
-                timeline: resTimeline
+                timeline4: null,
+                timeline5: null,
+                timeline6: null
             });
         }
     } catch (err) {
