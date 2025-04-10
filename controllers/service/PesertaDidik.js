@@ -33,7 +33,7 @@ const getPesertaDidikByNisn = async (nisn, nik) => {
                 {
                 model: Sekolah,
                 as: 'data_sekolah', // Tambahkan alias di sini
-                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id'],
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
                 include: [{
                     model: BentukPendidikan,
                     as: 'bentuk_pendidikan',
@@ -437,33 +437,33 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         }
 
         let is_pondok;
-        is_pondok = false;
+        //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
+        if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
 
-        //jika peserta didik ada di pondok
-        // if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
-        // // if (pesertaDidik.bentuk_pendidikan_id == '56') {
-   
-        //     const sekolah_id = pesertaDidik.sekolah_id;
-        //     const cariPondok = await Sekolah.findOne({
-        //         attributes: ['id', 'npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
-        //         where: { 
-        //             sekolah_id
-        //         },
-        //     });
+            pesertaDidik.lat = pesertaDidik.data_sekolah?.lat?.toString() || null;
+            pesertaDidik.lng = pesertaDidik.data_sekolah?.lng?.toString() || null;
+            is_pondok = 1;
+            // const sekolah_id = pesertaDidik.sekolah_id;
+            // const cariPondok = await Sekolah.findOne({
+            //     attributes: ['id', 'npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
+            //     where: { 
+            //         id:sekolah_id
+            //     },
+            // });
 
-        //     if (cariPondok) {
-        //         pesertaDidik.lat = cariPondok.lat;
-        //         pesertaDidik.lng = cariPondok.lng;
-        //         is_pondok = 1;
-        //     }else{
-        //         is_pondok = false;
-        //     }
+            // if (cariPondok) {
+            //     pesertaDidik.lat = pesertaDidik.data_sekolah.lat
+            //     pesertaDidik.lng = pesertaDidik.data_sekolah.lng;
+            //     is_pondok = 1;
+            // }else{
+            //     is_pondok = 0;
+            // }
 
-        // }else{
+        }else{
 
-        //     is_pondok = false;
+            is_pondok = 0;
 
-        // }
+        }
 
         // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
         // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
