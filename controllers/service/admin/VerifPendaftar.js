@@ -1638,6 +1638,7 @@ export const updatePendaftarByUser = async (req, res) => {
         is_anak_keluarga_tidak_mampu,
         is_anak_guru_jateng,
         is_pip,
+        is_buta_warna,
 
     } = req.body;
 
@@ -1721,6 +1722,7 @@ export const updatePendaftarByUser = async (req, res) => {
                 is_anak_keluarga_tidak_mampu,
                 is_anak_guru_jateng,
                 is_pip,
+                is_buta_warna,
                 is_verified:0,
                 updated_at: new Date(),
                 updated_by: decodedId,
