@@ -2142,8 +2142,51 @@ export const getPerangkingan = async (req, res) => {
                     id : sekolah_tujuan_id,
                 }
             });
-
+            
+            let daya_tampung = resSek.daya_tampung;
             let kuota_afirmasi = resSek.kuota_afirmasi;
+            let kuota_persentase_ats = 3;
+            let kuota_persentase_panti = 3;
+
+            let kuota_ats = Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0;
+            let kuota_panti = Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0;
+
+            let kuota_afirmasi_sisa = kuota_afirmasi - (kuota_ats-kuota_panti);
+
+            const resDataPanti = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 }, // tidak daftar ulang
+                    is_anak_keluarga_tidak_mampu: '0',
+                    is_anak_panti: '1',
+                    is_tidak_sekolah: '0', 
+                },
+                order: [
+                    [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['umur', 'DESC'], //umur tertua
+                    // ['created_at', 'ASC'] //daftar sekolah terawal
+                ],
+                limit: kuota_panti
+            });
+
+            const resDataAts = await DataPerangkingans.findAll({
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    is_delete: 0,
+                    is_daftar_ulang: { [Op.ne]: 2 }, // tidak daftar ulang
+                    is_anak_keluarga_tidak_mampu: '0',
+                    is_anak_panti: '0',
+                    is_tidak_sekolah: '1', 
+                },
+                order: [
+                    ['umur', 'DESC'], //umur tertua
+                    ['created_at', 'ASC'] //daftar sekolah terawal
+                ],
+                limit: kuota_ats
+            });
 
             const resData = await DataPerangkingans.findAll({
             where: {
@@ -2151,33 +2194,64 @@ export const getPerangkingan = async (req, res) => {
                 sekolah_tujuan_id,
                 is_delete: 0,
                 is_daftar_ulang: { [Op.ne]: 2 }, // tidak daftar ulang
-                // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
-                [Op.or]: [
-                    { is_anak_keluarga_tidak_mampu: '1' },
-                    { is_tidak_sekolah: '1' },
-                    { is_anak_panti: '1' }
-                ]
+                is_anak_keluarga_tidak_mampu: '1',
+                is_anak_panti: '0', // bukan anak panti
+                is_tidak_sekolah: '0', // bukan anak panti
+                // // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                // [Op.or]: [
+                //     { is_anak_keluarga_tidak_mampu: '1' },
+                //     { is_tidak_sekolah: '1' },
+                //     { is_anak_panti: '1' }
+                // ]
             },
             order: [
+                ['is_disabilitas', 'ASC'], //disabilitas 
                 [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
-                ['umur', 'DESC'], //umur tertua
                 // ['created_at', 'ASC'] //daftar sekolah terawal
             ],
-            limit: kuota_afirmasi
+            limit: kuota_afirmasi_sisa
            
             });
-            if (resData) { // Check if resData is not null
+            if (resData) { 
+                
+                // Check if resData is not null
                 // res.status(200).json({
                 //     'status': 1,
                 //     'message': 'Data berhasil ditemukan',
                 //     'data': resData // Return the found data
                 // });
 
-                const modifiedData = resData.map(item => {
-                    const { id_pendaftar, id, ...rest } = item.toJSON();
-                    return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
-                    // return { ...rest, id: encodeId(id) };
+                const combinedData = [
+                    ...(resDataPanti ? resDataPanti.map(item => ({
+                        ...item.toJSON(),
+                        order_berdasar: "1"
+                    })) : []), // Jika null, gunakan array kosong
+                
+                    ...(resDataAts ? resDataAts.map(item => ({
+                        ...item.toJSON(),
+                        order_berdasar: "2"
+                    })) : []), // Jika null, gunakan array kosong
+
+                    ...(resData ? resData.map(item => ({
+                        ...item.toJSON(),
+                        order_berdasar: "3"
+                    })) : []), // Jika null, gunakan array kosong
+                ];
+
+                const modifiedData = combinedData.map(item => {
+                    const { id_pendaftar, id, ...rest } = item;
+                    return { 
+                        ...rest, 
+                        id: encodeId(id), 
+                        id_pendaftar: encodeId(id_pendaftar) 
+                    };
                 });
+
+                // const modifiedData = resData.map(item => {
+                //     const { id_pendaftar, id, ...rest } = item.toJSON();
+                //     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                //     // return { ...rest, id: encodeId(id) };
+                // });
 
                 if (is_pdf === 1) {
                     // Generate PDF
