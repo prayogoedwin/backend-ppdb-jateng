@@ -2224,17 +2224,17 @@ export const getPerangkingan = async (req, res) => {
                 const combinedData = [
                     ...(resDataPanti ? resDataPanti.map(item => ({
                         ...item.toJSON(),
-                        order_berdasar: "1"
+                        order_berdasar: "3"
                     })) : []), // Jika null, gunakan array kosong
                 
                     ...(resDataAts ? resDataAts.map(item => ({
                         ...item.toJSON(),
-                        order_berdasar: "2"
+                        order_berdasar: "4"
                     })) : []), // Jika null, gunakan array kosong
 
                     ...(resData ? resData.map(item => ({
                         ...item.toJSON(),
-                        order_berdasar: "3"
+                        order_berdasar: "5"
                     })) : []), // Jika null, gunakan array kosong
                 ];
 
