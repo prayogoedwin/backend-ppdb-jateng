@@ -97,9 +97,9 @@ export async function sendOtpToEmail(email, message) {
 //SMA
 export const afirmasiSmaHelper = (key) => {
     const data = {
-        is_anak_keluarga_miskin: 30,
-        is_anak_panti: 5,
-        is_tidak_sekolah: 5
+        is_anak_keluarga_miskin: 26,
+        is_anak_panti: 3,
+        is_tidak_sekolah: 3
     };
 
     return data[key] || 0; // Jika key tidak ditemukan, return 0
@@ -119,9 +119,9 @@ export const DomiRegHelper = (key) => {
 //SMK
 export const afirmasiSmkHelper = (key) => {
     const data = {
-        is_anak_keluarga_miskin: 10,
+        is_anak_keluarga_miskin: 9,
         is_anak_panti: 3,
-        is_tidak_sekolah: 2
+        is_tidak_sekolah: 3
     };
 
     return data[key] || 0; // Jika key tidak ditemukan, return 0

@@ -2145,8 +2145,8 @@ export const getPerangkingan = async (req, res) => {
             
             let daya_tampung = resSek.daya_tampung;
             let kuota_afirmasi = resSek.kuota_afirmasi;
-            let kuota_persentase_ats = 3;
-            let kuota_persentase_panti = 3;
+            let kuota_persentase_ats = afirmasiSmaHelper('is_tidak_sekolah');
+            let kuota_persentase_panti = afirmasiSmaHelper('is_anak_panti');
 
             let kuota_ats = Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0;
             let kuota_panti = Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0;
