@@ -198,7 +198,7 @@ export const getPerangkinganDetail = async (req, res) => {
                 id: decodedIdPerangkingan, // Pastikan id_pendaftar adalah string
                 is_delete: 0
             },
-            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar'],
+            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
             include: [
                 {
                     model: SekolahTujuan,
@@ -1921,8 +1921,9 @@ export const getPerangkingan = async (req, res) => {
                 },
                 order: [
                     ['nilai_akhir', 'DESC'], //nilai tertinggi
+                    ['umur', 'DESC'], //umur tertua
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'],
-                    // ['created_at', 'ASC'] // daftar sekolah terawal
+                    ['created_at', 'ASC'] // daftar sekolah terawal
                 ],
                 limit: kuota_prestasi
                
@@ -2493,7 +2494,7 @@ export const getPerangkingan = async (req, res) => {
                     }, order: [
                         ['nilai_akhir', 'DESC'], //nilai tertinggi
                         ['umur', 'DESC'], //umur tertua
-                        // ['created_at', 'ASC'] // daftar sekolah terawal
+                        ['created_at', 'ASC'] // daftar sekolah terawal
                     ],
                     limit: kuota_prestasi_akhir
                 });
