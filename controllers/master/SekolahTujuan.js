@@ -47,15 +47,15 @@ export const getSekolahTujuanPublik = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi_persentase')), 'kuota_zonasi_persentase'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi')), 'kuota_zonasi_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi')), 'kuota_zonasi'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi_khusus_persentase')), 'kuota_zonasi_khusus_persentase'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi_khusus')), 'kuota_zonasi_khusus_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_zonasi_khusus')), 'kuota_zonasi_khusus'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('kuota_afirmasi_persentase')), 'kuota_afirmasi_persentase'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('kuota_afirmasi')), 'kuota_afirmasi_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_afirmasi')), 'kuota_afirmasi'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('kuota_prestasi_persentase')), 'kuota_prestasi_persentase'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('kuota_prestasi')), 'kuota_prestasi_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_prestasi')), 'kuota_prestasi'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('kuota_pto_persentase')), 'kuota_pto_persentase'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('kuota_pto')), 'kuota_pto_persentase'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('kuota_pto')), 'kuota_pto'], // Get the minimum capacity for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum capacity for each npsn
                    
                 ],
