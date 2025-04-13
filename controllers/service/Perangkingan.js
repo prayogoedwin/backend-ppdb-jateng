@@ -2461,7 +2461,7 @@ export const getPerangkingan = async (req, res) => {
                     limit: resJurSek.kuota_afirmasi
                 })).length;
 
-                 //hitung total pendaftar domisili terdekat smk dulu,
+                 //hitung total pendaftar prestasi khusus
                  const countPrestasiKhusus = (await DataPerangkingans.findAll({  
                     where: {  
                         jalur_pendaftaran_id: 8,
@@ -3428,6 +3428,7 @@ export const createPerangkingan = async (req, res) => {
             jurusan_id,
             jarak,
             nisn,
+            is_buta_warna,
         } = req.body;
 
         let id_pendaftar_decode = decodeId(id_pendaftar);
@@ -3490,6 +3491,7 @@ export const createPerangkingan = async (req, res) => {
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
             is_pip: pendaftar.is_pip,
             is_disabilitas: pendaftar.is_disabilitas,
+            is_buta_warna,
             created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
             created_by_ip: req.ip,

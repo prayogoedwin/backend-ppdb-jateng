@@ -163,7 +163,18 @@ const PerangkinganModels = db.define('ez_perangkingan', {
     daftar_ulang_at: {
         type: DataTypes.DATE,
         allowNull: true
-    }
+    },
+    is_disabilitas: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
+    },
+    is_buta_warna: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
+    },
+
 }, {
     freezeTableName: true,
     tableName: 'ez_perangkingan',
