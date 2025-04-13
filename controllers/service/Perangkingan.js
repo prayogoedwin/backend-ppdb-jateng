@@ -3370,6 +3370,7 @@ export const cekPerangkingan = async (req, res) => {
 
             const kecPendaftar = pendaftar.kecamatan_id.toString();
 
+            if(pendaftar.is_anak_pondok != 1){
             //tidak boleh jika tidak dalam zonasi
             const cariZonasis = await SekolahZonasis.findOne({
                 where: {
@@ -3384,6 +3385,7 @@ export const cekPerangkingan = async (req, res) => {
                   message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
                 });
               }
+            }
 
         }
 
