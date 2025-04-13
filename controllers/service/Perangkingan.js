@@ -2152,7 +2152,8 @@ export const getPerangkingan = async (req, res) => {
             let kuota_ats = Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0;
             let kuota_panti = Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0;
 
-            let kuota_afirmasi_sisa = kuota_afirmasi - (kuota_ats-kuota_panti);
+            console.log('kuota ats:'+kuota_ats)
+            console.log('kuota panti:'+kuota_panti)
 
             const resDataPanti = await DataPerangkingans.findAll({
                 where: {
@@ -2188,6 +2189,12 @@ export const getPerangkingan = async (req, res) => {
                 ],
                 limit: kuota_ats
             });
+
+            // let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length+resDataPanti.length);
+            let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
+
+            console.log('kuota kuota_afirmasi_sisa:'+kuota_afirmasi_sisa)
+
 
             const resData = await DataPerangkingans.findAll({
             where: {
