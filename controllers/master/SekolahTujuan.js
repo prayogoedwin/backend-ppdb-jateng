@@ -18,10 +18,11 @@ import { Sequelize, Op } from "sequelize";
 // }
 
 export const getSekolahTujuanPublik = async (req, res) => {
-    const redis_key = 'SekolahTujuansPublik'+req.body.bentuk_pendidikan_id;
+    // const redis_key = 'SekolahTujuansPublik'+req.body.bentuk_pendidikan_id;
+    const redis_key = 'SekolahTujuansPublik'+req.body.bentuk_pendidikan_id+req.body.kabkota;
     try {
-        // const cacheNya = await redisGet(redis_key);
-        const cacheNya = false;
+        const cacheNya = await redisGet(redis_key);
+        // const cacheNya = false;
         if (cacheNya) {
 
             res.status(200).json({
@@ -456,9 +457,10 @@ export const getSekolahTujuanJurusanPublik = async (req, res) => {
         const resData = await SekolahJurusan.findAll({
             where: {
                 id_sekolah_tujuan: req.body.id_sekolah_tujuan, // Filter dari EzSekolahTujuans
+                id_active: true
             },
             // attributes: ['id', 'npsn' ,'nama_jurusan', 'id_jurusan', 'daya_tampung'], // Ambil atribut hanya dari EzSekolahJurusan
-            attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_jarak_terdekat', 'kuota_afirmasi_persentase', 'kuota_afirmasi', 'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus'] // Specify the attributes to retrieve
+            attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_jarak_terdekat', 'kuota_afirmasi_persentase', 'kuota_afirmasi', 'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus', 'is_larang_buta_warna'] // Specify the attributes to retrieve
         });
 
 
