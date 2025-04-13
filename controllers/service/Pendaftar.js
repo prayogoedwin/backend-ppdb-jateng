@@ -515,7 +515,8 @@ export const createPendaftarTanpaFile = async (req, res) => {
         id: newPendaftar.id,
         nisn: newPendaftar.nisn,
         nama_lengkap: newPendaftar.nama_lengkap,
-        kode_verifikasi: newPendaftar.kode_verifikasi,
+        // kode_verifikasi: newPendaftar.kode_verifikasi,
+        kode_verifikasi: '******************',
       };
 
       // Kembalikan ID dan NISN
