@@ -457,7 +457,7 @@ export const getSekolahTujuanJurusanPublik = async (req, res) => {
         const resData = await SekolahJurusan.findAll({
             where: {
                 id_sekolah_tujuan: req.body.id_sekolah_tujuan, // Filter dari EzSekolahTujuans
-                id_active: true
+                is_active: true
             },
             // attributes: ['id', 'npsn' ,'nama_jurusan', 'id_jurusan', 'daya_tampung'], // Ambil atribut hanya dari EzSekolahJurusan
             attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_jarak_terdekat', 'kuota_afirmasi_persentase', 'kuota_afirmasi', 'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus', 'is_larang_buta_warna'] // Specify the attributes to retrieve
