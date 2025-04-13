@@ -422,7 +422,10 @@ export const createPendaftarTanpaFile = async (req, res) => {
           is_big_unregistered,
           tanggal_kedatangan,
           organisasi_id,
-          nilai_organisasi
+          nilai_organisasi,
+          kebutuhan_khusus_id,
+          kebutuhan_khusus
+
       } = req.body;
 
       const existingPendaftar = await DataPendaftars.findOne({
@@ -490,6 +493,9 @@ export const createPendaftarTanpaFile = async (req, res) => {
             is_big_unregistered,
             organisasi_id,
             nilai_organisasi,
+            is_disabilitas: kebutuhan_khusus_id ? 1 : 0,
+            kebutuhan_khusus_id,
+            kebutuhan_khusus,
             created_at: new Date(), // Set the current date and time
       };
 
