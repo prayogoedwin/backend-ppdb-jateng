@@ -1215,7 +1215,7 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
 }  
 
 export const verifikasiPendaftar = async (req, res) => {
-        const { id, is_verified, keterangan_verifikator, cek_list_dok} = req.body;
+        const { id, is_verified, keterangan_verifikator, cek_list_dok, is_tidak_boleh_domisili} = req.body;
 
         if (!id) {
             return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
@@ -1259,6 +1259,7 @@ export const verifikasiPendaftar = async (req, res) => {
                 {
                     is_verified,
                     keterangan_verifikator,
+                    is_tidak_boleh_domisili,
                     updated_at: new Date(), // Set the current date and time
                     updated_by: req.user.userId, // Extracted from token
                     verified_at: new Date(), // Set the current date and time
