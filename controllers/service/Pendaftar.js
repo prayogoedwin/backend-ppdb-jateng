@@ -165,7 +165,9 @@ export const createPendaftar = async (req, res) => {
                     tanggal_kedatangan,
                     is_buta_warna,
                     organisasi_id,
-                    nilai_organisasi
+                    nilai_organisasi,
+                    kebutuhan_khusus_id,
+                    kebutuhan_khusus,
             
                 } = req.body;
 
@@ -256,7 +258,10 @@ export const createPendaftar = async (req, res) => {
                     is_big_unregistered,
                     is_buta_warna,
                     organisasi_id,
-                    nilai_organisasi
+                    nilai_organisasi,
+                    is_disabilitas : kebutuhan_khusus_id ? 1 : 0,
+                    kebutuhan_khusus_id,
+                    kebutuhan_khusus,
          
               };
 

@@ -3336,8 +3336,8 @@ export const cekPerangkingan = async (req, res) => {
             }
         }
 
-         //jika status domisili bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
-         if(pendaftar.status_domisili != 2){
+        //jika status domisili bukan "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
+        if(pendaftar.status_domisili != 2){
             if(jalur_pendaftaran_id == 4){
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Perpindahan Tugas Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi (SMA)' });
             }
@@ -3356,6 +3356,10 @@ export const cekPerangkingan = async (req, res) => {
         }
 
         if(jalur_pendaftaran_id == 1){
+
+            if(pendaftar.is_tidak_boleh_domisili == 1){
+                return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili karena alasan tanggal kedatangan dan status nik pada kk' });
+            }
 
             const kecPendaftar = pendaftar.kecamatan_id.toString();
 
@@ -3485,6 +3489,7 @@ export const createPerangkingan = async (req, res) => {
             is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
             is_pip: pendaftar.is_pip,
+            is_disabilitas: pendaftar.is_disabilitas,
             created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
             created_by_ip: req.ip,

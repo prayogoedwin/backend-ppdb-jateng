@@ -342,7 +342,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.DOUBLE,
         allowNull: true,
     },
-
+    is_disabilitas: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kebutuhan_khusus_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    kebutuhan_khusus: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    is_tidak_boleh_domisili: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     
     
 }, {

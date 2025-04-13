@@ -157,7 +157,46 @@ const DataPesertaDidiks = db.define('ez_peserta_didik', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-
+    kebutuhan_khusus_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    nik_ibu: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    nik_ayah: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    nik_wali: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    kode_provinsi: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    provinsi: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    kode_kabupaten: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    kabupaten: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    kode_kecamatan: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    kecamatan: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
