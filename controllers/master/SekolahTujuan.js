@@ -204,38 +204,67 @@ export const getSekolahTujuan = async (req, res) => {
                 },  
             }); 
             
-            // Fetch npsn values from SekolahZonasis
-            const resDataZ = await SekolahZonasis.findAll({  
-                where: {  
-                    kode_wilayah_kec: cekPendaftar.kecamatan_id  
-                },
-                attributes: ['npsn']  
-            });
-            // console.log("test:"+resDataZ);
+            
 
-            // Extract npsn values from resDataZ
-            // const npsnList = resDataZ.map(s => s.npsn); // Assuming resDataZ is an array of objects
-            const npsnList = resDataZ.map(s => s.npsn).filter(npsn => npsn !== null); // Filter out null values
+            if(cekPendaftar.is_anak_pondok == 1){
 
-            // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
-            const resData = await SekolahTujuans.findAll({  
-                where: {  
-                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
-                    kode_wilayah_kot: kabkota,
-                    npsn: { [Op.in]: npsnList } // Use Op.in to filter by npsn
-                },  
-                // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
-                attributes: [
-                    'npsn', 
-                    [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
-                ],  
-                group: ['npsn']  
-            });
+                 // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
+                const resData = await SekolahTujuans.findAll({  
+                    where: {  
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
+                        kode_wilayah_kot: kabkota,
+                    },  
+                    // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
+                    attributes: [
+                        'npsn', 
+                        [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                    ],  
+                    group: ['npsn']  
+                });
+
+            }else{
+
+                // Fetch npsn values from SekolahZonasis
+                const resDataZ = await SekolahZonasis.findAll({  
+                    where: {  
+                        kode_wilayah_kec: cekPendaftar.kecamatan_id  
+                    },
+                    attributes: ['npsn']  
+                });
+                // console.log("test:"+resDataZ);
+
+                // Extract npsn values from resDataZ
+                // const npsnList = resDataZ.map(s => s.npsn); // Assuming resDataZ is an array of objects
+                const npsnList = resDataZ.map(s => s.npsn).filter(npsn => npsn !== null); // Filter out null values
+
+                 // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
+                const resData = await SekolahTujuans.findAll({  
+                    where: {  
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
+                        kode_wilayah_kot: kabkota,
+                        npsn: { [Op.in]: npsnList } // Use Op.in to filter by npsn
+                    },  
+                    // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
+                    attributes: [
+                        'npsn', 
+                        [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                    ],  
+                    group: ['npsn']  
+                });
+
+            }
+
+           
   
             // const resData = await SekolahTujuans.findAll({  
             //     where: {  

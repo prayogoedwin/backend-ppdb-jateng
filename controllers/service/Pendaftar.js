@@ -412,6 +412,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
           is_anak_panti,
           is_anak_keluarga_tidak_mampu,
           is_anak_guru_jateng,
+          is_anak_pondok,
           is_pip,
           created_by,
           saved_by,

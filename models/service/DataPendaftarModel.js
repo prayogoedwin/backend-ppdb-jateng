@@ -169,6 +169,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    is_anak_pondok: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     is_anak_keluarga_tidak_mampu: {
         type: DataTypes.INTEGER,
         allowNull: true,
