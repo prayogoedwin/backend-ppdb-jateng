@@ -3324,7 +3324,7 @@ export const cekPerangkingan = async (req, res) => {
                 id: decodeId(id_pendaftar),
                 is_delete: 0
             },
-            attributes: ['id', 'status_domisili', 'kecamatan_id', 'nisn', 'nama_lengkap', 'lat', 'lng', 'is_tidak_sekolah', 'is_anak_panti', 'is_anak_keluarga_tidak_mampu'] 
+            attributes: ['id', 'status_domisili', 'kecamatan_id', 'nisn', 'nama_lengkap', 'lat', 'lng', 'is_tidak_sekolah', 'is_anak_panti', 'is_anak_keluarga_tidak_mampu', 'is_anak_pondok', 'is_tidak_boleh_domisili'] 
         });
 
         if (!pendaftar) {
