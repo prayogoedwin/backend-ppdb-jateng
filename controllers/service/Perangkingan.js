@@ -3364,27 +3364,30 @@ export const cekPerangkingan = async (req, res) => {
 
         if(jalur_pendaftaran_id == 1){
 
+            console.log('is_tidak_boleh_domisili:'+pendaftar.is_tidak_boleh_domisili);
+
             if(pendaftar.is_tidak_boleh_domisili == 1){
                 return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili karena alasan tanggal kedatangan dan status nik pada kk' });
             }
 
             const kecPendaftar = pendaftar.kecamatan_id.toString();
 
+            console.log('anak pondok:'+pendaftar.is_anak_pondok);
             if(pendaftar.is_anak_pondok != 1){
-            //tidak boleh jika tidak dalam zonasi
-            const cariZonasis = await SekolahZonasis.findOne({
-                where: {
-                  id_sekolah: sekolah_tujuan_id,
-                  kode_wilayah_kec: kecPendaftar,
-                }
-              });
-        
-              if (!cariZonasis) {
-                return res.status(200).json({
-                  status: 0,
-                  message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
+                //tidak boleh jika tidak dalam zonasi
+                const cariZonasis = await SekolahZonasis.findOne({
+                    where: {
+                    id_sekolah: sekolah_tujuan_id,
+                    kode_wilayah_kec: kecPendaftar,
+                    }
                 });
-              }
+            
+                if (!cariZonasis) {
+                    return res.status(200).json({
+                    status: 0,
+                    message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
+                    });
+                }
             }
 
         }
