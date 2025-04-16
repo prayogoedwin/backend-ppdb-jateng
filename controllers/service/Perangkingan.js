@@ -1,5 +1,5 @@
 import { check, validationResult } from 'express-validator';
-import { DomiSmkHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper } from '../../helpers/HelpHelper.js';
+import { DomiSmkHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper, getTimelineSatuan } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
@@ -85,7 +85,7 @@ const calculateAgeInMonth_BAK = (birthdate) => {
 
 const calculateAge = (birthdate) => {
 
-    const resTm = getTimelineFromCache(4);
+    const resTm = getTimelineSatuan(4);
     
     // const today = new Date();
     const today = resTm.tanggal_buka;
