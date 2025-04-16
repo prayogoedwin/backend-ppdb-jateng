@@ -83,12 +83,20 @@ const calculateAgeInMonth_BAK = (birthdate) => {
 };
 
 
-const calculateAge = (birthdate) => {
+const calculateAge = async (birthdate) => {
 
-    const resTm = getTimelineSatuan(4);
+    const resTm = await getTimelineSatuan(4);
+
+    // console.log(resTm.tanggal_buka);
+
+    // if (!resTm || !resTm.tanggal_buka) {
+    //     console.error('tanggal_buka tidak ditemukan');
+    //     return null;
+    // }
+
     
     // const today = new Date();
-    const today = resTm.tanggal_buka;
+    const today = new Date(resTm.tanggal_buka);
     const birthDate = new Date(birthdate);
 
     const diffTime = today - birthDate; // Selisih dalam milidetik
@@ -3319,7 +3327,9 @@ export const cekPerangkingan = async (req, res) => {
         //     attributes: ['id', 'nama', 'status']  
         // }); 
         
-        const resTm = getTimelineSatuan(4);
+        const resTm = await getTimelineSatuan(4);
+
+        // console.log(resTm);
 
         if (resTm.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Pendaftaran Belum Dibuka' });
@@ -3342,7 +3352,7 @@ export const cekPerangkingan = async (req, res) => {
                 id: decodeId(id_pendaftar),
                 is_delete: 0
             },
-            attributes: ['id', 'status_domisili', 'kecamatan_id', 'nisn', 'nama_lengkap', 'lat', 'lng', 'is_tidak_sekolah', 'is_anak_panti', 'is_anak_keluarga_tidak_mampu', 'is_anak_pondok', 'is_tidak_boleh_domisili'] 
+            attributes: ['id', 'status_domisili', 'kecamatan_id', 'nisn', 'nama_lengkap', 'lat', 'lng', 'is_tidak_sekolah', 'is_anak_panti', 'is_anak_keluarga_tidak_mampu', 'is_anak_pondok', 'is_tidak_boleh_domisili', 'tanggal_lahir'] 
         });
 
         if (!pendaftar) {
@@ -3417,7 +3427,8 @@ export const cekPerangkingan = async (req, res) => {
             }
         });
 
-        const umur = calculateAge(pendaftar.tanggal_lahir);
+        console.log('tgl lahir:'+pendaftar.tanggal_lahir)
+        const umur = await calculateAge(pendaftar.tanggal_lahir);
         const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0)  + (pendaftar.nilai_organisasi || 0);
 
 
@@ -3503,7 +3514,7 @@ export const createPerangkingan = async (req, res) => {
 
         const no_pendaftaran = await generatePendaftaranNumber(bentuk_pendidikan_id);
 
-        const umur = calculateAge(pendaftar.tanggal_lahir);
+        const umur = await calculateAge(pendaftar.tanggal_lahir);
        
 
         const newPerangkinganData = {
