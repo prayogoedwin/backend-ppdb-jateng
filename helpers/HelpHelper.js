@@ -111,7 +111,7 @@ export const getTimelineSatuan = async (id) => {
         attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
     });
 
-    await redis.set(redis_key, JSON.stringify(resTm), 'EX', process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
+    await redisSet(redis_key, JSON.stringify(resTm), 'EX', process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
 
     return resTm;
 };

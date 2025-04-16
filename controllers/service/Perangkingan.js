@@ -3314,10 +3314,12 @@ export const cekPerangkingan = async (req, res) => {
             nisn,
         } = req.body;
 
-        const resTm = await Timelines.findOne({  
-            where: { id: 4 }, // Find the timeline by ID  
-            attributes: ['id', 'nama', 'status']  
-        });  
+        // const resTm = await Timelines.findOne({  
+        //     where: { id: 4 }, // Find the timeline by ID  
+        //     attributes: ['id', 'nama', 'status']  
+        // }); 
+        
+        const resTm = getTimelineSatuan(4);
 
         if (resTm.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Pendaftaran Belum Dibuka' });
@@ -3678,10 +3680,11 @@ export const daftarUlangPerangkingan = async (req, res) => {
         // Decode the ID
         const id_perangkingan_decode = decodeId(id_perangkingan);
 
-        const resTm = await Timelines.findOne({  
-            where: { id: 6 }, // Find the timeline by ID  
-            attributes: ['id', 'nama', 'status']  
-        });  
+        // const resTm = await Timelines.findOne({  
+        //     where: { id: 6 }, // Find the timeline by ID  
+        //     attributes: ['id', 'nama', 'status']  
+        // });  
+        const resTm = getTimelineSatuan(6);
 
         if (resTm.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka :)' });
