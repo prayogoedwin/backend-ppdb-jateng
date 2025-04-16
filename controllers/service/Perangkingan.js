@@ -17,6 +17,7 @@ import path from "path";
 import fs from "fs";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 import { Sequelize, Op, literal } from 'sequelize';
+import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
@@ -67,7 +68,7 @@ const generatePendaftaranNumber = async (bentuk_pendidikan_id) => {
     return code;
 };
 
-const calculateAge = (birthdate) => {
+const calculateAgeInMonth_BAK = (birthdate) => {
     const today = new Date();
     const birthDate = new Date(birthdate);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -79,6 +80,21 @@ const calculateAge = (birthdate) => {
     }
 
     return age;
+};
+
+
+const calculateAge = (birthdate) => {
+
+    const resTm = getTimelineFromCache(4);
+    
+    // const today = new Date();
+    const today = resTm.tanggal_buka;
+    const birthDate = new Date(birthdate);
+
+    const diffTime = today - birthDate; // Selisih dalam milidetik
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Konversi ke hari
+
+    return diffDays;
 };
 
 export const getPerangkinganSaya = async (req, res) => {
@@ -3399,11 +3415,17 @@ export const cekPerangkingan = async (req, res) => {
             }
         });
 
+        const umur = calculateAge(pendaftar.tanggal_lahir);
+        const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0)  + (pendaftar.nilai_organisasi || 0);
+
 
         const newPerangkingan = {
             id_pendaftar,
             nisn,
-            nama_lengkap: pendaftar.nama_lengkap
+            nama_lengkap: pendaftar.nama_lengkap,
+            umur: umur,
+            nilai_akhir: nilai_akhir
+
         };
 
         const data = {
@@ -3463,7 +3485,7 @@ export const createPerangkingan = async (req, res) => {
         }
 
         // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
-        const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0);
+        const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0)  + (pendaftar.nilai_organisasi || 0);
 
         // Count existing entries with the same NISN that are not deleted
         const count = await DataPerangkingans.count({
@@ -3479,6 +3501,9 @@ export const createPerangkingan = async (req, res) => {
 
         const no_pendaftaran = await generatePendaftaranNumber(bentuk_pendidikan_id);
 
+        const umur = calculateAge(pendaftar.tanggal_lahir);
+       
+
         const newPerangkinganData = {
             id_pendaftar: id_pendaftar_decode,
             no_pendaftaran,
@@ -3490,12 +3515,13 @@ export const createPerangkingan = async (req, res) => {
             nik: pendaftar.nik,
             nama_lengkap: pendaftar.nama_lengkap,
             tanggal_lahir: new Date(pendaftar.tanggal_lahir),
-            umur: calculateAge(pendaftar.tanggal_lahir),
+            umur: umur,
             tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
             umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
             jarak,
             nilai_raport: pendaftar.nilai_raport_rata,
             nilai_prestasi: pendaftar.nilai_prestasi,
+            nilai_organisasi: pendaftar.nilai_organisasi,
             nilai_akhir,
             is_tidak_sekolah: pendaftar.is_tidak_sekolah,
             is_anak_panti: pendaftar.is_anak_panti,

@@ -94,6 +94,26 @@ export async function sendOtpToEmail(email, message) {
     }
 }
 
+export const getTimelineSatuan = async (id) => {
+    const cacheKey = `timeline:byid:${id}`;
+
+    // Cek di Redis
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+        return JSON.parse(cached);
+    }
+
+    // Kalau tidak ada di cache, ambil dari DB
+    const resTm = await Timelines.findOne({
+        where: { id: id },
+        attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
+    });
+
+    await redis.set(cacheKey, JSON.stringify(resTm), 'EX', process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
+
+    return resTm;
+};
+
 //SMA
 export const afirmasiSmaHelper = (key) => {
     const data = {

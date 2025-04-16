@@ -8,7 +8,8 @@ dotenv.config();
 const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: process.env.DB_DRIVER
+    dialect: process.env.DB_DRIVER,
+    timezone: '+07:00', // Tambahkan ini agar waktu disimpan dalam WIB
     // pool: {  
     //     max: 5, // Maksimum koneksi  
     //     min: 0,  // Minimum koneksi  
