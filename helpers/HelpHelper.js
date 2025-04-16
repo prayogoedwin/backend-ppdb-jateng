@@ -96,7 +96,7 @@ export async function sendOtpToEmail(email, message) {
 }
 
 export const getTimelineSatuan = async (id) => {
-    const cacheKey = `timeline:byid:${id}`;
+    const redis_key = `timeline:byid:${id}`;
 
     // Cek di Redis
     const cached = await redisGet(redis_key);
