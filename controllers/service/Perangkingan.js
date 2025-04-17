@@ -3417,7 +3417,7 @@ export const cekPerangkingan = async (req, res) => {
                 if (!cariZonasis) {
                     return res.status(200).json({
                     status: 0,
-                    message: "Domisili Anda tidak termasuk dalam zonasi Sekolah Yang Anda Daftar. ",
+                    message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
                     });
                 }
             }
@@ -3519,7 +3519,6 @@ export const createPerangkingan = async (req, res) => {
         const no_pendaftaran = await generatePendaftaranNumber(bentuk_pendidikan_id);
 
         const umur = await calculateAge(pendaftar.tanggal_lahir);
-       
 
         const newPerangkinganData = {
             id_pendaftar: id_pendaftar_decode,
