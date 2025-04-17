@@ -3438,7 +3438,7 @@ export const cekPerangkingan = async (req, res) => {
         //pendaftaran
         if(jalur_pendaftaran_id == 5){
 
-            if(pendaftar.is_disabilitas == 1){
+            if(pendaftar.is_disabilitas == "1"){
 
                 data_file_tambahan_var = data_file_tambahan
 
@@ -3451,7 +3451,7 @@ export const cekPerangkingan = async (req, res) => {
 
             }else{
 
-                data_file_tambahan_var = '';
+                data_file_tambahan_var = [];
 
             }
 
