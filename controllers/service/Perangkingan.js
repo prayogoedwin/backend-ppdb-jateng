@@ -3426,21 +3426,32 @@ export const cekPerangkingan = async (req, res) => {
 
         
 
-        const data_file_tambahan = null;
+        let data_file_tambahan_var = null;
+
+        const data_file_tambahan = await FileTambahans.findAll({
+            where: {
+                id_jalur_pendaftaran: jalur_pendaftaran_id,
+                is_active: 1
+            }
+        });
+
         //pendaftaran
         if(jalur_pendaftaran_id == 5){
 
             if(pendaftar.is_disabilitas == 1){
 
-                data_file_tambahan = await FileTambahans.findAll({
-                    where: {
-                        id_jalur_pendaftaran: jalur_pendaftaran_id,
-                        is_active: 1
-                    }
-                });
+                data_file_tambahan_var = data_file_tambahan
+
+                // data_file_tambahan = await FileTambahans.findAll({
+                //     where: {
+                //         id_jalur_pendaftaran: jalur_pendaftaran_id,
+                //         is_active: 1
+                //     }
+                // });
+
             }else{
 
-                data_file_tambahan = null;
+                data_file_tambahan_var = '';
 
             }
 
@@ -3448,12 +3459,13 @@ export const cekPerangkingan = async (req, res) => {
             
         }else{
 
-             data_file_tambahan = await FileTambahans.findAll({
-                where: {
-                    id_jalur_pendaftaran: jalur_pendaftaran_id,
-                    is_active: 1
-                }
-            });
+            data_file_tambahan_var = data_file_tambahan;
+            //  data_file_tambahan = await FileTambahans.findAll({
+            //     where: {
+            //         id_jalur_pendaftaran: jalur_pendaftaran_id,
+            //         is_active: 1
+            //     }
+            // });
 
         }
 
