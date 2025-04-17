@@ -3486,7 +3486,7 @@ export const cekPerangkingan = async (req, res) => {
         const data = {
             id_: id_pendaftar, 
             ...newPerangkingan, 
-            data_file_tambahan: data_file_tambahan // tambahkan properti baru
+            data_file_tambahan: data_file_tambahan_var // tambahkan properti baru
         };
 
         // Send success response
