@@ -3424,12 +3424,38 @@ export const cekPerangkingan = async (req, res) => {
 
         }
 
-        const data_file_tambahan = await FileTambahans.findAll({
-            where: {
-                id_jalur_pendaftaran: jalur_pendaftaran_id,
-                is_active: 1
+        
+
+        const data_file_tambahan = null;
+        //pendaftaran
+        if(jalur_pendaftaran_id == 5){
+
+            if(pendaftar.is_disabilitas == 1){
+
+                data_file_tambahan = await FileTambahans.findAll({
+                    where: {
+                        id_jalur_pendaftaran: jalur_pendaftaran_id,
+                        is_active: 1
+                    }
+                });
+            }else{
+
+                data_file_tambahan = null;
+
             }
-        });
+
+            
+            
+        }else{
+
+             data_file_tambahan = await FileTambahans.findAll({
+                where: {
+                    id_jalur_pendaftaran: jalur_pendaftaran_id,
+                    is_active: 1
+                }
+            });
+
+        }
 
         console.log('tgl lahir:'+pendaftar.tanggal_lahir)
         const umur = await calculateAge(pendaftar.tanggal_lahir);
