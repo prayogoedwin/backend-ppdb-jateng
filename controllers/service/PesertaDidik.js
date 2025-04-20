@@ -1,5 +1,6 @@
 // controllers/PesertaDidik.js
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
+import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
@@ -25,6 +26,47 @@ import { response } from 'express';
 const getPesertaDidikByNisn = async (nisn, nik) => {
     try {
         const pesertaDidik = await DataPesertaDidiks.findOne({
+            where: { 
+                nisn,
+                nik, 
+            },
+            include: [
+                {
+                model: Sekolah,
+                as: 'data_sekolah', // Tambahkan alias di sini
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
+                include: [{
+                    model: BentukPendidikan,
+                    as: 'bentuk_pendidikan',
+                    attributes: ['id','nama']
+                }]
+            },
+            {
+                model: WilayahVerDapodik,
+                as: 'data_wilayah',
+                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+            }
+            ],
+         
+        });
+
+        if (!pesertaDidik) {
+
+            return false;
+
+        }
+
+        return pesertaDidik;
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+const getPesertaDidikAtsByNisn = async (nisn, nik) => {
+    try {
+        const pesertaDidik = await DataPesertaDidiksAts.findOne({
             where: { 
                 nisn,
                 nik, 
@@ -429,11 +471,26 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
         const pesertaDidik = await getPesertaDidikByNisn(nisn, nik);
 
+        
+
         if (!pesertaDidik) {
-            return res.status(200).json({
-                status: 0,
-                message: 'NISN tidak ditemukan'
-            });
+
+            const pesertaDidikAts = await getPesertaDidikAtsByNisn(nisn, nik);
+
+            if(!pesertaDidikAts){
+
+                 return res.status(200).json({
+                    status: 0,
+                    message: 'NISN tidak ditemukan'
+                });
+
+            }else{
+                
+                pesertaDidik = pesertaDidikAts;
+
+            }
+
+           
         }
 
         let is_pondok;
