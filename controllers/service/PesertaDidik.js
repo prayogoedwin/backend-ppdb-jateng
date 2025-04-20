@@ -482,7 +482,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             if(!pesertaDidikAts){
 
                 is_tidak_sekolah = 0;
-                 return res.status(200).json({
+                return res.status(200).json({
                     status: 0,
                     message: 'NISN tidak ditemukan'
                 });
@@ -490,7 +490,16 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 
             }else{
                 
-                pesertaDidik = pesertaDidikAts;
+                // pesertaDidik = pesertaDidikAts;
+                // is_tidak_sekolah = 1;
+
+                pesertaDidik = {
+                    ...pesertaDidikAts,
+                    data_sekolah: {
+                      nama: 'Terdaftar Sebagai Siswa ATS',
+                      npsn: '-----'
+                    }
+                };
                 is_tidak_sekolah = 1;
 
             }
