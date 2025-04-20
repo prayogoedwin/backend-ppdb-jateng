@@ -755,10 +755,10 @@ export const getDataDukungByNIK = async (req, res) => {
                 anak_miskin: 0,
                 data_anak_miskin: []
             };
-            
+
         } else {
 
-            if (anakMiskin.data.status === false) {
+            if (anakMiskin.data.status === true) {
                 dataAnakMiskin = {
                     anak_miskin: 1,
                     data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
