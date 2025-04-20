@@ -116,6 +116,20 @@ export const getTimelineSatuan = async (id) => {
     return resTm;
 };
 
+export const getStatusKepindahanByCode = (code) => {
+    const statusMap = {
+        0: 'TIDAK ADA / LEBIH DARI 1 TAHUN',
+        1: 'DALAM SATU DESA/KELURAHAN',
+        2: 'ANTAR DESA/KELURAHAN',
+        3: 'ANTAR KECAMATAN',
+        4: 'ANTAR KAB/KOTA',
+        5: 'ANTAR PROVINSI'
+    };
+
+    // Return the status based on the code, or a default message if not found
+    return statusMap[code] || 'Unknown Status';
+}
+
 //SMA
 export const afirmasiSmaHelper = (key) => {
     const data = {

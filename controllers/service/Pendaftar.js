@@ -1,6 +1,7 @@
 import { check, validationResult } from 'express-validator';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
+import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import SekolahTujuan from "../../models/master/SekolahTujuanModel.js";
 import SekolahAsalWilayah from "../../models/master/SekolahAsalModel.js";
 import StatusDomisili from "../../models/master/StatusDomisiliModel.js";
@@ -437,6 +438,8 @@ export const createPendaftarTanpaFile = async (req, res) => {
           return res.status(400).json({ status: 0, message: "NISN sudah terdaftar." });
       }
 
+     
+
       // Generate kode verifikasi dan hash password
       const kode_verifikasi = await generateVerificationCode();
       const hashedPassword = await bcrypt.hash("CPD123#=", 10);
@@ -500,9 +503,50 @@ export const createPendaftarTanpaFile = async (req, res) => {
             created_at: new Date(), // Set the current date and time
       };
 
-      if (tanggal_kedatangan !== "null" && tanggal_kedatangan !== null) {
-          insertData.tanggal_kedatangan = tanggal_kedatangan;
+      const dataCapil = await PemadananDukcapil.findOne({
+        where: { nik },
+      });
+
+      //ini tanggaal kedatangan lama
+      // if (tanggal_kedatangan !== "null" && tanggal_kedatangan !== null) {
+      //     insertData.tanggal_kedatangan = tanggal_kedatangan;
+      // }
+
+      if (dataCapil) {
+
+          if (dataCapil.status_kepindahan_anak !== 0) {
+              insertData.status_kepindahan_anak = dataCapil.status_kepindahan_anak;
+      
+              // Convert tgl_kepindahan_anak to Date format YMD
+              const date = new Date(dataCapil.tgl_kepindahan_anak); // Assuming tgl_kepindahan_anak is a valid date string
+              const formattedDate = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+      
+              insertData.tanggal_kedatangan = formattedDate;
+          }
+
+          if (dataCapil.status_kepindahan_ibu !== 0) {
+            insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
+    
+            // Convert tgl_kepindahan_anak to Date format YMD
+            const date = new Date(dataCapil.tgl_kepindahan_ibu); // Assuming tgl_kepindahan_anak is a valid date string
+            const formattedDateIbu = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+    
+            insertData.tanggal_kedatangan_ibu = formattedDateIbu;
+          }
+
+          if (dataCapil.status_kepindahan_ayah !== 0) {
+            insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
+    
+            // Convert tgl_kepindahan_anak to Date format YMD
+            const date = new Date(dataCapil.tgl_kepindahan_ayah); // Assuming tgl_kepindahan_anak is a valid date string
+            const formattedDateAyah = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+    
+            insertData.tanggal_kedatangan_ayah = formattedDateAyah;
+          }
+
       }
+
+
        //ini code kocak yak, tp ini untuk handla krn local sm server beda null wkwkwk
       //  if (tanggal_kedatangan == 'null' || tanggal_kedatangan == null) {
       //  }else{
