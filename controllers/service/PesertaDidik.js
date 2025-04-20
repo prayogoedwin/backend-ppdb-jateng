@@ -1,7 +1,6 @@
 // controllers/PesertaDidik.js
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
-import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
