@@ -755,10 +755,17 @@ export const getDataDukungByNIK = async (req, res) => {
                 data_anak_miskin: []
             };
         } else {
-            dataAnakMiskin = {
-                anak_miskin: 1,
-                data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
-            };
+            if (response.data.status === false) {
+                dataAnakMiskin = {
+                    anak_miskin: 1,
+                    data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
+                };
+            }else{
+                dataAnakMiskin = {
+                    anak_miskin: 0,
+                    data_anak_miskin: []
+                };
+            }
         }
 
         if (anakPanti) {
