@@ -755,7 +755,7 @@ export const getDataDukungByNIK = async (req, res) => {
                 data_anak_miskin: []
             };
         } else {
-            if (response.data.status === false) {
+            if (anakMiskin.data.status === false) {
                 dataAnakMiskin = {
                     anak_miskin: 1,
                     data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
