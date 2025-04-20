@@ -192,6 +192,11 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     created_at: {
         type: DataTypes.DATE,
         allowNull: true,
+        get() {
+            const rawValue = this.getDataValue('created_at');
+            // Return raw value tanpa konversi
+            return rawValue ? rawValue : null;
+          }
     },
     created_by: {
         type: DataTypes.STRING,
