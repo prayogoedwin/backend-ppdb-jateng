@@ -193,11 +193,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.DATE,
         allowNull: true,
         get() {
-            const rawValue = this.getDataValue('created_at');
-            // Biarkan Sequelize handle conversion, cukup format output
-            return rawValue ? rawValue.toISOString()
-              .replace('T', ' ')
-              .replace('.000Z', '') : null;
+            return this.getDataValue('created_at'); // Return langsung tanpa modifikasi
           }
     },
     created_by: {
