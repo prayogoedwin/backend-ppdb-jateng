@@ -382,7 +382,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    status_kepindahan_wali: {
+    tanggal_kedatangan_wali: {
         type: DataTypes.STRING,
         allowNull: true,
     },
