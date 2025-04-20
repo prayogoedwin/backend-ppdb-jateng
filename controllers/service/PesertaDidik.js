@@ -473,20 +473,25 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
         
 
+        let is_tidak_sekolah;
         if (!pesertaDidik) {
 
             const pesertaDidikAts = await getPesertaDidikAtsByNisn(nisn, nik);
+            is_tidak_sekolah = 0;
 
             if(!pesertaDidikAts){
 
+                is_tidak_sekolah = 0;
                  return res.status(200).json({
                     status: 0,
                     message: 'NISN tidak ditemukan'
                 });
-
+               
+                
             }else{
                 
                 pesertaDidik = pesertaDidikAts;
+                is_tidak_sekolah = 1;
 
             }
 
@@ -551,7 +556,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
                 data_wilayah_kot: dataKabKota, // Masukkan data wilayah ke dalam respons
                 data_wilayah_prov: dataProvinsi, // Masukkan data wilayah ke dalam respons
-                anak_pondok: is_pondok
+                anak_pondok: is_pondok,
+                ats:  is_tidak_sekolah,
             }
         });
     } catch (err) {
@@ -647,7 +653,7 @@ export const getPesertaDidikByNisnHandlerRevisi = async (req, res) => {
 
 //get anak miskin, get anak panti, get anak pondok by NIK
 export const getDataDukungByNIK = async (req, res) => {
-    const { nik, nisn, anak_pondok } = req.body;
+    const { nik, nisn, anak_pondok, ats } = req.body;
     try {
         if (!nik) {
             return res.status(400).json({
@@ -684,12 +690,15 @@ export const getDataDukungByNIK = async (req, res) => {
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
         const anakPondok = anak_pondok;
         const anakGuru = await DataAnakGuru.findOne({  where: { nisn_cpd: nisn } });
+
+        const anakTidakSekolah  = ats;
         
 
         let dataAnakMiskin = {};
         let dataAnakPanti = {};
         let dataAnakPondok = {};
         let dataAnakGuru = {};
+        let dataAnakTidakSekolah = {};
 
         // if (anakMiskin) {
         //     dataAnakMiskin = {
@@ -754,6 +763,18 @@ export const getDataDukungByNIK = async (req, res) => {
             };
         }
 
+        if (anakTidakSekolah) {
+            dataAnakTidakSekolah = {
+                ats: 1,
+                data_ats: anakTidakSekolah
+            };
+        } else {
+            dataAnakTidakSekolah = {
+                ats: 0,
+                data_ats: []
+            };
+        }
+
         res.status(200).json({
             status: 1,
             message: 'Data berhasil ditemukan',
@@ -761,7 +782,8 @@ export const getDataDukungByNIK = async (req, res) => {
                 ...dataAnakMiskin,
                 ...dataAnakPanti,
                 ...dataAnakPondok,
-                ...dataAnakGuru
+                ...dataAnakGuru,
+                ...dataAnakTidakSekolah
             }
         });
     } catch (err) {
