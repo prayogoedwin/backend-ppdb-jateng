@@ -194,22 +194,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
         get() {
             const rawValue = this.getDataValue('created_at');
-            if (!rawValue) return null;
-            
-            // Format manual tanpa library
-            const d = new Date(rawValue);
-            // Adjust untuk WIB (UTC+7)
-            d.setHours(d.getHours() + 7);
-            
-            return [
-              d.getFullYear(),
-              (d.getMonth() + 1).toString().padStart(2, '0'),
-              d.getDate().toString().padStart(2, '0')
-            ].join('-') + ' ' + [
-              d.getHours().toString().padStart(2, '0'),
-              d.getMinutes().toString().padStart(2, '0'),
-              d.getSeconds().toString().padStart(2, '0')
-            ].join(':');
+            // Biarkan Sequelize handle conversion, cukup format output
+            return rawValue ? rawValue.toISOString()
+              .replace('T', ' ')
+              .replace('.000Z', '') : null;
           }
     },
     created_by: {

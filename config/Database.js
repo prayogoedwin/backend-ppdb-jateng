@@ -9,10 +9,15 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DRIVER,
-    dialectOptions: {
-        useUTC: false // Non-aktifkan UTC
+    // dialectOptions: {
+    //     useUTC: false // Non-aktifkan UTC
+    //   },
+    // timezone: 'Asia/Jakarta',
+    ialectOptions: {
+        useUTC: true // Biarkan true untuk UTC
       },
-    timezone: 'Asia/Jakarta',
+      timezone: '+07:00', // WIB (UTC+7)
+
     // timezone: '+07:00', // Tambahkan ini agar waktu disimpan dalam WIB
     // pool: {  
     //     max: 5, // Maksimum koneksi  
