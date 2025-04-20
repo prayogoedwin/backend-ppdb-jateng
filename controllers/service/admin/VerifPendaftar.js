@@ -1640,6 +1640,8 @@ export const updatePendaftarByUser = async (req, res) => {
         is_anak_guru_jateng,
         is_pip,
         is_buta_warna,
+        organisasi_id,
+        nilai_organisasi,
 
     } = req.body;
 
@@ -1725,6 +1727,8 @@ export const updatePendaftarByUser = async (req, res) => {
                 is_pip,
                 is_buta_warna,
                 is_verified:0,
+                organisasi_id,
+                nilai_organisasi,
                 updated_at: new Date(),
                 updated_by: decodedId,
 
