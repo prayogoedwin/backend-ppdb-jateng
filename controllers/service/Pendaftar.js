@@ -515,7 +515,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
       if (dataCapil) {
 
           if (dataCapil.status_kepindahan_anak !== 0) {
-              insertData.status_kepindahan_anak = dataCapil.status_kepindahan_anak;
+              insertData.status_kepindahan = dataCapil.status_kepindahan_anak;
       
               // Convert tgl_kepindahan_anak to Date format YMD
               // const date = new Date(dataCapil.tgl_kepindahan_anak); // Assuming tgl_kepindahan_anak is a valid date string
