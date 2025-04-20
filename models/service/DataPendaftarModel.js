@@ -374,15 +374,15 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    status_kepindagan_ayah: {
+    status_kepindahan_ayah: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    status_kepindagan_wali: {
+    status_kepindahan_wali: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    tanggal_kedatangan_wali: {
+    status_kepindahan_wali: {
         type: DataTypes.STRING,
         allowNull: true,
     },
