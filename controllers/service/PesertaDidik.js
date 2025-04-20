@@ -561,7 +561,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             message: 'Data berhasil ditemukan',
             // ss: dataKec,
             data: {
-                ...pesertaDidik.toJSON(),
+                // ...pesertaDidik.toJSON(),
+                ...(typeof pesertaDidik.toJSON === 'function' ? pesertaDidik.toJSON() : pesertaDidik),
                 data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
                 data_wilayah_kot: dataKabKota, // Masukkan data wilayah ke dalam respons
                 data_wilayah_prov: dataProvinsi, // Masukkan data wilayah ke dalam respons
