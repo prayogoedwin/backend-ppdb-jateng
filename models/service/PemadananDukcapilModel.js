@@ -98,7 +98,8 @@ const PemadananDukcapil = db.define('ez_pemadanan_dukcapil', {
   }
 }, {
   freezeTableName: true,
-  timestamps: false
+  timestamps: false,
+  id: false // Ini akan mencegah Sequelize menambahkan kolom id
 });
 
 export default PemadananDukcapil;
