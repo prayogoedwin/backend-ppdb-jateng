@@ -9,6 +9,9 @@ const db2 = new Sequelize(process.env.DB2_NAME, process.env.DB2_USER, process.en
     host: process.env.DB2_HOST,
     port: process.env.DB2_PORT,
     dialect: process.env.DB2_DRIVER,
+    dialectOptions: {
+        useUTC: false // Non-aktifkan UTC
+      },
     timezone: 'Asia/Jakarta',
     // timezone: '+07:00', // Tambahkan ini agar waktu disimpan dalam WIB
     // pool: {  
