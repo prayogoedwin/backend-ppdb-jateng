@@ -192,6 +192,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     created_at: {
         type: DataTypes.DATE,
         allowNull: true,
+        get() {
+            const rawValue = this.getDataValue('created_at');
+            return rawValue ? this.formatDateLocal(rawValue) : null;
+          }
     },
     created_by: {
         type: DataTypes.STRING,
@@ -393,63 +397,7 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
 }, {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
-    getterMethods: {
-        toJSON() {
-          const values = Object.assign({}, this.get());
-          
-          // Fungsi formatter lokal
-          const formatDateTime = (date) => {
-            if (!date) return null;
-            const d = new Date(date);
-            const pad = num => num.toString().padStart(2, '0');
-            
-            return [
-              d.getFullYear(),
-              pad(d.getMonth() + 1),
-              pad(d.getDate())
-            ].join('-') + ' ' + [
-              pad(d.getHours()),
-              pad(d.getMinutes()),
-              pad(d.getSeconds())
-            ].join(':');
-          };
     
-          const formatDateOnly = (date) => {
-            if (!date) return null;
-            const d = new Date(date);
-            return [
-              d.getFullYear(),
-              (d.getMonth() + 1).toString().padStart(2, '0'),
-              d.getDate().toString().padStart(2, '0')
-            ].join('-');
-          };
-    
-          // Kolom DATE (dengan waktu)
-          const dateTimeFields = [
-            'created_at', 'updated_at', 'activated_at',
-            'verified_at', 'deleted_at', 'saved_at',
-            'disdukcapil_at', 'otp_expiration'
-          ];
-          
-          // Kolom DATEONLY (tanpa waktu)
-          const dateOnlyFields = [
-            'tanggal_lahir', 'tanggal_cetak_kk',
-            'tanggal_sertifikat', 'tanggal_kedatangan',
-            'tanggal_kedatangan_ibu', 'tanggal_kedatangan_ayah'
-          ];
-    
-          // Proses formatting
-          dateTimeFields.forEach(field => {
-            if (values[field]) values[field] = formatDateTime(values[field]);
-          });
-    
-          dateOnlyFields.forEach(field => {
-            if (values[field]) values[field] = formatDateOnly(values[field]);
-          });
-    
-          return values;
-        }
-    }
 });
 // 
 
