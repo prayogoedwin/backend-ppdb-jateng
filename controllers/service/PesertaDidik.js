@@ -303,6 +303,14 @@ export const getPesertaDidikByNisnNamaNamaNamaIbuHandler = async (req, res) => {
     }
 };
 
+function toPlainObject(data) {
+    try {
+        return JSON.parse(JSON.stringify(data));
+    } catch (err) {
+        return {};
+    }
+}
+
 export const getPesertaDidikByNisnHandler = async (req, res) => {
     const {nisn,nik} = req.body;
     try {
@@ -493,13 +501,24 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 // pesertaDidik = pesertaDidikAts;
                 // is_tidak_sekolah = 1;
 
+                // pesertaDidik = {
+                //     ...pesertaDidikAts,
+                //     data_sekolah: {
+                //       nama: 'Terdaftar Sebagai Siswa ATS',
+                //       npsn: '-----'
+                //     }
+                // };
+
                 pesertaDidik = {
-                    ...pesertaDidikAts,
+                    ...(typeof pesertaDidikAts.toJSON === 'function'
+                      ? pesertaDidikAts.toJSON()
+                      : pesertaDidikAts),
                     data_sekolah: {
                       nama: 'Terdaftar Sebagai Siswa ATS',
                       npsn: '-----'
                     }
-                };
+                  };
+
                 is_tidak_sekolah = 1;
 
             }
@@ -555,6 +574,10 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             dataProvinsi = await getProvinsi(dataKabKota.mst_kode_wilayah);
         }
         
+        // Jika pesertaDidik berasal dari model Sequelize, gunakan .toJSON()
+        const finalPeserta = typeof pesertaDidik.toJSON === 'function'
+        ? toPlainObject(pesertaDidik.toJSON())
+        : toPlainObject(pesertaDidik);
 
         res.status(200).json({
             status: 1,
@@ -562,7 +585,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             // ss: dataKec,
             data: {
                 // ...pesertaDidik.toJSON(),
-                ...(typeof pesertaDidik.toJSON === 'function' ? pesertaDidik.toJSON() : pesertaDidik),
+                // ...(typeof pesertaDidik.toJSON === 'function' ? pesertaDidik.toJSON() : pesertaDidik),
+                ...finalPeserta,
                 data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
                 data_wilayah_kot: dataKabKota, // Masukkan data wilayah ke dalam respons
                 data_wilayah_prov: dataProvinsi, // Masukkan data wilayah ke dalam respons
