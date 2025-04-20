@@ -473,7 +473,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
         
 
-        let is_tidak_sekolah;
+        let is_tidak_sekolah; 
         if (!pesertaDidik) {
 
             const pesertaDidikAts = await getPesertaDidikAtsByNisn(nisn, nik);
