@@ -192,9 +192,6 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     created_at: {
         type: DataTypes.DATE,
         allowNull: true,
-        get() {
-            return this.getDataValue('created_at'); // Return langsung tanpa modifikasi
-          }
     },
     created_by: {
         type: DataTypes.STRING,
