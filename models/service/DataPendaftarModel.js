@@ -194,7 +194,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
         get() {
             const rawValue = this.getDataValue('created_at');
-            return rawValue ? this.formatDateLocal(rawValue) : null;
+            if (!rawValue) return null;
+            
+            // Format manual tanpa library
+            const d = new Date(rawValue);
+            // Adjust untuk WIB (UTC+7)
+            d.setHours(d.getHours() + 7);
+            
+            return [
+              d.getFullYear(),
+              (d.getMonth() + 1).toString().padStart(2, '0'),
+              d.getDate().toString().padStart(2, '0')
+            ].join('-') + ' ' + [
+              d.getHours().toString().padStart(2, '0'),
+              d.getMinutes().toString().padStart(2, '0'),
+              d.getSeconds().toString().padStart(2, '0')
+            ].join(':');
           }
     },
     created_by: {
@@ -397,20 +412,6 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
 }, {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
-    instanceMethods: {
-        formatDateLocal(date) {
-          const d = new Date(date);
-          // Adjust for timezone offset (contoh: UTC+7)
-          d.setMinutes(d.getMinutes() + d.getTimezoneOffset() + 420);
-          return d.toISOString().replace('T', ' ').replace('.000Z', '');
-        },
-        formatDateOnlyLocal(date) {
-          const d = new Date(date);
-          // Adjust for timezone offset
-          d.setMinutes(d.getMinutes() + d.getTimezoneOffset() + 420);
-          return d.toISOString().split('T')[0];
-        }
-      }
     
 });
 // 
