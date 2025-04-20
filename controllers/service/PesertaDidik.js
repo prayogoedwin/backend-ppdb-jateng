@@ -750,11 +750,14 @@ export const getDataDukungByNIK = async (req, res) => {
         // Memeriksa status respons dari API
         // if (response.data.status === false) {
         if (anakMiskin === false) {
+
             dataAnakMiskin = {
                 anak_miskin: 0,
                 data_anak_miskin: []
             };
+            
         } else {
+
             if (anakMiskin.data.status === false) {
                 dataAnakMiskin = {
                     anak_miskin: 1,
@@ -780,7 +783,7 @@ export const getDataDukungByNIK = async (req, res) => {
             };
         }
 
-        if (anakPondok) {
+        if (anakPondok == 1) {
             dataAnakPondok = {
                 anak_pondok: 1,
                 data_anak_pondok: anakPondok
@@ -804,7 +807,7 @@ export const getDataDukungByNIK = async (req, res) => {
             };
         }
 
-        if (anakTidakSekolah) {
+        if (anakTidakSekolah == 1) {
             dataAnakTidakSekolah = {
                 ats: 1,
                 data_ats: anakTidakSekolah
