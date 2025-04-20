@@ -38,6 +38,10 @@ export const getSekolahTujuanPublik = async (req, res) => {
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
                     kode_wilayah_kot: req.body.kabkota,
+                    nama_jurusan: {
+                        [Op.not]: null,
+                      }
+
                 },
                 // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'kuota_zonasi_persentase', 'kuota_zonasi_khusus_persentase', 'kuota_afirmasi_persentase', 'kuota_prestasi_persentase', 'kuota_pto_persentase', 'alamat_jalan'] // Specify the attributes to retrieve
                 attributes: [
@@ -213,6 +217,9 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {  
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
                         kode_wilayah_kot: kabkota,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                          }
                     },  
                     // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
                     attributes: [
@@ -406,7 +413,10 @@ export const getSekolahTujuanKabkota = async (req, res) => {
         const resData = await SekolahTujuans.findAll({  
             where: {  
                 bentuk_pendidikan_id: bentuk_pendidikan_id,
-                kode_wilayah_kot: kabkota
+                kode_wilayah_kot: kabkota,
+                nama_jurusan: {
+                    [Op.not]: null,
+                  }
             },  
             // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
             attributes: [
@@ -486,7 +496,7 @@ export const getSekolahTujuanJurusanPublik = async (req, res) => {
         const resData = await SekolahJurusan.findAll({
             where: {
                 id_sekolah_tujuan: req.body.id_sekolah_tujuan, // Filter dari EzSekolahTujuans
-                is_active: true
+                is_active: true,
             },
             // attributes: ['id', 'npsn' ,'nama_jurusan', 'id_jurusan', 'daya_tampung'], // Ambil atribut hanya dari EzSekolahJurusan
             attributes: ['id', 'nama_jurusan', 'npsn', 'id_jurusan', 'daya_tampung', 'kuota_jarak_terdekat_persentase', 'kuota_jarak_terdekat', 'kuota_afirmasi_persentase', 'kuota_afirmasi', 'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus', 'is_larang_buta_warna'] // Specify the attributes to retrieve

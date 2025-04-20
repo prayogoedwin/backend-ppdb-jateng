@@ -170,14 +170,20 @@ export const getSekolahTujuanAdmin = async (req, res) => {
             if (sekolah_id == null) {  
                 resData = await SekolahTujuans.findAll({  
                     where: {  
-                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id  
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                          }  
                     },  
                     attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
                 });  
             } else {  
                 resData = await SekolahTujuans.findAll({  
                     where: {  
-                        id: sekolah_id  
+                        id: sekolah_id,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                          }  
                     },  
                     attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
                 });  
