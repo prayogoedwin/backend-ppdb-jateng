@@ -190,7 +190,8 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
     },
     created_at: {
-        type: DataTypes.DATE,
+        // type: DataTypes.DATE,
+        type: DataTypes.STRING, // Ubah tipe data ke STRING
         allowNull: true,
         get() {
             return this.getDataValue('created_at'); // Return langsung sebagai string
