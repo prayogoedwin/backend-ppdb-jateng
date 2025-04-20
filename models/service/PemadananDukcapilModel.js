@@ -6,6 +6,7 @@ const { DataTypes } = Sequelize;
 const PemadananDukcapil = db.define('ez_pemadanan_dukcapil', {
   peserta_didik_id: {
     type: DataTypes.STRING,
+    primaryKey: true, // Tetapkan primary key eksplisit
     allowNull: true,
   },
   nik: {
