@@ -190,18 +190,23 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
     },
     created_at: {
-        // type: DataTypes.DATE,
-        type: DataTypes.STRING, // Ubah tipe data ke STRING
+        type: DataTypes.DATE,
         allowNull: true,
         get() {
-            return this.getDataValue('created_at'); // Return langsung sebagai string
-          },
-          set(value) {
-            // Simpan sebagai string mentah
-            this.setDataValue('created_at', value instanceof Date ? 
-              value.toISOString().replace('T', ' ').replace('Z', '') : 
-              value
-            );
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('created_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
           }
     },
     created_by: {
