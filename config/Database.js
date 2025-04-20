@@ -9,15 +9,18 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: process.env.DB_DRIVER,
-    // dialectOptions: {
-    //     useUTC: false // Non-aktifkan UTC
-    //   },
-    // timezone: 'Asia/Jakarta',
-    ialectOptions: {
-        useUTC: true // Biarkan true untuk UTC
+    dialectOptions: {
+        useUTC: false // Non-aktifkan UTC
       },
-      timezone: '+07:00', // WIB (UTC+7)
-
+    timezone: 'Asia/Jakarta',
+    dialectOptions: {
+        // Tambahkan ini untuk PostgreSQL:
+        ssl: process.env.DB_SSL === 'true',
+        clientMinMessages: 'ignore',
+        // Force raw format dari database:
+        dateStrings: true,  // Ambil sebagai string langsung
+        typeCast: true      // Non-aktifkan type casting
+      }
     // timezone: '+07:00', // Tambahkan ini agar waktu disimpan dalam WIB
     // pool: {  
     //     max: 5, // Maksimum koneksi  
