@@ -759,10 +759,18 @@ export const getDataDukungByNIK = async (req, res) => {
         } else {
 
             if (anakMiskin.data.status != false) {
-                dataAnakMiskin = {
-                    anak_miskin: 1,
-                    data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
-                };
+                if(anakMiskin.data.priortias == '-'){
+                    dataAnakMiskin = {
+                        anak_miskin: 0,
+                        data_anak_miskin: []
+                    };
+                }else{
+                    dataAnakMiskin = {
+                        anak_miskin: 1,
+                        data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
+                    };
+                }
+                
             }else{
                 dataAnakMiskin = {
                     anak_miskin: 0,

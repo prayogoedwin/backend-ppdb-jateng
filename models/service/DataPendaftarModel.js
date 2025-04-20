@@ -362,6 +362,32 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
+    is_anak_pondok: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    status_kepindahan: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    status_kepindahan_ibu: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    status_kepindagan_ayah: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    status_kepindagan_wali: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    tanggal_kedatangan_wali: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+
+    
     
     
 }, {
