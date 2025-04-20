@@ -397,6 +397,20 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
 }, {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
+    instanceMethods: {
+        formatDateLocal(date) {
+          const d = new Date(date);
+          // Adjust for timezone offset (contoh: UTC+7)
+          d.setMinutes(d.getMinutes() + d.getTimezoneOffset() + 420);
+          return d.toISOString().replace('T', ' ').replace('.000Z', '');
+        },
+        formatDateOnlyLocal(date) {
+          const d = new Date(date);
+          // Adjust for timezone offset
+          d.setMinutes(d.getMinutes() + d.getTimezoneOffset() + 420);
+          return d.toISOString().split('T')[0];
+        }
+      }
     
 });
 // 
