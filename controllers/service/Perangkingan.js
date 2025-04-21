@@ -2916,10 +2916,8 @@ export const getPerangkingan = async (req, res) => {
             minute: "2-digit",
             second: "2-digit"
         });
-
-        let jalur_pendaftaran_ids = parseInt(jalur_pendaftaran_id_string);
         
-        if(jalur_pendaftaran_ids == 1){
+        if(jalur_pendaftaran_id == 1){
  
             //Jalur Zonasi Reguler SMA
             const resSek = await SekolahTujuan.findOne({
@@ -3150,7 +3148,7 @@ export const getPerangkingan = async (req, res) => {
             // });
             
 
-        }else if(jalur_pendaftaran_ids == 2){
+        }else if(jalur_pendaftaran_id == 2){
             //Jalur Zonasi KHUSUS SMA
 
             const resSek = await SekolahTujuan.findOne({
@@ -3271,7 +3269,7 @@ export const getPerangkingan = async (req, res) => {
                 });
             }
 
-        }else if(jalur_pendaftaran_ids == 3){
+        }else if(jalur_pendaftaran_id == 3){
              //Jalur Prestasi SMA
 
             const resSek = await SekolahTujuan.findOne({
@@ -3391,7 +3389,7 @@ export const getPerangkingan = async (req, res) => {
             }
 
 
-        }else if(jalur_pendaftaran_ids == 4){
+        }else if(jalur_pendaftaran_id == 4){
             //Jalur PTO / MutasiSMA 
             const resSek = await SekolahTujuan.findOne({
                 where: {
@@ -3506,7 +3504,7 @@ export const getPerangkingan = async (req, res) => {
                 });
             }
 
-        }else if(jalur_pendaftaran_ids == 5){
+        }else if(jalur_pendaftaran_id == 5){
         //Jalur Afirmasi SMA
 
             const resSek = await SekolahTujuan.findOne({
@@ -3708,7 +3706,7 @@ export const getPerangkingan = async (req, res) => {
                     'timeline': resTimeline // Return the found data
                 });
             }
-        }else if(jalur_pendaftaran_ids == 6){
+        }else if(jalur_pendaftaran_id == 6){
             //Jalur SMK Domisili Terdekat
                 const resJurSek = await SekolahJurusan.findOne({
                     where: {
@@ -3801,7 +3799,7 @@ export const getPerangkingan = async (req, res) => {
 
                 }
 
-        }else if(jalur_pendaftaran_ids == 7){
+        }else if(jalur_pendaftaran_id == 7){
             //Jalur SMK Prestasi
 
                 const resJurSek = await SekolahJurusan.findOne({
@@ -3960,7 +3958,7 @@ export const getPerangkingan = async (req, res) => {
                         'timeline': resTimeline // Return the found data
                     });
                 }
-        }else if(jalur_pendaftaran_ids == 8){
+        }else if(jalur_pendaftaran_id == 8){
             //Jalur SMK Prestasi Khusus
 
                 const resJurSek = await SekolahJurusan.findOne({
@@ -4055,7 +4053,7 @@ export const getPerangkingan = async (req, res) => {
 
                 }
 
-        }else if(jalur_pendaftaran_ids == 9){
+        }else if(jalur_pendaftaran_id == 9){
             //Jalur SMK Afirmasi
                 const resJurSek = await SekolahJurusan.findOne({
                     where: {
@@ -4217,16 +4215,11 @@ export const getPerangkingan = async (req, res) => {
         }else{
             
 
-            const resSek = await SekolahTujuan.findOne({
-                where: {
-                    id : sekolah_tujuan_id,
-                }
-            });
-            
+           
             res.status(200).json({
                 'status': 0,
                 'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
-                'data': resSek, // Return null or an appropriate value when data is not found
+                'data': [], // Return null or an appropriate value when data is not found
                 'timeline': resTimeline // Return the found data
             });
 
