@@ -144,11 +144,21 @@ export const afirmasiSmaHelper = (key) => {
 export const DomiRegHelper = (key) => {
     const data = {
         murni: 30,
-        prestasi: 0,
+        prestasi: 3,
     };
 
     return data[key] || 0; // Jika key tidak ditemukan, return 0
 };
+
+export const DomiNilaiHelper = (key) => {
+    const data = {
+        nilai: 3,
+    };
+
+    return data[key] || 0; // Jika key tidak ditemukan, return 0
+};
+
+
 
 //===================================================//
 
