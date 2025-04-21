@@ -2935,7 +2935,15 @@ export const getPerangkingan = async (req, res) => {
             // Hitung 3% dari kuota_zonasi_min
             let kuota_zonasi_nilai_min = (persentase_domisili_nilai / 100) * kuota_zonasi_min;
 
+            console.log('---------');
+            console.log('kuota zonasi nilai:'+kuota_zonasi_nilai_min);
+
+      
+            console.log('---------');
             let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
+
+            console.log('kuota zonasi jarak:'+zonasi_jarak);
+            console.log('---------');
             //cari data rangking zonasi reguler (jarak)
             const resDataZonasi = await DataPerangkingans.findAndCountAll({
                 attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
