@@ -2933,7 +2933,13 @@ export const getPerangkingan = async (req, res) => {
             let persentase_domisili_nilai = DomiNilaiHelper('nilai');
 
             // Hitung 3% dari kuota_zonasi_min
-            let kuota_zonasi_nilai_min = (persentase_domisili_nilai / 100) * kuota_zonasi_min;
+            // let kuota_zonasi_nilai_min = (persentase_domisili_nilai / 100) * kuota_zonasi_min;
+            // let kuota_zonasi_nilai_min = Math.round((persentase_domisili_nilai / 100) * kuota_zonasi_min);
+
+            //bulat keatas
+            let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_min);
+
+
 
             console.log('---------');
             console.log('kuota zonasi nilai:'+kuota_zonasi_nilai_min);
