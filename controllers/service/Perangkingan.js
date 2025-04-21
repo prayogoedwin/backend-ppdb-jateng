@@ -1,5 +1,5 @@
 import { check, validationResult } from 'express-validator';
-import { DomiSmkHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper, getTimelineSatuan } from '../../helpers/HelpHelper.js';
+import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper, getTimelineSatuan } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
