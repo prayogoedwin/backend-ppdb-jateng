@@ -4214,11 +4214,18 @@ export const getPerangkingan = async (req, res) => {
 
         }else{
             
+
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
+            
             res.status(200).json({
                 'status': 0,
                 'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
-                'data': [], // Return null or an appropriate value when data is not found
-                'timeline': null // Return the found data
+                'data': resSek, // Return null or an appropriate value when data is not found
+                'timeline': resTimeline // Return the found data
             });
 
         }
