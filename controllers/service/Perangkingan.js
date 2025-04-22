@@ -4164,8 +4164,8 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: encodeId(id),
-                            id_pendaftar: encodeId(id_pendaftar),
+                            // id: encodeId(id),
+                            // id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "3"
                           };
                         }),
@@ -4175,8 +4175,8 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: encodeId(id),
-                            id_pendaftar: encodeId(id_pendaftar),
+                            // id: encodeId(id),
+                            // id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "4"
                           };
                         }),
@@ -4186,8 +4186,8 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: encodeId(id),
-                            id_pendaftar: encodeId(id_pendaftar),
+                            // id: encodeId(id),
+                            // id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "5"
                           };
                         })
