@@ -1151,6 +1151,11 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
                     as: 'data_wilayah_prov',  
                     attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
                 },  
+                {
+                    model: StatusDomisilis,
+                    as: 'status_domisili_name',
+                    attributes: ['id', 'nama']
+                },
                 {  
                     model: DataUsers,  
                     as: 'diverifikasi_oleh',  
