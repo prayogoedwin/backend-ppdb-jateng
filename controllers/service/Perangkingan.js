@@ -4150,10 +4150,55 @@ export const getPerangkingan = async (req, res) => {
                     //     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
                     // });
 
-                    const modifiedData = [...(rowsAtsR || []), ...(rowsPantiR || []), ...(resDataMiskin || [])].map(item => {
-                        const { id_pendaftar, id, ...rest } = item.toJSON();
-                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // const modifiedData = [...(rowsAtsR || []), ...(rowsPantiR || []), ...(resDataMiskin || [])].map(item => {
+                    //     const { id_pendaftar, id, ...rest } = item.toJSON();
+                    //     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                    // });
+
+                    const combinedData = [
+                        // 1) Panti (order_berdasar = "3")
+                        ...(rowsPantiR || []).map(item => {
+                          const { id_pendaftar, id, ...rest } = item.toJSON();
+                          return {
+                            ...rest,
+                            id: encodeId(id),
+                            id_pendaftar: encodeId(id_pendaftar),
+                            order_berdasar: "3"
+                          };
+                        }),
+                      
+                        // 2) Ats (order_berdasar = "4")
+                        ...(rowsAtsR || []).map(item => {
+                          const { id_pendaftar, id, ...rest } = item.toJSON();
+                          return {
+                            ...rest,
+                            id: encodeId(id),
+                            id_pendaftar: encodeId(id_pendaftar),
+                            order_berdasar: "4"
+                          };
+                        }),
+                      
+                        // 3) Miskin (order_berdasar = "5")
+                        ...(resDataMiskin || []).map(item => {
+                          const { id_pendaftar, id, ...rest } = item.toJSON();
+                          return {
+                            ...rest,
+                            id: encodeId(id),
+                            id_pendaftar: encodeId(id_pendaftar),
+                            order_berdasar: "5"
+                          };
+                        })
+                      ];
+
+                      const modifiedData = combinedData.map(item => {
+                        const { id_pendaftar, id, ...rest } = item;
+                        return { 
+                            ...rest, 
+                            id: encodeId(id), 
+                            id_pendaftar: encodeId(id_pendaftar) 
+                        };
                     });
+                    
 
                     if (is_pdf === 1) {
                         // Generate PDF
