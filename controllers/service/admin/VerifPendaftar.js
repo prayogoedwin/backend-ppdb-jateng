@@ -924,7 +924,7 @@ export const getDataPendaftarById = async (req, res) => {
                 },  
                 {
                     model: StatusDomisilis,
-                    as: 'status_domisilinya',
+                    as: 'status_domisili_name',
                     attributes: ['id', 'nama']
                 },
                 // {  
