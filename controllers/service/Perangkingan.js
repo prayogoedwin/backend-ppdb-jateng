@@ -5201,7 +5201,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
         //     where: { id: 6 }, // Find the timeline by ID  
         //     attributes: ['id', 'nama', 'status']  
         // });  
-        const resTm = getTimelineSatuan(6);
+        const resTm = await getTimelineSatuan(6);
 
         if (resTm?.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka :)' });
