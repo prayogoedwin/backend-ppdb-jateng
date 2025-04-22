@@ -172,6 +172,9 @@ export const updateTimeline = [
             await clearCacheByKeyFunction('TimelineAllinAdmin');
             await clearCacheByKeyFunction('TimelineAll');
 
+            let key_satuan = `timeline:byid:${id}`;
+            await clearCacheByKeyFunction(key_satuan);
+
             res.status(200).json({
                 status: 1,
                 message: 'Update berhasil',

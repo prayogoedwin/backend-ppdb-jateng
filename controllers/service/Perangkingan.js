@@ -5085,9 +5085,9 @@ export const daftarUlangPerangkingan = async (req, res) => {
         // });  
         const resTm = getTimelineSatuan(6);
 
-        if (resTm.status != 1) {  
-            return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka :)' });
-        }
+        // if (resTm.status != 1) {  
+        //     return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka :)' });
+        // }
 
         // Find the record to be updated
         const perangkingan = await DataPerangkingans.findOne({
