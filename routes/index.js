@@ -225,6 +225,8 @@ router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, l
 router.post('/admin-api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
+router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cetakBuktiPerangkingan);
+
 
 
 //master data admin
