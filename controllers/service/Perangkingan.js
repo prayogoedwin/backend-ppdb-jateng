@@ -5237,6 +5237,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
         const perangkingan3 = await DataPerangkingans.update(
             { 
                 is_daftar_ulang: 1,
+                daftar_ulang_by: req.user.userId,
                 daftar_ulang_at: new Date(),
              },
             { where: { id: id_perangkingan_decode } }
