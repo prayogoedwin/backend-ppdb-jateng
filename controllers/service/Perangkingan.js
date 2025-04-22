@@ -219,6 +219,8 @@ export const getPerangkinganDetail = async (req, res) => {
         // Decode the ID
         const decodedIdPerangkingan = decodeId(id_perangkingan);
 
+        console.log('id decodenya adalah:'+decodedIdPerangkingan);
+
         // Fetch the data
         const resData = await DataPerangkingans.findOne({
             where: {
@@ -4172,7 +4174,7 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: id,
+                            id: encodeId(id),
                             id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "4"
                           };
@@ -4183,7 +4185,7 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: id,
+                            id: encodeId(id),
                             id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "5"
                           };
@@ -4194,7 +4196,7 @@ export const getPerangkingan = async (req, res) => {
                         const { id_pendaftar, id, ...rest } = item;
                         return { 
                             ...rest, 
-                            id: id, 
+                            id: encodeId(id), 
                             id_pendaftar: encodeId(id_pendaftar) 
                         };
                     });
