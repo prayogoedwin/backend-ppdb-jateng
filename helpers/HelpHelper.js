@@ -130,11 +130,6 @@ export const getFileTambahanByJalurPendaftaran = async (id) => {
         return data;
       }
   
-      // 2) Ambil dari DB
-    //   const resTm = await Timelines.findOne({
-    //     where: { id },
-    //     attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
-    //   });
 
       const resTm = await FileTambahans.findAll({
         where: {
@@ -184,7 +179,7 @@ export const getTimelineSatuan = async (id) => {
   
       // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
       if (resTm) {
-        const data = resTm.toJSON();                  // → plain object
+        const data = resTm;                // → plain object
         await redisSet(redis_key,
                        JSON.stringify(data),
                        process.env.REDIS_EXPIRE_TIME_MASTER);
