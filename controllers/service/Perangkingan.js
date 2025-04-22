@@ -4807,7 +4807,7 @@ export const cekPerangkingan = async (req, res) => {
 
         let data_file_tambahan_var = null;
 
-        console.log('jalur pendaftaran: '+data_file_tambahan);
+        // console.log('jalur pendaftaran: '+data_file_tambahan);
 
         const data_file_tambahan = await getFileTambahanByJalurPendaftaran(jalur_pendaftaran_id);
         // const data_file_tambahan = await FileTambahans.findAll({
