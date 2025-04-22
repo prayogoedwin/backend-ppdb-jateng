@@ -1,6 +1,7 @@
 import Timelines from "../../../models/service/TimelineModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
+import { redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues } from '../../../redis.js'; // Import the Redis functions
 
 
 export const getTimeline = async (req, res) => {
@@ -169,11 +170,14 @@ export const updateTimeline = [
                 }
             });
 
-            await clearCacheByKeyFunction('TimelineAllinAdmin');
-            await clearCacheByKeyFunction('TimelineAll');
+            await redisClearKey('TimelineAllinAdmin');
+            await redisClearKey('TimelineAll');
 
-            let key_satuan = `timeline:byid:${id}`;
-            await clearCacheByKeyFunction(key_satuan);
+            const key_satuan = 'timeline:byid:' + id;
+            await redisClearKey(key_satuan);
+
+            // const delResult = await redisClearKey(key_satuan);
+            // console.log(`DEL result (“${key_satuan}”):`, delResult); // 1 → berhasil, 0 → nothing to delete
 
             res.status(200).json({
                 status: 1,

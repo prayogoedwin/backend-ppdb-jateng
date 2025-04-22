@@ -1,5 +1,5 @@
 import { check, validationResult } from 'express-validator';
-import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper, getTimelineSatuan } from '../../helpers/HelpHelper.js';
+import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
@@ -11,6 +11,8 @@ import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import StatusDomisilis from '../../models/master/StatusDomisiliModel.js';
 import Timelines from "../../models/service/TimelineModel.js";
+// import DataUsers from '../../../models/service/DataUsersModel.js';
+import DataUsersModel from '../../models/service/DataUsersModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -173,7 +175,8 @@ export const getPerangkinganSaya = async (req, res) => {
         //     },
         // });
 
-        const allTimelines = await Timelines.findAll();
+        // const allTimelines = await Timelines.findAll();
+        const allTimelines = await getTimelineAll();
 
         const timeline4 = allTimelines.find(t => t.id === 4);
         const timeline5 = allTimelines.find(t => t.id === 5);
@@ -4775,12 +4778,13 @@ export const cekPerangkingan = async (req, res) => {
 
         let data_file_tambahan_var = null;
 
-        const data_file_tambahan = await FileTambahans.findAll({
-            where: {
-                id_jalur_pendaftaran: jalur_pendaftaran_id,
-                is_active: 1
-            }
-        });
+        const data_file_tambahan = await getFileTambahanByJalurPendaftaran(jalur_pendaftaran_id);
+        // const data_file_tambahan = await FileTambahans.findAll({
+        //     where: {
+        //         id_jalur_pendaftaran: jalur_pendaftaran_id,
+        //         is_active: 1
+        //     }
+        // });
 
         //pendaftaran
         if(jalur_pendaftaran_id == 5){
@@ -5097,7 +5101,12 @@ export const cetakBuktiPerangkinganAdmin = async (req, res) => {
                     model: JalurPendaftarans,
                     as: 'jalur_pendaftaran',
                     attributes: ['nama']
-                }
+                },
+                {  
+                    model: DataUsersModel,  
+                    as: 'daftarulang_oleh',  
+                    attributes: ['id', 'nama']
+                }  
             ]
         });
 
@@ -5136,7 +5145,7 @@ export const cetakBuktiPerangkinganAdmin = async (req, res) => {
                     model: WilayahVerDapodik,
                     as: 'data_wilayah_prov',
                     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
-                }
+                },
             ],
 
         });
@@ -5194,7 +5203,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
         // });  
         const resTm = getTimelineSatuan(6);
 
-        if (resTm.status != 1) {  
+        if (resTm?.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Daftar Ulang Belum Dibuka :)' });
         }
 

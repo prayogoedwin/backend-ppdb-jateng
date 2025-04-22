@@ -3,6 +3,7 @@ import FormData from 'form-data';
 import nodemailer from 'nodemailer';
 import { redisGet, redisSet } from '../redis.js'; // Import the Redis functions
 import Timelines from "../models/service/TimelineModel.js";
+import FileTambahans from "../models/master/FileTambahanModel.js";
 // import EzSekolahTujuans from '../models/master/EzSekolahTujuansModel.js'; // Adjusted path to EzSekolahTujuans model
 // import EzWilayahVerDapodiks from '../models/master/WilayahVerDapodikModel.js'; // Adjusted path to WilayahVerDapodik model
 
@@ -96,25 +97,144 @@ export async function sendOtpToEmail(email, message) {
     }
 }
 
+// export const getTimelineSatuan = async (id) => {
+//     const redis_key = `timeline:byid:${id}`;
+
+//     // Cek di Redis
+//     const cached = await redisGet(redis_key);
+//     if (cached) {
+//         return JSON.parse(cached);
+//     }
+
+//     // Kalau tidak ada di cache, ambil dari DB
+//     const resTm = await Timelines.findOne({
+//         where: { id: id },
+//         attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
+//     });
+
+//     await redisSet(redis_key, JSON.stringify(resTm), process.env.REDIS_EXPIRE_TIME_MASTER); 
+
+//     return resTm;
+// };
+
+export const getFileTambahanByJalurPendaftaran = async (id) => {
+    const redis_key = `file_tambahan:by-jalur-pendaftaran:${id}`;
+  
+    try {
+      // 1) Cek Redis
+      const cached = await redisGet(redis_key);
+      if (cached) {
+        const data = JSON.parse(cached);
+        console.log(`[CACHE] FileTambahans(${id}) →`, data);
+        return data;
+      }
+  
+      // 2) Ambil dari DB
+    //   const resTm = await Timelines.findOne({
+    //     where: { id },
+    //     attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
+    //   });
+
+      const resTm = await FileTambahans.findAll({
+        where: {
+            id_jalur_pendaftaran: jalur_pendaftaran_id,
+            is_active: 1
+        }
+    }   );
+  
+      // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+      if (resTm) {
+        const data = resTm.toJSON();                  // → plain object
+        await redisSet(redis_key,
+                       JSON.stringify(data),
+                       process.env.REDIS_EXPIRE_TIME_MASTER);
+        console.log(`[DB] FileTambahans(${id}) →`, data);
+        return data;
+      }
+  
+      // 4) Kalau tidak ketemu di DB
+      console.log(`[DB] FileTambahans(${id}) → null`);
+      return null;
+  
+    } catch (err) {
+      console.error(`Error in FileTambahans(${id}):`, err);
+      return null;
+    }
+};
+
+
 export const getTimelineSatuan = async (id) => {
     const redis_key = `timeline:byid:${id}`;
-
-    // Cek di Redis
-    const cached = await redisGet(redis_key);
-    if (cached) {
-        return JSON.parse(cached);
-    }
-
-    // Kalau tidak ada di cache, ambil dari DB
-    const resTm = await Timelines.findOne({
-        where: { id: id },
+  
+    try {
+      // 1) Cek Redis
+      const cached = await redisGet(redis_key);
+      if (cached) {
+        const data = JSON.parse(cached);
+        console.log(`[CACHE] getTimelineSatuan(${id}) →`, data);
+        return data;
+      }
+  
+      // 2) Ambil dari DB
+      const resTm = await Timelines.findOne({
+        where: { id },
         attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
-    });
-
-    await redisSet(redis_key, JSON.stringify(resTm), process.env.REDIS_EXPIRE_TIME_MASTER); 
-
-    return resTm;
+      });
+  
+      // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+      if (resTm) {
+        const data = resTm.toJSON();                  // → plain object
+        await redisSet(redis_key,
+                       JSON.stringify(data),
+                       process.env.REDIS_EXPIRE_TIME_MASTER);
+        console.log(`[DB] getTimelineSatuan(${id}) →`, data);
+        return data;
+      }
+  
+      // 4) Kalau tidak ketemu di DB
+      console.log(`[DB] getTimelineSatuan(${id}) → null`);
+      return null;
+  
+    } catch (err) {
+      console.error(`Error in getTimelineSatuan(${id}):`, err);
+      return null;
+    }
 };
+
+export const getTimelineAll = async () => {
+    const redis_key = 'TimelineAll';
+  
+    try {
+      // 1) Cek Redis
+      const cached = await redisGet(redis_key);
+      if (cached) {
+        const data = JSON.parse(cached);
+        console.log(`[CACHE] getTimelineAll →`, data);
+        return data;                  // array of plain objects
+      }
+  
+      // 2) Ambil semua dari DB
+      const resList = await Timelines.findAll({
+        attributes: ['id', 'nama', 'status', 'tanggal_buka', 'tanggal_tutup']
+      });
+  
+      // 3) Konversi ke POJO dan simpan ke Redis
+      const data = resList.map(item => item.toJSON());
+      if (data.length) {
+        await redisSet(
+          redis_key,
+          JSON.stringify(data),
+          process.env.REDIS_EXPIRE_TIME_MASTER
+        );
+      }
+      console.log(`[DB] getTimelineAll →`, data);
+      return data;
+  
+    } catch (err) {
+      console.error(`Error in getTimelineAll:`, err);
+      return [];
+    }
+  };
 
 export const getStatusKepindahanByCode = (code) => {
     const statusMap = {

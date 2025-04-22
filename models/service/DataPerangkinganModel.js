@@ -4,6 +4,7 @@ import SekolahTujuan from '../master/SekolahTujuanModel.js';
 import SekolahJurusan from '../master/SekolahJurusanModel.js';
 import JalurPendaftarans from '../master/JalurPendaftaranModel.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import DataUsers from '../../models/service/DataUsersModel.js';
 
 const PerangkinganModels = db.define('ez_perangkingan', {
     id: {
@@ -174,6 +175,11 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         defaultValue: 0,
         allowNull: true
     },
+    daftar_ulang_by: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
+    },
 
 }, {
     freezeTableName: true,
@@ -186,6 +192,7 @@ PerangkinganModels.belongsTo(SekolahTujuan, { as: 'sekolah_tujuan', foreignKey: 
 PerangkinganModels.belongsTo(JalurPendaftarans, { as: 'jalur_pendaftaran', foreignKey: 'jalur_pendaftaran_id' });
 PerangkinganModels.belongsTo(DataPendaftars, { as: 'data_pendaftar', foreignKey: 'id_pendaftar' });
 PerangkinganModels.belongsTo(SekolahJurusan, { as: 'sekolah_jurusan', foreignKey: 'jurusan_id' });
+PerangkinganModels.belongsTo(DataUsers, { as: 'daftarulang_oleh', foreignKey: 'daftar_ulang_by', targetKey: 'id' });
 
 
 
