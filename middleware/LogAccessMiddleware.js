@@ -167,7 +167,7 @@ export const logAccessPub = async (req, res, next) => {
             url: req.originalUrl,
             akun: req.body.nisn,
             json_data: req.body.nisn,
-            created_at: now,
+            created_at: new Date(),
             // created_at: now.toLocaleString('id-ID', {
             //     timeZone: 'Asia/Jakarta',
             //     year: 'numeric',
