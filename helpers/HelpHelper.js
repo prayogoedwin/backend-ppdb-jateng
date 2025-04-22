@@ -4,6 +4,7 @@ import nodemailer from 'nodemailer';
 import { redisGet, redisSet } from '../redis.js'; // Import the Redis functions
 import Timelines from "../models/service/TimelineModel.js";
 import FileTambahans from "../models/master/FileTambahanModel.js";
+import EzIntegrator from "../models/config/EzIntegrator.js";
 // import EzSekolahTujuans from '../models/master/EzSekolahTujuansModel.js'; // Adjusted path to EzSekolahTujuans model
 // import EzWilayahVerDapodiks from '../models/master/WilayahVerDapodikModel.js'; // Adjusted path to WilayahVerDapodik model
 
@@ -197,6 +198,44 @@ export const getTimelineSatuan = async (id) => {
   
     } catch (err) {
       console.error(`Error in getTimelineSatuan(${id}):`, err);
+      return null;
+    }
+};
+
+export const getIntegratorSatuan = async (id) => {
+    const redis_key = `integrasi_data:byid:${id}`;
+  
+    try {
+      // 1) Cek Redis
+      const cached = await redisGet(redis_key);
+      if (cached) {
+        const data = JSON.parse(cached);
+        console.log(`[CACHE] getIntegratorSatuan(${id}) →`, data);
+        return data;
+      }
+  
+      // 2) Ambil dari DB
+      const resTm = await EzIntegrator.findOne({
+        where: { id },
+        attributes: ['id', 'username', 'password_', 'nama_instansi', 'is_active']
+      });
+  
+      // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+      if (resTm) {
+        const data = resTm.toJSON();                  // → plain object
+        await redisSet(redis_key,
+                       JSON.stringify(data),
+                       process.env.REDIS_EXPIRE_TIME_MASTER);
+        console.log(`[DB] getIntegratorSatuan(${id}) →`, data);
+        return data;
+      }
+  
+      // 4) Kalau tidak ketemu di DB
+      console.log(`[DB] getIntegratorSatuan(${id}) → null`);
+      return null;
+  
+    } catch (err) {
+      console.error(`Error in getIntegratorSatuan(${id}):`, err);
       return null;
     }
 };

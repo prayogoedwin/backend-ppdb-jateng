@@ -1,5 +1,6 @@
 // controllers/PesertaDidik.js
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
+import { getIntegratorSatuan} from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
@@ -10,6 +11,8 @@ import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import SekolahTujuanModel from '../../models/master/SekolahTujuanModel.js';
 import DataUsers from '../../models/service/DataUsersModel.js';
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
+
+
 
 import axios from 'axios';
 import https from 'https';
@@ -712,12 +715,26 @@ export const getDataDukungByNIK = async (req, res) => {
         // const password = process.env.API_PASSWORD;
 
 
-        //Melakukan permintaan ke API untuk mendapatkan data anak miskin
-        const anakMiskin = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
-            username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
-            password: process.env.API_PASSWORD ,
-            nik: nik // Mengirimkan NIK dalam format JSON
-        });
+        const integrasi = await getIntegratorSatuan(2);
+
+        let anakMiskin;
+
+        if(integrasi?.is_active == 1){
+
+             //Melakukan permintaan ke API untuk mendapatkan data anak miskin
+            anakMiskin = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
+                username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
+                password: process.env.API_PASSWORD ,
+                nik: nik // Mengirimkan NIK dalam format JSON
+            });
+
+        }else{
+
+            anakMiskin = false;
+
+        }
+
+       
 
         // const response = false
         
