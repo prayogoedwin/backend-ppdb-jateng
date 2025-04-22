@@ -138,7 +138,7 @@ export const getFileTambahanByJalurPendaftaran = async (id) => {
 
       const resTm = await FileTambahans.findAll({
         where: {
-            id_jalur_pendaftaran: jalur_pendaftaran_id,
+            id_jalur_pendaftaran: id,
             is_active: 1
         }
     }   );
