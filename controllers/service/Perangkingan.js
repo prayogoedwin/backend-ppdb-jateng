@@ -4678,9 +4678,9 @@ export const cekPerangkingan = async (req, res) => {
 
         // console.log(resTm);
 
-        // if (resTm.status != 1) {  
-        //     return res.status(200).json({ status: 0, message: 'Pendaftaran Belum Dibuka' });
-        // }
+        if (resTm?.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Pendaftaran Belum Dibuka' });
+        }
         
         const count = await DataPerangkingans.count({
             where: {
