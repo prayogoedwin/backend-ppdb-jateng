@@ -40,7 +40,7 @@ import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
-import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, getPerangkinganDetail, getInfoParam } from '../controllers/service/Perangkingan.js';
+import { cekPerangkingan, createPerangkingan, getPerangkingan, uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, getPerangkinganDetail, getInfoParam } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
 import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser } from '../controllers/service/AuthPublic.js';
@@ -225,7 +225,7 @@ router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, l
 router.post('/admin-api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
-router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkingan);
+router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkinganAdmin);
 
 
 

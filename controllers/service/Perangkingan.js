@@ -5071,6 +5071,115 @@ export const cetakBuktiPerangkingan = async (req, res) => {
     }
 }
 
+// Function to handle POST request
+export const cetakBuktiPerangkinganAdmin = async (req, res) => {
+
+    try {
+        const {
+            no_pendaftaran,
+        } = req.body;
+
+       
+
+        // Retrieve data from DataPendaftarModel
+        const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: no_pendaftaran,
+                is_delete: 0
+            },
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['nama']
+                },
+                {
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['nama']
+                }
+            ]
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+          // Retrieve data from DataPendaftarModel
+          const pendaftar = await DataPendaftars.findOne({
+            where: {
+                id: perangkingan.id_pendaftar,
+                is_delete: 0
+            },
+            include: [
+                {
+                    model: StatusDomisilis,
+                    as: 'status_domisili_name',
+                    attributes: ['nama']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kec',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_kot',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                },
+                {
+                    model: WilayahVerDapodik,
+                    as: 'data_wilayah_prov',
+                    attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                }
+            ],
+
+        });
+
+        if (!pendaftar) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // Convert Sequelize model instance to a plain object
+        const perangkinganData = perangkingan.toJSON();
+
+    
+        // const sekolah_tujuan = {
+        //     npsn : '12345678',
+        //     nama : 'SMA / SMK Dummy'
+        // }
+
+        // // Add `sekolah_tujuan` to the plain object
+        // perangkinganData.sekolah_tujuan = sekolah_tujuan;
+
+        const datas = {
+            pendaftar: pendaftar,
+            perangkingan: perangkinganData,
+            id_pendaftar_: encodeId(perangkingan.id_pendaftar), // Menambahkan ID ke dalam data yang dikembalikan
+            id_perangkingan_: encodeId(perangkingan.id), // Menambahkan ID ke dalam data yang dikembalikan
+        };
+        delete pendaftar.id; 
+        delete perangkingan.id; 
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data ditemukan',
+            data: datas
+        });
+    } catch (error) {
+        console.error('Error daftar:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+}
+
 // Function to handle  request
 export const daftarUlangPerangkingan = async (req, res) => {
     try {
