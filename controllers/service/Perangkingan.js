@@ -4172,7 +4172,7 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: encodeId(id),
+                            id: id,
                             id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "4"
                           };
@@ -4183,7 +4183,7 @@ export const getPerangkingan = async (req, res) => {
                           const { id_pendaftar, id, ...rest } = item.toJSON();
                           return {
                             ...rest,
-                            id: encodeId(id),
+                            id: id,
                             id_pendaftar: encodeId(id_pendaftar),
                             order_berdasar: "5"
                           };
@@ -4194,7 +4194,7 @@ export const getPerangkingan = async (req, res) => {
                         const { id_pendaftar, id, ...rest } = item;
                         return { 
                             ...rest, 
-                            id: encodeId(id), 
+                            id: id, 
                             id_pendaftar: encodeId(id_pendaftar) 
                         };
                     });
