@@ -254,10 +254,11 @@ export const getSekolahTujuan = async (req, res) => {
                     where: {  
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
                         kode_wilayah_kot: kabkota,
-                        npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
                         nama_jurusan: {
                             [Op.not]: null,
-                          }
+                          },
+                        npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
+                        
                     },  
                     // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
                     attributes: [
