@@ -216,6 +216,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     updated_at: {
         type: DataTypes.DATE,
         allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('updated_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     updated_by: {
         type: DataTypes.INTEGER,
@@ -224,6 +240,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     activated_at: {
         type: DataTypes.DATE,
         allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('activated_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     activated_by: {
         type: DataTypes.STRING,
@@ -236,6 +268,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     verified_at: {
         type: DataTypes.DATE,
         allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('verified_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     verified_by: {
         type: DataTypes.INTEGER,
@@ -300,6 +348,22 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     disdukcapil_at: {
         type: DataTypes.DATE,
         allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('disdukcapil_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     otp_expiration: {
         type: DataTypes.DATE, // Gunakan DataTypes.DATE untuk TIMESTAMP

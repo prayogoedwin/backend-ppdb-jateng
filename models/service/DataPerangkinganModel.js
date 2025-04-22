@@ -102,7 +102,23 @@ const PerangkinganModels = db.define('ez_perangkingan', {
     },
     created_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('created_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     created_by: {
         type: DataTypes.INTEGER,
@@ -114,7 +130,23 @@ const PerangkinganModels = db.define('ez_perangkingan', {
     },
     updated_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('updated_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     updated_by: {
         type: DataTypes.INTEGER,
@@ -122,7 +154,23 @@ const PerangkinganModels = db.define('ez_perangkingan', {
     },
     deleted_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('deleted_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     deleted_by: {
         type: DataTypes.INTEGER,
@@ -135,7 +183,23 @@ const PerangkinganModels = db.define('ez_perangkingan', {
     },
     saved_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('saved_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     saved_by: {
         type: DataTypes.INTEGER,
@@ -163,7 +227,23 @@ const PerangkinganModels = db.define('ez_perangkingan', {
     },
     daftar_ulang_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            // Ambil nilai mentah yang sudah di-parse sebagai string
+            const rawValue = this.getDataValue('daftar_ulang_at');
+            return rawValue ? 
+              new Date(rawValue).toLocaleString('id-ID', {
+                timeZone: 'Asia/Jakarta',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              }).replace(/\//g, '-').replace(',', '') : 
+              null;
+          }
     },
     is_disabilitas: {
         type: DataTypes.INTEGER,
