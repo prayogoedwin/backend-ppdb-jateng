@@ -220,6 +220,7 @@ export const getPerangkinganDetail = async (req, res) => {
         const decodedIdPerangkingan = decodeId(id_perangkingan);
 
         console.log('id decodenya adalah:'+decodedIdPerangkingan);
+        console.log('id decodenya adalah:'+decodeId(decodedIdPerangkingan));
 
         // Fetch the data
         const resData = await DataPerangkingans.findOne({
