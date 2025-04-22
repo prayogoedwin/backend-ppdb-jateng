@@ -5084,7 +5084,7 @@ export const cetakBuktiPerangkinganAdmin = async (req, res) => {
         // Retrieve data from DataPendaftarModel
         const perangkingan = await DataPerangkingans.findOne({
             where: {
-                id: no_pendaftaran,
+                no_pendaftaran: no_pendaftaran,
                 is_delete: 0
             },
             include: [
