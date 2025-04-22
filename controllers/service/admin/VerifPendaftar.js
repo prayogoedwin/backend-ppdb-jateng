@@ -4,7 +4,10 @@ import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis func
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
 import SekolahTujuanModel from '../../../models/master/SekolahTujuanModel.js';
+import StatusDomisilis from '../../../models/master/StatusDomisiliModel.js';
 import DataUsers from '../../../models/service/DataUsersModel.js';
+
+
 import Timelines from "../../../models/service/TimelineModel.js";
 import multer from "multer";
 import path from "path";
@@ -800,7 +803,14 @@ export const getDataPendaftarById_BAK = async (req, res) => {
                         model: DataUsers,
                         as: 'diverifikasi_oleh',
                         attributes: ['id', 'nama']
-                    }
+                    },
+                    {
+                        model: StatusDomisilis,
+                        as: 'status_domisilinya',
+                        attributes: ['id', 'nama']
+                    },
+                    
+
                 ],
                 
             });
