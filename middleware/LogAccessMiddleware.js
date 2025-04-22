@@ -68,17 +68,17 @@ export const logAccessAdmin = async (req, res, next) => {
             url: req.originalUrl,
             akun: usernya, // Jika menggunakan autentikasi
             json_data:  req.body, // Ambil data JSON dari body
-            // created_at: new Date(),
-            created_at: now.toLocaleString('id-ID', {
-                timeZone: 'Asia/Jakarta',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-              }).replace(/\//g, '-').replace(',', '').replace(/\./g, ':'),
+            created_at: new Date(),
+            // created_at: now.toLocaleString('id-ID', {
+            //     timeZone: 'Asia/Jakarta',
+            //     year: 'numeric',
+            //     month: '2-digit',
+            //     day: '2-digit',
+            //     hour: '2-digit',
+            //     minute: '2-digit',
+            //     second: '2-digit',
+            //     hour12: false
+            //   }).replace(/\//g, '-').replace(',', '').replace(/\./g, ':'),
             created_by: akun,
             created_by_ip: req.ip // Alamat IP pengguna
         };
@@ -112,17 +112,17 @@ export const logAccessClient = async (req, res, next) => {
             url: req.originalUrl,
             akun: akun, // Jika menggunakan autentikasi, ambil dari `req.user`
             json_data:  '',
-            // created_at: new Date(),
-            created_at: now.toLocaleString('id-ID', {
-                timeZone: 'Asia/Jakarta',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-              }).replace(/\//g, '-').replace(',', '').replace(/\./g, ':'),
+            created_at: new Date(),
+            // created_at: now.toLocaleString('id-ID', {
+            //     timeZone: 'Asia/Jakarta',
+            //     year: 'numeric',
+            //     month: '2-digit',
+            //     day: '2-digit',
+            //     hour: '2-digit',
+            //     minute: '2-digit',
+            //     second: '2-digit',
+            //     hour12: false
+            //   }).replace(/\//g, '-').replace(',', '').replace(/\./g, ':'),
             created_by: req.body.username,
             created_by_ip: req.ip // Alamat IP pengguna
         };
@@ -167,17 +167,17 @@ export const logAccessPub = async (req, res, next) => {
             url: req.originalUrl,
             akun: req.body.nisn,
             json_data: req.body.nisn,
-            // created_at: now,
-            created_at: now.toLocaleString('id-ID', {
-                timeZone: 'Asia/Jakarta',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-              }).replace(/\//g, '-').replace(',', '').replace(/\./g, ':'),
+            created_at: now,
+            // created_at: now.toLocaleString('id-ID', {
+            //     timeZone: 'Asia/Jakarta',
+            //     year: 'numeric',
+            //     month: '2-digit',
+            //     day: '2-digit',
+            //     hour: '2-digit',
+            //     minute: '2-digit',
+            //     second: '2-digit',
+            //     hour12: false
+            //   }).replace(/\//g, '-').replace(',', '').replace(/\./g, ':'),
             created_by: req.body.nisn,
             created_by_ip: req.ip
           };
