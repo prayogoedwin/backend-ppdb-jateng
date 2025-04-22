@@ -335,6 +335,10 @@ export const getSekolahTujuan = async (req, res) => {
                 where: {  
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
                     kode_wilayah_kot: kabkota,
+                    nama_jurusan: {
+                        [Op.not]: null,
+                      },
+                    
                 },  
                 // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
                 attributes: [
