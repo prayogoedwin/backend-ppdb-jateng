@@ -4,6 +4,7 @@ import { getIntegratorSatuan} from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
+import DataAnakMiskins from '../../models/service/DataAnakPantiModel.js';
 import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
@@ -715,26 +716,31 @@ export const getDataDukungByNIK = async (req, res) => {
         // const password = process.env.API_PASSWORD;
 
 
-        const integrasi = await getIntegratorSatuan(2);
+        // const integrasi = await getIntegratorSatuan(2);
 
-        let anakMiskin;
+        // let anakMiskin;
 
-        if(integrasi?.is_active == 1){
+        // if(integrasi?.is_active == 1){
 
-             //Melakukan permintaan ke API untuk mendapatkan data anak miskin
-            anakMiskin = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
-                username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
-                password: process.env.API_PASSWORD ,
-                nik: nik // Mengirimkan NIK dalam format JSON
-            });
+        //      //Melakukan permintaan ke API untuk mendapatkan data anak miskin
+        //     // anakMiskin = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
+        //     //     username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
+        //     //     password: process.env.API_PASSWORD ,
+        //     //     nik: nik // Mengirimkan NIK dalam format JSON
+        //     // });
 
-        }else{
+        //     anakMiskin = false;
 
-            anakMiskin = false;
+        // }else{
 
-        }
+        //     // anakMiskin = false;
+        //     anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
+            
+
+        // }
 
        
+        const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
 
         // const response = false
         
@@ -766,34 +772,47 @@ export const getDataDukungByNIK = async (req, res) => {
 
         // Memeriksa status respons dari API
         // if (response.data.status === false) {
-        if (anakMiskin === false) {
+        // if (anakMiskin === false) {
 
+        //     dataAnakMiskin = {
+        //         anak_miskin: 0,
+        //         data_anak_miskin: []
+        //     };
+
+        // } else {
+
+        //     if (anakMiskin.data.status != false) {
+        //         if(anakMiskin.data.priortias == '-'){
+        //             dataAnakMiskin = {
+        //                 anak_miskin: 0,
+        //                 data_anak_miskin: []
+        //             };
+        //         }else{
+        //             dataAnakMiskin = {
+        //                 anak_miskin: 1,
+        //                 data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
+        //             };
+        //         }
+                
+        //     }else{
+        //         dataAnakMiskin = {
+        //             anak_miskin: 0,
+        //             data_anak_miskin: []
+        //         };
+        //     }
+        // }
+
+        if (anakMiskin) {
+            dataAnakMiskin = {
+                anak_miskin: 1,
+                data_anak_miskin: anakMiskin.toJSON()
+            };
+        } else {
             dataAnakMiskin = {
                 anak_miskin: 0,
-                data_anak_miskin: []
-            };
-
-        } else {
-
-            if (anakMiskin.data.status != false) {
-                if(anakMiskin.data.priortias == '-'){
-                    dataAnakMiskin = {
-                        anak_miskin: 0,
-                        data_anak_miskin: []
-                    };
-                }else{
-                    dataAnakMiskin = {
-                        anak_miskin: 1,
-                        data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
-                    };
-                }
+                data_anak_miskin: [],
                 
-            }else{
-                dataAnakMiskin = {
-                    anak_miskin: 0,
-                    data_anak_miskin: []
-                };
-            }
+            };
         }
 
         if (anakPanti) {
