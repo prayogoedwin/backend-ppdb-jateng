@@ -2,6 +2,7 @@
 
 import EzAppKey from '../models/config/AppKeyModel.js';
 import EzAppKeyIntegrator from '../models/service/DataIntegratorModel.js';
+import { redisGet, redisSet } from '../redis.js'; // Import the Redis functions
 
 
 export const appKeyMiddleware = async (req, res, next) => {
