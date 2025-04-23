@@ -4,7 +4,7 @@ import { getIntegratorSatuan} from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
-import DataAnakMiskins from '../../models/service/DataAnakPantiModel.js';
+import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
 import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
@@ -759,6 +759,20 @@ export const getDataDukungByNIK = async (req, res) => {
         let dataAnakGuru = {};
         let dataAnakTidakSekolah = {};
 
+        if (anakMiskin) {
+            dataAnakMiskin = {
+                anak_miskin: 1,
+                data_anak_miskin: anakMiskin.toJSON()
+            };
+        } else {
+            dataAnakMiskin = {
+                anak_miskin: 0,
+                data_anak_miskin: [],
+
+            };
+        }
+
+
         // if (anakMiskin) {
         //     dataAnakMiskin = {
         //         anak_miskin: 1,
@@ -804,19 +818,7 @@ export const getDataDukungByNIK = async (req, res) => {
         //     }
         // }
 
-        if (anakMiskin) {
-            dataAnakMiskin = {
-                anak_miskin: 1,
-                data_anak_miskin: anakMiskin.toJSON()
-            };
-        } else {
-            dataAnakMiskin = {
-                anak_miskin: 0,
-                data_anak_miskin: [],
-
-            };
-        }
-
+       
         if (anakPanti) {
             dataAnakPanti = {
                 anak_panti: 1,
