@@ -4125,6 +4125,14 @@ export const getPerangkingan = async (req, res) => {
 
 
                 let kuota_akhir_afirmasi = kuota_afirmasi - (totalPatntiL + totalAtsL)
+                
+                console.log('---');
+                console.log('total panti:'+totalPatntiL);
+                console.log('---');
+                console.log('total ats:'+totalAtsL);
+                console.log('---');
+                console.log('total akhir:'+kuota_akhir_afirmasi);
+                console.log('---');
 
                 const resAtsIds = (rowsAtsR.rows || []).map((item) => item.id);
                 const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
