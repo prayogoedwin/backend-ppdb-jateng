@@ -742,6 +742,8 @@ export const getDataDukungByNIK = async (req, res) => {
        
         const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
 
+        console.log('ini anak miskin:'+anakMiskin);
+
         // const response = false
         
         const anakPanti = await DataAnakPantis.findOne({ where: { nik } });
@@ -811,7 +813,7 @@ export const getDataDukungByNIK = async (req, res) => {
             dataAnakMiskin = {
                 anak_miskin: 0,
                 data_anak_miskin: [],
-                
+
             };
         }
 
