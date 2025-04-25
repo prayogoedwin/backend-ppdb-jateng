@@ -182,7 +182,7 @@ export const getTimelineSatuan = async (id) => {
         const data = resTm.toJSON();                  // → plain object
         await redisSet(redis_key,
                        JSON.stringify(data),
-                       process.env.REDIS_EXPIRE_TIME_MASTER);
+                       process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
         console.log(`[DB] getTimelineSatuan(${id}) →`, data);
         return data;
       }
@@ -258,7 +258,7 @@ export const getTimelineAll = async () => {
         await redisSet(
           redis_key,
           JSON.stringify(data),
-          process.env.REDIS_EXPIRE_TIME_MASTER
+          process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
         );
       }
       console.log(`[DB] getTimelineAll →`, data);
