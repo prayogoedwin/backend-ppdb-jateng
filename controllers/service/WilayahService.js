@@ -1,4 +1,5 @@
 import WilayahVerDapodiks from '../../models/master/WilayahVerDapodikModel.js';
+import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
 // export const getProvinsi = async (kode_wilayah_prov) => {
 //     try {
