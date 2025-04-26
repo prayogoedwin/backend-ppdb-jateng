@@ -8,11 +8,15 @@ router.use(cors());
 
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
+import domainWhitelistMiddleware from '../middleware/IpWhitelist.js';
+// import domainWhitelistMiddleware from '../middleware/domainWhitelist.js';
 import { appKeyMiddleware, appKeynyaIntegrator} from '../middleware/AppKey.js';
 import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
 import { authenticateToken, authenticateRefreshToken } from '../middleware/Auth.js';
 import { authenticateTokenClient, authenticateRefreshTokenClient } from '../middleware/AuthClient.js';
 import { logAccess, logAccessAdmin, logAccessClient, logAccessPub } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
+import csrfProtection from '../middleware/csrfProtection.js';
+import { validatePendaftar, validateResult } from '../middleware/validasiPendaftar.js';
 
 
 //konfigurasi cache
@@ -95,6 +99,43 @@ import { countPendaftar, countCheckedPesertaDidiks, listCheckedPesertaDidiks } f
 // // Terapkan logAccessMiddleware ke semua route
 // router.use(logAccessMiddleware);
 
+const isBrowser = (userAgent) => {
+    // Daftar beberapa browser populer yang perlu dideteksi
+    const browserKeywords = [
+        'Mozilla',    // Umum untuk banyak browser berbasis Gecko (Firefox, Brave, dll)
+        'Chrome',     // Google Chrome, Brave, Edge (Chromium-based)
+        'Safari',     // Safari
+        'Firefox',    // Firefox
+        'Edge',       // Microsoft Edge (Chromium-based)
+        'Opera',      // Opera
+    ];
+
+    // Memeriksa apakah User-Agent mengandung kata kunci dari browser yang valid
+    return browserKeywords.some(keyword => userAgent.includes(keyword));
+};
+
+// Pakai csrfProtection
+router.get('/api/csrf-token', domainWhitelistMiddleware, csrfProtection, (req, res) => {
+
+    const userAgent = req.get('User-Agent') || '';
+    
+    //Jika bukan browser, kirimkan status 403
+    if (!isBrowser(userAgent)) {
+        return res.status(403).json({
+            status: 0,
+            message: 'CSRF token cannot be retrieved from non-browser clients.'
+        });
+    }
+
+    // Jika permintaan datang dari browser, lanjutkan untuk mengembalikan CSRF token
+    res.json({
+        status: 1,
+        csrfToken: req.csrfToken()
+    });
+
+    // res.json({ csrfToken: req.csrfToken() });
+});
+
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
@@ -147,15 +188,15 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 //API Pendaftaran
 
 //service
-router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, getPesertaDidikByNisnHandler);
+router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
-router.post("/api/servis/daftar_akun_spmb", ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftarTanpaFile);
+router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftarTanpaFile);
 router.post("/api/servis/upload_data_dukung", ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
 
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);
 
-router.post('/api/servis/revisi_data', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updatePendaftarByUser);
+router.post('/api/servis/revisi_data', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, updatePendaftarByUser);
 // router.post('/api/servis/revisi_dokumen', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updateDokumen);
 
 
@@ -173,34 +214,34 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 
 //========================================================================//
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
-router.post('/api/auth/login', ipWhitelistMiddleware, appKeyMiddleware, logAccess, loginUser);
-router.post('/api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
+router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, loginUser);
+router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
-router.post('/api/auth/ubah_password', ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
-router.post('/api/auth/lupa_password', ipWhitelistMiddleware, appKeyMiddleware, forgotPassword);
+router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
+router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, forgotPassword);
 
 
 
-router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess,  cekPerangkingan);
-router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, createPerangkingan);
-router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
+router.post('/api/servis/cek_daftar_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess,  cekPerangkingan);
+router.post('/api/servis/daftar_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, createPerangkingan);
+router.post('/api/servis/cetak_bukti_daftar', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
 
 
 // router.post('/api/servis/upload_file_tambahan/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, uploadFileTambahan);
 
 
-router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
 
 router.post('/api/servis/perangkingan_info_param', ipWhitelistMiddleware, appKeyMiddleware, getInfoParam);
 
 
 
-router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
+router.post('/api/servis/perangkingan_saya', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
 
-router.post('/api/servis/perangkingan_detail', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
+router.post('/api/servis/perangkingan_detail', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
 
-router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
+router.post('/api/servis/perangkingan_hapus', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
 
 // router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware, daftarUlangPerangkingan);
 
@@ -221,8 +262,8 @@ router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddle
 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
-router.post('/admin-api/auth/signin', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
-router.post('/admin-api/auth/verifikasi_otp', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
+router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
+router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
 router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkinganAdmin);

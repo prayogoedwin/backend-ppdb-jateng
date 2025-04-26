@@ -1,7 +1,5 @@
 import { check, validationResult } from 'express-validator';
-import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, 
-    DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
-    getSekolahTujuanById, getSekolahJurusanById } from '../../helpers/HelpHelper.js';
+import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
@@ -85,6 +83,7 @@ const calculateAgeInMonth_BAK = (birthdate) => {
 
     return age;
 };
+
 
 const calculateAge = async (birthdate) => {
 
@@ -2927,12 +2926,11 @@ export const getPerangkingan = async (req, res) => {
         if(jalur_pendaftaran_id == 1){
  
             //Jalur Zonasi Reguler SMA
-            // const resSek = await SekolahTujuan.findOne({
-            //     where: {
-            //         id : sekolah_tujuan_id,
-            //     }
-            // });
-            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
 
             let kuota_zonasi_max = resSek.daya_tampung;
             let kuota_zonasi_min = resSek.kuota_zonasi;
@@ -3159,12 +3157,11 @@ export const getPerangkingan = async (req, res) => {
         }else if(jalur_pendaftaran_id == 2){
             //Jalur Zonasi KHUSUS SMA
 
-            // const resSek = await SekolahTujuan.findOne({
-            //     where: {
-            //         id : sekolah_tujuan_id,
-            //     }
-            // });
-            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
 
             let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
 
@@ -3281,12 +3278,11 @@ export const getPerangkingan = async (req, res) => {
         }else if(jalur_pendaftaran_id == 3){
              //Jalur Prestasi SMA
 
-            // const resSek = await SekolahTujuan.findOne({
-            //     where: {
-            //         id : sekolah_tujuan_id,
-            //     }
-            // });
-            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
 
             let kuota_prestasi = resSek.kuota_prestasi;
 
@@ -3401,12 +3397,11 @@ export const getPerangkingan = async (req, res) => {
 
         }else if(jalur_pendaftaran_id == 4){
             //Jalur PTO / MutasiSMA 
-            // const resSek = await SekolahTujuan.findOne({
-            //     where: {
-            //         id : sekolah_tujuan_id,
-            //     }
-            // });
-            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
 
             let kuota_pto = resSek.kuota_pto;
 
@@ -3518,12 +3513,11 @@ export const getPerangkingan = async (req, res) => {
         }else if(jalur_pendaftaran_id == 5){
         //Jalur Afirmasi SMA
 
-            // const resSek = await SekolahTujuan.findOne({
-            //     where: {
-            //         id : sekolah_tujuan_id,
-            //     }
-            // });
-            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+            const resSek = await SekolahTujuan.findOne({
+                where: {
+                    id : sekolah_tujuan_id,
+                }
+            });
             
             let daya_tampung = resSek.daya_tampung;
             let kuota_afirmasi = resSek.kuota_afirmasi;
@@ -3720,14 +3714,12 @@ export const getPerangkingan = async (req, res) => {
             }
         }else if(jalur_pendaftaran_id == 6){
             //Jalur SMK Domisili Terdekat
-                // const resJurSek = await SekolahJurusan.findOne({
-                //     where: {
-                //         id_sekolah_tujuan : sekolah_tujuan_id,
-                //         id : jurusan_id,
-                //     }
-                // });
-
-                const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
                 
 
                 let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
@@ -3816,13 +3808,12 @@ export const getPerangkingan = async (req, res) => {
         }else if(jalur_pendaftaran_id == 7){
             //Jalur SMK Prestasi
 
-                // const resJurSek = await SekolahJurusan.findOne({
-                //     where: {
-                //         id_sekolah_tujuan : sekolah_tujuan_id,
-                //         id : jurusan_id,
-                //     }
-                // });
-                const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
 
                 let kuota_prestasi_max = resJurSek.daya_tampung;
                 let kuota_prestasi_min = resJurSek.kuota_prestasi;
@@ -3976,13 +3967,12 @@ export const getPerangkingan = async (req, res) => {
         }else if(jalur_pendaftaran_id == 8){
             //Jalur SMK Prestasi Khusus
 
-                // const resJurSek = await SekolahJurusan.findOne({
-                //     where: {
-                //         id_sekolah_tujuan : sekolah_tujuan_id,
-                //         id : jurusan_id,
-                //     }
-                // });
-                const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
 
                 let kuota_prestasi_khusus = resJurSek.kuota_prestasi_khusus;
 
@@ -4071,13 +4061,12 @@ export const getPerangkingan = async (req, res) => {
 
         }else if(jalur_pendaftaran_id == 9){
             //Jalur SMK Afirmasi
-                // const resJurSek = await SekolahJurusan.findOne({
-                //     where: {
-                //         id_sekolah_tujuan : sekolah_tujuan_id,
-                //         id : jurusan_id,
-                //     }
-                // });
-                const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                const resJurSek = await SekolahJurusan.findOne({
+                    where: {
+                        id_sekolah_tujuan : sekolah_tujuan_id,
+                        id : jurusan_id,
+                    }
+                });
 
                 let kuota_afirmasi = resJurSek.kuota_afirmasi;
 

@@ -4,6 +4,8 @@ import nodemailer from 'nodemailer';
 import { redisGet, redisSet } from '../redis.js'; // Import the Redis functions
 import Timelines from "../models/service/TimelineModel.js";
 import FileTambahans from "../models/master/FileTambahanModel.js";
+import SekolahTujuan from "../models/master/SekolahTujuanModel.js";
+import SekolahJurusan from "../models/master/SekolahJurusanModel.js";
 import EzIntegrator from "../models/config/EzIntegrator.js";
 // import EzSekolahTujuans from '../models/master/EzSekolahTujuansModel.js'; // Adjusted path to EzSekolahTujuans model
 // import EzWilayahVerDapodiks from '../models/master/WilayahVerDapodikModel.js'; // Adjusted path to WilayahVerDapodik model
@@ -156,6 +158,87 @@ export const getFileTambahanByJalurPendaftaran = async (id) => {
       console.error(`Error in FileTambahans(${id}):`, err);
       return null;
     }
+};
+
+export const getSekolahTujuanById = async (id) => {
+  const redis_key = `sekolah_tujuan:byid:${id}`;
+
+  try {
+    // 1) Cek Redis
+    const cached = await redisGet(redis_key);
+    if (cached) {
+      const data = JSON.parse(cached);
+      console.log(`[CACHE] getSekolahTujuanById(${id}) →`, data);
+      return data;
+    }
+
+    // 2) Ambil dari DB
+    const resSek = await SekolahTujuan.findOne({
+      where: { id }
+    });
+
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resSek) {
+      const data = resSek.toJSON();
+      await redisSet(
+        redis_key,
+        JSON.stringify(data),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
+      );
+      console.log(`[DB] getSekolahTujuanById(${id}) →`, data);
+      return data;
+    }
+
+    // 4) Kalau tidak ketemu di DB
+    console.log(`[DB] getSekolahTujuanById(${id}) → null`);
+    return null;
+
+  } catch (err) {
+    console.error(`Error in getSekolahTujuanById(${id}):`, err);
+    return null;
+  }
+};
+
+export const getSekolahJurusanById = async (sekolah_tujuan_id, jurusan_id) => {
+  const redis_key = `sekolah_jurusan:byid:${sekolah_tujuan_id}:${jurusan_id}`;
+
+  try {
+    // 1) Cek Redis
+    const cached = await redisGet(redis_key);
+    if (cached) {
+      const data = JSON.parse(cached);
+      console.log(`[CACHE] getSekolahJurusanById(${sekolah_tujuan_id}, ${jurusan_id}) →`, data);
+      return data;
+    }
+
+    // 2) Ambil dari DB
+    const resJurSek = await SekolahJurusan.findOne({
+      where: {
+        id_sekolah_tujuan: sekolah_tujuan_id,
+        id: jurusan_id,
+      }
+    });
+
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resJurSek) {
+      const data = resJurSek.toJSON();
+      await redisSet(
+        redis_key,
+        JSON.stringify(data),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
+      );
+      console.log(`[DB] getSekolahJurusanById(${sekolah_tujuan_id}, ${jurusan_id}) →`, data);
+      return data;
+    }
+
+    // 4) Kalau tidak ketemu
+    console.log(`[DB] getSekolahJurusanById(${sekolah_tujuan_id}, ${jurusan_id}) → null`);
+    return null;
+
+  } catch (err) {
+    console.error(`Error in getSekolahJurusanById(${sekolah_tujuan_id}, ${jurusan_id}):`, err);
+    return null;
+  }
 };
 
 

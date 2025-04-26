@@ -10,6 +10,12 @@ import Router from "./routes/index.js";
 //Import dotenv
 import dotenv from "dotenv";
 
+import cookieParser from 'cookie-parser'; // <-- WAJIB ADA
+import csrf from 'csurf';  // Mengimpor csrf dari csurf
+
+import csrfProtection from './middleware/csrfProtection.js';
+import routes from './routes/index.js'; // Sesuaikan path-nya
+
 
 
 // Load environment variables from .env files
@@ -24,8 +30,24 @@ app.use(express.json());
 //use form data
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
+
 // use cors
 app.use(cors());
+
+app.use(routes);
+
+// Tangani error CSRF jika terjadi ForbiddenError
+routes.use((err, req, res, next) => {
+    if (err.code === 'EBADCSRFTOKEN') {
+      return res.status(403).json({ 
+        status: 0,
+        message: 'ForbiddenError: invalid csrf token'
+     });
+    }
+    // Lanjutkan ke error handler lainnya jika bukan CSRF error
+    next(err);
+  })
 
 // Testing database connection 
 try {
