@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const router = express.Router();
-router.use(cors());
+// router.use(cors());
 
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
@@ -114,27 +114,27 @@ const isBrowser = (userAgent) => {
     return browserKeywords.some(keyword => userAgent.includes(keyword));
 };
 
-// Pakai csrfProtection
-router.get('/api/csrf-token', domainWhitelistMiddleware, csrfProtection, (req, res) => {
+// // Pakai csrfProtection
+// router.get('/api/csrf-token', domainWhitelistMiddleware, csrfProtection, (req, res) => {
 
-    const userAgent = req.get('User-Agent') || '';
+//     const userAgent = req.get('User-Agent') || '';
     
-    //Jika bukan browser, kirimkan status 403
-    // if (!isBrowser(userAgent)) {
-    //     return res.status(403).json({
-    //         status: 0,
-    //         message: 'CSRF token cannot be retrieved from non-browser clients.'
-    //     });
-    // }
+//     //Jika bukan browser, kirimkan status 403
+//     // if (!isBrowser(userAgent)) {
+//     //     return res.status(403).json({
+//     //         status: 0,
+//     //         message: 'CSRF token cannot be retrieved from non-browser clients.'
+//     //     });
+//     // }
 
-    // Jika permintaan datang dari browser, lanjutkan untuk mengembalikan CSRF token
-    res.json({
-        status: 1,
-        csrfToken: req.csrfToken()
-    });
+//     // Jika permintaan datang dari browser, lanjutkan untuk mengembalikan CSRF token
+//     res.json({
+//         status: 1,
+//         csrfToken: req.csrfToken()
+//     });
 
-    // res.json({ csrfToken: req.csrfToken() });
-});
+//     // res.json({ csrfToken: req.csrfToken() });
+// });
 
 // refresh token
 router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);

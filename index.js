@@ -12,7 +12,9 @@ import dotenv from "dotenv";
 
 
 import cookieParser from 'cookie-parser';
-import csrfProtection from './middleware/csrfProtection.js'; // ini middleware kamu tadi
+import csrf from 'csurf';
+
+// import csrfProtection from './middleware/csrfProtection.js'; // ini middleware kamu tadi
 // import routes from './routes/index.js'; // Sesuaikan path-nya
 
 
@@ -25,15 +27,24 @@ dotenv.config(); // This will load variables from .env as well
 // Init express
 const app = express();
 
+app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
+
 // use cors
 app.use(cors());
 // use express json
 app.use(express.json());
 //use form data
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
 
+
+const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
+
+// Contoh route buat kirim csrf token
+app.get('/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
 
 
 app.use(Router);
