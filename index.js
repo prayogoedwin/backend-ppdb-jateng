@@ -61,7 +61,7 @@ app.use(
 );
 
 
-// Menangani error CORS secara global
+//Menangani error CORS secara global
 app.use((err, req, res, next) => {
   if (err.message === 'Not allowed by CORS') {
     // CORS Error
