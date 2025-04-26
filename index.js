@@ -10,10 +10,9 @@ import Router from "./routes/index.js";
 //Import dotenv
 import dotenv from "dotenv";
 
-import cookieParser from 'cookie-parser'; // <-- WAJIB ADA
-import csrf from 'csurf';  // Mengimpor csrf dari csurf
 
-import csrfProtection from './middleware/csrfProtection.js';
+import cookieParser from 'cookie-parser';
+import csrfProtection from './middleware/csrfProtection.js'; // ini middleware kamu tadi
 // import routes from './routes/index.js'; // Sesuaikan path-nya
 
 
@@ -33,6 +32,8 @@ app.use(express.json());
 //use form data
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
+
+app.use(csrfProtection);
 
 
 app.use(Router);
