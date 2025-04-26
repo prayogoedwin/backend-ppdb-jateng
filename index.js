@@ -80,7 +80,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // const csrfProtection = csrf({ cookie: true });
-app.use(csrfProtection);
+// app.use(csrfProtection);
 
 // Contoh route buat kirim csrf token
 // app.get('/api/csrf-token', (req, res) => {
