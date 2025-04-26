@@ -38,25 +38,7 @@ export const countPendaftar_BAK = async (req, res) => {
                 }
               });
 
-              const pendaftarDalam = await DataPendaftars.count({
-                where: {
-                  sekolah_asal_id: 1,
-                  [Op.or]: [
-                    { is_delete: { [Op.is]: null } },
-                    { is_delete: 0 }
-                  ]
-                }
-              });
-
-              const pendaftarLuar = await DataPendaftars.count({
-                where: {
-                  sekolah_asal_id: { [Op.in]: [2, 9] },
-                  [Op.or]: [
-                    { is_delete: { [Op.is]: null } },
-                    { is_delete: 0 }
-                  ]
-                }
-              });
+              
 
 
 
@@ -298,6 +280,24 @@ export const countPendaftar = async (req, res) => {
 
       const pendaftarCount = await DataPendaftars.count({ where: whereClause });
 
+      const whereDalam = {
+        ...whereClause,
+        sekolah_asal_id: 1
+      };
+      
+      const pendaftarDalam = await DataPendaftars.count({
+        where: whereDalam
+      });
+
+      const whereLuar = {
+        ...whereClause,
+        sekolah_asal_id: { [Op.in]: [2, 9] }
+      };
+      
+      const pendaftarLuar = await DataPendaftars.count({
+        where: whereLuar
+      });
+
       const genderCountsArray = await DataPendaftars.findAll({
           attributes: [
               'jenis_kelamin',
@@ -497,6 +497,8 @@ export const countPendaftar = async (req, res) => {
 
       const result = {
           pendaftar: pendaftarCount,
+          pendaftar_dalam: pendaftarDalam,
+          pendaftar_luar: pendaftarLuar,
           pendaftar_jenis_kelamin: genderCounts,
           pendaftar_terverifikasi: verifiedCount,
           pendaftar_aktivasi: activatedCount,
