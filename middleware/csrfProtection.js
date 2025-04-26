@@ -1,6 +1,6 @@
 import csrf from 'csurf';
 
-const csrfProtection = csrf({ cookie: false });
+const csrfProtection = csrf({ cookie: true });
 
 // const csrfProtection = csrf({
 //     cookie: {
