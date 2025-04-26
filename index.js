@@ -50,16 +50,16 @@ app.get('/csrf-token', (req, res) => {
 app.use(Router);
 
 // Tangani error CSRF jika terjadi ForbiddenError
-Router.use((err, req, res, next) => {
-    if (err.code === 'EBADCSRFTOKEN') {
-      return res.status(403).json({ 
-        status: 0,
-        message: 'ForbiddenError: invalid csrf token'
-     });
-    }
-    // Lanjutkan ke error handler lainnya jika bukan CSRF error
-    next(err);
-  })
+// Router.use((err, req, res, next) => {
+//     if (err.code === 'EBADCSRFTOKEN') {
+//       return res.status(403).json({ 
+//         status: 0,
+//         message: 'ForbiddenError: invalid csrf token'
+//      });
+//     }
+//     // Lanjutkan ke error handler lainnya jika bukan CSRF error
+//     next(err);
+//   })
 
 // Testing database connection 
 try {
