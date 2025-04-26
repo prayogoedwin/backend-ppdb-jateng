@@ -62,16 +62,16 @@ app.use(
 
 
 // Menangani error CORS secara global
-// app.use((err, req, res, next) => {
-//   if (err.message === 'Not allowed by CORS') {
-//     // CORS Error
-//     console.error('CORS Error: ', err.message);
-//     return res.status(403).json({ message: 'Forbidden: CORS Not Allowed' });
-//   }
+app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    // CORS Error
+    console.error('CORS Error: ', err.message);
+    return res.status(403).json({ message: 'Forbidden: CORS Not Allowed' });
+  }
   
-//   // Jika ada error lain, lanjutkan ke error handler berikutnya
-//   next(err);
-// });
+  // Jika ada error lain, lanjutkan ke error handler berikutnya
+  next(err);
+});
 
 
 app.use(Router);
