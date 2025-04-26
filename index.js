@@ -30,7 +30,12 @@ const app = express();
 app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
 
 // use cors
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3002', // sesuaikan asal front-end kamu
+  credentials: true,              // INI HARUS TRUE supaya cookie ikut dikirim
+}));
+
 // use express json
 app.use(express.json());
 //use form data
