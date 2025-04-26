@@ -47,7 +47,7 @@ app.use(
       }
 
       // Jika header origin tidak ada, izinkan akses
-      // if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true);
 
       // Jika origin ada, cek apakah sesuai dengan origin yang diizinkan
       if (allowedOrigins.includes(origin)) {
