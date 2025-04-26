@@ -46,7 +46,7 @@ const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
 
 // Contoh route buat kirim csrf token
-app.get('/csrf-token', (req, res) => {
+app.get('/api/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
