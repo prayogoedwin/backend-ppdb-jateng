@@ -25,15 +25,15 @@ dotenv.config(); // This will load variables from .env as well
  
 // Init express
 const app = express();
+
+// use cors
+app.use(cors());
 // use express json
 app.use(express.json());
 //use form data
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
 
-// use cors
-app.use(cors());
 
 app.use(Router);
 
