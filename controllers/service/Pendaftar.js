@@ -99,6 +99,8 @@ const generateVerificationCode = async () => {
 // Fungsi untuk menangani permintaan POST
 export const createPendaftar = async (req, res) => {
 
+      
+
       const resTm = await Timelines.findOne({  
         where: { id: 1 }, // Find the timeline by ID  
         attributes: ['id', 'nama', 'status']  

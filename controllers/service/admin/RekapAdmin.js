@@ -38,6 +38,28 @@ export const countPendaftar_BAK = async (req, res) => {
                 }
               });
 
+              const pendaftarDalam = await DataPendaftars.count({
+                where: {
+                  sekolah_asal_id: 1,
+                  [Op.or]: [
+                    { is_delete: { [Op.is]: null } },
+                    { is_delete: 0 }
+                  ]
+                }
+              });
+
+              const pendaftarLuar = await DataPendaftars.count({
+                where: {
+                  sekolah_asal_id: { [Op.in]: [2, 9] },
+                  [Op.or]: [
+                    { is_delete: { [Op.is]: null } },
+                    { is_delete: 0 }
+                  ]
+                }
+              });
+
+
+
         const genderCountsArray = await DataPendaftars.findAll({
             attributes: [
                 'jenis_kelamin',
@@ -210,6 +232,8 @@ export const countPendaftar_BAK = async (req, res) => {
 
         const result = {
           pendaftar: pendaftarCount,
+          pendaftar_dalam: pendaftarDalam,
+          pendaftar_luar: pendaftarLuar,
           pendaftar_jenis_kelamin: genderCounts,
           pendaftar_terverifikasi: verifiedCount,
           pendaftar_aktivasi: activatedCount,
@@ -251,8 +275,10 @@ export const countPendaftar = async (req, res) => {
   const redis_key = `RekapAdminsAll_${sekolah_id}_${start_date}_${end_date}`;
 
   try {
-      const cacheNya = false;
+      // const cacheNya = false;
+      const cacheNya = await redisGet(redis_key); // ambil dari Redis
       if (cacheNya) {
+         console.log(`[CACHE] →`, redis_key);
           return res.status(200).json({
               success: true,
               message: 'Data diambil dari cache',
@@ -260,6 +286,8 @@ export const countPendaftar = async (req, res) => {
           });
       }
 
+      
+      console.log(`[DB] →`, redis_key);
       let whereClause = {
           [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
       };
@@ -481,7 +509,12 @@ export const countPendaftar = async (req, res) => {
           jalur_pendaftaran_smk: jaluePendaftaranSMK
       };
 
-      await redisSet(redis_key, JSON.stringify(result));
+      // await redisSet(redis_key, JSON.stringify(result));
+      await redisSet(
+        redis_key,
+        JSON.stringify(result),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_REKAP
+      );
 
       res.status(200).json({
           success: true,

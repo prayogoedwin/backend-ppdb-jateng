@@ -20,7 +20,7 @@ export const appKeyMiddleware = async (req, res, next) => {
 
         if (keyNya) {
             keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
-            console.log(`[Redis] Found cached app key for ${apiKey}`);
+            console.log(`[CACHE] Found cached app key for ${apiKey}`);
         } else {
             keyNya = await EzAppKey.findOne({
                 where: {
