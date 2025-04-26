@@ -192,7 +192,7 @@ router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddle
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
 router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, validatePendaftar, createPendaftarTanpaFile);
-router.post("/api/servis/upload_data_dukung", ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
+router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
 
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);
 
@@ -206,7 +206,7 @@ router.post('/api/servis/cari_batas_wilayah', ipWhitelistMiddleware, appKeyMiddl
 
 router.post('/api/servis/cetak_pendaftaran', getPendaftarforCetak);
 router.post('/api/servis/aktivasi_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, aktivasiAkunPendaftar);
-router.post('/api/servis/data_dukung', ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
+router.post('/api/servis/data_dukung', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddleware, getPendaftarDetail);
 
 
