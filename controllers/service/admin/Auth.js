@@ -173,8 +173,6 @@ export const loginAdmin = async (req, res) => {
                 }
             );
 
-            console.log('Semua headers:', req.headers);
-
 
         // Respond with OTP status
         return res.status(200).json({

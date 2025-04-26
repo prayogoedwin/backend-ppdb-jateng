@@ -88,6 +88,7 @@ Router.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
       return res.status(403).json({ 
         status: 0,
+        test: req.headers,
         message: 'ForbiddenError: invalid csrf token'
      });
     }
