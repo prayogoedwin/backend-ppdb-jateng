@@ -188,7 +188,7 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 //API Pendaftaran
 
 //service
-router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
+router.post('/api/servis/calon_peserta_didik', ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
 router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftarTanpaFile);
