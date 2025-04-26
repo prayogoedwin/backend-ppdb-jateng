@@ -38,7 +38,7 @@ export const appKeyMiddleware = async (req, res, next) => {
             await redisSet(
                 redis_key,
                 JSON.stringify(keyNya),
-                process.env.REDIS_EXPIRE_TIME_MASTER
+                process.env.REDIS_EXPIRE_TIME_HARIAN
             );
 
             console.log(`[DB] AppKey(${apiKey}) →`, keyNya);
