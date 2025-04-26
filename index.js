@@ -14,9 +14,6 @@ import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 // import csrf from 'csurf';
 
-import csrfProtection from './middleware/csrfProtection.js'; // ini middleware kamu tadi
-// import routes from './routes/index.js'; // Sesuaikan path-nya
-
 
 
 // Load environment variables from .env files
@@ -27,66 +24,54 @@ dotenv.config(); // This will load variables from .env as well
 // Init express
 const app = express();
 
-app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
-
-// use cors
-// app.use(cors());
-// app.use(cors({
-//   origin: 'http://localhost:3002', // sesuaikan asal front-end kamu
-//   credentials: true,              // INI HARUS TRUE supaya cookie ikut dikirim
-// }));
+// Middleware untuk membaca cookies dan JSON body
+app.use(cookieParser());
+app.use(express.json());   // Parsing JSON
+app.use(express.urlencoded({ extended: true }));  // Parsing form dat
 
 const allowedOrigins = [
   process.env.ORIGIN_FRONTEND,
   process.env.ORIGIN_ADMIN
 ];
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    // let a = 0;
-    if (process.env.ORIGIN_CHECKER === '0') {
-      // return callback(null, true);
-      if (!origin) return callback(null, true);
-    }
 
-    console.log('origin checnker= '+process.env.ORIGIN_CHECKER)
-    
-    // if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
+
+// Middleware CORS dengan pengecekan header dan origin
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Jika request adalah dev access, izinkan tanpa origin
+
+      // Jika ORIGIN_CHECKER diset ke '0', izinkan akses tanpa memeriksa origin
+      if (process.env.ORIGIN_CHECKER === '0') {
+        return callback(null, true); // Izinkan tanpa origin
+      }
+
+      // Jika header origin tidak ada, izinkan akses
+      if (!origin) return callback(null, true);
+
+      // Jika origin ada, cek apakah sesuai dengan origin yang diizinkan
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 
 // Menangani error CORS secara global
-app.use((err, req, res, next) => {
-  if (err.message === 'Not allowed by CORS') {
-    // CORS Error
-    console.error('CORS Error: ', err.message);
-    return res.status(403).json({ message: 'Forbidden: CORS Not Allowed' });
-  }
+// app.use((err, req, res, next) => {
+//   if (err.message === 'Not allowed by CORS') {
+//     // CORS Error
+//     console.error('CORS Error: ', err.message);
+//     return res.status(403).json({ message: 'Forbidden: CORS Not Allowed' });
+//   }
   
-  // Jika ada error lain, lanjutkan ke error handler berikutnya
-  next(err);
-});
-
-// use express json
-app.use(express.json());
-//use form data
-app.use(express.urlencoded({ extended: true }));
-
-// const csrfProtection = csrf({ cookie: true });
-// app.use(csrfProtection);
-
-// Contoh route buat kirim csrf token
-// app.get('/api/csrf-token', (req, res) => {
-//   res.json({ csrfToken: req.csrfToken() });
+//   // Jika ada error lain, lanjutkan ke error handler berikutnya
+//   next(err);
 // });
-
 
 
 app.use(Router);
