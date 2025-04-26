@@ -120,12 +120,12 @@ router.get('/api/csrf-token', domainWhitelistMiddleware, csrfProtection, (req, r
     const userAgent = req.get('User-Agent') || '';
     
     //Jika bukan browser, kirimkan status 403
-    if (!isBrowser(userAgent)) {
-        return res.status(403).json({
-            status: 0,
-            message: 'CSRF token cannot be retrieved from non-browser clients.'
-        });
-    }
+    // if (!isBrowser(userAgent)) {
+    //     return res.status(403).json({
+    //         status: 0,
+    //         message: 'CSRF token cannot be retrieved from non-browser clients.'
+    //     });
+    // }
 
     // Jika permintaan datang dari browser, lanjutkan untuk mengembalikan CSRF token
     res.json({
