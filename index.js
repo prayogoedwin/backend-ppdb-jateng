@@ -14,7 +14,7 @@ import cookieParser from 'cookie-parser'; // <-- WAJIB ADA
 import csrf from 'csurf';  // Mengimpor csrf dari csurf
 
 import csrfProtection from './middleware/csrfProtection.js';
-import routes from './routes/index.js'; // Sesuaikan path-nya
+// import routes from './routes/index.js'; // Sesuaikan path-nya
 
 
 
@@ -32,13 +32,17 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser()); // <-- HARUS sebelum csrfProtection
 
-// use cors
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3002', // frontend URL kamu
+  credentials: true,               // ini wajib supaya cookie/token ikut
+};
 
-app.use(routes);
+app.use(cors(corsOptions));
+
+app.use(Router);
 
 // Tangani error CSRF jika terjadi ForbiddenError
-routes.use((err, req, res, next) => {
+Router.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
       return res.status(403).json({ 
         status: 0,
@@ -58,7 +62,7 @@ try {
 }
 
 // use router
-app.use(Router);
+// app.use(Router);
 // listen on port
 const port = process.env.PORT || 3033;
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
