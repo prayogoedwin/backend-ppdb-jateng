@@ -24,6 +24,8 @@ dotenv.config(); // This will load variables from .env as well
 // Init express
 const app = express();
 
+app.set('trust proxy', true);
+
 // Middleware untuk membaca cookies dan JSON body
 app.use(cookieParser());
 app.use(express.json());   // Parsing JSON
@@ -75,6 +77,11 @@ app.use((err, req, res, next) => {
 
 
 app.use(Router);
+
+// Routes
+app.get('/api/cek-ip-saya', (req, res) => {
+  res.send(`IP kamu adalah: ${req.ip}`);
+});
 
 //Tangani error CSRF jika terjadi ForbiddenError
 Router.use((err, req, res, next) => {
