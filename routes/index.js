@@ -17,6 +17,8 @@ import { authenticateTokenClient, authenticateRefreshTokenClient } from '../midd
 import { logAccess, logAccessAdmin, logAccessClient, logAccessPub } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
 import csrfProtection from '../middleware/csrfProtection.js';
 import { validatePendaftar, validateResult } from '../middleware/validasiPendaftar.js';
+import { verifyRecaptcha } from '../middleware/googleRecaptcha.js'; // Import dengan ES Modules
+
 
 
 //konfigurasi cache
@@ -117,7 +119,7 @@ const isBrowser = (userAgent) => {
 // // Pakai csrfProtection
 router.get('/api/csrf-token', domainWhitelistMiddleware, csrfProtection, (req, res) => {
 
-    // const userAgent = req.get('User-Agent') || '';
+    const userAgent = req.get('User-Agent') || '';
     
     //Jika bukan browser, kirimkan status 403
     // if (!isBrowser(userAgent)) {
@@ -188,7 +190,7 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 //API Pendaftaran
 
 //service
-router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
+router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
 router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, validatePendaftar, createPendaftarTanpaFile);
@@ -231,7 +233,7 @@ router.post('/api/servis/cetak_bukti_daftar', csrfProtection, ipWhitelistMiddlew
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, uploadFileTambahan);
 
 
-router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
 
 router.post('/api/servis/perangkingan_info_param', ipWhitelistMiddleware, appKeyMiddleware, getInfoParam);
 
