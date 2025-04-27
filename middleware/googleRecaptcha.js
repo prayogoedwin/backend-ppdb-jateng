@@ -24,10 +24,26 @@ export const verifyRecaptcha = async (req, res, next) => {
 
     const { success, score } = response.data;
 
-    if (!success || score < 0.3) {
+    //  if (!success || score < 0.3) {
+    //     return res.status(400).json({ 
+    //       status: 0,
+    //       message: 'Verifikasi reCAPTCHA gagal atau skor terlalu rendah' ,
+    //       score: score // Optional: kirim skor untuk debugging
+    //     });
+    //   }
+
+      if (!success) {
         return res.status(400).json({ 
           status: 0,
-          message: 'Verifikasi reCAPTCHA gagal atau skor terlalu rendah' ,
+          message: 'Verifikasi reCAPTCHA gagal, silahkan ganti browser chrome / mozila terbaru' ,
+          score: score // Optional: kirim skor untuk debugging
+        });
+      }
+
+      if (score < 0.3) {
+        return res.status(400).json({ 
+          status: 0,
+          message: 'Skor Verifikasi reCAPTCHA terlalu rendah, silahkan refresh browser atau rubah ke mode incognito atau ganti jaringan internet' ,
           score: score // Optional: kirim skor untuk debugging
         });
       }
