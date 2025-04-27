@@ -85,20 +85,6 @@ const redisGetAllKeys = async () => {
   }
 };
 
-const redisGetAllKeys2 = async () => {
-  const redisClient = createRedisClient();
-  let keys = [];
-  let cursor = '0';
-
-  do {
-    const reply = await redisClient.scan(cursor, { MATCH: '*', COUNT: 1000 });
-    cursor = reply.cursor;
-    keys.push(...reply.keys);
-  } while (cursor !== '0');
-
-  return keys;
-};
-
 const redisGetAllKeysAndValues = async () => {
   try {
     const keys = await redisClient.keys('*');
@@ -114,4 +100,4 @@ const redisGetAllKeysAndValues = async () => {
   }
 };
 
-export { redisGet, redisSet, redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues, redisGetAllKeys2 };
+export { redisGet, redisSet, redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues };

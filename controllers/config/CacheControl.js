@@ -45,6 +45,7 @@ const clearCacheByKey = async (req, res) => {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+  
 
   const getAllCacheKeysAndValues = async (req, res) => {
     try {
@@ -56,4 +57,4 @@ const clearCacheByKey = async (req, res) => {
     }
   };
 
-  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByKeyFunction };
+  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByKeyFunction, getAllCacheKeys2 };

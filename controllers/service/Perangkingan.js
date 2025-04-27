@@ -3727,6 +3727,8 @@ export const getPerangkingan = async (req, res) => {
                 //     }
                 // });
 
+                let persentase_seleksi_terdekat_anak_guru = DomiSmkHelper('anak_guru');
+
                 const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
                 
 
