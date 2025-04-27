@@ -22,7 +22,7 @@ import { verifyRecaptcha } from '../middleware/googleRecaptcha.js'; // Import de
 
 
 //konfigurasi cache
-import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues } from '../controllers/config/CacheControl.js';
+import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, getAllCacheKeys2 } from '../controllers/config/CacheControl.js';
 
 
 //download
@@ -153,7 +153,8 @@ router.get('/download/:nisn/:filename', viewFile);
 router.delete('/api/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
 router.delete('/api/internal/clear_all_cache', clearAllCache); // Clear all cache
 router.get('/api/internal/cache/keys', getAllCacheKeys); // Get all cache keys
-router.get('/api/internal/cache/key_values', getAllCacheKeysAndValues); 
+router.get('/api/internal/cache/key_values', getAllCacheKeysAndValues);
+router.get('/api/internal/cache/keys_all', getAllCacheKeys2); // Get all cache keys
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);

@@ -417,3 +417,4 @@ export const DomiSmkHelper = (key) => {
 
     return data[key] || 0; // Jika key tidak ditemukan, return 0
 };
+
