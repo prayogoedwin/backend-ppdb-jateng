@@ -301,10 +301,20 @@ export const countPendaftar = async (req, res) => {
       // const pendaftarLuar = await DataPendaftars.count({
       //   where: whereLuar
       // });
+      
+      // const whereAbk = {
+      //   ...whereClause,
+      //   kebutuhan_khusus_id: { 
+      //       [Op.ne]: 0 // Tidak sama dengan 0
+      //   }
+      // };
       const whereAbk = {
         ...whereClause,
-        kebutuhan_khusus_id: { 
-            [Op.ne]: 0 // Tidak sama dengan 0
+        kebutuhan_khusus_id: {
+          [Op.and]: [
+            { [Op.ne]: 0 },  // Tidak sama dengan 0
+            { [Op.ne]: 9 }   // Tidak sama dengan 9
+          ]
         }
       };
       const pendaftarAbk = await DataPendaftars.count({

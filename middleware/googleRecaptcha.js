@@ -35,7 +35,7 @@ export const verifyRecaptcha = async (req, res, next) => {
       if (!success) {
         return res.status(400).json({ 
           status: 0,
-          message: 'Verifikasi reCAPTCHA gagal, silahkan ganti browser chrome / mozila terbaru' ,
+          message: 'Verifikasi reCAPTCHA gagal, silahkan hard refresh browser anda atau ganti browser chrome / mozila terbaru' ,
           score: score // Optional: kirim skor untuk debugging
         });
       }
