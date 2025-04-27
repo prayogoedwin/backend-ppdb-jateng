@@ -5,7 +5,11 @@ export const verifyRecaptcha = async (req, res, next) => {
 //   return true;
   
   if (!recaptchaToken) {
-    return res.status(400).json({ error: 'reCAPTCHA token diperlukan' });
+    // return res.status(400).json({ error: 'reCAPTCHA token diperlukan' });
+    return res.status(400).json({ 
+        status: 0,
+        message: 'error: reCAPTCHA token diperlukan' 
+      });
   }
 
   try {
