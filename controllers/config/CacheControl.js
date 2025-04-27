@@ -57,4 +57,4 @@ const clearCacheByKey = async (req, res) => {
     }
   };
 
-  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByKeyFunction, getAllCacheKeys2 };
+  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByKeyFunction };
