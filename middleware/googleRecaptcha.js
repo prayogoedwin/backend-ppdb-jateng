@@ -35,7 +35,7 @@ export const verifyRecaptcha = async (req, res, next) => {
   } catch (error) {
     console.error('Error verifikasi reCAPTCHA:', error);
    // res.status(500).json({ error: 'Internal server error' });
-    return res.status(200).json({ 
+    return res.status(500).json({ 
         status: 0,
         message: 'Error verifikasi reCAPTCHA' 
       });
