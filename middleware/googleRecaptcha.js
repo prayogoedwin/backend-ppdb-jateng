@@ -24,7 +24,7 @@ export const verifyRecaptcha = async (req, res, next) => {
 
     const { success, score } = response.data;
 
-    if (!success || score < 0.5) {
+    if (!success || score <= 0.3) {
         return res.status(400).json({ 
           status: 0,
           message: 'Verifikasi reCAPTCHA gagal atau skor terlalu rendah' ,
