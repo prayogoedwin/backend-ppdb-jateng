@@ -42,3 +42,9 @@ export const verifyRecaptcha = async (req, res, next) => {
     
   }
 };
+
+// untuk keutuhan lokal
+// export const verifyRecaptcha = async (req, res, next) => {
+//         return true;
+//         next();
+// };
