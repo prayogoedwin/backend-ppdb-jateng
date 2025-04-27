@@ -212,7 +212,7 @@ router.post('/api/servis/cari_batas_wilayah', ipWhitelistMiddleware, appKeyMiddl
 
 router.post('/api/servis/cetak_pendaftaran', getPendaftarforCetak);
 router.post('/api/servis/aktivasi_akun', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, aktivasiAkunPendaftar);
-router.post('/api/servis/data_dukung', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, getDataDukungByNIK);
+router.post('/api/servis/data_dukung', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getDataDukungByNIK);
 router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddleware, getPendaftarDetail);
 
 
