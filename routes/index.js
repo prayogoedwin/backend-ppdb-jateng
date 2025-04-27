@@ -193,12 +193,12 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
-router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, validatePendaftar, createPendaftarTanpaFile);
-router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
+router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, validatePendaftar, createPendaftarTanpaFile);
+router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, uploadPendaftarFiles);
 
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);
 
-router.post('/api/servis/revisi_data', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, updatePendaftarByUser);
+router.post('/api/servis/revisi_data', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, updatePendaftarByUser);
 // router.post('/api/servis/revisi_dokumen', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updateDokumen);
 
 
@@ -216,11 +216,11 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 
 //========================================================================//
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
-router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, loginUser);
-router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
+router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, loginUser);
+router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, verifikasiOtpUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
-router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
-router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, forgotPassword);
+router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, resetPassword);
+router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, forgotPassword);
 
 
 
