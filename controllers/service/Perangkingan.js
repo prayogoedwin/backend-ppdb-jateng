@@ -4112,7 +4112,7 @@ export const getPerangkingan = async (req, res) => {
                 });
 
                 const rowsAtsR = resDataAts.rows; // Data hasil query
-                const totalAtsL = resDataAts.length || 0; // Total jumlah data setelah limit
+                const totalAtsL = resDataAts.rows.length || 0; // Total jumlah data setelah limit
 
                 //panti
                 const resDataPanti = await DataPerangkingans.findAndCountAll({
@@ -4132,7 +4132,7 @@ export const getPerangkingan = async (req, res) => {
                 });
 
                 const rowsPantiR = resDataPanti.rows; // Data hasil query
-                const totalPatntiL = resDataPanti.length || 0; // Total jumlah data setelah limit
+                const totalPatntiL = resDataPanti.rows.length || 0; // Total jumlah data setelah limit
 
 
                 let kuota_akhir_afirmasi = kuota_afirmasi - (totalPatntiL + totalAtsL)
