@@ -363,11 +363,12 @@ export const createPendaftar = async (req, res) => {
 //fungi untuk daftar akun tanpa upload file
 export const createPendaftarTanpaFile = async (req, res) => {
   try {
-      // Cek apakah pendaftaran sudah dibuka
+      //Cek apakah pendaftaran sudah dibuka
       const resTm = await Timelines.findOne({
           where: { id: 1 },
           attributes: ["id", "nama", "status"],
       });
+      // const resTm = await getTimelineSatuan(1);
 
       if (resTm.status != 1) {
           return res.status(400).json({ status: 0, message: "Pendaftaran belum dibuka." });

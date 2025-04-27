@@ -1,4 +1,4 @@
-import { redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues } from '../../redis.js'; // Import the Redis functions
+import { redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues, redisClearByPrefix } from '../../redis.js'; // Import the Redis functions
 
 // Function to clear cache for a specific key
 const clearCacheByKey = async (req, res) => {
@@ -57,4 +57,41 @@ const clearCacheByKey = async (req, res) => {
     }
   };
 
-  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByKeyFunction };
+  // Function to clear cache by prefix
+const clearCacheByPrefix = async (req, res) => {
+  const { prefix } = req.body; // Ambil prefix dari body request
+  
+  if (!prefix) {
+    return res.status(400).json({ error: 'Prefix parameter is required' });
+  }
+
+  try {
+    const deletedCount = await redisClearByPrefix(prefix);
+    return res.json({ 
+      message: `Cache cleared for keys with prefix: ${prefix}`,
+      deletedCount 
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// Function to clear cache by prefix (untuk konsumsi internal)
+const clearCacheByPrefixFunction = async (prefix) => {
+  try {
+    const deletedCount = await redisClearByPrefix(prefix);
+    return { 
+      message: `Cache cleared for keys with prefix: ${prefix}`,
+      deletedCount 
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    throw new Error('Internal Server Error');
+  }
+};
+
+
+  export { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, 
+    clearCacheByKeyFunction, clearCacheByPrefix,
+    clearCacheByPrefixFunction  };

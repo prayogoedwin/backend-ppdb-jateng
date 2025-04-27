@@ -9,6 +9,9 @@ const router = express.Router();
 //middleware
 import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
 import domainWhitelistMiddleware from '../middleware/IpWhitelist.js';
+import simpleAuthMiddleware from '../middleware/simpleAuthMiddleware.js';
+
+
 // import domainWhitelistMiddleware from '../middleware/domainWhitelist.js';
 import { appKeyMiddleware, appKeynyaIntegrator} from '../middleware/AppKey.js';
 import { authenticateTokenPublic, authenticateRefreshTokenPublic } from '../middleware/AuthPublic.js';
@@ -22,7 +25,7 @@ import { verifyRecaptcha } from '../middleware/googleRecaptcha.js'; // Import de
 
 
 //konfigurasi cache
-import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues } from '../controllers/config/CacheControl.js';
+import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValues, clearCacheByPrefix } from '../controllers/config/CacheControl.js';
 
 
 //download
@@ -154,6 +157,7 @@ router.delete('/api/internal/clear_cache/:key', clearCacheByKey); // Clear speci
 router.delete('/api/internal/clear_all_cache', clearAllCache); // Clear all cache
 router.get('/api/internal/cache/keys', getAllCacheKeys); // Get all cache keys
 router.get('/api/internal/cache/key_values', getAllCacheKeysAndValues);
+router.delete('/api/internal/cache/clear_cache_by_prefix', simpleAuthMiddleware, clearCacheByPrefix);
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);

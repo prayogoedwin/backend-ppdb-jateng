@@ -100,4 +100,36 @@ const redisGetAllKeysAndValues = async () => {
   }
 };
 
-export { redisGet, redisSet, redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues };
+const redisClearByPrefix = async (prefix) => {
+  try {
+    // Gunakan SCAN untuk menemukan semua key yang sesuai dengan prefix
+    const keys = [];
+    let cursor = 0;
+    
+    do {
+      const reply = await redisClient.scan(cursor, {
+        MATCH: `${prefix}*`,
+        COUNT: 1000 // Jumlah key per iterasi
+      });
+      
+      cursor = reply.cursor;
+      keys.push(...reply.keys);
+    } while (cursor !== 0);
+
+    // Jika tidak ada key yang ditemukan
+    if (keys.length === 0) {
+      console.log(`No keys found with prefix: ${prefix}`);
+      return 0;
+    }
+
+    // Hapus semua key yang ditemukan
+    const deletedCount = await redisClient.del(keys);
+    console.log(`Deleted ${deletedCount} keys with prefix: ${prefix}`);
+    return deletedCount;
+  } catch (error) {
+    console.error('Error deleting keys by prefix from Redis:', error);
+    throw error;
+  }
+};
+
+export { redisGet, redisSet, redisClearKey, redisClearAll, redisGetAllKeys, redisGetAllKeysAndValues, redisClearByPrefix };
