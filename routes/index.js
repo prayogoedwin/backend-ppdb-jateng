@@ -198,7 +198,7 @@ router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddle
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
 router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, validatePendaftar, createPendaftarTanpaFile);
-router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, uploadPendaftarFiles);
+router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
 
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);
 
