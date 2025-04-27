@@ -282,7 +282,7 @@ export const countPendaftar = async (req, res) => {
           whereClause.created_at = { [Op.between]: [start_date, end_date] };
       }
 
-      // const pendaftarCount = await DataPendaftars.count({ where: whereClause });
+      const pendaftarCount = await DataPendaftars.count({ where: whereClause });
 
       // const whereDalam = {
       //   ...whereClause,
