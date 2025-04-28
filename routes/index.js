@@ -269,8 +269,8 @@ router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddle
 
 //Auth
 router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
-router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccessAdmin, loginAdmin);
-router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccessAdmin, verifikasiOtp);
+router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
+router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
 router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkinganAdmin);
