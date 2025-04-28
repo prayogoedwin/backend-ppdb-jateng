@@ -432,5 +432,5 @@ export const klasifikasiPindah = (key) => {
       5: 'ANTAR PROVINSI'
   };
 
-  return data[key] || 0; // Jika key tidak ditemukan, return 0
+  return data[key] || 'TIDAK ADA DATA KEPINDAHAN'; // Jika key tidak ditemukan, return 0
 };
