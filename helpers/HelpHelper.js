@@ -418,3 +418,19 @@ export const DomiSmkHelper = (key) => {
     return data[key] || 0; // Jika key tidak ditemukan, return 0
 };
 
+
+// ===========
+
+
+export const klasifikasiPindah = (key) => {
+  const data = {
+      0: 'TIDAK ADA DATA KEPINDAHAN',
+      1: 'DALAM SATU DESA/KELURAHAN',
+      2: 'ANTAR DESA/KELURAHAN',
+      3: 'ANTAR KECAMATAN',
+      4: 'ANTAR KAB/KOTA',
+      5: 'ANTAR PROVINSI'
+  };
+
+  return data[key] || 0; // Jika key tidak ditemukan, return 0
+};

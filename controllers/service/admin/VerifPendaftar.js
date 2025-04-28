@@ -6,6 +6,7 @@ import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js'
 import SekolahTujuanModel from '../../../models/master/SekolahTujuanModel.js';
 import StatusDomisilis from '../../../models/master/StatusDomisiliModel.js';
 import DataUsers from '../../../models/service/DataUsersModel.js';
+import { klasifikasiPindah } from '../../../helpers/HelpHelper.js';
 
 
 import Timelines from "../../../models/service/TimelineModel.js";
@@ -1032,6 +1033,18 @@ export const getDataPendaftarById = async (req, res) => {
                 ...resData.toJSON(), // Convert Sequelize instance to plain object  
             };  
             delete data.id; // Remove original ID from the response  
+
+            if (data.status_kepindahan !== undefined) {
+                data.status_kepindahan_text = klasifikasiPindah(data.status_kepindahan);
+            }
+
+            if (data.status_kepindahan_ibu !== undefined) {
+                data.status_kepindahan_ibu_text = klasifikasiPindah(data.status_kepindahan_ibu);
+            }
+
+            if (data.status_kepindahan_ayah !== undefined) {
+                data.status_kepindahan_ayah_text = klasifikasiPindah(data.status_kepindahan_ayah);
+            }
   
             // Custom value for dok_piagam and dok_kk  
             if (data.dok_kk) {  
