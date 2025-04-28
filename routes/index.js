@@ -20,7 +20,8 @@ import { authenticateTokenClient, authenticateRefreshTokenClient } from '../midd
 import { logAccess, logAccessAdmin, logAccessClient, logAccessPub } from '../middleware/LogAccessMiddleware.js'; // Import log middleware
 import csrfProtection from '../middleware/csrfProtection.js';
 import { validatePendaftar, validateResult } from '../middleware/validasiPendaftar.js';
-import { verifyRecaptcha } from '../middleware/googleRecaptcha.js'; // Import dengan ES Modules
+import { verifyRecaptcha } from '../middleware/googleRecaptcha.js';
+import { verifyCluodflareCaptcha } from '../middleware/cloudflareCaptcha.js';
 
 
 
@@ -220,7 +221,7 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 
 //========================================================================//
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
-router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, loginUser);
+router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCluodflareCaptcha, logAccess, loginUser);
 router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, logAccess, verifikasiOtpUser);
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
 router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyRecaptcha, resetPassword);
