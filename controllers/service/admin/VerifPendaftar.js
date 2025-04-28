@@ -1034,15 +1034,15 @@ export const getDataPendaftarById = async (req, res) => {
             };  
             delete data.id; // Remove original ID from the response  
 
-            if (data.status_kepindahan) {
+            if (data.status_kepindahan !== undefined) {
                 data.status_kepindahan_text = klasifikasiPindah(data.status_kepindahan);
             }
 
-            if (data.status_kepindahan_ibu) {
+            if (data.status_kepindahan_ibu !== undefined) {
                 data.status_kepindahan_ibu_text = klasifikasiPindah(data.status_kepindahan_ibu);
             }
 
-            if (data.status_kepindahan_ayah) {
+            if (data.status_kepindahan_ayah !== undefined) {
                 data.status_kepindahan_ayah_text = klasifikasiPindah(data.status_kepindahan_ayah);
             }
   
