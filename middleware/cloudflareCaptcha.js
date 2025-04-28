@@ -20,7 +20,6 @@ export const verifyCluodflareCaptcha = async (req, res, next) => {
         body: JSON.stringify({
             secret: "0x4AAAAAABVkMumzcgp09oPqozVWkoK0IeI",
             response: token,
-            remoteip: req.ip
         })
         });
         
@@ -30,6 +29,7 @@ export const verifyCluodflareCaptcha = async (req, res, next) => {
             return res.status(403).json({ 
             status: 0,
             message: 'Verifikasi turnstile CAPTCHA gagal, silahkan hard refresh browser anda atau ganti browser chrome / mozila terbaru' ,
+            token_yang_dikirim: token
             });
         }
         next();
