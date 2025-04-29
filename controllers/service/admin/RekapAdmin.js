@@ -367,8 +367,6 @@ export const countPendaftar = async (req, res) => {
           pendaftar_kejuaraan: pendaftarKejuaraan,
           pendaftar_organisasi: pendaftarOrganisasi,
 
-          
-
           pendaftar_abk: pendaftarAbk,
           pendaftar_miskin: pendaftarMiskin,
           pendaftar_ada_kepindahan: pendaftarAdaKepindahan,
