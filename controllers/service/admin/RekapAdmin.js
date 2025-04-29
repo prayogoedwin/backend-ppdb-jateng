@@ -74,7 +74,7 @@ export const countPendaftar = async (req, res) => {
         ...whereClause,
         nilai_organisasi: { [Op.notIn]: [0, 9] }
       };
-      const whereOrganisasiwhereOrganisasi = await DataPendaftars.count({
+      const pendaftarOrganisasi = await DataPendaftars.count({
         where: whereOrganisasi
       });
 
@@ -364,8 +364,8 @@ export const countPendaftar = async (req, res) => {
           pendaftar_dalam: pendaftarDalam,
           pendaftar_luar: pendaftarLuar,
 
-          pendaftar_kejuaraan: whereKejuaraan,
-          pendaftar_organisasi: whereOrganisasi,
+          pendaftar_kejuaraan: pendaftarKejuaraan,
+          pendaftar_organisasi: pendaftarOrganisasi,
 
           
 
