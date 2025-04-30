@@ -298,7 +298,7 @@ router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMidd
 router.get('/admin-api/data/pendaftaran_data_nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereNisn);
 
 // router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
-router.get('/admin-api/data/pendaftaran_count', getDataPendaftarCount);
+router.get('/admin-api/data/pendaftaran_count', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarCount);
 
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarForVerifPagination);
 router.get('/admin-api/data/pendaftar_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarById);
