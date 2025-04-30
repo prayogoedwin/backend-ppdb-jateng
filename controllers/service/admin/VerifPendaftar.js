@@ -692,8 +692,8 @@ export const getDataPendaftarByWhereNisn = async (req, res) => {
 export const getDataPendaftarCount = async (req, res) => {
     const redis_key = 'DataPendaftarCountAdmin';
     try {
-        // const cacheNya = await redisGet(redis_key);
-        const cacheNya = false;
+        const cacheNya = await redisGet(redis_key);
+        // const cacheNya = false;
         if (cacheNya) {
             res.status(200).json({
                 status: 1,
@@ -720,7 +720,10 @@ export const getDataPendaftarCount = async (req, res) => {
 
 
             if (dataAdminNya.role_ == 101) {
-                whereFor.kabkota_id = dataAdminNya.kabkota_id;
+                if(dataAdminNya.kabkota_id != null){
+                    whereFor.kabkota_id = dataAdminNya.kabkota_id;
+                }
+       
             }
 
             // Parameter pencarian opsional
