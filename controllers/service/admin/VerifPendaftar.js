@@ -701,7 +701,8 @@ export const getDataPendaftarCount = async (req, res) => {
                 data: JSON.parse(cacheNya)
             });
         } else {
-            const adminNya = 19;
+            // const adminNya = 19;
+            const adminNya = req.user.userId;
 
             const dataAdminNya = await DataUsers.findOne({
                 where: {
@@ -719,12 +720,12 @@ export const getDataPendaftarCount = async (req, res) => {
             };
 
 
-            if (dataAdminNya.role_ == 101) {
-                if(dataAdminNya.kabkota_id != null){
-                    whereFor.kabkota_id = dataAdminNya.kabkota_id;
-                }
+            // if (dataAdminNya.role_ == 101) {
+            //     if(dataAdminNya.kabkota_id != null){
+            //         whereFor.kabkota_id = dataAdminNya.kabkota_id;
+            //     }
        
-            }
+            // }
 
             // Parameter pencarian opsional
             const { nisn } = req.query;
