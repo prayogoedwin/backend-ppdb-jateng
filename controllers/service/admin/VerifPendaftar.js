@@ -413,7 +413,11 @@ export const getDataPendaftarByWhere = async (req, res) => {
 
                 whereFor.verifikasikan_disdukcapil =  1;
                 whereFor.is_verified !=  1;
-                whereFor.kabkota_id = dataAdminNya.kabkota_id;
+
+                if(dataAdminNya.kabkota_id != null){
+                    whereFor.kabkota_id = dataAdminNya.kabkota_id;
+                }
+        
                 // if (verifikasiDukcapil != 1) {
                 //     whereFor.is_verified_disdukcapil = {
                 //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
