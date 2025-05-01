@@ -466,6 +466,14 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    keterangan_untuk_ducapil: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    alasan_batal_verifikasi: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 
     
     
