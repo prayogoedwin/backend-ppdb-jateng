@@ -101,6 +101,7 @@ export const getDataPendaftarForVerif = async (req, res) => {
         const cacheNya = false;
         if (cacheNya) {
 
+            console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
             res.status(200).json({
                 'status': 1,
                 'message': 'Data di ambil dari cache',
@@ -695,6 +696,7 @@ export const getDataPendaftarCount = async (req, res) => {
         const cacheNya = await redisGet(redis_key);
         // const cacheNya = false;
         if (cacheNya) {
+            console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
             res.status(200).json({
                 status: 1,
                 message: 'Data diambil dari cache',
@@ -760,14 +762,18 @@ export const getDataPendaftarCount = async (req, res) => {
                 }
             });
 
+            const counts = {
+                verifikasikan_disdukcapil_1: countVerifikasikan1,
+                verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_1: countVerifikasikan1AndVerified1,
+                verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_null: countVerifikasikan1AndVerifiedNullOr0
+            };
+
+            await redisSet(redis_key, JSON.stringify(counts), process.env.REDIS_EXPIRE_TIME_SOURCE_REKAP);
+            console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
             res.status(200).json({
                 status: 1,
                 message: 'Jumlah data berhasil dihitung',
-                data: {
-                    verifikasikan_disdukcapil_1: countVerifikasikan1,
-                    verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_1: countVerifikasikan1AndVerified1,
-                    verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_null: countVerifikasikan1AndVerifiedNullOr0
-                }
+                data: counts
             });
         }
     } catch (err) {
@@ -1990,125 +1996,3 @@ export const updatePendaftarCapil = async (req, res) => {
         });
     }
 };
-
-//     const {
-//         id,
-//         sekolah_asal_id,
-//         jenis_lulusan_id,
-//         tahun_lulus,
-//         nama_sekolah_asal,
-//         nik,
-//         nama_lengkap,
-//         jenis_kelamin,
-//         tanggal_lahir,
-//         tempat_lahir,
-//         status_domisili,
-//         alamat,
-//         provinsi_id,
-//         kabkota_id,
-//         kecamatan_id,
-//         kelurahan_id,
-//         rt,
-//         rw,
-//         lat,
-//         lng,
-//         no_wa,
-//         tanggal_cetak_kk,
-//         kejuaraan_id,
-//         nama_kejuaraan,
-//         tanggal_sertifikat,
-//         umur_sertifikat,
-//         nomor_sertifikat,
-//         nilai_prestasi,
-//         nilai_raport,
-//         nilai_raport_rata,
-//         is_tidak_sekolah,
-//         is_anak_panti,
-//         is_anak_keluarga_tidak_mampu,
-//         is_anak_guru_jateng,
-//         is_pip
-//     } = req.body;
-
-//     try {
-
-//         res.status(200).json({
-//             status: 1,
-//             message: 'Data berhasil diperbarui',
-//         });
-
-
-//         // Cek apakah pendaftar sudah ada dan belum dihapus
-//         const existingPendaftar = await DataPendaftars.findOne({
-//             where: {
-//                 id: decodeId(id),
-//                 [Op.or]: [
-//                     { is_delete: 0 }, // Entri yang belum dihapus
-//                     { is_delete: null } // Entri yang belum diatur
-//                 ]
-//             }
-//         });
-
-//         if (!existingPendaftar) {
-//             return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
-//         }
-
-//         const updateData = {
-//             sekolah_asal_id,
-//             jenis_lulusan_id,
-//             tahun_lulus,
-//             nama_sekolah_asal,
-//             nik,
-//             nama_lengkap,
-//             jenis_kelamin,
-//             tanggal_lahir: new Date(tanggal_lahir),
-//             tempat_lahir,
-//             status_domisili,
-//             alamat,
-//             provinsi_id,
-//             kabkota_id,
-//             kecamatan_id,
-//             kelurahan_id,
-//             rt,
-//             rw,
-//             lat,
-//             lng,
-//             no_wa,
-//             tanggal_cetak_kk: tanggal_cetak_kk ? new Date(tanggal_cetak_kk) : null,
-//             kejuaraan_id: kejuaraan_id || 0,
-//             nama_kejuaraan,
-//             tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
-//             umur_sertifikat: umur_sertifikat || 0,
-//             nomor_sertifikat,
-//             nilai_prestasi,
-//             nilai_raport,
-//             nilai_raport_rata,
-//             is_tidak_sekolah,
-//             is_anak_panti,
-//             is_anak_keluarga_tidak_mampu,
-//             is_anak_guru_jateng,
-//             is_pip,
-//             updated_at: new Date(),
-//             updated_by: req.user.userId
-
-//         };
-
-//         // // Update the pendaftar entry
-//         await DataPendaftars.update(updateData, {
-//             where: { id: decodeId(id), }
-//         });
-
-//         await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
-//         res.status(200).json({
-//             status: 1,
-//             message: 'Data berhasil diperbarui',
-//             data: updateData
-//         });
-
-//     } catch (error) {
-//         console.error('Gagal memperbarui data:', error);
-//         res.status(500).json({
-//             status: 0,
-//             message: error.message
-//         });
-//     }
-// };
