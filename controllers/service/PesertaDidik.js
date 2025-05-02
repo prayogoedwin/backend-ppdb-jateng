@@ -554,6 +554,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             //     is_pondok = 0;
             // }
 
+            console.log( pesertaDidik.lng_lainnya); 
+
         }else{
 
             is_pondok = 0;
