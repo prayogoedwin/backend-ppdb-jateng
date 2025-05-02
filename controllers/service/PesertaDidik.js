@@ -536,6 +536,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             pesertaDidik.lat_lainnya = pesertaDidik.data_sekolah?.lat?.toString() || null;
             pesertaDidik.lng_lainnya = pesertaDidik.data_sekolah?.lng?.toString() || null;
+    
             is_pondok = 1;
             // const sekolah_id = pesertaDidik.sekolah_id;
             // const cariPondok = await Sekolah.findOne({
