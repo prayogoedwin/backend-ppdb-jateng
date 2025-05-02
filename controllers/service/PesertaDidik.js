@@ -534,8 +534,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
         if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
 
-            pesertaDidik.lat = pesertaDidik.data_sekolah?.lat?.toString() || null;
-            pesertaDidik.lng = pesertaDidik.data_sekolah?.lng?.toString() || null;
+            pesertaDidik.lat_lainnya = pesertaDidik.data_sekolah?.lat?.toString() || null;
+            pesertaDidik.lng_lainnya = pesertaDidik.data_sekolah?.lng?.toString() || null;
             is_pondok = 1;
             // const sekolah_id = pesertaDidik.sekolah_id;
             // const cariPondok = await Sekolah.findOne({
