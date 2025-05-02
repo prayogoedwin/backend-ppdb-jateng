@@ -38,7 +38,7 @@ const getPesertaDidikByNisn = async (nisn, nik) => {
                 {
                 model: Sekolah,
                 as: 'data_sekolah', // Tambahkan alias di sini
-                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
                 include: [{
                     model: BentukPendidikan,
                     as: 'bentuk_pendidikan',
@@ -533,11 +533,13 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         let is_pondok;
         let lat_pondok;
         let lng_pondok;
+        let kode_wilayah_pondok
         //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
         if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
 
             lat_pondok = pesertaDidik.data_sekolah?.lat?.toString() || null;
             lng_pondok = pesertaDidik.data_sekolah?.lng?.toString() || null;
+            kode_wilayah_pondok = pesertaDidik.data_sekolah?.kode_wilayah?.toString() || null;
     
             is_pondok = 1;
             // const sekolah_id = pesertaDidik.sekolah_id;
@@ -561,8 +563,9 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         }else{
 
             is_pondok = 0;
-            lat_pondok = null
-            lng_pondok = null
+            lat_pondok = null;
+            lng_pondok = null;
+            kode_wilayah_pondok= null;
     
 
         }
@@ -606,6 +609,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 ats:  is_tidak_sekolah,
                 lat_pondok: lat_pondok,
                 lng_pondok: lng_pondok,
+                kode_wilayah_pondok: kode_wilayah_pondok
             }
         });
     } catch (err) {
