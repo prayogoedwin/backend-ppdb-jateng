@@ -531,11 +531,13 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         }
 
         let is_pondok;
+        let lat_pondok;
+        let lng_pondok;
         //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
         if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
 
-            pesertaDidik.lat_lainnya = pesertaDidik.data_sekolah?.lat?.toString() || null;
-            pesertaDidik.lng_lainnya = pesertaDidik.data_sekolah?.lng?.toString() || null;
+            lat_pondok = pesertaDidik.data_sekolah?.lat?.toString() || null;
+            lng_pondok = pesertaDidik.data_sekolah?.lng?.toString() || null;
     
             is_pondok = 1;
             // const sekolah_id = pesertaDidik.sekolah_id;
@@ -559,6 +561,9 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         }else{
 
             is_pondok = 0;
+            lat_pondok = null
+            lng_pondok = null
+    
 
         }
 
@@ -599,6 +604,8 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 data_wilayah_prov: dataProvinsi, // Masukkan data wilayah ke dalam respons
                 anak_pondok: is_pondok,
                 ats:  is_tidak_sekolah,
+                lat_pondok: lat_pondok,
+                lng_pondok: lng_pondok,
             }
         });
     } catch (err) {
