@@ -122,23 +122,32 @@ export const getSekolahTujuanByCabdin = async (req, res) => {
                 },  
                 attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan','cabang_dinas']  
             });  
+
+            // Tambahkan nama_npsn ke setiap sekolah
+            const sekolahDenganNamaNpsn = resData.map(sekolah => {
+                return {
+                    ...sekolah.get({ plain: true }), // Convert Sequelize instance to plain object
+                    nama_npsn: `${sekolah.nama} ${sekolah.npsn}`
+                };
+            });
+
   
             if (resData.length > 0) {  
 
                 // Cache the new data  
-                await redisSet(redis_key, JSON.stringify(resData), process.env.REDIS_EXPIRE_TIME_MASTER);  
+                await redisSet(redis_key, JSON.stringify(sekolahDenganNamaNpsn), process.env.REDIS_EXPIRE_TIME_MASTER);  
 
                 res.status(200).json({  
                     'status': 1,  
                     'message': 'Data berhasil ditemukan',  
-                    'data': resData  
+                    'data': sekolahDenganNamaNpsn  
                 });  
 
             } else {  
                 res.status(200).json({  
                     'status': 0,  
                     'message': 'Data kosong',  
-                    'data': resData  
+                    'data': []  
                 });  
             }  
         }  
