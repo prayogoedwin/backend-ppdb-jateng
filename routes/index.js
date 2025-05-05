@@ -229,9 +229,9 @@ router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, ap
 
 
 
-router.post('/api/servis/cek_daftar_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess,  cekPerangkingan);
-router.post('/api/servis/daftar_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, createPerangkingan);
-router.post('/api/servis/cetak_bukti_daftar', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
+router.post('/api/servis/cek_daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess,  cekPerangkingan);
+router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, createPerangkingan);
+router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
 
 
 // router.post('/api/servis/upload_file_tambahan/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
@@ -247,9 +247,9 @@ router.post('/api/servis/perangkingan_info_param', ipWhitelistMiddleware, appKey
 // csrf masih mati
 router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
 
-router.post('/api/servis/perangkingan_detail', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
+router.post('/api/servis/perangkingan_detail', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
 
-router.post('/api/servis/perangkingan_hapus', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
+router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
 
 // router.post('/api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware, daftarUlangPerangkingan);
 
