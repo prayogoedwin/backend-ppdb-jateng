@@ -4389,7 +4389,7 @@ export const getPerangkingan_Tanpa_Redis = async (req, res) => {
 // console.log('Jumlah row:', resultData.length);
 
 //selain tambah redis, ada perbaikan di jarak terdekat SMK, penambahan 2% untuk anak guru
-export const getPerangkingan = async (req, res) => {
+export const getPerangkingan_good = async (req, res) => {
     try {
         const {
             bentuk_pendidikan_id,
