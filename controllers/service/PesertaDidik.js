@@ -870,7 +870,14 @@ export const getDataDukungByNIK = async (req, res) => {
         // }
 
        
-        const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
+        // const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
+
+        const anakMiskin = await DataAnakMiskins.findOne({
+            where: {
+              nik,
+              prioritas: ['P1', 'P2', 'P3'] // mencari yang prioritas P1, P2, atau P3
+            }
+          });
 
         console.log('ini anak miskin:'+anakMiskin);
 
