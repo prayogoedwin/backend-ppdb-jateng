@@ -244,7 +244,8 @@ router.post('/api/servis/perangkingan_info_param', ipWhitelistMiddleware, appKey
 
 
 
-router.post('/api/servis/perangkingan_saya', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
+// csrf masih mati
+router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
 
 router.post('/api/servis/perangkingan_detail', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
 
