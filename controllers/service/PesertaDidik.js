@@ -353,6 +353,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
 
         if (cekPendaftar) {
+
             if(cekPendaftar.is_verified == 2){
 
                 const pendaftarDetail = await DataPendaftars.findOne({
@@ -585,13 +586,13 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             };
 
-            // if(cekPendaftar.is_verified != 2){
-            //     return res.status(200).json({
-            //         status: 2,
-            //         message: 'NISN Sudah Terdaftar Sebelumnya',
-            //         data: cekPendaftar
-            //      });
-            // }
+            if(cekPendaftar.is_verified != 2 || cekPendaftar.is_verified != 99){
+                return res.status(200).json({
+                    status: 2,
+                    message: 'NISN Sudah Terdaftar Sebelumnya',
+                    data: cekPendaftar
+                 });
+            }
         }
 
             
