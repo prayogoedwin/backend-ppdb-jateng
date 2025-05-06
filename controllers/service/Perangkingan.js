@@ -195,7 +195,7 @@ export const getPerangkinganDetail = async (req, res) => {
                 id: decodedIdPerangkingan, // Pastikan id_pendaftar adalah string
                 is_delete: 0
             },
-            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
+            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur', ''],
             include: [
                 {
                     model: SekolahTujuan,
@@ -205,6 +205,19 @@ export const getPerangkinganDetail = async (req, res) => {
                     model: JalurPendaftarans,
                     as: 'jalur_pendaftaran',
                     attributes: ['bentuk_pendidikan_id', 'nama']
+                },
+                {
+                    model: DataPendaftars,
+                    as: 'data_pendaftar',
+                    attributes: [
+                        'nama_kejuaraan', 
+                        'nilai_prestasi', 
+                        'tanggal_sertifikat', 
+                        'umur_sertifikat', 
+                        'nomor_sertifikat', 
+                        'organisasi_id', 
+                        'nilai_organisasi'
+                    ]
                 }
             ]
         });
