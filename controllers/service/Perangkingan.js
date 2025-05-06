@@ -206,19 +206,19 @@ export const getPerangkinganDetail = async (req, res) => {
                     as: 'jalur_pendaftaran',
                     attributes: ['bentuk_pendidikan_id', 'nama']
                 },
-                {
-                    model: DataPendaftars,
-                    as: 'data_pendaftar',
-                    attributes: [
-                        'nama_kejuaraan', 
-                        'nilai_prestasi', 
-                        'tanggal_sertifikat', 
-                        'umur_sertifikat', 
-                        'nomor_sertifikat', 
-                        'organisasi_id', 
-                        'nilai_organisasi'
-                    ]
-                }
+                // {
+                //     model: DataPendaftars,
+                //     as: 'data_pendaftar',
+                //     attributes: [
+                //         'nama_kejuaraan', 
+                //         'nilai_prestasi', 
+                //         'tanggal_sertifikat', 
+                //         'umur_sertifikat', 
+                //         'nomor_sertifikat', 
+                //         'organisasi_id', 
+                //         'nilai_organisasi'
+                //     ]
+                // }
             ]
         });
 
@@ -231,7 +231,16 @@ export const getPerangkinganDetail = async (req, res) => {
                   id: resData.id_pendaftar,
                   is_delete: 0
                 },
-                attributes: ['nisn', 'nama_lengkap', 'tempat_lahir', 'jenis_kelamin', 'tanggal_cetak_kk'],
+                attributes: ['nisn', 'nama_lengkap', 'tempat_lahir', 'jenis_kelamin', 'tanggal_cetak_kk',
+                    'nama_kejuaraan', 
+                    'nilai_prestasi', 
+                    'tanggal_sertifikat', 
+                    'umur_sertifikat', 
+                    'nomor_sertifikat', 
+                    'organisasi_id', 
+                    'nilai_organisasi'
+
+                ],
                 include: [
                     {
                         model: StatusDomisilis,
