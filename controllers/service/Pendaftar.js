@@ -740,7 +740,40 @@ export const getPendaftarDetail = async (req, res) => {
         where: {
           nisn: req.body.nisn,
           is_delete: 0
-        }
+        },
+        include: [
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah_kec',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah_kot',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah_prov',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+            model: SekolahAsalWilayah,
+            as: 'wilayah_sekolah_asal',
+            attributes: ['id','nama']
+          },
+          {
+            model: StatusDomisili,
+            as: 'status_domisili_name',
+            attributes: ['id','nama']
+          },
+      ],
+
       });
   
       if (profil) {
