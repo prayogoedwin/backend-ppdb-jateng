@@ -38,6 +38,22 @@ const DataAnakPantis = db.define('ez_anak_panti', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    lat: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+    },
+    lng: {
+        type: DataTypes.DOUBLE,
+        allowNull: true,
+    },
+    prioritas: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    th: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 }, {
     freezeTableName: true,
     timestamps: false, // Nonaktifkan timestamps
