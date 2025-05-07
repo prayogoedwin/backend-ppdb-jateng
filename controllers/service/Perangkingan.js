@@ -8352,38 +8352,42 @@ export const cekPerangkingan = async (req, res) => {
         // });
 
         //pendaftaran
-        if(jalur_pendaftaran_id == 5){
+        data_file_tambahan_var = data_file_tambahan;
 
-            if(pendaftar.is_disabilitas == "1"){
+        // if(jalur_pendaftaran_id == 5){
 
-                data_file_tambahan_var = data_file_tambahan
+        //     data_file_tambahan_var = data_file_tambahan
 
-                // data_file_tambahan = await FileTambahans.findAll({
-                //     where: {
-                //         id_jalur_pendaftaran: jalur_pendaftaran_id,
-                //         is_active: 1
-                //     }
-                // });
+        //     if(pendaftar.is_disabilitas == 1){
 
-            }else{
+        //         data_file_tambahan_var = data_file_tambahan
 
-                data_file_tambahan_var = [];
+        //         // data_file_tambahan = await FileTambahans.findAll({
+        //         //     where: {
+        //         //         id_jalur_pendaftaran: jalur_pendaftaran_id,
+        //         //         is_active: 1
+        //         //     }
+        //         // });
 
-            }
+        //     }else{
+
+        //         data_file_tambahan_var = [];
+
+        //     }
 
             
             
-        }else{
+        // }else{
 
-            data_file_tambahan_var = data_file_tambahan;
-            //  data_file_tambahan = await FileTambahans.findAll({
-            //     where: {
-            //         id_jalur_pendaftaran: jalur_pendaftaran_id,
-            //         is_active: 1
-            //     }
-            // });
+        //     data_file_tambahan_var = data_file_tambahan;
+        //     //  data_file_tambahan = await FileTambahans.findAll({
+        //     //     where: {
+        //     //         id_jalur_pendaftaran: jalur_pendaftaran_id,
+        //     //         is_active: 1
+        //     //     }
+        //     // });
 
-        }
+        // }
 
         console.log('tgl lahir:'+pendaftar.tanggal_lahir)
         const umur = await calculateAge(pendaftar.tanggal_lahir);
