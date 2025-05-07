@@ -450,6 +450,9 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 }  
                 if (data.dok_piagam) {  
                     data.dok_piagam = baseUrl + data.dok_piagam;  
+                } 
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
                 }  
       
                 // Proses file tambahan dengan downloadable URL  
