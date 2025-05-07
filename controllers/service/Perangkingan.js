@@ -5960,7 +5960,7 @@ export const getPerangkingan = async (req, res) => {
 
 //percobaan untuk akomodir urutan peserta didalam redis
 //selain tambah redis, ada perbaikan di jarak terdekat SMK, penambahan 2% untuk anak guru
-export const getPerangkingan_old = async (req, res) => {
+export const getPerangkingan_new = async (req, res) => {
     try {
         const {
             bentuk_pendidikan_id,
@@ -6202,6 +6202,8 @@ export const getPerangkingan_old = async (req, res) => {
                     ],
                     limit: kuota_zonasi_nilai
                 });
+
+               
     
                    
                 const combinedData = [
@@ -6228,6 +6230,42 @@ export const getPerangkingan_old = async (req, res) => {
                 // await redisSet(redis_key, JSON.stringify(modifiedData), 'EX', REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN); // Cache 1 jam
                 await redisSet(redis_key, JSON.stringify(modifiedData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                 console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
+
+
+                const resZonasiNilai99 = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 },// dinyatakan tidak daftar ulang
+                        // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                        id: { 
+                            [Op.notIn]: combinedData.map(item => item.id) // Exclude yang sudah diterima
+                        }
+                    },
+                    order: [
+                        ['nilai_akhir', 'DESC'],
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        // ['created_at', 'ASC'] //daftar sekolah terawal
+                    ],
+                    // limit: kuota_zonasi
+                });
+
+                const modifiedData99 = resZonasiNilai99.map(item => {
+                    const { id_pendaftar, id, ...rest } = item.toJSON();
+                    // return { ...rest, id: encodeId(id) };
+                    return { 
+                        ...rest, 
+                        id: encodeId(id), 
+                        id_pendaftar: encodeId(id_pendaftar),
+                        status_daftar_sekolah: 0
+                    };
+                });
+
+                const combinedData99 = [...modifiedData, ...modifiedData99];
+                //ini untuk simpan data yang full pendaftar
+                await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
                 
                 if (is_pdf === 1) {
                     // Generate PDF
@@ -6385,10 +6423,9 @@ export const getPerangkingan_old = async (req, res) => {
 
 
                     const combinedData99 = [...modifiedData, ...modifiedData99];
-
                      //ini untuk simpan data yang full pendaftar
                      await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
-                     console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key_full}`);
+                     console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
 
     
                     if (is_pdf === 1) {
@@ -6493,10 +6530,31 @@ export const getPerangkingan_old = async (req, res) => {
                         ['nilai_akhir', 'DESC'], //nilai tertinggi
                         ['umur', 'DESC'], //umur tertua
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'],
-                        ['created_at', 'ASC'] // daftar sekolah terawal
+                        // ['created_at', 'ASC'] // daftar sekolah terawal
                     ],
                     limit: kuota_prestasi
                    
+                });
+
+                const resData99 = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 },// dinyatakan tidak daftar ulang
+                        // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                        id: { 
+                            [Op.notIn]: resData.map(item => item.id) // Exclude yang sudah diterima
+                        }
+                        
+                    },
+                    order: [
+                        ['nilai_akhir', 'DESC'], //nilai tertinggi
+                        ['umur', 'DESC'], //umur tertua
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        // ['created_at', 'ASC'] // daftar sekolah terawal
+                    ],
+                    // limit: kuota_zonasi_khusus
                 });
     
                 if (resData && resData.length > 0) {
@@ -6516,6 +6574,23 @@ export const getPerangkingan_old = async (req, res) => {
                     // await redisSet(redis_key, JSON.stringify(modifiedData), 'EX', REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN); // Cache 1 jam
                     await redisSet(redis_key, JSON.stringify(modifiedData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                     console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
+
+
+                    const modifiedData99 = resData99.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        // return { ...rest, id: encodeId(id) };
+                        return { 
+                            ...rest, 
+                            id: encodeId(id), 
+                            id_pendaftar: encodeId(id_pendaftar),
+                            status_daftar_sekolah: 0
+                        };
+                    });
+
+                    const combinedData99 = [...modifiedData, ...modifiedData99];
+                    //ini untuk simpan data yang full pendaftar
+                    await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                    console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
                     if (is_pdf === 1) {
                         // Generate PDF
@@ -6620,6 +6695,26 @@ export const getPerangkingan_old = async (req, res) => {
                     limit: kuota_pto
                 });
     
+                const resData99 = await DataPerangkingans.findAll({
+                    where: {
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        is_delete: 0,
+                        is_daftar_ulang: { [Op.ne]: 2 },// dinyatakan tidak daftar ulang
+                        // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                        id: { 
+                            [Op.notIn]: resData.map(item => item.id) // Exclude yang sudah diterima
+                        }
+                        
+                    },
+                    order: [
+                        [literal('is_anak_guru_jateng DESC')], // Prioritaskan yang is_anak_guru_jateng = 1
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
+                        // ['created_at', 'ASC'] // Urutkan berdasarkan waktu pendaftaran (tercepat lebih dulu)
+                    ],
+                    // limit: kuota_zonasi_khusus
+                });
+
                if (resData && resData.length > 0) {
                     // res.status(200).json({
                     //     'status': 1,
@@ -6637,6 +6732,23 @@ export const getPerangkingan_old = async (req, res) => {
                      // await redisSet(redis_key, JSON.stringify(modifiedData), 'EX', REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN); // Cache 1 jam
                      await redisSet(redis_key, JSON.stringify(modifiedData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                      console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
+
+                     const modifiedData99 = resData99.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        // return { ...rest, id: encodeId(id) };
+                        return { 
+                            ...rest, 
+                            id: encodeId(id), 
+                            id_pendaftar: encodeId(id_pendaftar),
+                            status_daftar_sekolah: 0
+                        };
+                    });
+
+
+                     const combinedData99 = [...modifiedData, ...modifiedData99];
+                     //ini untuk simpan data yang full pendaftar
+                     await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                     console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
                     if (is_pdf === 1) {
                         // Generate PDF
@@ -6838,7 +6950,45 @@ export const getPerangkingan_old = async (req, res) => {
                      // await redisSet(redis_key, JSON.stringify(modifiedData), 'EX', REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN); // Cache 1 jam
                      await redisSet(redis_key, JSON.stringify(modifiedData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                      console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
-    
+
+                     const resData99 = await DataPerangkingans.findAll({
+                        where: {
+                            jalur_pendaftaran_id,
+                            sekolah_tujuan_id,
+                            is_delete: 0,
+                            is_daftar_ulang: { [Op.ne]: 2 },// dinyatakan tidak daftar ulang
+                            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                            is_anak_keluarga_tidak_mampu: '1',
+                            is_anak_panti: '0', // bukan anak panti
+                            is_tidak_sekolah: '0', // bukan anak panti
+                            id: { 
+                                [Op.notIn]: combinedData.map(item => item.id) // Exclude yang sudah diterima
+                            }
+                        },
+                        order: [
+                            ['is_disabilitas', 'ASC'], //disabilitas 
+                            [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                            // ['created_at', 'ASC'] //daftar sekolah terawal
+                        ],
+                        // limit: kuota_zonasi
+                    });
+
+                    const modifiedData99 = resData99.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        // return { ...rest, id: encodeId(id) };
+                        return { 
+                            ...rest, 
+                            id: encodeId(id), 
+                            id_pendaftar: encodeId(id_pendaftar),
+                            status_daftar_sekolah: 0
+                        };
+                    });
+
+                    const combinedData99 = [...modifiedData, ...modifiedData99];
+                    //ini untuk simpan data yang full pendaftar
+                    await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                    console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
+
                     // const modifiedData = resData.map(item => {
                     //     const { id_pendaftar, id, ...rest } = item.toJSON();
                     //     return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
@@ -7006,6 +7156,41 @@ export const getPerangkingan_old = async (req, res) => {
                     // await redisSet(redis_key, JSON.stringify(modifiedData), 'EX', REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN); // Cache 1 jam
                     await redisSet(redis_key, JSON.stringify(modifiedData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                     console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
+
+                    const resData99 = await DataPerangkingans.findAll({
+                        where: {
+                            jalur_pendaftaran_id,
+                            sekolah_tujuan_id,
+                            is_delete: 0,
+                            is_daftar_ulang: { [Op.ne]: 2 },// dinyatakan tidak daftar ulang
+                            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                            id: { 
+                                [Op.notIn]: combinedData.map(item => item.id) // Exclude yang sudah diterima
+                            }
+                        },
+                        order: [
+                            [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                            ['umur', 'DESC'], //umur tertua
+                            // ['created_at', 'ASC'] //daftar sekolah terawal
+                        ],
+                        // limit: kuota_zonasi
+                    });
+    
+                    const modifiedData99 = resData99.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        // return { ...rest, id: encodeId(id) };
+                        return { 
+                            ...rest, 
+                            id: encodeId(id), 
+                            id_pendaftar: encodeId(id_pendaftar),
+                            status_daftar_sekolah: 0
+                        };
+                    });
+
+                    const combinedData99 = [...modifiedData, ...modifiedData99];
+                    //ini untuk simpan data yang full pendaftar
+                    await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                    console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
                     
     
                     if (is_pdf === 1) {
@@ -7143,6 +7328,28 @@ export const getPerangkingan_old = async (req, res) => {
                         ],
                         limit: kuota_prestasi_akhir
                     });
+
+
+                    const resData99 = await DataPerangkingans.findAll({
+                        where: {
+                            jalur_pendaftaran_id,
+                            sekolah_tujuan_id,
+                            is_delete: 0,
+                            is_daftar_ulang: { [Op.ne]: 2 },// dinyatakan tidak daftar ulang
+                            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+                            id: { 
+                                [Op.notIn]: resData.map(item => item.id) // Exclude yang sudah diterima
+                            }
+                            
+                        },
+                        order: [
+                            ['nilai_akhir', 'DESC'], //nilai tertinggi
+                            ['umur', 'DESC'], //umur tertua
+                            ['created_at', 'ASC'] // daftar sekolah terawal
+                        ],
+                        // limit: kuota_zonasi_khusus
+                    });
+                    
                     if (resData && resData.length > 0) {
         
                        
@@ -7155,6 +7362,23 @@ export const getPerangkingan_old = async (req, res) => {
                          // await redisSet(redis_key, JSON.stringify(modifiedData), 'EX', REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN); // Cache 1 jam
                         await redisSet(redis_key, JSON.stringify(modifiedData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                         console.log(`[DB] Data disimpan ke cache untuk key: ${redis_key}`);
+
+                        const modifiedData99 = resData99.map(item => {
+                            const { id_pendaftar, id, ...rest } = item.toJSON();
+                            // return { ...rest, id: encodeId(id) };
+                            return { 
+                                ...rest, 
+                                id: encodeId(id), 
+                                id_pendaftar: encodeId(id_pendaftar),
+                                status_daftar_sekolah: 0
+                            };
+                        });
+    
+    
+                        const combinedData99 = [...modifiedData, ...modifiedData99];
+                         //ini untuk simpan data yang full pendaftar
+                         await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                         console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
     
                         if (is_pdf === 1) {
@@ -8069,7 +8293,13 @@ export const cekPerangkingan = async (req, res) => {
         //     return res.status(200).json({ status: 0, message: 'Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anaka Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
         // }
 
-        if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0){
+        if(pendaftar.is_tidak_sekolah == 1){
+            if(jalur_pendaftaran_id != 5 || jalur_pendaftaran_id != 9){
+                return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai ATS, anda hanya bisa daftar jalur / seleksi Afirmasi' });
+            }
+        }
+
+        if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0 && pendaftar.is_disabilitas == 0){
 
             if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
                 return res.status(200).json({ status: 0, message: 'Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anak Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
