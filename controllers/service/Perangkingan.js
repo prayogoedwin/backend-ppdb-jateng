@@ -9089,7 +9089,7 @@ export const uploadFileTambahan = async (req, res) => {
 
 export const automasiPerangkingan = async (req, res) => {
     // Dapatkan transaction dari sequelize instance
-    const transaction = await S.transaction();
+    const transaction = await Sequelize.transaction();
     
     try {
         console.log('Memulai proses automasi perangkingan...');
