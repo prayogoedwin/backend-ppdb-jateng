@@ -479,8 +479,6 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         allowNull: true,
     },
     
-
-    
     
     
 }, {
