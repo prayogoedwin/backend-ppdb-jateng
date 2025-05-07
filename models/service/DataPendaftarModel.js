@@ -474,6 +474,11 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    npsn_anak_guru: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    
 
     
     
