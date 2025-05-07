@@ -9207,52 +9207,11 @@ export const automasiPerangkingan = async (req, res) => {
 };
 
 // Fungsi untuk update data perangkingan ke database
-// async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, transaction) {
-//     try {
-//         // 1. Reset semua is_saved untuk kombinasi ini
-//         await DataPerangkingans.update(
-//             { is_saved: 0, no_urut: null },
-//             {
-//                 where: {
-//                     jalur_pendaftaran_id,
-//                     sekolah_tujuan_id,
-//                     jurusan_id: jurusan_id || null,
-//                     is_delete: 0
-//                 },
-//                 transaction
-//             }
-//         );
-
-//         // 2. Update data dengan is_saved = 1 dan no_urut
-//         for (let i = 0; i < data.length; i++) {
-//             const item = data[i];
-//             await DataPerangkingans.update(
-//                 { 
-//                     is_saved: 1,
-//                     no_urut: i + 1,
-//                     is_diterima: 1
-//                 },
-//                 {
-//                     where: { id: decodeId(item.id) },
-//                     transaction
-//                 }
-//             );
-//         }
-
-//         console.log(`Berhasil update ${data.length} peserta`);
-
-//     } catch (err) {
-//         console.error('Gagal update database:', err);
-//         throw err;
-//     }
-// }
-
-// Update fungsi updateDatabasePerangkingan tetap sama seperti sebelumnya
 async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, transaction) {
     try {
         // 1. Reset semua is_saved untuk kombinasi ini
         await DataPerangkingans.update(
-            { is_saved: 0, no_urut: null, is_diterima: null },
+            { is_saved: 0, no_urut: null },
             {
                 where: {
                     jalur_pendaftaran_id,
@@ -9264,14 +9223,14 @@ async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tu
             }
         );
 
-        // 2. Update data dengan is_saved = 1, no_urut, dan is_diterima
+        // 2. Update data dengan is_saved = 1 dan no_urut
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             await DataPerangkingans.update(
                 { 
                     is_saved: 1,
                     no_urut: i + 1,
-                    is_diterima: item.is_diterima || 1 // Default to 1 if not specified
+                    is_diterima: 1
                 },
                 {
                     where: { id: decodeId(item.id) },
@@ -9347,13 +9306,152 @@ async function prosesPerangkinganDanUpdate(jalur_pendaftaran_id, sekolah_tujuan_
     }
 }
 
-const KUOTA_CADANGAN = parseInt(process.env.KUOTA_CADANGAN) || 0; // Default to 20 if not set
+// Contoh implementasi fungsi jalur dengan transaction
+async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
+    const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
 
-// Update all jalur processing functions to include cadangan quota
+    let kuota_zonasi_max = resSek.daya_tampung;
+    let kuota_zonasi_min = resSek.kuota_zonasi;
+    let persentase_domisili_nilai = DomiNilaiHelper('nilai');
+    let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_min);
+    let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
+
+    // Data berdasarkan jarak terdekat
+    const resDataZonasi = await DataPerangkingans.findAndCountAll({
+        attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+        where: {
+            jalur_pendaftaran_id: 1,
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        order: [
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            ['umur', 'DESC']
+        ],
+        limit: zonasi_jarak,
+        transaction
+    });
+    
+    const rowsZonasiReg = resDataZonasi.rows; // Data hasil query
+    const totalZonasiReg = rowsZonasiReg.length; // Total jumlah data setelah limit
+
+    //hitung total pendaftar prestasi dulu
+    const countPrestasi = (await DataPerangkingans.findAll({  
+        attributes: ['nisn'], // Pilih kolom yang diambil
+        where: {  
+            jalur_pendaftaran_id: 3,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+        },
+        limit: resSek.kuota_prestasi
+    })).length;
+
+        //hitung total pendaftar afirmasi dulu
+        const countAfirmasi = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 5,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+        },
+        limit: resSek.kuota_afirmasi
+    })).length;
+
+        //hitung total pendaftar pto dulu
+        const countPto = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 4,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+        },
+        limit: resSek.kuota_afirmasi
+    })).length;
+
+    let countZonasiKhusus = 0;
+    if(resSek.kuota_zonasi_khusus > 0){
+
+        //hitung total pendaftar zonasi khusus
+            countZonasiKhusus = (await DataPerangkingans.findAll({  
+            attributes: ['nisn'], // Pilih kolom yang diambil
+            where: {  
+                jalur_pendaftaran_id: 2,
+                sekolah_tujuan_id,  
+                is_delete: 0,
+                is_daftar_ulang: { [Op.ne]: 2 } // Tidak daftar ulang
+            },
+            limit: resSek.kuota_zonasi_khusus
+        })).length;
+
+    }else{
+
+            countZonasiKhusus = 0;
+        
+    }
+
+    // let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
+    // let kuota_zonasi_nilai = kuota_zonasi_max - (totalZonasiReg + countZonasiKhusus) +  countPrestasi + countAfirmasi + countPto;
+
+    let kuota_terpakai = totalZonasiReg + countZonasiKhusus +  countPrestasi + countAfirmasi + countPto;
+
+    // let kuota_zonasi_nilai = kuota_zonasi_max - kuota_terpakai;
+    let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+
+    // const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
+    const resDataZonasiIds = (resDataZonasi.rows || []).map((item) => item.id);
+    const resZonasiNilai = await DataPerangkingans.findAll({
+        attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+        where: {
+            jalur_pendaftaran_id: 1,
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 },  // dinyatakan tidak daftar ulang
+            id: { [Op.notIn]: resDataZonasiIds } // Hindari ID yang sudah ada di resDataZonasi
+        },
+        order: [
+            ['nilai_akhir', 'DESC'],
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            // ['umur', 'DESC'], 
+            // ['created_at', 'ASC'] 
+        ],
+        limit: kuota_zonasi_nilai
+    });
+
+    
+
+        
+    const combinedData = [
+        ...(rowsZonasiReg ? rowsZonasiReg.map(item => ({
+            ...item.toJSON(),
+            order_berdasar: "1"
+        })) : []), // Jika null, gunakan array kosong
+    
+        ...(resZonasiNilai ? resZonasiNilai.map(item => ({
+            ...item.toJSON(),
+            order_berdasar: "2"
+        })) : []) // Jika null, gunakan array kosong
+    ];
+    
+    return combinedData.map(item => {
+        const { id_pendaftar, id, ...rest } = item;
+        return { 
+            ...rest, 
+            id: encodeId(id), 
+            id_pendaftar: encodeId(id_pendaftar),
+            status_daftar_sekolah: 1
+        };
+    });
+}
+
+// Implementasi fungsi untuk semua jalur
 async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
     const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
     let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
-    let kuota_dengan_cadangan = kuota_zonasi_khusus + KUOTA_CADANGAN;
 
     const resData = await DataPerangkingans.findAll({
         where: {
@@ -9366,23 +9464,21 @@ async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
             ['umur', 'DESC'],
             ['nilai_akhir', 'DESC']
         ],
-        limit: kuota_dengan_cadangan,
+        limit: kuota_zonasi_khusus,
         transaction
     });
 
-    return resData.map((item, index) => ({
+    return resData.map(item => ({
         ...item.toJSON(),
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: index < kuota_zonasi_khusus ? 1 : 2 // 1 for main quota, 2 for cadangan
+        status_daftar_sekolah: 1
     }));
 }
 
 async function prosesJalurPrestasi(sekolah_tujuan_id, transaction) {
     const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
     let kuota_prestasi = resSek.kuota_prestasi;
-    let kuota_dengan_cadangan = kuota_prestasi + KUOTA_CADANGAN;
 
     const resData = await DataPerangkingans.findAll({
         where: {
@@ -9396,23 +9492,21 @@ async function prosesJalurPrestasi(sekolah_tujuan_id, transaction) {
             ['umur', 'DESC'],
             [literal('CAST(jarak AS FLOAT)'), 'ASC']
         ],
-        limit: kuota_dengan_cadangan,
+        limit: kuota_prestasi,
         transaction
     });
 
-    return resData.map((item, index) => ({
+    return resData.map(item => ({
         ...item.toJSON(),
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: index < kuota_prestasi ? 1 : 2
+        status_daftar_sekolah: 1
     }));
 }
 
 async function prosesJalurPTO(sekolah_tujuan_id, transaction) {
     const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
     let kuota_pto = resSek.kuota_pto;
-    let kuota_dengan_cadangan = kuota_pto + KUOTA_CADANGAN;
 
     const resData = await DataPerangkingans.findAll({
         where: {
@@ -9425,16 +9519,15 @@ async function prosesJalurPTO(sekolah_tujuan_id, transaction) {
             [literal('is_anak_guru_jateng DESC')],
             [literal('CAST(jarak AS FLOAT)'), 'ASC']
         ],
-        limit: kuota_dengan_cadangan,
+        limit: kuota_pto,
         transaction
     });
 
-    return resData.map((item, index) => ({
+    return resData.map(item => ({
         ...item.toJSON(),
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: index < kuota_pto ? 1 : 2
+        status_daftar_sekolah: 1
     }));
 }
 
@@ -9447,8 +9540,6 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
 
     let kuota_ats = Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0;
     let kuota_panti = Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0;
-    let kuota_ats_dengan_cadangan = kuota_ats + Math.ceil(KUOTA_CADANGAN * (kuota_ats / kuota_afirmasi));
-    let kuota_panti_dengan_cadangan = kuota_panti + Math.ceil(KUOTA_CADANGAN * (kuota_panti / kuota_afirmasi));
 
     // Data ATS
     const resDataAts = await DataPerangkingans.findAll({
@@ -9465,7 +9556,7 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
             ['umur', 'DESC'],
             ['created_at', 'ASC']
         ],
-        limit: kuota_ats_dengan_cadangan,
+        limit: kuota_ats,
         transaction
     });
 
@@ -9484,16 +9575,12 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
             [literal('CAST(jarak AS FLOAT)'), 'ASC'],
             ['umur', 'DESC']
         ],
-        limit: kuota_panti_dengan_cadangan,
+        limit: kuota_panti,
         transaction
     });
 
     // Data Afirmasi Miskin
-    let kuota_afirmasi_sisa = kuota_afirmasi - (kuota_ats + kuota_panti);
-    let kuota_miskin_dengan_cadangan = kuota_afirmasi_sisa + (KUOTA_CADANGAN - 
-        (kuota_ats_dengan_cadangan - kuota_ats) - 
-        (kuota_panti_dengan_cadangan - kuota_panti));
-
+    let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
     const resDataMiskin = await DataPerangkingans.findAll({
         where: {
             jalur_pendaftaran_id: 5,
@@ -9508,26 +9595,23 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
             ['is_disabilitas', 'ASC'],
             [literal('CAST(jarak AS FLOAT)'), 'ASC']
         ],
-        limit: kuota_miskin_dengan_cadangan,
+        limit: kuota_afirmasi_sisa,
         transaction
     });
 
-    // Gabungkan semua data dengan flag cadangan
+    // Gabungkan semua data
     const combinedData = [
-        ...(resDataPanti || []).map((item, index) => ({
+        ...(resDataPanti || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "3",
-            is_cadangan: index >= kuota_panti
+            order_berdasar: "3"
         })),
-        ...(resDataAts || []).map((item, index) => ({
+        ...(resDataAts || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "4",
-            is_cadangan: index >= kuota_ats
+            order_berdasar: "4"
         })),
-        ...(resDataMiskin || []).map((item, index) => ({
+        ...(resDataMiskin || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "5",
-            is_cadangan: index >= kuota_afirmasi_sisa
+            order_berdasar: "5"
         }))
     ];
 
@@ -9535,8 +9619,7 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
         ...item,
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: item.is_cadangan ? 2 : 1
+        status_daftar_sekolah: 1
     }));
 }
 
@@ -9547,8 +9630,6 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
     let daya_tampung = resJurSek.daya_tampung;
     let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
-    let kuota_anak_guru_dengan_cadangan = kuota_anak_guru + Math.ceil(KUOTA_CADANGAN * (kuota_anak_guru / daya_tampung));
-    let kuota_jarak_terdekat_dengan_cadangan = kuota_jarak_terdekat + (KUOTA_CADANGAN - (kuota_anak_guru_dengan_cadangan - kuota_anak_guru));
 
     // Data Anak Guru
     const resDataAnakGuru = await DataPerangkingans.findAll({
@@ -9564,11 +9645,12 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
             ['is_anak_guru_jateng', 'DESC'],
             [literal('CAST(jarak AS FLOAT)'), 'ASC']
         ],
-        limit: kuota_anak_guru_dengan_cadangan,
+        limit: kuota_anak_guru,
         transaction
     });
 
     // Data Domisili Terdekat
+    let kuota_akhir_jarak_terdekat = kuota_jarak_terdekat - resDataAnakGuru.length;
     const resData = await DataPerangkingans.findAll({
         where: {
             jalur_pendaftaran_id: 6,
@@ -9581,21 +9663,19 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
             [literal('CAST(jarak AS FLOAT)'), 'ASC'],
             ['umur', 'DESC']
         ],
-        limit: kuota_jarak_terdekat_dengan_cadangan,
+        limit: kuota_akhir_jarak_terdekat,
         transaction
     });
 
-    // Gabungkan data dengan flag cadangan
+    // Gabungkan data
     const combinedData = [
-        ...(resDataAnakGuru || []).map((item, index) => ({
+        ...(resDataAnakGuru || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "6",
-            is_cadangan: index >= kuota_anak_guru
+            order_berdasar: "6"
         })),
-        ...(resData || []).map((item, index) => ({
+        ...(resData || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "7",
-            is_cadangan: index >= kuota_jarak_terdekat
+            order_berdasar: "7"
         }))
     ];
 
@@ -9603,8 +9683,7 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
         ...item,
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: item.is_cadangan ? 2 : 1
+        status_daftar_sekolah: 1
     }));
 }
 
@@ -9649,7 +9728,6 @@ async function prosesJalurSMKPrestasi(sekolah_tujuan_id, jurusan_id, transaction
 
     let kuota_prestasi = kuota_prestasi_max - (countTerdekat + countAfirmasi + countPrestasiKhusus);
     let kuota_prestasi_akhir = kuota_prestasi >= kuota_prestasi_min ? kuota_prestasi : kuota_prestasi_min;
-    let kuota_dengan_cadangan = kuota_prestasi_akhir + KUOTA_CADANGAN;
 
     const resData = await DataPerangkingans.findAll({
         where: {
@@ -9664,23 +9742,21 @@ async function prosesJalurSMKPrestasi(sekolah_tujuan_id, jurusan_id, transaction
             ['umur', 'DESC'],
             ['created_at', 'ASC']
         ],
-        limit: kuota_dengan_cadangan,
+        limit: kuota_prestasi_akhir,
         transaction
     });
 
-    return resData.map((item, index) => ({
+    return resData.map(item => ({
         ...item.toJSON(),
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: index < kuota_prestasi_akhir ? 1 : 2
+        status_daftar_sekolah: 1
     }));
 }
 
 async function prosesJalurSMKPrestasiKhusus(sekolah_tujuan_id, jurusan_id, transaction) {
     const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id, transaction);
     let kuota_prestasi_khusus = resJurSek.kuota_prestasi_khusus;
-    let kuota_dengan_cadangan = kuota_prestasi_khusus + KUOTA_CADANGAN;
 
     const resData = await DataPerangkingans.findAll({
         where: {
@@ -9693,16 +9769,15 @@ async function prosesJalurSMKPrestasiKhusus(sekolah_tujuan_id, jurusan_id, trans
         order: [
             ['created_at', 'ASC']
         ],
-        limit: kuota_dengan_cadangan,
+        limit: kuota_prestasi_khusus,
         transaction
     });
 
-    return resData.map((item, index) => ({
+    return resData.map(item => ({
         ...item.toJSON(),
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: index < kuota_prestasi_khusus ? 1 : 2
+        status_daftar_sekolah: 1
     }));
 }
 
@@ -9716,8 +9791,6 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
 
     let kuota_panti = Math.round((panti / jml) * kuota_afirmasi) || 0;
     let kuota_ats = Math.round((ats / jml) * kuota_afirmasi) || 0;
-    let kuota_panti_dengan_cadangan = kuota_panti + Math.ceil(KUOTA_CADANGAN * (kuota_panti / kuota_afirmasi));
-    let kuota_ats_dengan_cadangan = kuota_ats + Math.ceil(KUOTA_CADANGAN * (kuota_ats / kuota_afirmasi));
 
     // Data ATS
     const resDataAts = await DataPerangkingans.findAll({
@@ -9733,7 +9806,7 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             ['umur', 'DESC'],
             [literal('CAST(jarak AS FLOAT)'), 'ASC']
         ],
-        limit: kuota_ats_dengan_cadangan,
+        limit: kuota_ats,
         transaction
     });
 
@@ -9751,16 +9824,12 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             [literal('CAST(jarak AS FLOAT)'), 'ASC'],
             ['umur', 'DESC']
         ],
-        limit: kuota_panti_dengan_cadangan,
+        limit: kuota_panti,
         transaction
     });
 
     // Data Afirmasi Miskin
-    let kuota_akhir_afirmasi = kuota_afirmasi - (kuota_ats + kuota_panti);
-    let kuota_miskin_dengan_cadangan = kuota_akhir_afirmasi + (KUOTA_CADANGAN - 
-        (kuota_ats_dengan_cadangan - kuota_ats) - 
-        (kuota_panti_dengan_cadangan - kuota_panti));
-
+    let kuota_akhir_afirmasi = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
     const resDataMiskin = await DataPerangkingans.findAll({
         where: {
             jalur_pendaftaran_id: 9,
@@ -9776,26 +9845,23 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             ['nilai_akhir', 'DESC'],
             ['umur', 'DESC']
         ],
-        limit: kuota_miskin_dengan_cadangan,
+        limit: kuota_akhir_afirmasi,
         transaction
     });
 
-    // Gabungkan semua data dengan flag cadangan
+    // Gabungkan semua data
     const combinedData = [
-        ...(resDataPanti || []).map((item, index) => ({
+        ...(resDataPanti || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "3",
-            is_cadangan: index >= kuota_panti
+            order_berdasar: "3"
         })),
-        ...(resDataAts || []).map((item, index) => ({
+        ...(resDataAts || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "4",
-            is_cadangan: index >= kuota_ats
+            order_berdasar: "4"
         })),
-        ...(resDataMiskin || []).map((item, index) => ({
+        ...(resDataMiskin || []).map(item => ({
             ...item.toJSON(),
-            order_berdasar: "5",
-            is_cadangan: index >= kuota_akhir_afirmasi
+            order_berdasar: "5"
         }))
     ];
 
@@ -9803,8 +9869,7 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
         ...item,
         id: encodeId(item.id),
         id_pendaftar: encodeId(item.id_pendaftar),
-        status_daftar_sekolah: 1,
-        is_diterima: item.is_cadangan ? 2 : 1
+        status_daftar_sekolah: 1
     }));
 }
 
