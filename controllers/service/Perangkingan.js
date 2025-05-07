@@ -22,6 +22,7 @@ import fs from "fs";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 import { Sequelize, Op, literal } from 'sequelize';
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
+import db from '../../config/Database.js'; // sesuaikan path jika beda
 
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
@@ -9089,7 +9090,8 @@ export const uploadFileTambahan = async (req, res) => {
 
 export const automasiPerangkingan = async (req, res) => {
     // Dapatkan transaction dari sequelize instance
-    const transaction = await Sequelize.transaction();
+    // const transaction = await Sequelize.transaction();
+    const transaction = await db.transaction();
     
     try {
         console.log('Memulai proses automasi perangkingan...');
