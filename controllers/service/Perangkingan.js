@@ -9306,6 +9306,148 @@ async function prosesPerangkinganDanUpdate(jalur_pendaftaran_id, sekolah_tujuan_
     }
 }
 
+// Contoh implementasi fungsi jalur dengan transaction
+async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
+    const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
+
+    let kuota_zonasi_max = resSek.daya_tampung;
+    let kuota_zonasi_min = resSek.kuota_zonasi;
+    let persentase_domisili_nilai = DomiNilaiHelper('nilai');
+    let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_min);
+    let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
+
+    // Data berdasarkan jarak terdekat
+    const resDataZonasi = await DataPerangkingans.findAndCountAll({
+        attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+        where: {
+            jalur_pendaftaran_id: 1,
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        order: [
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            ['umur', 'DESC']
+        ],
+        limit: zonasi_jarak,
+        transaction
+    });
+    
+    const rowsZonasiReg = resDataZonasi.rows; // Data hasil query
+    const totalZonasiReg = rowsZonasiReg.length; // Total jumlah data setelah limit
+
+    //hitung total pendaftar prestasi dulu
+    const countPrestasi = (await DataPerangkingans.findAll({  
+        attributes: ['nisn'], // Pilih kolom yang diambil
+        where: {  
+            jalur_pendaftaran_id: 3,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+        },
+        limit: resSek.kuota_prestasi
+    })).length;
+
+        //hitung total pendaftar afirmasi dulu
+        const countAfirmasi = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 5,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+        },
+        limit: resSek.kuota_afirmasi
+    })).length;
+
+        //hitung total pendaftar pto dulu
+        const countPto = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 4,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
+        },
+        limit: resSek.kuota_afirmasi
+    })).length;
+
+    let countZonasiKhusus = 0;
+    if(resSek.kuota_zonasi_khusus > 0){
+
+        //hitung total pendaftar zonasi khusus
+            countZonasiKhusus = (await DataPerangkingans.findAll({  
+            attributes: ['nisn'], // Pilih kolom yang diambil
+            where: {  
+                jalur_pendaftaran_id: 2,
+                sekolah_tujuan_id,  
+                is_delete: 0,
+                is_daftar_ulang: { [Op.ne]: 2 } // Tidak daftar ulang
+            },
+            limit: resSek.kuota_zonasi_khusus
+        })).length;
+
+    }else{
+
+            countZonasiKhusus = 0;
+        
+    }
+
+    // let kuota_zonasi_nilai = kuota_zonasi_max - totalZonasiReg - countZonasiKhusus - countPrestasi - countAfirmasi - countPto;
+    // let kuota_zonasi_nilai = kuota_zonasi_max - (totalZonasiReg + countZonasiKhusus) +  countPrestasi + countAfirmasi + countPto;
+
+    let kuota_terpakai = totalZonasiReg + countZonasiKhusus +  countPrestasi + countAfirmasi + countPto;
+
+    // let kuota_zonasi_nilai = kuota_zonasi_max - kuota_terpakai;
+    let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+
+    // const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
+    const resDataZonasiIds = (resDataZonasi.rows || []).map((item) => item.id);
+    const resZonasiNilai = await DataPerangkingans.findAll({
+        attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+        where: {
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 },  // dinyatakan tidak daftar ulang
+            id: { [Op.notIn]: resDataZonasiIds } // Hindari ID yang sudah ada di resDataZonasi
+        },
+        order: [
+            ['nilai_akhir', 'DESC'],
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            // ['umur', 'DESC'], 
+            // ['created_at', 'ASC'] 
+        ],
+        limit: kuota_zonasi_nilai
+    });
+
+    
+
+        
+    const combinedData = [
+        ...(rowsZonasiReg ? rowsZonasiReg.map(item => ({
+            ...item.toJSON(),
+            order_berdasar: "1"
+        })) : []), // Jika null, gunakan array kosong
+    
+        ...(resZonasiNilai ? resZonasiNilai.map(item => ({
+            ...item.toJSON(),
+            order_berdasar: "2"
+        })) : []) // Jika null, gunakan array kosong
+    ];
+    
+    return combinedData.map(item => {
+        const { id_pendaftar, id, ...rest } = item;
+        return { 
+            ...rest, 
+            id: encodeId(id), 
+            id_pendaftar: encodeId(id_pendaftar),
+            status_daftar_sekolah: 1
+        };
+    });
+}
+
 // Implementasi fungsi untuk semua jalur
 async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
     const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
