@@ -9407,7 +9407,7 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
     const resZonasiNilai = await DataPerangkingans.findAll({
         attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
         where: {
-            jalur_pendaftaran_id,
+            jalur_pendaftaran_id: 1,
             sekolah_tujuan_id,
             is_delete: 0,
             is_daftar_ulang: { [Op.ne]: 2 },  // dinyatakan tidak daftar ulang
