@@ -6264,7 +6264,7 @@ export const getPerangkingan = async (req, res) => {
 
                 const combinedData99 = [...modifiedData, ...modifiedData99];
                 //ini untuk simpan data yang full pendaftar
-                await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                 console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
                 
                 if (is_pdf === 1) {
@@ -6424,7 +6424,7 @@ export const getPerangkingan = async (req, res) => {
 
                     const combinedData99 = [...modifiedData, ...modifiedData99];
                      //ini untuk simpan data yang full pendaftar
-                     await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                     await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                      console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
 
     
@@ -6589,7 +6589,7 @@ export const getPerangkingan = async (req, res) => {
 
                     const combinedData99 = [...modifiedData, ...modifiedData99];
                     //ini untuk simpan data yang full pendaftar
-                    await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                    await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                     console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
                     if (is_pdf === 1) {
@@ -6747,7 +6747,7 @@ export const getPerangkingan = async (req, res) => {
 
                      const combinedData99 = [...modifiedData, ...modifiedData99];
                      //ini untuk simpan data yang full pendaftar
-                     await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                     await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                      console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
                     if (is_pdf === 1) {
@@ -6986,7 +6986,7 @@ export const getPerangkingan = async (req, res) => {
 
                     const combinedData99 = [...modifiedData, ...modifiedData99];
                     //ini untuk simpan data yang full pendaftar
-                    await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                    await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                     console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
 
                     // const modifiedData = resData.map(item => {
@@ -7189,7 +7189,7 @@ export const getPerangkingan = async (req, res) => {
 
                     const combinedData99 = [...modifiedData, ...modifiedData99];
                     //ini untuk simpan data yang full pendaftar
-                    await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                    await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                     console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
                     
     
@@ -7377,7 +7377,7 @@ export const getPerangkingan = async (req, res) => {
     
                         const combinedData99 = [...modifiedData, ...modifiedData99];
                          //ini untuk simpan data yang full pendaftar
-                         await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                         await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                          console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
     
@@ -7530,7 +7530,7 @@ export const getPerangkingan = async (req, res) => {
 
                     const combinedData99 = [...modifiedData, ...modifiedData99];
                      //ini untuk simpan data yang full pendaftar
-                     await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                     await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                      console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
                     if (is_pdf === 1) {
@@ -7767,7 +7767,7 @@ export const getPerangkingan = async (req, res) => {
     
                         const combinedData99 = [...modifiedData, ...modifiedData99];
                         //ini untuk simpan data yang full pendaftar
-                        await redisSet(redis_key, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                        await redisSet(redis_key_full, JSON.stringify(combinedData99), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
                         console.log(`[DB] Data 99 disimpan ke cache untuk key: ${redis_key_full}`);
     
                         if (is_pdf === 1) {
@@ -7831,9 +7831,7 @@ export const getPerangkingan = async (req, res) => {
                         }
     
             }else{
-                
-    
-               
+                          
                 res.status(200).json({
                     'status': 0,
                     'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
@@ -9087,5 +9085,151 @@ export const uploadFileTambahan = async (req, res) => {
         });
     }
 };
+
+export const automasiPerangkingan = async (req, res) => {
+    try {
+        // 1. Ambil semua jalur pendaftaran yang aktif
+        const allJalur = await JalurPendaftarans.findAll({
+            attributes: ['id']
+        });
+
+        // 2. Loop melalui setiap jalur pendaftaran
+        for (const jalur of allJalur) {
+            const jalur_pendaftaran_id = jalur.id;
+
+            // 3. Ambil semua sekolah tujuan yang aktif
+            const allSekolah = await SekolahTujuan.findAll({
+                // where: { 
+                //     is_active: 1 
+                // },
+                attributes: ['id']
+            });
+
+            // 4. Loop melalui setiap sekolah tujuan
+            for (const sekolah of allSekolah) {
+                const sekolah_tujuan_id = sekolah.id;
+
+                // 5. Cek apakah jalur ini membutuhkan jurusan (6,7,8,9)
+                if ([6, 7, 8, 9].includes(jalur_pendaftaran_id)) {
+                    // 6. Ambil semua jurusan untuk sekolah ini
+                    const allJurusan = await SekolahJurusan.findAll({
+                        where: { 
+                            id_sekolah_tujuan: sekolah_tujuan_id,
+                            // is_active: 1 
+                        },
+                        attributes: ['id']
+                    });
+
+                    // 7. Loop melalui setiap jurusan
+                    for (const jurusan of allJurusan) {
+                        const jurusan_id = jurusan.id;
+                        await prosesPerangkingan(
+                            jalur_pendaftaran_id,
+                            sekolah_tujuan_id,
+                            jurusan_id
+                        );
+                    }
+                } else {
+                    // Jalur yang tidak membutuhkan jurusan
+                    await prosesPerangkingan(
+                        jalur_pendaftaran_id,
+                        sekolah_tujuan_id,
+                        null
+                    );
+                }
+            }
+        }
+
+        res.status(200).json({
+            'status': 1,
+            'message': 'Automasi perangkingan selesai'
+        });
+
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({
+            'status': 0,
+            'message': 'Error dalam automasi perangkingan'
+        });
+    }
+};
+
+// Fungsi untuk memproses perangkingan dan update database
+async function prosesPerangkingan(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
+    try {
+        // Update database dengan hasil perangkingan
+        await updatePerangkinganKeDatabase(resultData, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id);
+        console.log(`Perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}`);
+
+    } catch (err) {
+        console.error(`Error proses perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}:`, err);
+        throw err;
+    }
+}
+
+// Fungsi untuk update data perangkingan ke database
+async function updatePerangkinganKeDatabase(data, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
+    const transaction = await sequelize.transaction();
+    
+    try {
+        // 1. Reset semua is_saved untuk kombinasi ini
+        await DataPerangkingans.update(
+            { is_saved: 0, no_urut: null },
+            {
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id: jurusan_id || null,
+                    is_delete: 0
+                },
+                transaction
+            }
+        );
+
+        // 2. Update data dengan is_saved = 1 dan no_urut
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            await DataPerangkingans.update(
+                { 
+                    is_saved: 1,
+                    no_urut: i + 1,
+                    is_diterima: 1 // Status diterima
+                },
+                {
+                    where: { id: decodeId(item.id) },
+                    transaction
+                }
+            );
+        }
+
+        // 3. Update yang tidak masuk perangkingan (status_daftar_sekolah = 0)
+        const idsInRanking = data.map(item => decodeId(item.id));
+        await DataPerangkingans.update(
+            { 
+                status_daftar_sekolah: 0,
+                is_saved: 1,
+                no_urut: null
+            },
+            {
+                where: {
+                    jalur_pendaftaran_id,
+                    sekolah_tujuan_id,
+                    jurusan_id: jurusan_id || null,
+                    id: { [Op.notIn]: idsInRanking },
+                    is_delete: 0
+                },
+                transaction
+            }
+        );
+
+        await transaction.commit();
+        console.log(`Berhasil update perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}`);
+
+    } catch (err) {
+        await transaction.rollback();
+        console.error(`Gagal update perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}:`, err);
+        throw err;
+    }
+}
 
 
