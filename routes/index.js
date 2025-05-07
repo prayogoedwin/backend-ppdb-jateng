@@ -235,7 +235,7 @@ router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddl
 
 
 // router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, automasiPerangkingan);
-router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, appKeyMiddleware, automasiPerangkingan); 
+router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, automasiPerangkingan); 
 
 
 // router.post('/api/servis/upload_file_tambahan/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
