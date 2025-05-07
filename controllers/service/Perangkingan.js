@@ -9091,8 +9091,7 @@ export const automasiPerangkingan = async (req, res) => {
         console.log('Memulai proses automasi perangkingan...');
         
         // 1. Ambil semua jalur pendaftaran yang aktif
-        const allJalur = await JalurPendaftaran.findAll({
-            where: { is_active: 1 },
+        const allJalur = await JalurPendaftarans.findAll({
             attributes: ['id'],
             order: [['id', 'ASC']]
         });
@@ -9104,7 +9103,6 @@ export const automasiPerangkingan = async (req, res) => {
 
             // 3. Ambil semua sekolah tujuan yang aktif
             const allSekolah = await SekolahTujuan.findAll({
-                where: { is_active: 1 },
                 attributes: ['id'],
                 order: [['id', 'ASC']]
             });
@@ -9181,7 +9179,7 @@ export const automasiPerangkingan = async (req, res) => {
 // Fungsi utama untuk memproses perangkingan dan update database
 async function prosesPerangkinganDanUpdate(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
     let resultData = [];
-    const transaction = await sequelize.transaction();
+    const transaction = await Sequelize.transaction();
 
     try {
         console.log(`Memproses perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id || 'tidak ada'}`);
