@@ -427,7 +427,8 @@ export const createPendaftarTanpaFile = async (req, res) => {
           organisasi_id,
           nilai_organisasi,
           kebutuhan_khusus_id,
-          kebutuhan_khusus
+          kebutuhan_khusus,
+          npsn_anak_guru
 
       } = req.body;
 
@@ -491,6 +492,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
             is_anak_panti,
             is_anak_keluarga_tidak_mampu,
             is_anak_guru_jateng,
+            npsn_anak_guru, 
             kode_verifikasi,
             created_by: req.ip,
             password_:hashedPassword,
