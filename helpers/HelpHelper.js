@@ -150,9 +150,7 @@ export const getFileTambahanByJalurPendaftaran = async (id) => {
         return data;
       }
   
-      // 4) Kalau tidak ketemu di DB
-      console.log(`[DB] FileTambahans(${id}) → null`);
-      return null;
+
   
     } catch (err) {
       console.error(`Error in FileTambahans(${id}):`, err);
