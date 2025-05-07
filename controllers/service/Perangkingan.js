@@ -9088,54 +9088,77 @@ export const uploadFileTambahan = async (req, res) => {
 
 export const automasiPerangkingan = async (req, res) => {
     try {
+        console.log('Memulai proses automasi perangkingan...');
+        
         // 1. Ambil semua jalur pendaftaran yang aktif
-        const allJalur = await JalurPendaftarans.findAll({
-            attributes: ['id']
+        const allJalur = await JalurPendaftaran.findAll({
+            where: { is_active: 1 },
+            attributes: ['id'],
+            order: [['id', 'ASC']]
         });
 
         // 2. Loop melalui setiap jalur pendaftaran
         for (const jalur of allJalur) {
             const jalur_pendaftaran_id = jalur.id;
+            console.log(`\nMemproses jalur ${jalur_pendaftaran_id}`);
 
             // 3. Ambil semua sekolah tujuan yang aktif
             const allSekolah = await SekolahTujuan.findAll({
-                // where: { 
-                //     is_active: 1 
-                // },
-                attributes: ['id']
+                where: { is_active: 1 },
+                attributes: ['id'],
+                order: [['id', 'ASC']]
             });
 
             // 4. Loop melalui setiap sekolah tujuan
             for (const sekolah of allSekolah) {
                 const sekolah_tujuan_id = sekolah.id;
+                console.log(`Memproses sekolah ${sekolah_tujuan_id}`);
 
-                // 5. Cek apakah jalur ini membutuhkan jurusan (6,7,8,9)
-                if ([6, 7, 8, 9].includes(jalur_pendaftaran_id)) {
-                    // 6. Ambil semua jurusan untuk sekolah ini
-                    const allJurusan = await SekolahJurusan.findAll({
-                        where: { 
-                            id_sekolah_tujuan: sekolah_tujuan_id,
-                            // is_active: 1 
-                        },
-                        attributes: ['id']
-                    });
+                try {
+                    // 5. Cek apakah jalur ini membutuhkan jurusan (6,7,8,9)
+                    if ([6, 7, 8, 9].includes(jalur_pendaftaran_id)) {
+                        // 6. Ambil semua jurusan untuk sekolah ini
+                        const allJurusan = await SekolahJurusan.findAll({
+                            where: { 
+                                id_sekolah_tujuan: sekolah_tujuan_id,
+                                is_active: 1 
+                            },
+                            attributes: ['id'],
+                            order: [['id', 'ASC']]
+                        });
 
-                    // 7. Loop melalui setiap jurusan
-                    for (const jurusan of allJurusan) {
-                        const jurusan_id = jurusan.id;
-                        await prosesPerangkingan(
-                            jalur_pendaftaran_id,
-                            sekolah_tujuan_id,
-                            jurusan_id
-                        );
+                        // 7. Loop melalui setiap jurusan
+                        for (const jurusan of allJurusan) {
+                            const jurusan_id = jurusan.id;
+                            console.log(`Memproses jurusan ${jurusan_id}`);
+                            
+                            try {
+                                await prosesPerangkinganDanUpdate(
+                                    jalur_pendaftaran_id,
+                                    sekolah_tujuan_id,
+                                    jurusan_id
+                                );
+                            } catch (err) {
+                                console.error(`Gagal memproses jurusan ${jurusan_id}:`, err.message);
+                                continue;
+                            }
+                        }
+                    } else {
+                        // Jalur yang tidak membutuhkan jurusan
+                        try {
+                            await prosesPerangkinganDanUpdate(
+                                jalur_pendaftaran_id,
+                                sekolah_tujuan_id,
+                                null
+                            );
+                        } catch (err) {
+                            console.error(`Gagal memproses sekolah ${sekolah_tujuan_id}:`, err.message);
+                            continue;
+                        }
                     }
-                } else {
-                    // Jalur yang tidak membutuhkan jurusan
-                    await prosesPerangkingan(
-                        jalur_pendaftaran_id,
-                        sekolah_tujuan_id,
-                        null
-                    );
+                } catch (err) {
+                    console.error(`Gagal memproses sekolah ${sekolah_tujuan_id}:`, err.message);
+                    continue;
                 }
             }
         }
@@ -9146,31 +9169,199 @@ export const automasiPerangkingan = async (req, res) => {
         });
 
     } catch (err) {
-        console.error('Error:', err);
+        console.error('Error utama dalam automasi perangkingan:', err);
         res.status(500).json({
             'status': 0,
-            'message': 'Error dalam automasi perangkingan'
+            'message': 'Error dalam automasi perangkingan',
+            'error': err.message
         });
     }
 };
 
-// Fungsi untuk memproses perangkingan dan update database
-async function prosesPerangkingan(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
+// Fungsi utama untuk memproses perangkingan dan update database
+async function prosesPerangkinganDanUpdate(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
+    let resultData = [];
+    const transaction = await sequelize.transaction();
+
     try {
+        console.log(`Memproses perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id || 'tidak ada'}`);
+
+        // Logika perangkingan berdasarkan jalur
+        switch(jalur_pendaftaran_id) {
+            case 1: // Zonasi Reguler SMA
+                resultData = await prosesJalurZonasiReguler(sekolah_tujuan_id);
+                break;
+                
+            case 2: // Zonasi Khusus SMA
+                resultData = await prosesJalurZonasiKhusus(sekolah_tujuan_id);
+                break;
+                
+            case 3: // Prestasi SMA
+                resultData = await prosesJalurPrestasi(sekolah_tujuan_id);
+                break;
+                
+            case 4: // PTO/Mutasi SMA
+                resultData = await prosesJalurPTO(sekolah_tujuan_id);
+                break;
+                
+            case 5: // Afirmasi SMA
+                resultData = await prosesJalurAfirmasi(sekolah_tujuan_id);
+                break;
+                
+            case 6: // SMK Domisili Terdekat
+                resultData = await prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id);
+                break;
+                
+            case 7: // SMK Prestasi
+                resultData = await prosesJalurSMKPrestasi(sekolah_tujuan_id, jurusan_id);
+                break;
+                
+            case 8: // SMK Prestasi Khusus
+                resultData = await prosesJalurSMKPrestasiKhusus(sekolah_tujuan_id, jurusan_id);
+                break;
+                
+            case 9: // SMK Afirmasi
+                resultData = await prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id);
+                break;
+                
+            default:
+                throw new Error(`Jalur pendaftaran ${jalur_pendaftaran_id} tidak dikenali`);
+        }
+
         // Update database dengan hasil perangkingan
-        await updatePerangkinganKeDatabase(resultData, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id);
-        console.log(`Perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}`);
+        await updateDatabasePerangkingan(resultData, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, transaction);
+
+        await transaction.commit();
+        console.log(`Berhasil update perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id || 'tidak ada'}`);
 
     } catch (err) {
-        console.error(`Error proses perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}:`, err);
+        await transaction.rollback();
+        console.error(`Gagal memproses perangkingan:`, err);
         throw err;
     }
 }
 
-// Fungsi untuk update data perangkingan ke database
-async function updatePerangkinganKeDatabase(data, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
-    const transaction = await sequelize.transaction();
+// Contoh implementasi salah satu fungsi jalur (Zonasi Reguler)
+async function prosesJalurZonasiReguler(sekolah_tujuan_id) {
+    const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+
+    let kuota_zonasi_max = resSek.daya_tampung;
+    let kuota_zonasi_min = resSek.kuota_zonasi;
+    let persentase_domisili_nilai = DomiNilaiHelper('nilai');
+    let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_min);
+    let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
+
+    // Data berdasarkan jarak terdekat
+    const resDataZonasi = await DataPerangkingans.findAndCountAll({
+        attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+        where: {
+            jalur_pendaftaran_id: 1,
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        order: [
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            ['umur', 'DESC']
+        ],
+        limit: zonasi_jarak
+    });
     
+    const rowsZonasiReg = resDataZonasi.rows;
+    const totalZonasiReg = rowsZonasiReg.length;
+
+    // Hitung kuota yang sudah terpakai oleh jalur lain
+    const countPrestasi = (await DataPerangkingans.findAll({  
+        attributes: ['nisn'],
+        where: {  
+            jalur_pendaftaran_id: 3,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        limit: resSek.kuota_prestasi
+    })).length;
+
+    const countAfirmasi = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 5,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        limit: resSek.kuota_afirmasi
+    })).length;
+
+    const countPto = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 4,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        limit: resSek.kuota_pto
+    })).length;
+
+    let countZonasiKhusus = 0;
+    if(resSek.kuota_zonasi_khusus > 0) {
+        countZonasiKhusus = (await DataPerangkingans.findAll({  
+            attributes: ['nisn'],
+            where: {  
+                jalur_pendaftaran_id: 2,
+                sekolah_tujuan_id,  
+                is_delete: 0,
+                is_daftar_ulang: { [Op.ne]: 2 }
+            },
+            limit: resSek.kuota_zonasi_khusus
+        })).length;
+    }
+
+    let kuota_terpakai = totalZonasiReg + countZonasiKhusus + countPrestasi + countAfirmasi + countPto;
+    let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+
+    // Data berdasarkan nilai tertinggi
+    const resDataZonasiIds = (resDataZonasi.rows || []).map((item) => item.id);
+    const resZonasiNilai = await DataPerangkingans.findAll({
+        attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
+        where: {
+            jalur_pendaftaran_id: 1,
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 },
+            id: { [Op.notIn]: resDataZonasiIds }
+        },
+        order: [
+            ['nilai_akhir', 'DESC'],
+            [literal('CAST(jarak AS FLOAT)'), 'ASC']
+        ],
+        limit: kuota_zonasi_nilai
+    });
+
+    // Gabungkan data
+    const combinedData = [
+        ...(rowsZonasiReg || []).map(item => ({
+            ...item.toJSON(),
+            order_berdasar: "1"
+        })),
+        ...(resZonasiNilai || []).map(item => ({
+            ...item.toJSON(),
+            order_berdasar: "2"
+        }))
+    ];
+
+    return combinedData.map(item => {
+        const { id_pendaftar, id, ...rest } = item;
+        return { 
+            ...rest, 
+            id: encodeId(id), 
+            id_pendaftar: encodeId(id_pendaftar),
+            status_daftar_sekolah: 1
+        };
+    });
+}
+
+// Fungsi untuk update data perangkingan ke database
+async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, transaction) {
     try {
         // 1. Reset semua is_saved untuk kombinasi ini
         await DataPerangkingans.update(
@@ -9202,34 +9393,13 @@ async function updatePerangkinganKeDatabase(data, jalur_pendaftaran_id, sekolah_
             );
         }
 
-        // 3. Update yang tidak masuk perangkingan (status_daftar_sekolah = 0)
-        const idsInRanking = data.map(item => decodeId(item.id));
-        await DataPerangkingans.update(
-            { 
-                status_daftar_sekolah: 0,
-                is_saved: 1,
-                no_urut: null
-            },
-            {
-                where: {
-                    jalur_pendaftaran_id,
-                    sekolah_tujuan_id,
-                    jurusan_id: jurusan_id || null,
-                    id: { [Op.notIn]: idsInRanking },
-                    is_delete: 0
-                },
-                transaction
-            }
-        );
-
-        await transaction.commit();
-        console.log(`Berhasil update perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}`);
+        console.log(`Berhasil update ${data.length} peserta`);
 
     } catch (err) {
-        await transaction.rollback();
-        console.error(`Gagal update perangkingan untuk jalur ${jalur_pendaftaran_id}, sekolah ${sekolah_tujuan_id}, jurusan ${jurusan_id}:`, err);
+        console.error('Gagal update database:', err);
         throw err;
     }
 }
+
 
 
