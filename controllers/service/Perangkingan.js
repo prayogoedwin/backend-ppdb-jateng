@@ -9119,7 +9119,6 @@ export const automasiPerangkingan = async (req, res) => {
                         const allJurusan = await SekolahJurusan.findAll({
                             where: { 
                                 id_sekolah_tujuan: sekolah_tujuan_id,
-                                is_active: 1 
                             },
                             attributes: ['id'],
                             order: [['id', 'ASC']]
