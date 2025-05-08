@@ -9917,12 +9917,57 @@ export const getPerangkinganCadangan = async (req, res) => {
         }
 
         let resSek
-        if (jalur_pendaftaran_id == 1 || jalur_pendaftaran_id == 2 || jalur_pendaftaran_id == 3 || jalur_pendaftaran_id == 4 || jalur_pendaftaran_id == 5) {
-            //sma
-            resSek = await getSekolahTujuanById(sekolah_tujuan_id);
-        }else{
-            // smk jurusan
-            resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+        let limitasi_cadangan;
+
+        switch (jalur_pendaftaran_id) {
+            case 1:
+                //Jalur Domisili Reguler (SMA)
+                resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+                limitasi_cadangan = resSek.kuota_zonasi;
+                break;
+            case 2:
+                //Jalur Domisili Khusus (SMA)
+                resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+                limitasi_cadangan = resSek.kuota_zonasi_khusus;
+                break;
+            case 3:
+                //Jalur Prestasi (SMA)
+                resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+                limitasi_cadangan = resSek.kuota_zonasi_khusus;
+                break;
+            case 4:
+                //Jalur Mutasi (SMA)
+                resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+                limitasi_cadangan = resSek.kuota_pto;
+                break;
+            case 5:
+                //Jalur Afirmasi (SMA)
+                resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+                limitasi_cadangan = resSek.kuota_afirmasi;
+                break;
+            case 6:
+                //Seleksi Terdekat (SMK)
+                resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                limitasi_cadangan = resSek.kuota_jarak_terdekat;
+                break;
+            case 7:
+                //Seleksi Prestasi (SMK)
+                resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                limitasi_cadangan = resSek.kuota_prestasi;
+                break;
+            case 8:
+                //Seleksi Prestasi Khusus(SMK)
+                resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                limitasi_cadangan = resSek.kuota_prestasi_khusus;
+                break;
+            case 9:
+                //Seleksi Afirmasi(SMK)
+                resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                limitasi_cadangan = resSek.kuota_afirmasi;
+                break;
+            default:
+                resSek = 0;
+                break;
         }
 
         // 2. Jika tidak ada di cache, ambil dari database
@@ -9945,7 +9990,7 @@ export const getPerangkinganCadangan = async (req, res) => {
             where: whereClause
         });
 
-        let limit_cadangan = resSek.daya_tampung - count;
+        let limit_cadangan = limitasi_cadangan - count;
 
         const whereClause2 = {
             jalur_pendaftaran_id,
