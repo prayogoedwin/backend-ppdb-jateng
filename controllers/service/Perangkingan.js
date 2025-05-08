@@ -123,10 +123,10 @@ export const getPerangkinganSaya = async (req, res) => {
 
             const resDatas = resData.map(item => {
                 const jsonItem = item.toJSON();
-                jsonItem.id = encodeId(item.id); // Add the encoded ID to the response
+                jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
                 jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
-                // delete jsonItem.id; // Hapus kolom id dari output JSON
-                // delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
+                delete jsonItem.id; // Hapus kolom id dari output JSON
+                delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
             
                 return jsonItem;
             });
@@ -10004,10 +10004,10 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
 
         const resDatas = resultData.map(item => {
             const jsonItem = item.toJSON();
-            jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
+            jsonItem.id = encodeId(item.id); // Add the encoded ID to the response
             jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
-            delete jsonItem.id; // Hapus kolom id dari output JSON
-            delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
+            // delete jsonItem.id; // Hapus kolom id dari output JSON
+            // delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
         
             return jsonItem;
         });
@@ -10022,7 +10022,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Data berhasil ditemukan',
-                data: resDatas,
+                data: resultData,
                 timeline: resTimeline
             });
         }
