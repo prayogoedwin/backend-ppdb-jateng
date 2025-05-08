@@ -9917,7 +9917,7 @@ export const getPerangkinganCadangan = async (req, res) => {
         }
 
         let resSek
-        if ([1, 2, 3, 4, 5].includes(jalur_pendaftaran_id)) {
+        if (jalur_pendaftaran_id == 1 || jalur_pendaftaran_id == 2 || jalur_pendaftaran_id == 3 || jalur_pendaftaran_id == 4 || jalur_pendaftaran_id == 5) {
             //sma
             resSek = await getSekolahTujuanById(sekolah_tujuan_id);
         }else{
