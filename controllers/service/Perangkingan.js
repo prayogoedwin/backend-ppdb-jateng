@@ -10003,13 +10003,12 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         });
 
         const resDatas = resultData.map(item => {
-            const jsonItem = item.toJSON();
-            jsonItem.id = encodeId(item.id); // Add the encoded ID to the response
-            jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
-            // delete jsonItem.id; // Hapus kolom id dari output JSON
-            // delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
-        
-            return jsonItem;
+            const { id_pendaftar, id, ...rest } = item;
+            return { 
+                ...rest, 
+                id: encodeId(id), 
+                id_pendaftar: encodeId(id_pendaftar) 
+            };
         });
 
         // Simpan ke cache
