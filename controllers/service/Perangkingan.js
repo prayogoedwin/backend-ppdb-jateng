@@ -8374,7 +8374,7 @@ export const cekPerangkingan = async (req, res) => {
         // }
 
         if(pendaftar.is_tidak_sekolah == 1){
-            if(jalur_pendaftaran_id != 5 || jalur_pendaftaran_id != 9){
+            if(jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9){
                 return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai ATS, anda hanya bisa daftar jalur / seleksi Afirmasi' });
             }
         }
