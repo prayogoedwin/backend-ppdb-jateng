@@ -9916,12 +9916,13 @@ export const getPerangkinganCadangan = async (req, res) => {
             }
         }
 
+        let resSek
         if ([1, 2, 3, 4, 5].includes(jalur_pendaftaran_id)) {
             //sma
-            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+            resSek = await getSekolahTujuanById(sekolah_tujuan_id);
         }else{
             // smk jurusan
-            const resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+            resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
         }
 
         // 2. Jika tidak ada di cache, ambil dari database
