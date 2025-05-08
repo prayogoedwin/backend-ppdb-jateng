@@ -578,7 +578,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
       // Kembalikan ID dan NISN
       res.status(201).json({
           status: 1,
-          message: "Pendaftaran berhasil.",
+          message: "Pengajuan akun berhasil.",
           data: responseData
           // data: {
           //     id: newPendaftar.id,
