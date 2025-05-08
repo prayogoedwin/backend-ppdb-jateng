@@ -86,14 +86,22 @@ export const loginUser = [
             const user = await DataPendaftars.findOne({
                 where: {
                     nisn,
-                    is_active: 1,
-                    is_verified: 1,
+                    // is_active: 1,
+                    // is_verified: 1,
                     is_delete: 0
                 }
             });
 
             if (!user) {
-                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+                return res.status(403).json({ status: 0, message: 'Akun tidak ditemukan!' });
+            }
+
+            if(user.is_verified == 0){
+                return res.status(403).json({ status: 0, message: 'Akun belum diverifikasi, silahkan verifikasi terlebih dahulu ke sekolah!' });
+            }
+
+            if(user.is_active == 0){
+                return res.status(403).json({ status: 0, message: 'Akun belum di aktivasi!' });
             }
 
             // Compare password
