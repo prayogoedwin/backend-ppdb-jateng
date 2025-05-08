@@ -9885,6 +9885,101 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
     }
 };
 
+export const getPerangkinganCadangan = async (req, res) => {
+    try {
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id, 
+            jurusan_id,
+            nisn,
+            is_pdf
+        } = req.body;
+
+        const redis_key = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+
+        // 1. Cek cache Redis terlebih dahulu
+        const cached = await redisGet(redis_key);
+        if (cached) {
+            const resultData = JSON.parse(cached);
+            
+            if (is_pdf == 1) {
+                return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+            } else {
+                const resTimeline = await getTimelineSatuan(6);
+                return res.status(200).json({
+                    status: 1,
+                    message: 'Data berhasil ditemukan (from cache)',
+                    data: resultData,
+                    timeline: resTimeline
+                });
+            }
+        }
+
+        // 2. Jika tidak ada di cache, ambil dari database
+        const whereClause = {
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            is_saved: 1,
+            is_diterima: 1,
+            is_daftar_ulang: 0,
+            is_delete: 0
+        };
+
+        // Tambahkan filter jurusan jika ada (untuk SMK)
+        if (jurusan_id) {
+            whereClause.jurusan_id = jurusan_id;
+        }
+
+        // Pertama hitung jumlah data yang memenuhi kriteria
+        const count = await DataPerangkingans.count({
+            where: whereClause
+        });
+
+        const whereClause2 = {
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            is_saved: 1,
+            is_diterima: 2,
+            is_delete: 0
+        };
+
+        if (jurusan_id) {
+            whereClause2.jurusan_id = jurusan_id;
+        }
+
+        const resultData = await DataPerangkingans.findAll({
+            where: whereClause2,
+            order: [
+                ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
+            ],
+            limit: count
+        });
+
+        // Simpan ke cache
+        await redisSet(redis_key, JSON.stringify(resultData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+
+        if (is_pdf == 1) {
+            return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+        } else {
+            const resTimeline = await getTimelineSatuan(6);
+            return res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: resultData,
+                timeline: resTimeline
+            });
+        }
+
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
 // Fungsi helper untuk generate PDF
 const generatePDFResponse = (res, data, jalurId) => {
     const currentDateTime = new Date().toLocaleString("id-ID", {

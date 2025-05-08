@@ -54,7 +54,7 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
     uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, 
     getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan,
      getPerangkinganDetail, getInfoParam,  automasiPerangkingan,
-     getPerangkinganDaftarUlang } from '../controllers/service/Perangkingan.js';
+     getPerangkinganDaftarUlang, getPerangkinganCadangan } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
 import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser } from '../controllers/service/AuthPublic.js';
@@ -238,12 +238,6 @@ router.post('/api/servis/daftar_sekolah', ipWhitelistMiddleware, appKeyMiddlewar
 router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
 
 
-// router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, automasiPerangkingan);
-router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, automasiPerangkingan); 
-router.post('/api/servis/perangkingan_daftar_ulang', ipWhitelistMiddleware, getPerangkinganDaftarUlang); 
-
-
-
 
 // router.post('/api/servis/upload_file_tambahan/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, uploadFileTambahan);
@@ -375,6 +369,11 @@ router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, a
 //daftar ulang & perangkingan
 router.post('/admin-api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkingan);
 
+// router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, automasiPerangkingan);
+router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, automasiPerangkingan); 
+router.post('/api/servis/perangkingan_daftar_ulang', ipWhitelistMiddleware, getPerangkinganDaftarUlang); 
+router.post('/api/servis/perangkingan_cadangan', ipWhitelistMiddleware, getPerangkinganCadangan); 
+
 
 // ============================ API UNTUK EXTERNAL ==============================//
 
@@ -387,6 +386,8 @@ router.post('/client-api/auth/signout', ipWhitelistMiddleware, appKeynyaIntegrat
 router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKejuaraan);
 router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
 router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
+
+
 
 
 
