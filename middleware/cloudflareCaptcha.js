@@ -15,7 +15,7 @@ export const verifyCloudflareCaptcha = async (req, res, next) => {
     const { data } = await axios.post(
       'https://challenges.cloudflare.com/turnstile/v0/siteverify',
       {
-        secret: '0x4AAAAAABVkMumzcgp09oPqozVWkoK0IeI', // Selalu gunakan environment variable
+        secret: process.env.TURNSTILE_SECRETKEY, // Selalu gunakan environment variable
         response: token,
         remoteip: req.ip // Validasi tambahan dengan IP pengguna
       },
