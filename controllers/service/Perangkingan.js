@@ -9943,7 +9943,7 @@ export const getPerangkinganCadangan = async (req, res) => {
             case 5:
                 //Jalur Afirmasi (SMA)
                 resSek = await getSekolahTujuanById(sekolah_tujuan_id);
-                limitasi_cadangan = resSek.kuota_afirmasi;
+                2 = resSek.kuota_afirmasi;
                 break;
             case 6:
                 //Seleksi Terdekat (SMK)
@@ -9990,7 +9990,12 @@ export const getPerangkinganCadangan = async (req, res) => {
             where: whereClause
         });
 
-        let limit_cadangan = limitasi_cadangan - count;
+        // let limit_cadangan = limitasi_cadangan - count;
+
+        let limit_cadangan = limitasi_cadangan - count; // Hasil: NaN
+        limit_cadangan = isNaN(limit_cadangan) ? 0 : limit_cadangan;
+
+        console.log('Limit Cadangan'+limit_cadangan); // Output: 0
 
         const whereClause2 = {
             jalur_pendaftaran_id,
