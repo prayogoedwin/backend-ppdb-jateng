@@ -8361,11 +8361,7 @@ export const cekPerangkingan = async (req, res) => {
         //jika status domisili TIDAK "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili != 2){
 
- 
-
-            // return res.status(200).json({ status: 0, message: 'AA Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anak Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
             if(jalur_pendaftaran_id == 4){
-            // return res.status(200).json({ status: 0, message: 'AA' });
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi (SMA)' });
             }
 
@@ -8378,23 +8374,12 @@ export const cekPerangkingan = async (req, res) => {
             }
         }
 
-        // if(pendaftar.is_anak_keluarga_tidak_mampu == 0 && jalur_pendaftaran_id == 5){
-        //     return res.status(200).json({ status: 0, message: 'Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anaka Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
-        // }
 
         if(pendaftar.is_tidak_sekolah == 1){
             if(jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9){
                 return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai ATS, anda hanya bisa daftar jalur / seleksi Afirmasi' });
             }
         }
-
-        // if(pendaftar.is_tidak_sekolah == '0' && pendaftar.is_anak_panti == '0' && pendaftar.is_anak_keluarga_tidak_mampu == '0' && pendaftar.is_disabilitas == 0){
-
-        //     if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
-        //         return res.status(200).json({ status: 0, message: '1 Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anak Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
-        //     }
-
-        // }
 
         if(jalur_pendaftaran_id == 1){
 
