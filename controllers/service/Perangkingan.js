@@ -9916,6 +9916,14 @@ export const getPerangkinganCadangan = async (req, res) => {
             }
         }
 
+        if (in_array($jalur_pendaftaran_id, [1, 2, 3, 4, 5])) {
+            //sma
+            const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
+        }else{
+            // smk jurusan
+            const resSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+        }
+
         // 2. Jika tidak ada di cache, ambil dari database
         const whereClause = {
             jalur_pendaftaran_id,
@@ -9936,6 +9944,8 @@ export const getPerangkinganCadangan = async (req, res) => {
             where: whereClause
         });
 
+        let limit_cadangan = resSek.daya_tampung - count;
+
         const whereClause2 = {
             jalur_pendaftaran_id,
             sekolah_tujuan_id,
@@ -9953,7 +9963,7 @@ export const getPerangkinganCadangan = async (req, res) => {
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
             ],
-            limit: count
+            limit: limit_cadangan
         });
 
         // Simpan ke cache
