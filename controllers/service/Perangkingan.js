@@ -9916,7 +9916,7 @@ export const getPerangkinganCadangan = async (req, res) => {
             }
         }
 
-        if (in_array(jalur_pendaftaran_id, [1, 2, 3, 4, 5])) {
+        if ([1, 2, 3, 4, 5].includes(jalur_pendaftaran_id)) {
             //sma
             const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
         }else{
