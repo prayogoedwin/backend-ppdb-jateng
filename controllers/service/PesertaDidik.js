@@ -638,7 +638,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                       ? pesertaDidikAts.toJSON()
                       : pesertaDidikAts),
                     data_sekolah: {
-                      nama: 'Terdaftar Sebagai ATS',
+                      nama: 'Terdaftar Sebagai ATS | Sekolah Asal:'+ pesertaDidikAts.nama_sekolah,
                       npsn: '-----'
                     }
                   };
