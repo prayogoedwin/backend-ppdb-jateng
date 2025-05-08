@@ -9995,7 +9995,7 @@ export const getPerangkinganCadangan = async (req, res) => {
         // let limit_cadangan = limitasi_cadangan - count; // Hasil: NaN
         // limit_cadangan = isNaN(limit_cadangan) ? 0 : limit_cadangan;
 
-        limit_cadangan = 2;
+        let limit_cadangan = 2;
 
         console.log('Limit Cadangan'+limit_cadangan); // Output: 0
 
