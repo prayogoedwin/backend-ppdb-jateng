@@ -411,7 +411,7 @@ export const getSekolahTujuan = async (req, res) => {
     }  
 }  
 
-export const getSekolahTujuanKabkota = async (req, res) => {  
+export const getSekolahTujuanKabkotaBAK = async (req, res) => {  
     const nins = req.body.nisn;  
     const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
     const kabkota = req.body.kabkota; 
@@ -498,6 +498,103 @@ export const getSekolahTujuanKabkota = async (req, res) => {
         });  
     }  
 } 
+
+export const getSekolahTujuanKabkota = async (req, res) => {  
+    const nins = req.body.nisn;  
+    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+    const kabkota = req.body.kabkota; 
+    
+    // Create Redis key based on parameters
+    const redis_key = `sekolah_tujuan_kabkota_publik:${bentuk_pendidikan_id}:${kabkota}`;
+  
+    try {
+        // Try to get data from Redis cache first
+        const cacheNya = await redisGet(redis_key);
+        if (cacheNya) {
+            return res.status(200).json({
+                'status': 1,
+                'message': 'Data berhasil ditemukan (from cache)',
+                'data': JSON.parse(cacheNya)
+            });
+        }
+
+        // If not in cache, fetch from database
+        const resData = await SekolahTujuans.findAll({  
+            where: {  
+                bentuk_pendidikan_id: bentuk_pendidikan_id,
+                kode_wilayah_kot: kabkota,
+                nama_jurusan: {
+                    [Op.not]: null,
+                }
+            },  
+            attributes: [
+                'npsn', 
+                [Sequelize.fn('MIN', Sequelize.col('id')), 'id'],
+                [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'],
+                [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'],
+                [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'],
+                [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'],
+                [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan']
+            ],
+            group: ['npsn'],  
+            order: ['id']
+        });  
+
+        // Format the data
+        const formattedResData = resData.map(school => {  
+            return {  
+                ...school.dataValues,  
+                nama_npsn: `${school.nama} ${school.npsn}`  
+            };  
+        });  
+
+        // If bentuk_pendidikan_id is 15, fetch jurusan data  
+        if (req.body.bentuk_pendidikan_id == 15) {  
+            const jurusanData = await SekolahJurusan.findAll({  
+                where: {  
+                    id_sekolah_tujuan: formattedResData.map(school => school.id)  
+                },
+                attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
+                order: ['id']
+            });  
+
+            const formattedJurusanData = jurusanData.map(jurusan => {  
+                return {  
+                    ...jurusan.dataValues,  
+                    id_sekolah_tujuan: jurusan.id_sekolah_tujuan  
+                };  
+            });  
+
+            formattedResData.forEach(school => {  
+                school.jurusan = formattedJurusanData.filter(jurusan => jurusan.id_sekolah_tujuan === school.id);  
+            });  
+        }  
+
+        if (formattedResData.length > 0) {  
+            // Cache the data with your existing Redis setup
+            await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER);
+            
+            res.status(200).json({  
+                'status': 1,  
+                'message': 'Data berhasil ditemukan',  
+                'data': formattedResData  
+            });  
+        } else {  
+            res.status(200).json({  
+                'status': 0,  
+                'message': 'Data kosong',  
+                'data': ''  
+            });
+        }
+    } catch (error) {  
+        console.error(error);  
+        res.status(500).json({  
+            'status': 0,  
+            'message': 'Terjadi kesalahan pada server',  
+            'data': ''  
+        });  
+    }  
+}
 
 export const getSekolahTujuanJurusanPublik = async (req, res) => {
 
