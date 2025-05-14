@@ -18,6 +18,8 @@ export const logAccess = async (req, res, next) => {
     //     akun = req.body.username
     // }
 
+  
+
     const akun = req.body.nisn || req.params.nisn || req.query.nisn || (req.user ? req.user.userId : null); // Hanya gunakan req.user.userId jika req.user ada
 
     try {
@@ -31,11 +33,17 @@ export const logAccess = async (req, res, next) => {
             created_by_ip: req.ip // Alamat IP pengguna
         };
 
-        // Simpan ke dalam database
-        // await AccessLog.create(logData);
-        AccessLog.create(logData);
-        console.log("Log entry created:", logData); // 
-        next(); // Lanjutkan ke handler berikutnya
+        if (process.env.LOG_CHECKER === '1') {
+            // Simpan ke dalam database
+            // await AccessLog.create(logData);
+            AccessLog.create(logData);
+            console.log("Log entry created:", logData); // 
+            next(); // Lanjutkan ke handler berikutnya
+        }else{
+            next();
+        }
+
+       
 
     } catch (error) {
         console.error('Error logging access:', error);
@@ -84,10 +92,17 @@ export const logAccessAdmin = async (req, res, next) => {
         };
 
         // Simpan ke dalam database
-        // await AccessLogAdmin.create(logData);
-        AccessLogAdmin.create(logData);
-        console.log("Log entry created:", logData); // 
-        next(); // Lanjutkan ke handler berikutnya
+        // await AccessLogAdmin.create(logData)
+
+        if (process.env.LOG_CHECKER === '1') {
+            // Simpan ke dalam database
+            // await AccessLog.create(logData);
+            AccessLogAdmin.create(logData);
+            console.log("Log entry created:", logData); // 
+            next(); // Lanjutkan ke handler berikutnya
+        }else{
+            next();
+        }
 
     } catch (error) {
         console.error('Error logging access:', error);
@@ -129,9 +144,16 @@ export const logAccessClient = async (req, res, next) => {
 
         // Simpan ke dalam database
         // await AccessLogClient.create(logData);
-        AccessLogClient.create(logData);
-        console.log("Log entry created:", logData); // 
-        next(); // Lanjutkan ke handler berikutnya
+       
+        if (process.env.LOG_CHECKER === '1') {
+            // Simpan ke dalam database
+            // await AccessLog.create(logData);
+            AccessLogClient.create(logData);
+            console.log("Log entry created:", logData); // 
+            next(); // Lanjutkan ke handler berikutnya
+        }else{
+            next();
+        }
 
     } catch (error) {
         console.error('Error logging access:', error);
@@ -183,9 +205,19 @@ export const logAccessPub = async (req, res, next) => {
           };
 
         // Simpan ke dalam database
-        AccessLogPub.create(logData);
-        console.log("Log entry created:", logData); // 
-        next(); // Lanjutkan ke handler berikutnya
+        // AccessLogPub.create(logData);
+        // console.log("Log entry created:", logData); // 
+        // next(); // Lanjutkan ke handler berikutnya
+
+        if (process.env.LOG_CHECKER === '1') {
+            // Simpan ke dalam database
+            // await AccessLog.create(logData);
+            AccessLogPub.create(logData);
+            console.log("Log entry created:", logData); // 
+            next(); // Lanjutkan ke handler berikutnya
+        }else{
+            next();
+        }
 
     } catch (error) {
         console.error('Error logging access:', error);
