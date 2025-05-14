@@ -29,7 +29,10 @@ export const getJenisKejuaraan = async (req, res) => {
         }else{
 
             const resData = await JenisKejuaraans.findAll({
-                attributes: ['id', 'nama', 'bobot', 'id_tingkat_kejuaraan', 'is_berjenjang'] // Specify the attributes to retrieve
+                attributes: ['id', 'nama', 'bobot', 'id_tingkat_kejuaraan', 'is_berjenjang'], // Specify the attributes to retrieve
+                order: [
+                    ['id', 'ASC'] // Order by id in ascending order
+                ]
             });
             if(resData.length > 0){
 
