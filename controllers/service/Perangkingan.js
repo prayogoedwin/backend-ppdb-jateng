@@ -10989,6 +10989,9 @@ export const automasiPerangkingan = async (req, res) => {
         
         // 1. Ambil semua jalur pendaftaran yang aktif
         const allJalur = await JalurPendaftarans.findAll({
+            where: { 
+                id: 1,
+            },
             attributes: ['id'],
             order: [['id', 'ASC']],
             transaction
@@ -11250,6 +11253,7 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
     let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_max);
     let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
 
+    
     // Data berdasarkan jarak terdekat
     const resDataZonasi = await DataPerangkingans.findAndCountAll({
         attributes: ['id', 'no_pendaftaran', 'nisn', 'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'],
