@@ -11905,14 +11905,14 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             ]
         });
 
-        const resDatas = resultData.map(item => {
-            const { id_pendaftar, id, ...rest } = item;
-            return { 
-                ...rest, 
-                id: encodeId(id),          // id yang sudah di-encode
-                id_pendaftar: encodeId(id_pendaftar)  // id_pendaftar yang sudah di-encode
-            };
-        });
+        // const resDatas = resultData.map(item => {
+        //     const { id_pendaftar, id, ...rest } = item;
+        //     return { 
+        //         ...rest, 
+        //         id: encodeId(id),          // id yang sudah di-encode
+        //         id_pendaftar: encodeId(id_pendaftar)  // id_pendaftar yang sudah di-encode
+        //     };
+        // });
 
         // Simpan ke cache
         // await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
@@ -11924,7 +11924,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Data berhasil ditemukan',
-                data: resDatas,
+                data: resultData,
                 timeline: resTimeline
             });
         }
