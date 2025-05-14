@@ -11252,7 +11252,7 @@ async function prosesPerangkinganDanUpdate(jalur_pendaftaran_id, sekolah_tujuan_
 const KUOTA_CADANGAN = parseInt(process.env.KUOTA_CADANGAN) || 0; // Default to 20 if not set
 
 // Contoh implementasi fungsi jalur dengan transaction
-async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
+async function prosesJalurZonasiReguler_BAK(sekolah_tujuan_id, transaction) {
     const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
 
     let kuota_zonasi_max = resSek.daya_tampung;
@@ -11399,6 +11399,80 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
             status_daftar_sekolah: 1
         };
     });
+}
+
+async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
+    const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
+    let daya_tampung = resSek.daya_tampung;
+    let kuota_zonasi = resSek.kuota_zonasi;
+
+    // Bagi kuota zonasi menjadi 2 bagian: berdasarkan jarak dan nilai
+    let persentase_domisili_nilai = DomiNilaiHelper('nilai');
+    let kuota_zonasi_nilai = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi);
+    let kuota_zonasi_jarak = kuota_zonasi - kuota_zonasi_nilai;
+
+    // Hitung kuota dengan cadangan
+    let kuota_jarak_dengan_cadangan = kuota_zonasi_jarak + Math.ceil(KUOTA_CADANGAN * (kuota_zonasi_jarak / kuota_zonasi));
+    let kuota_nilai_dengan_cadangan = kuota_zonasi_nilai + Math.ceil(KUOTA_CADANGAN * (kuota_zonasi_nilai / kuota_zonasi));
+
+    // Data berdasarkan jarak
+    const resDataJarak = await DataPerangkingans.findAll({
+        where: {
+            jalur_pendaftaran_id: 1, // Zonasi Reguler
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        order: [
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Jarak terdekat
+            ['umur', 'DESC'], // Umur tertua
+            ['created_at', 'ASC'] // Pendaftaran paling awal
+        ],
+        limit: kuota_jarak_dengan_cadangan,
+        transaction
+    });
+
+    // Data berdasarkan nilai
+    const resDataNilai = await DataPerangkingans.findAll({
+        where: {
+            jalur_pendaftaran_id: 1, // Zonasi Reguler
+            sekolah_tujuan_id,
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 },
+            id: { 
+                [Op.notIn]: resDataJarak.map(item => item.id) // Exclude yang sudah masuk jarak
+            }
+        },
+        order: [
+            ['nilai_akhir', 'DESC'], // Nilai tertinggi
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Jarak terdekat
+            ['created_at', 'ASC'] // Pendaftaran paling awal
+        ],
+        limit: kuota_nilai_dengan_cadangan,
+        transaction
+    });
+
+    // Gabungkan semua data dengan flag cadangan
+    const combinedData = [
+        ...(resDataJarak || []).map((item, index) => ({
+            ...item.toJSON(),
+            order_berdasar: "1", // 1 untuk zonasi jarak
+            is_cadangan: index >= kuota_zonasi_jarak
+        })),
+        ...(resDataNilai || []).map((item, index) => ({
+            ...item.toJSON(),
+            order_berdasar: "2", // 2 untuk zonasi nilai
+            is_cadangan: index >= kuota_zonasi_nilai
+        }))
+    ];
+
+    return combinedData.map(item => ({
+        ...item,
+        id: encodeId(item.id),
+        id_pendaftar: encodeId(item.id_pendaftar),
+        status_daftar_sekolah: 1,
+        is_diterima: item.is_cadangan ? 2 : 1
+    }));
 }
 
 // Update all jalur processing functions to include cadangan quota
