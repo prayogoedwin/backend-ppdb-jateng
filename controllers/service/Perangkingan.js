@@ -11369,6 +11369,12 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
         limit: kuota_zonasi_nilai
     });
 
+    console.log('Kuota Zonasi Max:', kuota_zonasi_max);
+    console.log('Kuota Terpakai:', kuota_terpakai);
+    console.log('Kuota Zonasi Nilai:', kuota_zonasi_nilai);
+    console.log('Total Data Zonasi Jarak:', totalZonasiReg);
+    console.log('Total Data Zonasi Nilai:', resZonasiNilai.length);
+
     
 
         
