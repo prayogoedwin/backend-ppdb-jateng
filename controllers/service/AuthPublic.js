@@ -199,15 +199,132 @@ export const verifikasiOtpUser = [
                     id: decodeId(userid),
                     nisn,
                     // access_token: otp,
-                    is_active: 1,
-                    is_verified: 1,
+                    // is_active: 1,
+                    // is_verified: 1,
                     is_delete: 0
                 }
                 
             });
 
+            // if (!user) {
+            //     return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+            // }
+
             if (!user) {
-                return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+                return res.status(403).json({ status: 0, message: 'NISN / password salah' });
+            }
+
+            
+            if(user.is_verified == 0){
+                return res.status(403).json({ status: 0, message: 'Akun belum diverifikasi, silahkan verifikasi terlebih dahulu ke sekolah!' });
+            }
+
+            if(user.is_active == 0){
+                return res.status(403).json({ status: 0, message: 'Akun belum di aktivasi!' });
+            }
+
+            // if(user.access_token != otp){
+            //     return res.status(200).json({ status: 0, message: 'OTP salah' });
+            // }
+
+            // Check if OTP has expired
+            const currentTime = new Date();
+            // if (user.otp_expiration && user.otp_expiration < currentTime) {
+            //     return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
+            // }
+
+            // Generate tokens
+            const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
+            const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
+
+            const login_ip = req.ip || req.connection.remoteAddress; 
+            const now = Date.now();
+
+            // Save tokens to user record
+            user.access_token = accessToken;
+            user.access_token_refresh = refreshToken;
+            
+            user.is_login = 1;
+            user.login_at = currentTime;
+            user.login_ip = login_ip;
+
+            await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
+
+            const fullName =  user.nama_lengkap;
+            const nameParts = fullName.trim().split(' ');
+            // Mengambil kata pertama sebagai nama depan
+
+            const resTimeline = await Timelines.findOne({
+                attributes: ['id', 'nama', 'status'],
+                where: {
+                    id: 4,
+                },
+            });
+
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil masuk',
+                data: {
+                    userId: encodeId(user.id),
+                    nisn: user.nisn,
+                    nama: nameParts[0],
+                    nama_lengkap: fullName,
+                    accessToken,
+                    refreshToken,
+                    timline_dafatar_sekolah: resTimeline
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+    }
+];
+
+// User login
+export const loginTanpaOtp = [
+
+    async (req, res) => {
+
+        const { nisn, password} = req.body;
+
+        try {
+            // Check if user exists
+            const user = await DataPendaftars.findOne({
+                where: {
+                    id: decodeId(userid),
+                    nisn,
+                    // access_token: otp,
+                    // is_active: 1,
+                    // is_verified: 1,
+                    is_delete: 0
+                }
+                
+            });
+
+            // if (!user) {
+            //     return res.status(200).json({ status: 0, message: 'Akun tidak ditemukan, indikasi akun belum di aktifasi / verifikasi' });
+            // }
+
+            if (!user) {
+                return res.status(403).json({ status: 0, message: 'Akun tidak ditemukan!' });
+            }
+
+            // Compare password
+            const isMatch = await bcrypt.compare(password, user.password_);
+            if (!isMatch) {
+                return res.status(403).json({ status: 0, message: 'NISN / password salah' });
+            }
+
+
+            if(user.is_verified == 0){
+                return res.status(403).json({ status: 0, message: 'Akun belum diverifikasi, silahkan verifikasi terlebih dahulu ke sekolah!' });
+            }
+
+            if(user.is_active == 0){
+                return res.status(403).json({ status: 0, message: 'Akun belum di aktivasi!' });
             }
 
             // if(user.access_token != otp){

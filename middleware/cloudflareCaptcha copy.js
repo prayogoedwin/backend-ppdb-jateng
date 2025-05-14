@@ -76,13 +76,6 @@ export const verifyCloudflareCaptcha = async (req, res, next) => {
   }
 };
 
-
-export const skipCaptchaVerification = (req, res, next) => {
-  // Middleware passthrough tanpa verifikasi
-  next();
-};
-
-// Ekspor middleware berdasarkan environment variable
-export default process.env.TURNSTILE_CHECKER === '0' 
-  ? skipCaptchaVerification 
-  : verifyCloudflareCaptcha;
+// export const verifyCluodflareCaptcha = async (req, res, next) => {
+//     next();
+// }
