@@ -11894,9 +11894,9 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         };
 
         // Tambahkan filter jurusan jika ada (untuk SMK)
-        if (jurusan_id) {
-            whereClause.jurusan_id = jurusan_id;
-        }
+        // if (jurusan_id) {
+        //     whereClause.jurusan_id = jurusan_id;
+        // }
 
         const resultData = await DataPerangkingans.findAll({
             where: whereClause,
