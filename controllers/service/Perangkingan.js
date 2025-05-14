@@ -11893,10 +11893,10 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             is_delete: 0
         };
 
-        // Tambahkan filter jurusan jika ada (untuk SMK)
-        // if (jurusan_id) {
-        //     whereClause.jurusan_id = jurusan_id;
-        // }
+        //Tambahkan filter jurusan jika ada (untuk SMK)
+        if (jurusan_id) {
+            whereClause.jurusan_id = jurusan_id;
+        }
 
         const resultData = await DataPerangkingans.findAll({
             where: whereClause,
@@ -11924,7 +11924,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Data berhasil ditemukan',
-                data: 'a',
+                data: resDatas,
                 timeline: resTimeline
             });
         }
