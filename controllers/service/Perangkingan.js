@@ -11915,14 +11915,22 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         // });
 
         // Modifikasi data
-        const modifiedData = {
-            data: resultData.map(item => ({
-                ...item,
-                id: encodeId(item.id),          // id yang sudah di-encode
-                id_pendaftar: encodeId(item.id_pendaftar)  // id_pendaftar yang sudah di-encode
-            }))
-        };
-
+        const modifiedData = resultData.map(item => {
+            // Buat copy dari dataValues untuk menghindari perubahan langsung
+            const dataValues = { ...item.dataValues };
+            
+            // Encode ID yang diperlukan
+            dataValues.id = encodeId(dataValues.id);
+            dataValues.id_pendaftar = encodeId(dataValues.id_pendaftar);
+            
+            // Kembalikan object dengan struktur yang sama termasuk properti Sequelize lainnya
+            return {
+              ...item,
+              dataValues: dataValues,
+              id: dataValues.id, // Update juga properti langsung di root object
+              id_pendaftar: dataValues.id_pendaftar
+            };
+          });
         // Simpan ke cache
         // await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
