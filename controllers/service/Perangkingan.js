@@ -11013,6 +11013,9 @@ export const automasiPerangkingan = async (req, res) => {
             // 3. Ambil semua sekolah tujuan yang aktif
             const allSekolah = await SekolahTujuan.findAll({
                 attributes: ['id'],
+                where: { 
+                    id: 2233,
+                },
                 order: [['id', 'ASC']],
                 transaction
             });
