@@ -11916,7 +11916,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
 
         // Modifikasi data
         const modifiedData = {
-            data: resultData.data.map(item => ({
+            data: resultData.map(item => ({
                 ...item,
                 id: encodeId(item.id),          // id yang sudah di-encode
                 id_pendaftar: encodeId(item.id_pendaftar)  // id_pendaftar yang sudah di-encode
