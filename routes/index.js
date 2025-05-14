@@ -370,8 +370,8 @@ router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, a
 router.post('/admin-api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkingan);
 
 // router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, automasiPerangkingan);
-router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, automasiPerangkingan); 
-router.post('/api/servis/perangkingan_daftar_ulang', ipWhitelistMiddleware, getPerangkinganDaftarUlang); 
+router.post('/admin-api/servis/automasi_perangkingan', ipWhitelistMiddleware, automasiPerangkingan); 
+router.post('/admin-api/servis/perangkingan_daftar_ulang', ipWhitelistMiddleware, getPerangkinganDaftarUlang); 
 router.post('/api/servis/perangkingan_cadangan', ipWhitelistMiddleware, getPerangkinganCadangan); 
 
 
