@@ -11147,6 +11147,11 @@ export const automasiPerangkingan = async (req, res) => {
 // Update fungsi updateDatabasePerangkingan tetap sama seperti sebelumnya
 async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, transaction) {
     try {
+
+        console.log('sekolah id: '+sekolah_tujuan_id);
+        console.log('----');
+        console.log('jalur id: '+jalur_pendaftaran_id);
+
         // 1. Reset semua is_saved untuk kombinasi ini
         await DataPerangkingans.update(
             { is_saved: 0, no_urut: null, is_diterima: null },
