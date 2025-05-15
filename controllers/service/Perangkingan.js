@@ -12835,29 +12835,29 @@ export const daftarUlangPerangkingan = async (req, res) => {
             { where: { id: id_perangkingan_decode } }
         );
 
-        if (perangkingan3) {
-            const perangkingan4 = await DataPerangkingans.findAll({
-                where: {
-                    nisn: perangkingan.nisn, // Condition for specific NISN
-                    id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
-                    is_delete: 0 // Condition for is_delete being 0
-                }
-            });
+        // if (perangkingan3) {
+        //     const perangkingan4 = await DataPerangkingans.findAll({
+        //         where: {
+        //             nisn: perangkingan.nisn, // Condition for specific NISN
+        //             id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+        //             is_delete: 0 // Condition for is_delete being 0
+        //         }
+        //     });
 
-            await DataPerangkingans.update(
-                { 
-                    is_daftar_ulang: 2,
-                    daftar_ulang_at: new Date(),
-                 },
-                { 
-                    where: {
-                        nisn: perangkingan.nisn, // Condition for specific NISN
-                        id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
-                        is_delete: 0 // Condition for is_delete being 0
-                    }
-                 }
-            );
-        }
+        //     await DataPerangkingans.update(
+        //         { 
+        //             is_daftar_ulang: 2,
+        //             daftar_ulang_at: new Date(),
+        //          },
+        //         { 
+        //             where: {
+        //                 nisn: perangkingan.nisn, // Condition for specific NISN
+        //                 id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+        //                 is_delete: 0 // Condition for is_delete being 0
+        //             }
+        //          }
+        //     );
+        // }
 
         res.status(200).json({
             status: 1,
