@@ -12215,7 +12215,8 @@ export const cekPerangkingan = async (req, res) => {
             attributes: ['id', 'status_domisili', 'kecamatan_id', 'nisn', 'nama_lengkap', 'lat', 'lng',
                  'is_tidak_sekolah', 'is_anak_panti', 'is_anak_keluarga_tidak_mampu', 'is_anak_pondok', 
                  'is_tidak_boleh_domisili', 'tanggal_lahir',
-                 'nilai_raport_rata', 'nilai_prestasi', 'nilai_organisasi', 'is_disabilitas', 'is_anak_guru_jateng'
+                 'nilai_raport_rata', 'nilai_prestasi', 'nilai_organisasi', 'is_disabilitas', 'is_anak_guru_jateng',
+                 'npsn_anak_guru'
                 ] 
         });
 
