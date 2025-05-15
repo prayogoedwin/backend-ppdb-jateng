@@ -12812,17 +12812,17 @@ export const daftarUlangPerangkingan = async (req, res) => {
         }
 
         //untuk cek apakah sudah ada yang dia daftar dan sudah daftar ulang
-        const perangkingan2 = await DataPerangkingans.findOne({
-            where: {
-                nisn: perangkingan.nisn,
-                is_daftar_ulang: 1,
-                is_delete: 0
-            }
-        });
+        // const perangkingan2 = await DataPerangkingans.findOne({
+        //     where: {
+        //         nisn: perangkingan.nisn,
+        //         is_daftar_ulang: 1,
+        //         is_delete: 0
+        //     }
+        // });
 
-        if (perangkingan2) {
-            return res.status(200).json({ status: 0, message: 'Anda sudah pernah melakukan daftar ulang, daftar ulang hanya bisa di lakukan 1 kali' });
-        }
+        // if (perangkingan2) {
+        //     return res.status(200).json({ status: 0, message: 'Anda sudah pernah melakukan daftar ulang, daftar ulang hanya bisa di lakukan 1 kali' });
+        // }
 
 
         // Update the record to set is_delete to 1
