@@ -10449,6 +10449,42 @@ export const createPerangkingan = async (req, res) => {
 
         const umur = await calculateAge(pendaftar.tanggal_lahir);
 
+        let anak_tidak_mampu = pendaftar.is_anak_keluarga_tidak_mampu;
+        let anak_panti = pendaftar.is_anak_panti;
+        let anak_disabilitas =  pendaftar.is_disabilitas;
+        let anak_tidak_sekolah = pendaftar.is_tidak_sekolah;
+
+        if(jalur_pendaftaran_id == 5){
+            if(pendaftar.status_domisili == 1 && pendaftar.is_anak_keluarga_tidak_mampu == 1){
+                anak_tidak_mampu = 1;
+                anak_panti = 0;
+                anak_disabilitas = 0;
+                anak_tidak_sekolah = 0;
+            }
+
+            if(pendaftar.status_domisili == 4 && pendaftar.is_anak_panti == 1){
+                anak_tidak_mampu = 0;
+                anak_panti = 1;
+                anak_disabilitas = 0;
+                anak_tidak_sekolah = 0;
+            }
+
+            if(pendaftar.status_domisili == 1 && pendaftar.is_disabilitas == 1){
+                anak_tidak_mampu = 0;
+                anak_panti = 0;
+                anak_disabilitas = 1;
+                anak_tidak_sekolah = 0;
+            }
+
+            if(pendaftar.status_domisili == 1 && pendaftar.is_tidak_sekolah == 1){
+                anak_tidak_mampu = 0;
+                anak_panti = 0;
+                anak_disabilitas = 0;
+                anak_tidak_sekolah = 1;
+            }
+        }
+        
+
         const newPerangkinganData = {
             id_pendaftar: id_pendaftar_decode,
             no_pendaftaran,
@@ -10468,12 +10504,12 @@ export const createPerangkingan = async (req, res) => {
             nilai_prestasi: pendaftar.nilai_prestasi,
             nilai_organisasi: pendaftar.nilai_organisasi,
             nilai_akhir,
-            is_tidak_sekolah: pendaftar.is_tidak_sekolah,
-            is_anak_panti: pendaftar.is_anak_panti,
-            is_anak_keluarga_tidak_mampu: pendaftar.is_anak_keluarga_tidak_mampu,
+            is_tidak_sekolah: anak_tidak_sekolah,
+            is_anak_panti: anak_panti,
+            is_anak_keluarga_tidak_mampu: anak_tidak_mampu,
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
             is_pip: pendaftar.is_pip,
-            is_disabilitas: pendaftar.is_disabilitas,
+            is_disabilitas: anak_disabilitas,
             is_buta_warna,
             created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
