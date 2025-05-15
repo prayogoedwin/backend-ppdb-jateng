@@ -4,6 +4,7 @@ import EzSekolahs from '../master/SekolahModel.js';
 import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
 import StatusDomisilis from '../master/StatusDomisiliModel.js';
 import SekolahAsals from '../master/SekolahAsalModel.js';
+import JenisKejuaraans from '../master/JenisKejuaraanModel.js';
 
 
 import { encodeId } from '../../middleware/EncodeDecode.js'; // Import fungsi encodeId
@@ -506,6 +507,7 @@ DataPesertaDidiks.belongsTo(StatusDomisilis, { as: 'status_domisili_name', forei
 DataPesertaDidiks.belongsTo(DataUsers, { as: 'diverifikasi_oleh', foreignKey: 'verified_by', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(DataUsers, { as: 'sedang_diproses_oleh', foreignKey: 'opened_by', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(SekolahAsals, { as: 'wilayah_sekolah_asal', foreignKey: 'sekolah_asal_id', targetKey: 'id' });
+DataPesertaDidiks.belongsTo(JenisKejuaraans, { as: 'jenis_kejuaraan', foreignKey: 'kejuaraan_id', targetKey: 'id' });
 
 
 export default DataPesertaDidiks;

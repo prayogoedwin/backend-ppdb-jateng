@@ -12,6 +12,7 @@ import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import JalurPendaftarans from '../../models/master/JalurPendaftaranModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import StatusDomisilis from '../../models/master/StatusDomisiliModel.js';
+import JenisKejuaraans from '../../models/master/JenisKejuaraanModel.js';
 import Timelines from "../../models/service/TimelineModel.js";
 // import DataUsers from '../../../models/service/DataUsersModel.js';
 import DataUsersModel from '../../models/service/DataUsersModel.js';
@@ -267,6 +268,10 @@ export const getPerangkinganDetail = async (req, res) => {
                         model: WilayahVerDapodik,
                         as: 'data_wilayah_prov',
                         attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },{
+                        model: JenisKejuaraans,
+                        as: 'jenis_kejuaraan',
+                        attributes: ['nama']
                     }
                 ],
             });
