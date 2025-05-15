@@ -158,11 +158,11 @@ router.get('/download/:nisn/:filename', viewFile);
 
 
 //konfigurasi cache
-router.delete('/api/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
-router.delete('/api/internal/clear_all_cache', clearAllCache); // Clear all cache
-router.get('/api/internal/cache/keys', getAllCacheKeys); // Get all cache keys
-router.get('/api/internal/cache/key_values', getAllCacheKeysAndValues);
-router.delete('/api/internal/cache/clear_cache_by_prefix', simpleAuthMiddleware, clearCacheByPrefix);
+router.delete('/rahasia-api/internal/clear_cache/:key', clearCacheByKey); // Clear specific cache key
+router.delete('/rahasia-api/internal/clear_all_cache', clearAllCache); // Clear all cache
+router.get('/rahasia-api/internal/cache/keys', getAllCacheKeys); // Get all cache keys
+router.get('/rahasia-api/internal/cache/key_values', getAllCacheKeysAndValues);
+router.delete('/rahasia-api/internal/cache/clear_cache_by_prefix', simpleAuthMiddleware, clearCacheByPrefix);
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);
