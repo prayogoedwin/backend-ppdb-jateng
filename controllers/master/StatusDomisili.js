@@ -2,6 +2,7 @@
 import StatusDomisilis from "../../models/master/StatusDomisiliModel.js";
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
+import { Sequelize, Op } from "sequelize";
 
 // Get semua product
 // export const getKabkotas = async (req, res) => {
