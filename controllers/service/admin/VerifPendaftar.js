@@ -828,7 +828,8 @@ export const getDataPendaftarById = async (req, res) => {
                 {
                     model: JenisKejuaraans,
                     as: 'jenis_kejuaraan',
-                    attributes: ['nama']
+                    attributes: ['nama'],
+                    required: false 
                 },
                 {
                     model: DataUsers,
@@ -857,7 +858,7 @@ export const getDataPendaftarById = async (req, res) => {
                        
                     ]
                     
-                }
+                },
             ],  
         });  
   
