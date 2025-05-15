@@ -13514,7 +13514,7 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
             is_delete: 0,
             is_daftar_ulang: { [Op.ne]: 2 }
         },
-        limit: resSek.kuota_afirmasi
+        limit: resSek.kuota_pto
     })).length;
 
     let countZonasiKhusus = 0;
