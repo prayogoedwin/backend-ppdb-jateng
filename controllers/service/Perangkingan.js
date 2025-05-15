@@ -241,7 +241,7 @@ export const getPerangkinganDetail = async (req, res) => {
                     'nomor_sertifikat', 
                     'organisasi_id', 
                     'nilai_organisasi',
-                    'nilai_raport'
+                    'nilai_raport_rata',
 
                 ],
                 include: [
