@@ -5,6 +5,7 @@ import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
 import SekolahTujuanModel from '../../../models/master/SekolahTujuanModel.js';
 import StatusDomisilis from '../../../models/master/StatusDomisiliModel.js';
+import JenisKejuaraans from '../../../models/master/JenisKejuaraanModel.js';
 import DataUsers from '../../../models/service/DataUsersModel.js';
 import { klasifikasiPindah } from '../../../helpers/HelpHelper.js';
 
@@ -824,6 +825,11 @@ export const getDataPendaftarById = async (req, res) => {
                 //     as: 'diverifikasi_oleh',  
                 //     attributes: ['id', 'nama']  
                 // }  
+                {
+                    model: JenisKejuaraans,
+                    as: 'jenis_kejuaraan',
+                    attributes: ['nama']
+                },
                 {
                     model: DataUsers,
                     as: 'diverifikasi_oleh',
