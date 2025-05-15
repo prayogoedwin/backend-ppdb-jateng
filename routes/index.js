@@ -36,7 +36,7 @@ import { downloadFile, viewFile } from '../middleware/Donlod.js';
 import { LogSiswaLoggedIn, LogAdminLoggedIn } from "../controllers/log/LogLog.js";
 
 // Master Data
-import { getStatusDomisili } from "../controllers/master/StatusDomisili.js";
+import { getStatusDomisili, getStatusDomisiliLuarProv } from "../controllers/master/StatusDomisili.js";
 import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
@@ -166,6 +166,7 @@ router.delete('/api/internal/cache/clear_cache_by_prefix', simpleAuthMiddleware,
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);
+router.get('/api/master/status_domisili_luar_provinsi', getStatusDomisiliLuarProv);
 router.get('/api/master/sekolah_asal', getSekolahAsal);
 router.get('/api/master/jenis_lulusan', getJenisLulusan);
 
