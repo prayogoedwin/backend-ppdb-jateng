@@ -8050,7 +8050,7 @@ export const getPerangkingan = async (req, res) => {
                         is_daftar_ulang: { [Op.ne]: 2 } // dinyatakan tidak daftar ulang
                         // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                     },
-                    limit: resSek.kuota_afirmasi
+                    limit: resSek.kuota_pto
                 })).length;
     
                 let countZonasiKhusus = 0;
@@ -8078,9 +8078,35 @@ export const getPerangkingan = async (req, res) => {
                 // let kuota_zonasi_nilai = kuota_zonasi_max - (totalZonasiReg + countZonasiKhusus) +  countPrestasi + countAfirmasi + countPto;
     
                 let kuota_terpakai = totalZonasiReg + countZonasiKhusus +  countPrestasi + countAfirmasi + countPto;
-    
+
+
+               
                 // let kuota_zonasi_nilai = kuota_zonasi_max - kuota_terpakai;
                 let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
+
+                console.log('totalZonasiReg :'+totalZonasiReg);
+                console.log('-----');
+
+                console.log('countZonasiKhusus :'+countZonasiKhusus);
+                console.log('-----');
+
+                console.log('countPrestasi :'+countPrestasi);
+                console.log('-----');
+
+                console.log('countAfirmasi :'+countAfirmasi);
+                console.log('-----');
+
+                console.log('countPto :'+countPto);
+                console.log('-----');
+
+                console.log('kuota_zonasi_max :'+kuota_zonasi_max);
+                console.log('-----');
+    
+                console.log('kuota_terpakai :'+kuota_terpakai);
+                console.log('-----');
+    
+
+                console.log('kuota_zonasi_nilai akhir:'+kuota_zonasi_nilai)
     
                 // const resDataZonasiIds = resDataZonasi.rows.map((item) => item.id);
                 const resDataZonasiIds = (resDataZonasi.rows || []).map((item) => item.id);
