@@ -240,7 +240,8 @@ export const getPerangkinganDetail = async (req, res) => {
                     'umur_sertifikat', 
                     'nomor_sertifikat', 
                     'organisasi_id', 
-                    'nilai_organisasi'
+                    'nilai_organisasi',
+                    'nilai_raport'
 
                 ],
                 include: [
