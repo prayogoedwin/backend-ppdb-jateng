@@ -315,7 +315,7 @@ router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddle
 
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/tolak_ajuan_akun', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
-router.post('/admin-api/data/tolak_ajuan_akun_alasan_alamat', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
+router.post('/admin-api/data/tolak_ajuan_akun_plus_alasan_alamat', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 
 router.post('/admin-api/data/fm_ajuan_akun', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/batalkan_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
