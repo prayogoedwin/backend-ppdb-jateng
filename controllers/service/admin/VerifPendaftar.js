@@ -1139,7 +1139,7 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
 }  
 
 export const verifikasiPendaftar = async (req, res) => {
-        const { id, is_verified, keterangan_verifikator, cek_list_dok, is_tidak_boleh_domisili, is_disabilitas, is_with_surat_sehat, status_shdk, alasan_batal_verifikasi} = req.body;
+        const { id, is_verified, keterangan_verifikator, cek_list_dok, is_tidak_boleh_domisili, is_disabilitas, is_with_surat_sehat, status_shdk, is_usia_domisili, is_nama_ortu_sesuai, alasan_batal_verifikasi} = req.body;
 
         if (!id) {
             return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
@@ -1179,6 +1179,16 @@ export const verifikasiPendaftar = async (req, res) => {
                 return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
             }
 
+            if(is_usia_domisili == 1 && is_nama_ortu_sesuai == 1 && status_shdk == 1){
+
+                is_tidak_boleh_domisili = 0;
+
+            }else{
+
+                is_tidak_boleh_domisili = 1;
+
+            }
+
             await DataPendaftars.update(
                 {
                     is_verified,
@@ -1188,6 +1198,8 @@ export const verifikasiPendaftar = async (req, res) => {
                     is_disabilitas,
                     is_with_surat_sehat,
                     status_shdk,
+                    is_nama_ortu_sesuai,
+                    is_usia_domisili,
                     updated_at: new Date(), // Set the current date and time
                     updated_by: req.user.userId, // Extracted from token
                     verified_at: new Date(), // Set the current date and time
