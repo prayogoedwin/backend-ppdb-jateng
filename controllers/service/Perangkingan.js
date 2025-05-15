@@ -12859,10 +12859,16 @@ export const daftarUlangPerangkingan = async (req, res) => {
         //     );
         // }
 
-        res.status(200).json({
-            status: 1,
-            message: 'Data berhasil diupdate'
-        });
+        if(perangkingan3){
+
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil diupdate'
+            });
+
+        }
+
+        
     } catch (error) {
         console.error('Error hapus:', error);
         res.status(500).json({
@@ -14160,25 +14166,25 @@ export const getPerangkinganCadangan = async (req, res) => {
             is_pdf
         } = req.body;
 
-        const redis_key = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+        // const redis_key = `perangkingan_daftar_ulang_:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
 
         // 1. Cek cache Redis terlebih dahulu
-        const cached = await redisGet(redis_key);
-        if (cached) {
-            const resultData = JSON.parse(cached);
+        // const cached = await redisGet(redis_key);
+        // if (cached) {
+        //     const resultData = JSON.parse(cached);
             
-            if (is_pdf == 1) {
-                return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
-            } else {
-                const resTimeline = await getTimelineSatuan(6);
-                return res.status(200).json({
-                    status: 1,
-                    message: 'Data berhasil ditemukan (from cache)',
-                    data: resultData,
-                    timeline: resTimeline
-                });
-            }
-        }
+        //     if (is_pdf == 1) {
+        //         return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+        //     } else {
+        //         const resTimeline = await getTimelineSatuan(6);
+        //         return res.status(200).json({
+        //             status: 1,
+        //             message: 'Data berhasil ditemukan (from cache)',
+        //             data: resultData,
+        //             timeline: resTimeline
+        //         });
+        //     }
+        // }
 
         // let resSek
         // let limitasi_cadangan;
