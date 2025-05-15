@@ -260,7 +260,7 @@ export const createPendaftar = async (req, res) => {
                     is_buta_warna,
                     organisasi_id,
                     nilai_organisasi,
-                    is_disabilitas : kebutuhan_khusus_id ? 1 : 0,
+                    is_disabilitas : 0,
                     kebutuhan_khusus_id,
                     kebutuhan_khusus,
          
