@@ -478,6 +478,15 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    is_with_surat_sehat: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    status_shdk: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    
     
     
     
