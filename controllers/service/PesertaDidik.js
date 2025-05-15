@@ -469,7 +469,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         
                 return res.status(200).json({
                     status: 3,
-                    message: 'NISN diperbolehkan untuk revisi data sementara',
+                    message: 'Anda diperbolehkan untuk revisi data sementara',
                     data: data
                 });
 
@@ -586,7 +586,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         
                 return res.status(200).json({
                     status: 99,
-                    message: 'NISN diperbolehkan untuk update data kebutuhan force majeure',
+                    message: 'Anda diperbolehkan untuk update data kebutuhan force majeure',
                     data: data
                 });
 
@@ -703,7 +703,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         
                 return res.status(200).json({
                     status: 98,
-                    message: 'NISN diperbolehkan untuk update data alamat dan wilayah',
+                    message: 'Anda diperbolehkan untuk update data alamat dan wilayah',
                     data: data
                 });
 
