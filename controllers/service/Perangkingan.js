@@ -10220,7 +10220,7 @@ export const cekPerangkingan = async (req, res) => {
             return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
         }
 
-        if (pendaftar.is_anak_panti == 1 && (jalur_pendaftaran_id != 5 || jalur_pendaftaran_id != 9)) {
+        if (pendaftar.is_anak_panti == 1 && (jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9)) {
             return res.status(200).json({ status: 0, message: 'Saat ini anda terdata sebagai anak panti, hanya diperbolehkan daftar di jalur Afirmas SMA / seleksi Afirmasi SMK' });
         }
 
