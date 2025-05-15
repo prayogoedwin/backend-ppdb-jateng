@@ -14282,6 +14282,16 @@ export const getPerangkinganCadangan = async (req, res) => {
             limit: limit_cadangan
         });
 
+        resultData.forEach(item => {
+            // Update di dataValues (untuk data utama)
+            item.dataValues.id = encodeId(item.dataValues.id);
+            item.dataValues.id_pendaftar = encodeId(item.dataValues.id_pendaftar);
+            
+            // Update juga di root object instance
+            item.id = item.dataValues.id;
+            item.id_pendaftar = item.dataValues.id_pendaftar;
+        });
+
         // Simpan ke cache
         await redisSet(redis_key, JSON.stringify(resultData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
