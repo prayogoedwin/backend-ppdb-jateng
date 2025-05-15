@@ -1139,7 +1139,7 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
 }  
 
 export const verifikasiPendaftar = async (req, res) => {
-        const { id, is_verified, keterangan_verifikator, cek_list_dok, is_tidak_boleh_domisili, is_disabilitas, is_with_surat_sehat, status_shdk, is_usia_domisili, is_nama_ortu_sesuai, alasan_batal_verifikasi} = req.body;
+        const { id, is_verified, keterangan_verifikator, cek_list_dok, is_disabilitas, is_with_surat_sehat, status_shdk, is_usia_domisili, is_nama_ortu_sesuai, alasan_batal_verifikasi} = req.body;
 
         if (!id) {
             return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
@@ -1179,13 +1179,14 @@ export const verifikasiPendaftar = async (req, res) => {
                 return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
             }
 
+            let is_tidak_boleh_domisili_by_if
             if(is_usia_domisili == 1 && is_nama_ortu_sesuai == 1 && status_shdk == 1){
 
-                is_tidak_boleh_domisili = 0;
+                is_tidak_boleh_domisili_by_if = 0;
 
             }else{
 
-                is_tidak_boleh_domisili = 1;
+                is_tidak_boleh_domisili_by_if = 1;
 
             }
 
@@ -1194,7 +1195,7 @@ export const verifikasiPendaftar = async (req, res) => {
                     is_verified,
                     keterangan_verifikator,
                     alasan_batal_verifikasi,
-                    is_tidak_boleh_domisili,
+                    is_tidak_boleh_domisili: is_tidak_boleh_domisili_by_if,
                     is_disabilitas,
                     is_with_surat_sehat,
                     status_shdk,
