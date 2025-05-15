@@ -10453,13 +10453,15 @@ export const createPerangkingan = async (req, res) => {
         let anak_panti = pendaftar.is_anak_panti;
         let anak_disabilitas =  pendaftar.is_disabilitas;
         let anak_tidak_sekolah = pendaftar.is_tidak_sekolah;
+        let is_anak_guru_jateng= pendaftar.is_anak_guru_jateng;
 
-        if(jalur_pendaftaran_id == 5){
+        if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
             if(pendaftar.status_domisili == 1 && pendaftar.is_anak_keluarga_tidak_mampu == 1){
                 anak_tidak_mampu = 1;
                 anak_panti = 0;
                 anak_disabilitas = 0;
                 anak_tidak_sekolah = 0;
+                is_anak_guru_jateng = 0;
             }
 
             if(pendaftar.status_domisili == 4 && pendaftar.is_anak_panti == 1){
@@ -10467,6 +10469,7 @@ export const createPerangkingan = async (req, res) => {
                 anak_panti = 1;
                 anak_disabilitas = 0;
                 anak_tidak_sekolah = 0;
+                is_anak_guru_jateng = 0;
             }
 
             if(pendaftar.status_domisili == 1 && pendaftar.is_disabilitas == 1){
@@ -10474,6 +10477,7 @@ export const createPerangkingan = async (req, res) => {
                 anak_panti = 0;
                 anak_disabilitas = 1;
                 anak_tidak_sekolah = 0;
+                is_anak_guru_jateng = 0;
             }
 
             if(pendaftar.status_domisili == 1 && pendaftar.is_tidak_sekolah == 1){
@@ -10481,6 +10485,7 @@ export const createPerangkingan = async (req, res) => {
                 anak_panti = 0;
                 anak_disabilitas = 0;
                 anak_tidak_sekolah = 1;
+                is_anak_guru_jateng = 0;
             }
         }else{
 
@@ -10488,6 +10493,7 @@ export const createPerangkingan = async (req, res) => {
             anak_panti = 0;
             anak_disabilitas = pendaftar.is_disabilitas;
             anak_tidak_sekolah = 0;
+            is_anak_guru_jateng = pendaftar.is_anak_guru_jateng;
 
         }
         
