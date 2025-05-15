@@ -10227,8 +10227,8 @@ export const cekPerangkingan = async (req, res) => {
         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili == 2){
             //tidak boleh daftar jalur selain jalur mutasi dan domisili terdekat di SMK
-            if(jalur_pendaftaran_id != 4){
-                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Surat Mutasi Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi (SMA)' });
+            if(jalur_pendaftaran_id != 4 || jalur_pendaftaran_id != 3){
+                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Surat Mutasi Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi dan prestasi (SMA)' });
             }
 
             if(pendaftar.is_anak_guru_jateng == 1){
@@ -11515,17 +11515,25 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
             is_cadangan: index >= kuota_zonasi_nilai // Tandai sebagai cadangan jika melebihi kuota normal
         })) : [])
     ];
+
+    return combinedData.map(item => ({
+        ...item,
+        id: encodeId(item.id),
+        id_pendaftar: encodeId(item.id_pendaftar),
+        status_daftar_sekolah: 1,
+        is_diterima: item.is_cadangan ? 2 : 1
+    }));
     
-    return combinedData.map(item => {
-        const { id_pendaftar, id, is_cadangan, ...rest } = item;
-        return { 
-            ...rest, 
-            id: encodeId(id), 
-            id_pendaftar: encodeId(id_pendaftar),
-            status_daftar_sekolah: 1,
-            is_diterima: is_cadangan ? 2 : 1 // 1 untuk diterima, 2 untuk cadangan
-        };
-    });
+    // return combinedData.map(item => {
+    //     const { id_pendaftar, id, is_cadangan, ...rest } = item;
+    //     return { 
+    //         ...rest, 
+    //         id: encodeId(id), 
+    //         id_pendaftar: encodeId(id_pendaftar),
+    //         status_daftar_sekolah: 1,
+    //         is_diterima: is_cadangan ? 2 : 1 // 1 untuk diterima, 2 untuk cadangan
+    //     };
+    // });
 }
 
 // Update all jalur processing functions to include cadangan quota
