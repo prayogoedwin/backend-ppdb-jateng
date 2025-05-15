@@ -83,6 +83,6 @@ export const skipCaptchaVerification = (req, res, next) => {
 };
 
 // Ekspor middleware berdasarkan environment variable
-export default process.env.TURNSTILE_CHECKER === '0' 
+export default process.env.TURNSTILE_CHECKER == 0 
   ? skipCaptchaVerification 
   : verifyCloudflareCaptcha;
