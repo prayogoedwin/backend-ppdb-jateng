@@ -10482,9 +10482,15 @@ export const createPerangkingan = async (req, res) => {
                 anak_disabilitas = 0;
                 anak_tidak_sekolah = 1;
             }
+        }else{
+
+            anak_tidak_mampu = 0;
+            anak_panti = 0;
+            anak_disabilitas = pendaftar.is_disabilitas;
+            anak_tidak_sekolah = 0;
+
         }
         
-
         const newPerangkinganData = {
             id_pendaftar: id_pendaftar_decode,
             no_pendaftaran,
