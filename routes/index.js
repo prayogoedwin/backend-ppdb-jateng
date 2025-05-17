@@ -226,8 +226,8 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 
 //========================================================================//
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
-// router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginUser);
-// router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
+router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginUser);
+router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
 
 router.post('/api/auth/login_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginTanpaOtp);
 
@@ -280,8 +280,8 @@ router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddle
 
 //Auth
 // router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
-// router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
-// router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
+router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
+router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 
 router.post('/admin-api/auth/signin_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdminTanpaOtp);
 
