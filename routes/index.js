@@ -57,7 +57,7 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getPerangkinganDaftarUlang, getPerangkinganCadangan } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
-import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser } from '../controllers/service/AuthPublic.js';
+import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser, loginTanpaOtp } from '../controllers/service/AuthPublic.js';
 
 //akun client api
 import { loginClient, logoutClient } from '../controllers/service/integration/Auth.js';
@@ -65,7 +65,7 @@ import { loginClient, logoutClient } from '../controllers/service/integration/Au
 
 //Admin
 //Auth
-import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp } from '../controllers/service/admin/Auth.js';
+import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp, loginTanpaOtp } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
 import { getDataPendaftarForVerif, 
@@ -226,8 +226,12 @@ router.post('/api/servis/detail_pendaftar', ipWhitelistMiddleware, appKeyMiddlew
 
 //========================================================================//
 //API Calon Siswa After Aktivasi (Dashboard Calon Siswa)
-router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginUser);
-router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
+// router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginUser);
+// router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
+
+router.post('/api/auth/login_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginTanpaOtp);
+
+
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
 router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, resetPassword);
 router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, forgotPassword);
@@ -275,9 +279,12 @@ router.post('/admin-api/log/lihat_log_cm', ipWhitelistMiddleware, appKeyMiddlewa
 router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogAdminLoggedIn); 
 
 //Auth
-router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
-router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
-router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
+// router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
+// router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
+// router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
+
+router.post('/admin-api/auth/signin_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginTanpaOtp);
+
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
 router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkinganAdmin);

@@ -363,6 +363,134 @@ export const verifikasiOtp = async (req, res) => {
     }
 };
 
+// User login
+export const loginTanpaOtp = async (req, res) => {
+
+    const { username, password } = req.body;
+
+    try {
+        // Check if user exists
+        const user = await DataUsers.findOne({
+            where: {
+                // username,
+                username: username,
+                // access_token: otp,
+                is_active: 1,
+                is_delete: 0
+            },
+            include: [
+                {
+                    model: EzRoles,
+                    as: 'data_role', // Pastikan alias ini sesuai dengan yang Anda definisikan di model
+                    attributes: ['id', 'nama'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
+                }
+            ]
+        });
+
+        if (!user) {
+            return res.status(403).json({ status: 0, message: 'Username / Password Salah' });
+        }
+
+        if(user.is_active != 1){
+            return res.status(200).json({ status: 0, message: 'Akun dinonaktifkan' });
+        }
+
+        if(user.is_login == 1){
+            return res.status(200).json({ status: 0, message: 'Akun sedang digunakan oleh perangkat lain' });
+        }
+
+         // Compare password
+         const isMatch = await bcrypt.compare(password, user.password_);
+         if (!isMatch) {
+             return res.status(403).json({ status: 0, message: 'Username / Password Salah 2' });
+         }
+
+        // if(user.access_token != otp){
+        //     return res.status(200).json({ status: 0, message: 'OTP salah' });
+        // }
+
+         // Check if OTP has expired
+        const currentTime = new Date();
+        const login_ip = req.ip || req.connection.remoteAddress; 
+        //  if (user.otp_expiration && user.otp_expiration < currentTime) {
+        //      return res.status(200).json({ status: 0, message: 'OTP sudah kadaluarsa' });
+        //  }
+
+        const sekolah_id = user.sekolah_id;
+
+        // Generate tokens
+        const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_SECRET_EXPIRE_TIME  });
+        const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_SECRET_EXPIRE_TIME  });
+
+        // Save tokens to user record
+        user.access_token = accessToken;
+        user.access_token_refresh = refreshToken;
+
+        user.is_login = 1;
+        user.login_at = currentTime;
+        user.login_ip = login_ip;
+
+        await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at', 'is_login', 'login_at', 'login_ip' ] });
+        // await user.save({ fields: ['access_token', 'access_token_refresh', 'updated_at'] });
+        
+        let bentuk_pendidikan_id;
+        if(user.sekolah_id != null){
+
+            const resData = await SekolahTujuans.findOne({
+                where: {
+                    id: sekolah_id
+                }
+            });
+
+            bentuk_pendidikan_id = resData.bentuk_pendidikan_id
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil masuk',
+                data: {
+                    userId: encodeId(user.id),
+                    username: user.username,
+                    nama: user.nama,
+                    role: user.role_,
+                    role_nama: user.data_role.nama,
+                    sekolah_id: user.sekolah_id,
+                    kabkota_id: user.kabkota_id,
+                    bentuk_pendidikan_id: bentuk_pendidikan_id,
+                    cabdin_id: user.cabdin_id,
+                    accessToken,
+                    refreshToken
+                }
+            });
+
+        }else{
+          
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil masuk',
+                data: {
+                    userId: encodeId(user.id),
+                    username: user.username,
+                    nama: user.nama,
+                    role: user.role_,
+                    role_nama: user.data_role.nama,
+                    sekolah_id: user.sekolah_id,
+                    kabkota_id: user.kabkota_id,
+                    bentuk_pendidikan_id: 0,
+                    cabdin_id: user.cabdin_id,
+                    accessToken,
+                    refreshToken
+                }
+            });
+        }
+
+        
+    } catch (error) {
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+};
+
 // User logout
 export const logoutAdmin = async (req, res) => {
         const { userId } = req.body;

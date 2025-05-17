@@ -294,7 +294,6 @@ export const loginTanpaOtp = [
             // Check if user exists
             const user = await DataPendaftars.findOne({
                 where: {
-                    id: decodeId(userid),
                     nisn,
                     // access_token: otp,
                     // is_active: 1,
