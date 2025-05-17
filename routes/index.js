@@ -248,7 +248,8 @@ router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddl
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, uploadFileTambahan);
 
 
-router.post('/api/servis/perangkingan', ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+router.post('/api/servis/pengumuman', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDaftarUlang);
 
 router.post('/api/servis/perangkingan_info_param', ipWhitelistMiddleware, appKeyMiddleware, getInfoParam);
 
