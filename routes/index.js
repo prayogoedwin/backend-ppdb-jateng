@@ -283,7 +283,7 @@ router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddle
 // router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
 // router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 
-router.post('/admin-api/auth/signin_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginTanpaOtp);
+router.post('/admin-api/auth/signin_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdminTanpaOtp);
 
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
