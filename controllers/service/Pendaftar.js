@@ -774,12 +774,11 @@ export const getPendaftarDetail = async (req, res) => {
             model: StatusDomisili,
             as: 'status_domisili_name',
             attributes: ['id','nama']
-          },
-          ,{
-            model: JenisKejuaraans,
-            as: 'jenis_kejuaraan',
-            attributes: ['nama']
-        }
+          },{
+                        model: JenisKejuaraans,
+                        as: 'jenis_kejuaraan',
+                        attributes: ['nama']
+          }
       ],
 
       });
