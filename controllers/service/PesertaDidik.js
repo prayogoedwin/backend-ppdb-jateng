@@ -826,7 +826,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             };
 
-            if(cekPendaftar.is_verified != 2 || cekPendaftar.is_verified != 99 || cekPendaftar.is_verified != 98){
+            if(cekPendaftar.is_verified != 2 || cekPendaftar.is_verified != 99 || cekPendaftar.is_verified != 98 || cekPendaftar.is_verified != 97){
                 return res.status(200).json({
                     status: 2,
                     message: 'NISN Sudah Terdaftar Sebelumnya',
