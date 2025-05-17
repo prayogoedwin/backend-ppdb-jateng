@@ -13216,7 +13216,7 @@ async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tu
 
         // 1. Reset semua is_saved untuk kombinasi ini
         await DataPerangkingans.update(
-            { is_saved: 0, no_urut: null, is_diterima: null },
+            { is_saved: 0, no_urut: null, is_diterima: null,  order_berdasar: null  },
             {
                 where: {
                     jalur_pendaftaran_id,
@@ -13229,14 +13229,39 @@ async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tu
         );
 
         // 2. Update data dengan is_saved = 1, no_urut, dan is_diterima
+        // for (let i = 0; i < data.length; i++) {
+        //     const item = data[i];
+        //     await DataPerangkingans.update(
+        //         { 
+        //             is_saved: 1,
+        //             no_urut: i + 1,
+        //             is_diterima: item.is_diterima || 1 // Default to 1 if not specified
+        //         },
+        //         {
+        //             where: { id: decodeId(item.id) },
+        //             transaction
+        //         }
+        //     );
+        // }
+
+        // 2. Update data dengan is_saved = 1, no_urut, is_diterima, dan order_berdasar
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
+            const updateData = {
+                is_saved: 1,
+                no_urut: i + 1,
+                is_diterima: item.is_diterima || 1
+            };
+
+            // Cek apakah order_berdasar ada di item
+            if (item.hasOwnProperty('order_berdasar')) {
+                updateData.order_berdasar = item.order_berdasar;
+            } else {
+                updateData.order_berdasar = '0'; // Default value jika tidak ada
+            }
+
             await DataPerangkingans.update(
-                { 
-                    is_saved: 1,
-                    no_urut: i + 1,
-                    is_diterima: item.is_diterima || 1 // Default to 1 if not specified
-                },
+                updateData,
                 {
                     where: { id: decodeId(item.id) },
                     transaction
