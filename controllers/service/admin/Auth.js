@@ -370,21 +370,33 @@ export const loginAdminTanpaOtp = async (req, res) => {
 
     try {
         // Check if user exists
+        // const user = await DataUsers.findOne({
+        //     where: {
+        //         // username,
+        //         email: username,
+        //         // access_token: otp,
+        //         // is_active: 1,
+        //         is_delete: 0
+        //     },
+        //     include: [
+        //         {
+        //             model: EzRoles,
+        //             as: 'data_role', // Pastikan alias ini sesuai dengan yang Anda definisikan di model
+        //             attributes: ['id', 'nama'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
+        //         }
+        //     ]
+        // });
+
+
         const user = await DataUsers.findOne({
             where: {
-                // username,
-                username: username,
-                // access_token: otp,
-                is_active: 1,
-                is_delete: 0
-            },
-            include: [
-                {
-                    model: EzRoles,
-                    as: 'data_role', // Pastikan alias ini sesuai dengan yang Anda definisikan di model
-                    attributes: ['id', 'nama'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
-                }
-            ]
+                [Sequelize.Op.or]: [
+                    { username: username },
+                    { email: username },
+                    { whatsapp: username },
+                ],
+                is_delete: 0,
+            }
         });
 
         if (!user) {
