@@ -709,6 +709,123 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             };
 
+            if(cekPendaftar.is_verified == 97){
+
+                //ini FM bisa buka semua
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }  
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }  
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }  
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }  
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 98,
+                    message: 'Anda diperbolehkan untuk mengubah data koordinat tanpa batas wilayah karena alasan teknis',
+                    data: data
+                });
+
+            };
+
             if(cekPendaftar.is_verified != 2 || cekPendaftar.is_verified != 99 || cekPendaftar.is_verified != 98){
                 return res.status(200).json({
                     status: 2,
