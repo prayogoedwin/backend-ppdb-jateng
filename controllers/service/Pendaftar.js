@@ -5,6 +5,7 @@ import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import SekolahTujuan from "../../models/master/SekolahTujuanModel.js";
 import SekolahAsalWilayah from "../../models/master/SekolahAsalModel.js";
 import StatusDomisili from "../../models/master/StatusDomisiliModel.js";
+import JenisKejuaraans from '../../models/master/JenisKejuaraanModel.js';
 import GeoJsons from "../../models/master/GeoJsonModel.js";
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import { getTimelineSatuan } from '../../helpers/HelpHelper.js';
@@ -774,6 +775,11 @@ export const getPendaftarDetail = async (req, res) => {
             as: 'status_domisili_name',
             attributes: ['id','nama']
           },
+          ,{
+            model: JenisKejuaraans,
+            as: 'jenis_kejuaraan',
+            attributes: ['nama']
+        }
       ],
 
       });
