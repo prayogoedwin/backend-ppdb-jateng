@@ -364,7 +364,7 @@ export const verifikasiOtp = async (req, res) => {
 };
 
 // User login
-export const loginTanpaOtp = async (req, res) => {
+export const loginAdminTanpaOtp = async (req, res) => {
 
     const { username, password } = req.body;
 

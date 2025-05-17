@@ -65,7 +65,7 @@ import { loginClient, logoutClient } from '../controllers/service/integration/Au
 
 //Admin
 //Auth
-import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp, loginTanpaOtp } from '../controllers/service/admin/Auth.js';
+import { generateSuperAdmin, loginAdmin, logoutAdmin, verifikasiOtp, loginAdminTanpaOtp } from '../controllers/service/admin/Auth.js';
 
 //verifikasi pendaftar
 import { getDataPendaftarForVerif, 
