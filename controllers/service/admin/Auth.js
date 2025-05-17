@@ -396,7 +396,14 @@ export const loginAdminTanpaOtp = async (req, res) => {
                     { whatsapp: username },
                 ],
                 is_delete: 0,
-            }
+            },
+            include: [
+                        {
+                            model: EzRoles,
+                            as: 'data_role', // Pastikan alias ini sesuai dengan yang Anda definisikan di model
+                            attributes: ['id', 'nama'] // Ganti dengan atribut yang ingin Anda ambil dari EzRoles
+                        }
+                    ]
         });
 
         if (!user) {
