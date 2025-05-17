@@ -819,7 +819,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 }  
         
                 return res.status(200).json({
-                    status: 98,
+                    status: 97,
                     message: 'Anda diperbolehkan untuk mengubah data koordinat tanpa batas wilayah karena alasan teknis',
                     data: data
                 });
