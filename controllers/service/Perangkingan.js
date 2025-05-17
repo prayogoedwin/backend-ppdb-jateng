@@ -14138,6 +14138,7 @@ export const getPerangkinganPengumuman = async (req, res) => {
         }
 
         const resultData = await DataPerangkingans.findAll({
+            attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'order_berdasar'], // Pilih kolom yang diambil
             where: whereClause,
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
