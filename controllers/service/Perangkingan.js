@@ -13229,15 +13229,43 @@ async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tu
         );
 
         //2. Update data dengan is_saved = 1, no_urut, dan is_diterima
+        // for (let i = 0; i < data.length; i++) {
+        //     const item = data[i];
+        //     await DataPerangkingans.update(
+        //         { 
+        //             is_saved: 1,
+        //             no_urut: i + 1,
+        //             is_diterima: item.is_diterima || 1, // Default to 1 if not specified
+        //             order_berdasar: item.order_berdasar || '0' // Default to '0' if not specified
+        //         },
+        //         {
+        //             where: { id: decodeId(item.id) },
+        //             transaction
+        //         }
+        //     );
+        // }
+
+        // 2. Update data dengan is_saved = 1, no_urut, is_diterima, dan order_berdasar
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
+            
+            // Ambil order_berdasar dari object asli sebelum mapping
+            const originalItem = data.find(original => 
+                decodeId(original.id) === decodeId(item.id) || 
+                original.id === item.id
+            );
+            
+            const updateData = {
+                is_saved: 1,
+                no_urut: i + 1,
+                is_diterima: item.is_diterima || 1,
+                order_berdasar: (originalItem && originalItem.order_berdasar) ? 
+                               originalItem.order_berdasar : 
+                               '0' // Default value
+            };
+
             await DataPerangkingans.update(
-                { 
-                    is_saved: 1,
-                    no_urut: i + 1,
-                    is_diterima: item.is_diterima || 1, // Default to 1 if not specified
-                    order_berdasar: item.order_berdasar || '0' // Default to '0' if not specified
-                },
+                updateData,
                 {
                     where: { id: decodeId(item.id) },
                     transaction
