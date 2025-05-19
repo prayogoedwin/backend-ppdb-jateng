@@ -331,15 +331,29 @@ export const getSekolahTujuan = async (req, res) => {
             }  
   
         } else {  
+
+            const whereCondition = {
+                bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                nama_jurusan: {
+                    [Op.not]: null,
+                }
+            };
+            
+            // Hanya tambahkan kondisi kode_wilayah_kot jika kabkota tidak null/undefined
+            if (kabkota !== undefined && kabkota !== null) {
+                whereCondition.kode_wilayah_kot = kabkota;
+            }
+
             const resData = await SekolahTujuans.findAll({  
-                where: {  
-                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
-                    kode_wilayah_kot: kabkota,
-                    nama_jurusan: {
-                        [Op.not]: null,
-                      },
+                // where: {  
+                //     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                //     kode_wilayah_kot: kabkota,
+                //     nama_jurusan: {
+                //         [Op.not]: null,
+                //       },
                     
-                },  
+                // }, 
+                where: whereCondition,   
                 // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
                 attributes: [
                     'npsn', 
