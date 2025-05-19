@@ -13445,13 +13445,13 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
     const combinedData = [
         ...(rowsZonasiReg ? rowsZonasiReg.map(item => ({
             ...item.toJSON(),
-            order_berdasar: "1",
+            order_berdasar: 1,
             is_cadangan: false
         })) : []),
         
         ...(resZonasiNilai ? resZonasiNilai.map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "2",
+            order_berdasar: 2,
             is_cadangan: index >= kuota_zonasi_nilai // Tandai sebagai cadangan jika melebihi kuota normal
         })) : [])
     ];
@@ -13648,17 +13648,17 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
     const combinedData = [
         ...(resDataPanti || []).map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "3",
+            order_berdasar: 3,
             is_cadangan: index >= kuota_panti
         })),
         ...(resDataAts || []).map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "4",
+            order_berdasar: 4,
             is_cadangan: index >= kuota_ats
         })),
         ...(resDataMiskin || []).map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "5",
+            order_berdasar: 5,
             is_cadangan: index >= kuota_afirmasi_sisa
         }))
     ];
@@ -13921,17 +13921,17 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
     const combinedData = [
         ...(resDataPanti || []).map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "3",
+            order_berdasar: 3,
             is_cadangan: index >= kuota_panti
         })),
         ...(resDataAts || []).map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "4",
+            order_berdasar: 4,
             is_cadangan: index >= kuota_ats
         })),
         ...(resDataMiskin || []).map((item, index) => ({
             ...item.toJSON(),
-            order_berdasar: "5",
+            order_berdasar: 5,
             is_cadangan: index >= kuota_akhir_afirmasi
         }))
     ];

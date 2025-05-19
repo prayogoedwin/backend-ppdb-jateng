@@ -260,6 +260,11 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         defaultValue: 0,
         allowNull: true
     },
+    order_berdasar: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: true
+    }
 
 }, {
     freezeTableName: true,
