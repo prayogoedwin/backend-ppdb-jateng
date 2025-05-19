@@ -55,7 +55,9 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
     getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan,
      getPerangkinganDetail, getInfoParam,  automasiPerangkingan,
      getPerangkinganPengumuman,
-     getPerangkinganDaftarUlang, getPerangkinganCadangan } from '../controllers/service/Perangkingan.js';
+     getPerangkinganDaftarUlang, getPerangkinganCadangan,
+     getPerangkinganCadanganHitungSisaDaftarUlang
+    } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
 import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser, loginTanpaOtp } from '../controllers/service/AuthPublic.js';
@@ -350,8 +352,8 @@ router.post('/admin-api/setting/timeline_update', ipWhitelistMiddleware, appKeyM
 // router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,logAccessAdmin, getUsers);
 router.get('/admin-api/setting/users', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUsersPagination);
 router.get('/admin-api/setting/user_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getUserById);
-router.post('/admin-api/setting/user_tambah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, addUser);
-router.post('/admin-api/setting/user_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUser);
+router.post('/admin-api/setting/user_tambah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, addUser);
+router.post('/admin-api/setting/user_update', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUser);
 router.post('/admin-api/setting/user_update_password', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateUserPassword);
 router.get('/admin-api/setting/reset_is_login_masal', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, bulkUpdateIsLoginUsers);
 router.post('/admin-api/setting/user_delete/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, softDeleteUser);
@@ -388,6 +390,9 @@ router.post('/admin-api/servis/automasi_perangkingan', ipWhitelistMiddleware, au
 router.post('/admin-api/servis/perangkingan_daftar_ulang', ipWhitelistMiddleware, getPerangkinganDaftarUlang); 
 router.post('/api/servis/perangkingan_cadangan', ipWhitelistMiddleware, getPerangkinganCadangan); 
 
+router.post('/api/servis/perangkingan_daftar_ulang_cadangan', ipWhitelistMiddleware, getPerangkinganCadanganHitungSisaDaftarUlang); 
+
+router.post('/api/servis/perangkingan_daftar_ulang_cadangan_admin', ipWhitelistMiddleware, getPerangkinganCadanganHitungSisaDaftarUlang); 
 
 // ============================ API UNTUK EXTERNAL ==============================//
 
