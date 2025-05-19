@@ -12263,7 +12263,7 @@ export const cekPerangkingan = async (req, res) => {
         if(pendaftar.status_domisili != 2){
 
             if(jalur_pendaftaran_id == 4){
-             return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi jalur mutasi (SMA)' });
+             return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali", Anda tidak diperbolehkan daftar jalur mutasi (SMA)' });
             }
 
             if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0 && pendaftar.is_disabilitas == 0){
@@ -14382,7 +14382,7 @@ export const getPerangkinganCadangan = async (req, res) => {
         // let limit_cadangan = limitasi_cadangan - count; // Hasil: NaN
         // limit_cadangan = isNaN(limit_cadangan) ? 0 : limit_cadangan;
 
-        let limit_cadangan = 2;
+        let limit_cadangan = 5;
 
         console.log('Limit Cadangan'+limit_cadangan); // Output: 0
 
