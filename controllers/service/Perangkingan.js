@@ -13307,26 +13307,22 @@ async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tu
             }
         );
 
-        // Filter data yang memenuhi syarat update
-        const validData = data.filter(item => 
-            item.is_delete === 0 && 
-            item.is_daftar_ulang !== 2
-        );
-
-         // Update dengan no_urut berurutan
-        for (let i = 0; i < validData.length; i++) {
-            await DataPerangkingans.update(
-                {
-                    is_saved: 1,
-                    no_urut: i + 1,
-                    is_diterima: validData[i].is_diterima || 1,
-                    order_berdasar: validData[i].order_berdasar ?? '0'
-                },
-                {
-                    where: { id: decodeId(validData[i].id) },
-                    transaction
-                }
-            );
+        let counter = 1;
+        for (const item of data) {
+            if (item.is_delete === 0 && item.is_daftar_ulang !== 2) {
+                await DataPerangkingans.update(
+                    {
+                        is_saved: 1,
+                        no_urut: counter++, // Increment hanya jika data valid
+                        is_diterima: item.is_diterima || 1,
+                        order_berdasar: item.order_berdasar ?? '0'
+                    },
+                    {
+                        where: { id: decodeId(item.id) },
+                        transaction
+                    }
+                );
+            }
         }
 
 
