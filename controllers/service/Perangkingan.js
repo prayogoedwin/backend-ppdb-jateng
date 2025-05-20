@@ -13949,7 +13949,8 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             [literal('CAST(jarak AS FLOAT)'), 'ASC'],
             ['created_at', 'ASC'] 
         ],
-        limit: kuota_ats_dengan_cadangan,
+        // limit: kuota_ats_dengan_cadangan,
+        limit: kuota_ats,
         transaction
     });
 
@@ -13968,15 +13969,19 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             ['umur', 'DESC'],
             ['created_at', 'ASC'] 
         ],
-        limit: kuota_panti_dengan_cadangan,
+        // limit: kuota_panti_dengan_cadangan,
+        limit: kuota_panti,
         transaction
     });
 
     // Data Afirmasi Miskin
     let kuota_akhir_afirmasi = kuota_afirmasi - (kuota_ats + kuota_panti);
-    let kuota_miskin_dengan_cadangan = kuota_akhir_afirmasi + (KUOTA_CADANGAN - 
-        (kuota_ats_dengan_cadangan - kuota_ats) - 
-        (kuota_panti_dengan_cadangan - kuota_panti));
+    let kuota_miskin_dengan_cadangan = kuota_akhir_afirmasi + 
+        // (KUOTA_CADANGAN - 
+        // (kuota_ats_dengan_cadangan - kuota_ats) - 
+        // (kuota_panti_dengan_cadangan - kuota_panti));
+        (KUOTA_CADANGAN - kuota_ats - kuota_panti);
+
 
     const resDataMiskin = await DataPerangkingans.findAll({
         where: {
