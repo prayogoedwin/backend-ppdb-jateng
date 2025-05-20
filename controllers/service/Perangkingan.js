@@ -14301,13 +14301,46 @@ export const getPerangkinganCadanganHitungSisaDaftarUlang = async (req, res) => 
             nisn,
             is_pdf
         } = req.body;
+
+        const whereClauseDiterima = {
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            is_saved: 1,
+            is_diterima: 1,
+            is_delete: 0
+        };
+        
+        // Tambahkan filter jurusan jika ada
+        if (jurusan_id) {
+            whereClause.jurusan_id = jurusan_id;
+        }
+        
+        // Hitung total yang diterima
+        const totalDiterima = await DataPerangkingans.count({
+            where: whereClause
+        });
+        
+        // Hitung yang daftar ulang
+        const totalDaftarUlang = await DataPerangkingans.count({
+            where: {
+                ...whereClauseDiterima,
+                is_daftar_ulang: 1
+            }
+        });
+        
+        // Hitung selisih yang tidak daftar ulang
+        // const totalTidakDaftarUlang = totalDiterima - totalDaftarUlang;
+        const totalTidakDaftarUlang = Math.max(
+            (totalDiterima || 0) - (totalDaftarUlang || 0),
+            0
+        );
  
         // 2. Jika tidak ada di cache, ambil dari database
         const whereClause = {
             jalur_pendaftaran_id,
             sekolah_tujuan_id,
             is_saved: 1,
-            is_diterima: 1,
+            is_diterima: 2,
             is_daftar_ulang: 0,
             is_delete: 0
         };
@@ -14327,7 +14360,7 @@ export const getPerangkinganCadanganHitungSisaDaftarUlang = async (req, res) => 
         // let limit_cadangan = limitasi_cadangan - count; // Hasil: NaN
         // limit_cadangan = isNaN(limit_cadangan) ? 0 : limit_cadangan;
 
-        let limit_cadangan = 5;
+        let limit_cadangan = totalTidakDaftarUlang;
 
         console.log('Limit Cadangan'+limit_cadangan); // Output: 0
 
