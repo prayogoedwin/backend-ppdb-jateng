@@ -12530,6 +12530,8 @@ export const createPerangkingan = async (req, res) => {
             created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
             created_by_ip: req.ip,
+            daftar_ulang_by: 0,
+            order_berdasar: 0,
         };
 
         const newPerangkingan = await DataPerangkingans.create(newPerangkinganData);
