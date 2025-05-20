@@ -12675,6 +12675,74 @@ export const cetakBuktiPerangkingan = async (req, res) => {
 }
 
 // Function to handle POST request
+export const CariPengumumanByNoPendaftaran = async (req, res) => {
+
+    try {
+        const {
+            no_pendaftaran,
+        } = req.body;
+
+         // Retrieve data from DataPendaftarModel
+         const perangkingan = await DataPerangkingans.findOne({
+            attributes: ['no_pendaftaran', 'is_saved', 'id_diterima','no_urut','nama_lengkap', 'nisn'],
+            where: {
+                no_pendaftaran,
+                is_delete: 0
+            },
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['nama']
+                },
+                {
+                    model: SekolahJurusan,
+                    as: 'sekolah_jurusan',
+                    attributes: ['id', 'nama_jurusan']
+                },
+                {
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['nama']
+                }
+            ]
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // Convert Sequelize model instance to a plain object
+        const perangkinganData = perangkingan.toJSON();
+
+    
+        // const sekolah_tujuan = {
+        //     npsn : '12345678',
+        //     nama : 'SMA / SMK Dummy'
+        // }
+
+        // // Add `sekolah_tujuan` to the plain object
+        // perangkinganData.sekolah_tujuan = sekolah_tujuan;
+
+        const datas = {
+            perangkingan: perangkinganData,
+        };
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data ditemukan',
+            data: datas
+        });
+    } catch (error) {
+        console.error('Error daftar:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+}
+
+// Function to handle POST request
 export const cetakBuktiPerangkinganAdmin = async (req, res) => {
 
     try {
