@@ -56,7 +56,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getPerangkinganDetail, getInfoParam,  automasiPerangkingan,
      getPerangkinganPengumuman,
      getPerangkinganDaftarUlang, getPerangkinganCadangan,
-     getPerangkinganCadanganHitungSisaDaftarUlang
+     getPerangkinganCadanganHitungSisaDaftarUlang,
+     getPerangkinganCadanganHitungSisaDaftarUlangAdmin
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -392,7 +393,7 @@ router.post('/api/servis/perangkingan_cadangan', ipWhitelistMiddleware, getPeran
 
 router.post('/api/servis/perangkingan_daftar_ulang_cadangan', ipWhitelistMiddleware, getPerangkinganCadanganHitungSisaDaftarUlang); 
 
-router.post('/api/servis/perangkingan_daftar_ulang_cadangan_admin', ipWhitelistMiddleware, getPerangkinganCadanganHitungSisaDaftarUlang); 
+router.post('/admin-api/servis/perangkingan_daftar_ulang_cadangan_admin', ipWhitelistMiddleware, getPerangkinganCadanganHitungSisaDaftarUlangAdmin); 
 
 // ============================ API UNTUK EXTERNAL ==============================//
 
