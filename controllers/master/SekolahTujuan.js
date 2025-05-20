@@ -271,6 +271,8 @@ export const getSekolahTujuan = async (req, res) => {
                         [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
                         [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
                         [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
+                       
+                        
                     ],  
                     group: ['npsn']  
                 });
@@ -372,7 +374,8 @@ export const getSekolahTujuan = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
                 ],  
                 order: ['id'],
                 group: ['npsn'] 
