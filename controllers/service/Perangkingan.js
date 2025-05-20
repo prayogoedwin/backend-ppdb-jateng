@@ -8820,7 +8820,11 @@ export const getPerangkingan = async (req, res) => {
                     sekolah_tujuan_id,
                     is_delete: 0,
                     is_daftar_ulang: { [Op.ne]: 2 }, // tidak daftar ulang
-                    is_anak_keluarga_tidak_mampu: '1',
+                    // is_anak_keluarga_tidak_mampu: '1',
+                    [Op.or]: [
+                        { is_anak_keluarga_tidak_mampu: '1' },
+                        { is_disabilitas: '1' }
+                    ],
                     is_anak_panti: '0', // bukan anak panti
                     is_tidak_sekolah: '0', // bukan anak panti
                     // // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
@@ -8833,7 +8837,7 @@ export const getPerangkingan = async (req, res) => {
                 order: [
                     ['is_disabilitas', 'ASC'], //disabilitas 
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
-                    // ['created_at', 'ASC'] //daftar sekolah terawal
+                    ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
                 limit: kuota_afirmasi_sisa
                
@@ -13303,48 +13307,48 @@ async function updateDatabasePerangkingan(data, jalur_pendaftaran_id, sekolah_tu
             }
         );
 
-        //2. Update data dengan is_saved = 1, no_urut, dan is_diterima
+        // Filter data yang memenuhi syarat update
+        const validData = data.filter(item => 
+            item.is_delete === 0 && 
+            item.is_daftar_ulang !== 2
+        );
+
+         // Update dengan no_urut berurutan
+        for (let i = 0; i < validData.length; i++) {
+            await DataPerangkingans.update(
+                {
+                    is_saved: 1,
+                    no_urut: i + 1,
+                    is_diterima: validData[i].is_diterima || 1,
+                    order_berdasar: validData[i].order_berdasar ?? '0'
+                },
+                {
+                    where: { id: decodeId(validData[i].id) },
+                    transaction
+                }
+            );
+        }
+
+
+        // 2. Update data dengan is_saved = 1, no_urut, is_diterima, dan order_berdasar
         // for (let i = 0; i < data.length; i++) {
         //     const item = data[i];
+            
+        //     const updateData = {
+        //         is_saved: 1,
+        //         no_urut: i + 1,
+        //         is_diterima: item.is_diterima || 1,
+        //         order_berdasar: item.order_berdasar ?? '0' // Gunakan '0' hanya jika order_berdasar null atau undefined
+        //     };
+
         //     await DataPerangkingans.update(
-        //         { 
-        //             is_saved: 1,
-        //             no_urut: i + 1,
-        //             is_diterima: item.is_diterima || 1, // Default to 1 if not specified
-        //             order_berdasar: item.order_berdasar || '0' // Default to '0' if not specified
-        //         },
+        //         updateData,
         //         {
         //             where: { id: decodeId(item.id) },
         //             transaction
         //         }
         //     );
         // }
-
-        // 2. Update data dengan is_saved = 1, no_urut, is_diterima, dan order_berdasar
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            
-            // Ambil order_berdasar dari object asli sebelum mapping
-            const originalItem = data.find(original => 
-                decodeId(original.id) === decodeId(item.id) || 
-                original.id === item.id
-            );
-            
-            const updateData = {
-                is_saved: 1,
-                no_urut: i + 1,
-                is_diterima: item.is_diterima || 1,
-                order_berdasar: item.order_berdasar ?? '0' // Gunakan '0' hanya jika order_berdasar null atau undefined
-            };
-
-            await DataPerangkingans.update(
-                updateData,
-                {
-                    where: { id: decodeId(item.id) },
-                    transaction
-                }
-            );
-        }
 
         console.log(`Berhasil update ${data.length} peserta`);
 
@@ -13706,7 +13710,11 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
             sekolah_tujuan_id,
             is_delete: 0,
             is_daftar_ulang: { [Op.ne]: 2 },
-            is_anak_keluarga_tidak_mampu: '1',
+            // is_anak_keluarga_tidak_mampu: '1',
+            [Op.or]: [
+                { is_anak_keluarga_tidak_mampu: '1' },
+                { is_disabilitas: '1' }
+            ],
             is_anak_panti: '0',
             is_tidak_sekolah: '0'
         },
