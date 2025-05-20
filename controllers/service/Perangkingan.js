@@ -14317,7 +14317,7 @@ export const getPerangkinganCadanganHitungSisaDaftarUlang = async (req, res) => 
         
         // Hitung total yang diterima
         const totalDiterima = await DataPerangkingans.count({
-            where: whereClause
+            where: whereClauseDiterima
         });
         
         // Hitung yang daftar ulang
