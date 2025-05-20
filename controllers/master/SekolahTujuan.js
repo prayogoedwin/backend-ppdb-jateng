@@ -286,30 +286,22 @@ export const getSekolahTujuan = async (req, res) => {
             //     },  
             //     attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan']  
             // });  
-
-            let formattedResData;
   
             // Tambahkan properti nama_npsn ke setiap item dalam resData  
-            if(status_sekolah == 2){
-
-                formattedResData = resData.map(school => {  
-                    return {  
-                        ...school.dataValues,  
-                        nama_npsn: `* ${school.nama} ${school.npsn}`  
-                    };  
-                });  
-
-            }else{
-
-                formattedResData = resData.map(school => {  
-                    return {  
-                        ...school.dataValues,  
-                        nama_npsn: `${school.nama} ${school.npsn}`  
-                    };  
-                });  
-
-            }
+            // const formattedResData = resData.map(school => {  
+            //     return {  
+            //         ...school.dataValues,  
+            //         nama_npsn: `${school.nama} ${school.npsn}`  
+            //     };  
+            // }); 
             
+            const formattedResData = resData.map(school => {
+                const namaNpsn = `${school.nama} ${school.npsn}`; 
+                return {
+                    ...school.dataValues,
+                    nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                };
+            });
   
             // If bentuk_pendidikan_id is 15, fetch jurusan data  
             if (req.body.bentuk_pendidikan_id == 15) {  
@@ -395,25 +387,13 @@ export const getSekolahTujuan = async (req, res) => {
             //     };  
             // });  
 
-            if(status_sekolah == 2){
-
-                formattedResData = resData.map(school => {  
-                    return {  
-                        ...school.dataValues,  
-                        nama_npsn: `* ${school.nama} ${school.npsn}`  
-                    };  
-                });  
-
-            }else{
-
-                formattedResData = resData.map(school => {  
-                    return {  
-                        ...school.dataValues,  
-                        nama_npsn: `${school.nama} ${school.npsn}`  
-                    };  
-                });  
-
-            }
+            const formattedResData = resData.map(school => {
+                const namaNpsn = `${school.nama} ${school.npsn}`; 
+                return {
+                    ...school.dataValues,
+                    nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                };
+            });
   
             // If bentuk_pendidikan_id is 15, fetch jurusan data  
             if (req.body.bentuk_pendidikan_id == 15) {  
