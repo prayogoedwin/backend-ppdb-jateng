@@ -12602,16 +12602,6 @@ export const cetakBuktiPerangkingan = async (req, res) => {
                     as: 'data_wilayah_prov',
                     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
                 },
-                {
-                    model: SekolahJurusan,
-                    as: 'sekolah_jurusan',
-                    attributes: ['id', 'nama_jurusan']
-                },
-                {
-                    model: JalurPendaftarans,
-                    as: 'jalur_pendaftaran',
-                    attributes: ['bentuk_pendidikan_id', 'nama']
-                }
             ],
 
         });
@@ -12631,6 +12621,11 @@ export const cetakBuktiPerangkingan = async (req, res) => {
                     model: SekolahTujuan,
                     as: 'sekolah_tujuan',
                     attributes: ['nama']
+                },
+                {
+                    model: SekolahJurusan,
+                    as: 'sekolah_jurusan',
+                    attributes: ['id', 'nama_jurusan']
                 },
                 {
                     model: JalurPendaftarans,
