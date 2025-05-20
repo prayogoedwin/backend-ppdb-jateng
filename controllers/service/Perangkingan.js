@@ -8175,6 +8175,7 @@ export const getPerangkingan = async (req, res) => {
                         // ['created_at', 'ASC'] //daftar sekolah terawal
                     ],
                     // limit: kuota_zonasi
+                    limit: KUOTA_CADANGAN
                 });
 
                 const modifiedData99 = resZonasiNilai99.map(item => {
@@ -8311,6 +8312,7 @@ export const getPerangkingan = async (req, res) => {
                         // ['created_at', 'ASC'] //daftar sekolah terawal
                     ],
                     // limit: kuota_zonasi_khusus
+                    limit: KUOTA_CADANGAN
                 });
     
                 if (resData) { 
@@ -8481,6 +8483,7 @@ export const getPerangkingan = async (req, res) => {
                         ['created_at', 'ASC'] // daftar sekolah terawal
                     ],
                     // limit: kuota_zonasi_khusus
+                    limit: KUOTA_CADANGAN
                 });
     
                 if (resData && resData.length > 0) {
@@ -8639,6 +8642,7 @@ export const getPerangkingan = async (req, res) => {
                         ['created_at', 'ASC'] // Urutkan berdasarkan waktu pendaftaran (tercepat lebih dulu)
                     ],
                     // limit: kuota_zonasi_khusus
+                    limit: KUOTA_CADANGAN
                 });
 
                if (resData && resData.length > 0) {
@@ -8901,6 +8905,7 @@ export const getPerangkingan = async (req, res) => {
                             // ['created_at', 'ASC'] //daftar sekolah terawal
                         ],
                         // limit: kuota_zonasi
+                        limit: KUOTA_CADANGAN
                     });
 
                     const modifiedData99 = resData99.map(item => {
@@ -9104,6 +9109,7 @@ export const getPerangkingan = async (req, res) => {
                             // ['created_at', 'ASC'] //daftar sekolah terawal
                         ],
                         // limit: kuota_zonasi
+                        limit: KUOTA_CADANGAN
                     });
     
                     const modifiedData99 = resData99.map(item => {
@@ -9278,6 +9284,7 @@ export const getPerangkingan = async (req, res) => {
                             ['created_at', 'ASC'] // daftar sekolah terawal
                         ],
                         // limit: kuota_zonasi_khusus
+                        limit: KUOTA_CADANGAN
                     });
                     
                     if (resData && resData.length > 0) {
@@ -9445,6 +9452,7 @@ export const getPerangkingan = async (req, res) => {
                             ['created_at', 'ASC'] // daftar sekolah terawal
                         ],
                         // limit: kuota_zonasi_khusus
+                        limit: KUOTA_CADANGAN
                     });
 
                     const modifiedData99 = resData99.map(item => {
@@ -9681,7 +9689,7 @@ export const getPerangkingan = async (req, res) => {
                                 ['umur', 'DESC'], //umur tertua
                                 // ['created_at', 'ASC'] // daftar sekolah terawal
                             ],
-                            // limit: kuota_zonasi
+                            limit: KUOTA_CADANGAN
                         });
     
                         const modifiedData99 = resData99.map(item => {
@@ -13697,10 +13705,12 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
     });
 
     // Data Afirmasi Miskin
-    let kuota_afirmasi_sisa = kuota_afirmasi - (kuota_ats + kuota_panti);
-    let kuota_miskin_dengan_cadangan = kuota_afirmasi_sisa + 
+    // let kuota_afirmasi_sisa = kuota_afirmasi - (kuota_ats + kuota_panti);
+    let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
+    let kuota_miskin_dengan_cadangan = kuota_afirmasi_sisa + KUOTA_CADANGAN;
+    //let kuota_miskin_dengan_cadangan = kuota_afirmasi_sisa + 
         // (KUOTA_CADANGAN - (kuota_ats_dengan_cadangan - kuota_ats) - (kuota_panti_dengan_cadangan - kuota_panti));
-        (KUOTA_CADANGAN - kuota_ats - kuota_panti);
+        //(KUOTA_CADANGAN - kuota_ats - kuota_panti);
 
     const resDataMiskin = await DataPerangkingans.findAll({
         where: {
@@ -13761,7 +13771,7 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
     let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
     let kuota_anak_guru_dengan_cadangan = kuota_anak_guru + Math.ceil(KUOTA_CADANGAN * (kuota_anak_guru / daya_tampung));
-    let kuota_jarak_terdekat_dengan_cadangan = kuota_jarak_terdekat + (KUOTA_CADANGAN - (kuota_anak_guru_dengan_cadangan - kuota_anak_guru));
+    //let kuota_jarak_terdekat_dengan_cadangan = kuota_jarak_terdekat + (KUOTA_CADANGAN - (kuota_anak_guru_dengan_cadangan - kuota_anak_guru));
 
     // Data Anak Guru
     const resDataAnakGuru = await DataPerangkingans.findAll({
@@ -13778,9 +13788,13 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
             [literal('CAST(jarak AS FLOAT)'), 'ASC'],
             ['created_at', 'ASC'] 
         ],
-        limit: kuota_anak_guru_dengan_cadangan,
+        //limit: kuota_anak_guru_dengan_cadangan,
+        limit: kuota_anak_guru,
         transaction
     });
+
+    const totalAnakGuru = resDataAnakGuru.length;
+    let kuota_jarak_terdekat_dengan_cadangan = (kuota_jarak_terdekat + KUOTA_CADANGAN) - totalAnakGuru;
 
     // Data Domisili Terdekat
     const resData = await DataPerangkingans.findAll({
@@ -13975,13 +13989,15 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
     });
 
     // Data Afirmasi Miskin
-    let kuota_akhir_afirmasi = kuota_afirmasi - (kuota_ats + kuota_panti);
-    let kuota_miskin_dengan_cadangan = kuota_akhir_afirmasi + 
+    // let kuota_akhir_afirmasi = kuota_afirmasi - (kuota_ats + kuota_panti);
+    // let kuota_miskin_dengan_cadangan = kuota_akhir_afirmasi + 
         // (KUOTA_CADANGAN - 
         // (kuota_ats_dengan_cadangan - kuota_ats) - 
         // (kuota_panti_dengan_cadangan - kuota_panti));
-        (KUOTA_CADANGAN - kuota_ats - kuota_panti);
+        //(KUOTA_CADANGAN - kuota_ats - kuota_panti);
 
+    let kuota_akhir_afirmasi = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
+    let kuota_miskin_dengan_cadangan = kuota_akhir_afirmasi + KUOTA_CADANGAN;
 
     const resDataMiskin = await DataPerangkingans.findAll({
         where: {
