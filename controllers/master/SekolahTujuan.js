@@ -289,7 +289,7 @@ export const getSekolahTujuan = async (req, res) => {
             const formattedResData = resData.map(school => {  
                 return {  
                     ...school.dataValues,  
-                    nama_npsn: `${school.nama} ${school.npsn}`  
+                    nama_npsn: `${school.nama} ${school.npsn} *`  
                 };  
             });  
   
@@ -373,7 +373,7 @@ export const getSekolahTujuan = async (req, res) => {
             const formattedResData = resData.map(school => {  
                 return {  
                     ...school.dataValues,  
-                    nama_npsn: `${school.nama} ${school.npsn}`  
+                    nama_npsn: `${school.nama} ${school.npsn} *`  
                 };  
             });  
   
