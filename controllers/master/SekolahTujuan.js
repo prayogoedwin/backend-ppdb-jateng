@@ -229,7 +229,8 @@ export const getSekolahTujuan = async (req, res) => {
                         [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
                         [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
                         [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
                     ],  
                     group: ['npsn']  
                 });
@@ -268,7 +269,8 @@ export const getSekolahTujuan = async (req, res) => {
                         [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
                         [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
                         [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'] // Get the minimum address for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
                     ],  
                     group: ['npsn']  
                 });
@@ -284,14 +286,30 @@ export const getSekolahTujuan = async (req, res) => {
             //     },  
             //     attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan']  
             // });  
+
+            let formattedResData;
   
             // Tambahkan properti nama_npsn ke setiap item dalam resData  
-            const formattedResData = resData.map(school => {  
-                return {  
-                    ...school.dataValues,  
-                    nama_npsn: `* ${school.nama} ${school.npsn}`  
-                };  
-            });  
+            if(status_sekolah == 2){
+
+                formattedResData = resData.map(school => {  
+                    return {  
+                        ...school.dataValues,  
+                        nama_npsn: `* ${school.nama} ${school.npsn}`  
+                    };  
+                });  
+
+            }else{
+
+                formattedResData = resData.map(school => {  
+                    return {  
+                        ...school.dataValues,  
+                        nama_npsn: `${school.nama} ${school.npsn}`  
+                    };  
+                });  
+
+            }
+            
   
             // If bentuk_pendidikan_id is 15, fetch jurusan data  
             if (req.body.bentuk_pendidikan_id == 15) {  
@@ -370,12 +388,32 @@ export const getSekolahTujuan = async (req, res) => {
             });  
   
             // Tambahkan properti nama_npsn ke setiap item dalam resData  
-            const formattedResData = resData.map(school => {  
-                return {  
-                    ...school.dataValues,  
-                    nama_npsn: `* ${school.nama} ${school.npsn}`  
-                };  
-            });  
+            // const formattedResData = resData.map(school => {  
+            //     return {  
+            //         ...school.dataValues,  
+            //         nama_npsn: `* ${school.nama} ${school.npsn}`  
+            //     };  
+            // });  
+
+            if(status_sekolah == 2){
+
+                formattedResData = resData.map(school => {  
+                    return {  
+                        ...school.dataValues,  
+                        nama_npsn: `* ${school.nama} ${school.npsn}`  
+                    };  
+                });  
+
+            }else{
+
+                formattedResData = resData.map(school => {  
+                    return {  
+                        ...school.dataValues,  
+                        nama_npsn: `${school.nama} ${school.npsn}`  
+                    };  
+                });  
+
+            }
   
             // If bentuk_pendidikan_id is 15, fetch jurusan data  
             if (req.body.bentuk_pendidikan_id == 15) {  
