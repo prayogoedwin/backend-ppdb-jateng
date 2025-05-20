@@ -12684,7 +12684,7 @@ export const CariPengumumanByNoPendaftaran = async (req, res) => {
 
          // Retrieve data from DataPendaftarModel
          const perangkingan = await DataPerangkingans.findOne({
-            attributes: ['no_pendaftaran', 'is_saved', 'id_diterima','no_urut','nama_lengkap', 'nisn'],
+            attributes: ['no_pendaftaran', 'is_saved', 'is_diterima','no_urut','nama_lengkap', 'nisn'],
             where: {
                 no_pendaftaran,
                 is_delete: 0
