@@ -1067,6 +1067,12 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
                     as: 'status_domisili_name',
                     attributes: ['id', 'nama']
                 },
+                {
+                    model: JenisKejuaraans,
+                    as: 'jenis_kejuaraan',
+                    attributes: ['nama'],
+                    required: false 
+                },
                 {  
                     model: DataUsers,  
                     as: 'diverifikasi_oleh',  
@@ -1078,7 +1084,22 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
                             attributes: ['id', 'nama', 'npsn']
                         }
                     ]
-                }  
+                },
+                ,
+                {
+                    model: DataUsers,
+                    as: 'sedang_diproses_oleh',
+                    attributes: ['id', 'nama', 'sekolah_id'],
+                    include: [
+                        {
+                            model: SekolahTujuanModel,
+                            as: 'asal_sekolah_admin',
+                            attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                        }
+                       
+                    ]
+                    
+                },  
             ],  
         });  
   
@@ -1100,6 +1121,18 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
             delete data.id; // Remove original ID from the response  
             
             data.nik = '*'.repeat(16); // Masking nik jadi 16 bintang
+
+            if (data.status_kepindahan !== undefined) {
+                data.status_kepindahan_text = klasifikasiPindah(data.status_kepindahan);
+            }
+
+            if (data.status_kepindahan_ibu !== undefined) {
+                data.status_kepindahan_ibu_text = klasifikasiPindah(data.status_kepindahan_ibu);
+            }
+
+            if (data.status_kepindahan_ayah !== undefined) {
+                data.status_kepindahan_ayah_text = klasifikasiPindah(data.status_kepindahan_ayah);
+            }
   
             // Custom value for dok_piagam and dok_kk  
             if (data.dok_kk) {  
