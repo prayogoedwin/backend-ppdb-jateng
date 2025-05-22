@@ -434,8 +434,14 @@ export const klasifikasiPindah = (key) => {
 };
 
 export function parseKodeWilayah(kodeKelurahan) {
-  if (!kodeKelurahan) {
-      throw new Error('Kode kelurahan harus di input');
+  if (kodeKelurahan == '') {
+      // throw new Error('Kode kelurahan harus di input');
+      return {
+        kode_kelurahan: null,
+        kode_kecamatan: null,
+        kode_kabupaten: null,
+        kode_provinsi: null
+    };
   }
 
   let kode = kodeKelurahan.toString();
