@@ -190,7 +190,9 @@ const EzAnakPondokKemenag = db.define('ez_anak_pondok_kemenag', {
     }
 }, {
     tableName: 'ez_anak_pondok_kemenag',
-    timestamps: false // Nonaktifkan timestamps otomatis
+    timestamps: false, // Nonaktifkan timestamps otomatis
+    freezeTableName: true,
+    id: false // Nonaktifkan kolom id otomatis
 });
 
 export default EzAnakPondokKemenag;
