@@ -1080,7 +1080,6 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
                         }
                     ]
                 },
-                ,
                 {
                     model: DataUsers,
                     as: 'sedang_diproses_oleh',
