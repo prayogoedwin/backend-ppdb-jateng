@@ -911,7 +911,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 is_pondok = 1;
                 lat_pondok = dataAnakKemenag.lintang_pondok?.toString() || null;
                 lng_pondok = dataAnakKemenag.bujur_pondok?.toString() || null;
-                kode_wilayah_pondok = dataAnakKemenag.kode_wilayah_pondok?.toString() || null;
+                kode_wilayah_pondok = dataAnakKemenag.kode_wilayah?.toString() || null;
                 kecamatan_pondok = wilayah.kode_kecamatan?.toString() || null;
                 kabupaten_pondok = wilayah.kode_kabupaten?.toString() || null;
                 provinsi_pondok = wilayah.kode_provinsi?.toString() || null;
