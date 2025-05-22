@@ -1,5 +1,5 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js';
+import { Sequelize } from "sequelize";
+import db from "../../config/Database.js";
 
 const EzAnakPondokKemenag = sequelize.define('ez_anak_pondok_kemenag', {
     sekolah_id_pondok: {
