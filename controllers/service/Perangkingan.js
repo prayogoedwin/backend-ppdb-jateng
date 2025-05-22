@@ -12247,8 +12247,8 @@ export const cekPerangkingan = async (req, res) => {
         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili == 2){
             //tidak boleh daftar jalur selain jalur mutasi dan prestasi, prestasi smk
-            if(jalur_pendaftaran_id != 4 && jalur_pendaftaran_id != 3 && jalur_pendaftaran_id != 6 && jalur_pendaftaran_id != 8){
-                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Surat Mutasi Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi dan prestasi (SMA)' });
+            if(jalur_pendaftaran_id != 4 && jalur_pendaftaran_id != 3 && jalur_pendaftaran_id != 6 && jalur_pendaftaran_id != 8 && jalur_pendaftaran_id != 7){
+                return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah "Sesuai Surat Mutasi Ortu/Wali" status domisili tersebut hanya di perbolehkan mendaftar jalur mutasi dan prestasi' });
             }
 
             if(pendaftar.is_anak_guru_jateng == 1){
