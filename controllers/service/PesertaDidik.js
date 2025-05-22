@@ -6,7 +6,7 @@ import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
 import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
-import DataAnakPondokKemenag from '../../models/service/ezAnakPondokKemenagModel.js';
+import EzAnakPondokKemenag from '../../models/service/ezAnakPondokKemenagModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
@@ -898,7 +898,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
         if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
 
-            const dataAnakKemenag = await DataAnakPondokKemenag.findOne({
+            const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
                 where: {
                     nisn: pesertaDidik.nisn
                 }
