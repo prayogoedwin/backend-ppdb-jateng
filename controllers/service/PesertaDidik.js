@@ -1003,7 +1003,11 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 ats:  is_tidak_sekolah,
                 lat_pondok: lat_pondok,
                 lng_pondok: lng_pondok,
-                kode_wilayah_pondok: kode_wilayah_pondok
+                kode_wilayah_pondok: kode_wilayah_pondok,
+                kecamatan_pondok: kecamatan_pondok,
+                kabupaten_pondok: kabupaten_pondok,
+                provinsi_pondok: provinsi_pondok
+
             }
         });
     } catch (err) {
