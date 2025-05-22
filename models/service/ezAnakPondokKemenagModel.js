@@ -157,19 +157,19 @@ const EzAnakPondokKemenag = db.define('ez_anak_pondok_kemenag', {
         type: DataTypes.STRING(50),
         allowNull: true
     },
-    layak_PIP: {
+    layak_pip: {
         type: DataTypes.STRING(5),
         allowNull: true
     },
-    no_KIP: {
+    no_kip: {
         type: DataTypes.STRING(50),
         allowNull: true
     },
-    no_KKS: {
+    no_kks: {
         type: DataTypes.STRING(50),
         allowNull: true
     },
-    no_KPS: {
+    no_kps: {
         type: DataTypes.STRING(50),
         allowNull: true
     },
