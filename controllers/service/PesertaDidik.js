@@ -1,6 +1,6 @@
 // controllers/PesertaDidik.js
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
-import { getIntegratorSatuan} from '../../helpers/HelpHelper.js';
+import { getIntegratorSatuan, parseKodeWilayah } from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
