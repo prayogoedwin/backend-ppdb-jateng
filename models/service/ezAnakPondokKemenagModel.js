@@ -54,7 +54,8 @@ const EzAnakPondokKemenag = db.define('ez_anak_pondok_kemenag', {
     },
     nisn: {
         type: DataTypes.STRING(20),
-        allowNull: true
+        allowNull: true,
+        primaryKey: true // Tentukan sebagai primary key
     },
     nama: {
         type: DataTypes.STRING(100),
