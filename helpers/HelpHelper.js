@@ -434,18 +434,20 @@ export const klasifikasiPindah = (key) => {
 };
 
 export function parseKodeWilayah(kodeKelurahan) {
-  if (!kodeKelurahan || typeof kodeKelurahan !== 'string') {
-      throw new Error('Kode kelurahan harus berupa string');
+  if (!kodeKelurahan) {
+      throw new Error('Kode kelurahan harus di input');
   }
 
+  kode = kodeKelurahan.toString();
+
   // Kode kecamatan adalah 6 digit pertama
-  const kodeKecamatan = kodeKelurahan.substring(0, 6);
+  const kodeKecamatan = kode.substring(0, 6);
   
   // Kode kabupaten adalah 4 digit pertama + '00'
-  const kodeKabupaten = kodeKelurahan.substring(0, 4) + '00';
+  const kodeKabupaten = kode.substring(0, 4) + '00';
   
   // Kode provinsi adalah 2 digit pertama + '0000'
-  const kodeProvinsi = kodeKelurahan.substring(0, 2) + '0000';
+  const kodeProvinsi = kode.substring(0, 2) + '0000';
 
   return {
       kode_kelurahan: kodeKelurahan,
