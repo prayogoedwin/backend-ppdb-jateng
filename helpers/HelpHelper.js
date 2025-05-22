@@ -468,7 +468,7 @@ export function parseKodeWilayah(kodeKelurahan) {
   const kodeProvinsi = kode.substring(0, 2) + '0000';
   
   return {
-      kode_kelurahan: kodeKelurahan,
+      kode_kelurahan: kode,
       kode_kecamatan: kodeKecamatan,
       kode_kabupaten: kodeKabupaten,
       kode_provinsi: kodeProvinsi
