@@ -438,7 +438,7 @@ export function parseKodeWilayah(kodeKelurahan) {
       throw new Error('Kode kelurahan harus di input');
   }
 
-  kode = kodeKelurahan.toString();
+  let kode = kodeKelurahan.toString();
 
   if (kode.length !== 6) {
 
