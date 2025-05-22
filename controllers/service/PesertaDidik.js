@@ -6,6 +6,7 @@ import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
 import DataAnakGuru from '../../models/service/DataAnakGuruModel.js';
+import DataAnakPondokKemenag from '../../models/service/ezAnakPondokKemenagModel.js';
 import Sekolah from '../../models/master/SekolahModel.js';
 import BentukPendidikan from '../../models/master/BentukPendidikanModel.js';
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
@@ -890,15 +891,49 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         let is_pondok;
         let lat_pondok;
         let lng_pondok;
-        let kode_wilayah_pondok
+        let kode_wilayah_pondok;
+        let kecamatan_pondok;
+        let kabupaten_pondok;
+        let provinsi_pondok;
         //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
         if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
 
-            lat_pondok = pesertaDidik.data_sekolah?.lat?.toString() || null;
-            lng_pondok = pesertaDidik.data_sekolah?.lng?.toString() || null;
-            kode_wilayah_pondok = pesertaDidik.data_sekolah?.kode_wilayah?.toString() || null;
+            const dataAnakKemenag = await DataAnakPondokKemenag.findOne({
+                where: {
+                    nisn: pesertaDidik.nisn
+                }
+            });
+
+            if (dataAnakKemenag) {
+                
+                const wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah_pondok);
+
+                is_pondok = 1;
+                lat_pondok = dataAnakKemenag.lintang_pondok?.toString() || null;
+                lng_pondok = dataAnakKemenag.bujur_pondok?.toString() || null;
+                kode_wilayah_pondok = dataAnakKemenag.kode_wilayah_pondok?.toString() || null;
+                kecamatan_pondok = wilayah.kode_kecamatan?.toString() || null;
+                kabupaten_pondok = wilayah.kode_kabupaten?.toString() || null;
+                provinsi_pondok = wilayah.kode_provinsi?.toString() || null;
+
+
+            }else{
+
+                is_pondok = 1;
+                lat_pondok = null;
+                lng_pondok = null;
+                kode_wilayah_pondok= null;
+                kecamatan_pondok = null;
+                kabupaten_pondok = null;
+                provinsi_pondok = null;
+
+            }
+
+            // lat_pondok = pesertaDidik.data_sekolah?.lat?.toString() || null;
+            // lng_pondok = pesertaDidik.data_sekolah?.lng?.toString() || null;
+            // kode_wilayah_pondok = pesertaDidik.data_sekolah?.kode_wilayah?.toString() || null;
     
-            is_pondok = 1;
+          
             // const sekolah_id = pesertaDidik.sekolah_id;
             // const cariPondok = await Sekolah.findOne({
             //     attributes: ['id', 'npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
@@ -915,7 +950,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             //     is_pondok = 0;
             // }
 
-            console.log( pesertaDidik.lng_lainnya); 
+            // console.log( pesertaDidik.lng_lainnya); 
 
         }else{
 
@@ -923,8 +958,10 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             lat_pondok = null;
             lng_pondok = null;
             kode_wilayah_pondok= null;
+            kecamatan_pondok = null;
+            kabupaten_pondok = null;
+            provinsi_pondok = null;
     
-
         }
 
         // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
