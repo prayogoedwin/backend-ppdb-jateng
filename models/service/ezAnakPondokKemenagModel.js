@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
 
+const { DataTypes } = Sequelize;
+
 const EzAnakPondokKemenag = sequelize.define('ez_anak_pondok_kemenag', {
     sekolah_id_pondok: {
         type: DataTypes.STRING(50),
