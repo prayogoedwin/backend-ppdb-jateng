@@ -440,15 +440,33 @@ export function parseKodeWilayah(kodeKelurahan) {
 
   kode = kodeKelurahan.toString();
 
+  if (kode.length !== 6) {
+
+    // Kode kabupaten adalah 4 digit pertama + '00'
+    const kodeKabupaten = kode.substring(0, 4) + '00';
+    
+    // Kode provinsi adalah 2 digit pertama + '0000'
+    const kodeProvinsi = kode.substring(0, 2) + '0000';
+    
+    return {
+        kode_kelurahan: kode,
+        kode_kecamatan: kode,
+        kode_kabupaten: kodeKabupaten,
+        kode_provinsi: kodeProvinsi
+    };
+
+
+  }
+
   // Kode kecamatan adalah 6 digit pertama
   const kodeKecamatan = kode.substring(0, 6);
-  
+
   // Kode kabupaten adalah 4 digit pertama + '00'
   const kodeKabupaten = kode.substring(0, 4) + '00';
-  
+    
   // Kode provinsi adalah 2 digit pertama + '0000'
   const kodeProvinsi = kode.substring(0, 2) + '0000';
-
+  
   return {
       kode_kelurahan: kodeKelurahan,
       kode_kecamatan: kodeKecamatan,

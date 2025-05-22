@@ -906,7 +906,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             if (dataAnakKemenag) {
                 
-                const wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah_pondok);
+                const wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
 
                 is_pondok = 1;
                 lat_pondok = dataAnakKemenag.lintang_pondok?.toString() || null;
