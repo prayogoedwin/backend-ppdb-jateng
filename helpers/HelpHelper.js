@@ -440,7 +440,7 @@ export function parseKodeWilayah(kodeKelurahan) {
 
   let kode = kodeKelurahan.toString();
 
-  if (kode.length !== 6) {
+  if (kode.length == 6) {
 
     // Kode kabupaten adalah 4 digit pertama + '00'
     const kodeKabupaten = kode.substring(0, 4) + '00';
