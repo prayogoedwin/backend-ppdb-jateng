@@ -3,7 +3,7 @@ import db from "../../config/Database.js";
 
 const { DataTypes } = Sequelize;
 
-const EzAnakPondokKemenag = Sequelize.define('ez_anak_pondok_kemenag', {
+const EzAnakPondokKemenag = db.define('ez_anak_pondok_kemenag', {
     sekolah_id_pondok: {
         type: DataTypes.STRING(50),
         allowNull: true
