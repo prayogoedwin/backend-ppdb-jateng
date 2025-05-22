@@ -820,11 +820,6 @@ export const getDataPendaftarById = async (req, res) => {
                     as: 'status_domisili_name',
                     attributes: ['id', 'nama']
                 },
-                // {  
-                //     model: DataUsers,  
-                //     as: 'diverifikasi_oleh',  
-                //     attributes: ['id', 'nama']  
-                // }  
                 {
                     model: JenisKejuaraans,
                     as: 'jenis_kejuaraan',
