@@ -919,7 +919,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             }else{
 
-                is_pondok = 1;
+                is_pondok = 0;
                 lat_pondok = null;
                 lng_pondok = null;
                 kode_wilayah_pondok= null;
