@@ -12278,10 +12278,10 @@ export const cekPerangkingan = async (req, res) => {
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali", Anda tidak diperbolehkan daftar jalur mutasi (SMA)' });
             }
 
-            if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0 && pendaftar.is_disabilitas == 0){
+            if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0 && pendaftar.is_disabilitas == 0 && pendaftar.is_anak_pondok == 0){
                 // return res.status(200).json({ status: 0, message: 'BB' });
                 if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
-                    return res.status(200).json({ status: 0, message: '1 Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anak Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
+                    return res.status(200).json({ status: 0, message: '1. Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anak Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
                 }
     
             }
@@ -12304,22 +12304,35 @@ export const cekPerangkingan = async (req, res) => {
 
             const kecPendaftar = pendaftar.kecamatan_id.toString();
 
-            console.log('anak pondok:'+pendaftar.is_anak_pondok);
-            if(pendaftar.is_anak_pondok != 1){
-                //tidak boleh jika tidak dalam zonasi
-                const cariZonasis = await SekolahZonasis.findOne({
-                    where: {
-                    id_sekolah: sekolah_tujuan_id,
-                    kode_wilayah_kec: kecPendaftar,
-                    }
-                });
+            // console.log('anak pondok:'+pendaftar.is_anak_pondok);
+            // if(pendaftar.is_anak_pondok != 1){
+            //     const cariZonasis = await SekolahZonasis.findOne({
+            //         where: {
+            //         id_sekolah: sekolah_tujuan_id,
+            //         kode_wilayah_kec: kecPendaftar,
+            //         }
+            //     });
             
-                if (!cariZonasis) {
-                    return res.status(200).json({
-                    status: 0,
-                    message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
-                    });
+            //     if (!cariZonasis) {
+            //         return res.status(200).json({
+            //         status: 0,
+            //         message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
+            //         });
+            //     }
+            // }
+
+            const cariZonasis = await SekolahZonasis.findOne({
+                where: {
+                id_sekolah: sekolah_tujuan_id,
+                kode_wilayah_kec: kecPendaftar,
                 }
+            });
+        
+            if (!cariZonasis) {
+                return res.status(200).json({
+                status: 0,
+                message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
+                });
             }
 
         }
