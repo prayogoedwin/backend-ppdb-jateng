@@ -12228,7 +12228,7 @@ export const cekPerangkingan = async (req, res) => {
                  'is_tidak_sekolah', 'is_anak_panti', 'is_anak_keluarga_tidak_mampu', 'is_anak_pondok', 
                  'is_tidak_boleh_domisili', 'tanggal_lahir',
                  'nilai_raport_rata', 'nilai_prestasi', 'nilai_organisasi', 'is_disabilitas', 'is_anak_guru_jateng',
-                 'npsn_anak_guru'
+                 'npsn_anak_guru','is_boleh_prestasi_khusus'
                 ] 
         });
 
@@ -12278,7 +12278,7 @@ export const cekPerangkingan = async (req, res) => {
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali", Anda tidak diperbolehkan daftar jalur mutasi (SMA)' });
             }
 
-            if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0 && pendaftar.is_disabilitas == 0 && pendaftar.is_anak_pondok == 0){
+            if(pendaftar.is_tidak_sekolah == 0 && pendaftar.is_anak_panti == 0 && pendaftar.is_anak_keluarga_tidak_mampu == 0 && pendaftar.is_disabilitas == 0){
                 // return res.status(200).json({ status: 0, message: 'BB' });
                 if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
                     return res.status(200).json({ status: 0, message: '1. Anda tidak bisa mendaftar jalur ini karena anda tidak termasuk salah satu dari kategori afirmasi: (ATS, Anak Panti, Anak Keluarga Tidak Mampu yang terdaftar  pada BDT Jateng)' });
@@ -12291,6 +12291,12 @@ export const cekPerangkingan = async (req, res) => {
         if(pendaftar.is_tidak_sekolah == 1){
             if(jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9){
                 return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai ATS, anda hanya bisa daftar jalur / seleksi Afirmasi' });
+            }
+        }
+
+        if(jalur_pendaftaran_id == 8){
+            if(pendaftar.is_boleh_prestasi_khusus != 1){
+                return res.status(200).json({ status: 0, message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' });
             }
         }
 
