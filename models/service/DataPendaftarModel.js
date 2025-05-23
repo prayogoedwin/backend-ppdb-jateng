@@ -495,8 +495,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    
-    
+    is_boleh_prestasi_khusus: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
     
     
 }, {

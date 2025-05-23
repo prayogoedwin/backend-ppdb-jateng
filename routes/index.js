@@ -414,11 +414,6 @@ router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKeju
 router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
 router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
 
-
-
-
-
-
 // Define the version as a constant
 const VERSION = '1.20.27'; 
 const APPNAME = 'Backend PPDB';
