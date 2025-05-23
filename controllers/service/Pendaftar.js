@@ -10,6 +10,7 @@ import GeoJsons from "../../models/master/GeoJsonModel.js";
 import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import { getTimelineSatuan } from '../../helpers/HelpHelper.js';
 import Timelines from "../../models/service/TimelineModel.js";
+import DataUsers from '../../models/service/DataUsersModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -697,6 +698,11 @@ export const getPendaftarforCetak = async (req, res) => {
                   as: 'status_domisili_name',
                   attributes: ['id','nama']
                 },
+                {
+                    model: DataUsers,
+                    as: 'diverifikasi_oleh',
+                    attributes: ['id', 'nama']
+                }
             ],
 
         });
