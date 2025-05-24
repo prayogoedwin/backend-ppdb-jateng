@@ -94,6 +94,14 @@ const EzSekolahJurusan = db.define('EzSekolahJurusan', {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    nama_jurusan: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    is_larang_buta_warna: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   }, {
     tableName: 'ez_sekolah_jurusan',
     timestamps: true,

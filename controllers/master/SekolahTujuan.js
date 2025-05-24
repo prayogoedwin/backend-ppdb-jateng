@@ -932,113 +932,132 @@ export const getSekolahTujuan = async (req, res) => {
         
         } else {  
 
-            const whereCondition = {
-                bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
-                nama_jurusan: {
-                    [Op.not]: null,
-                }
-            };
-            
-            // Hanya tambahkan kondisi kode_wilayah_kot jika kabkota tidak null/undefined
-            if (kabkota !== undefined && kabkota !== null) {
-                whereCondition.kode_wilayah_kot = kabkota;
-            }
+            const redis_key = 'SekolahTujuansPublikWithJalur'+req.body.bentuk_pendidikan_id+req.body.kabkota+'-Jalur:'+jalur_pendaftaran_id;
 
-            if(jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9){
-                whereCondition.status_sekolah = 1;
-            }
+            const cacheNya = await redisGet(redis_key);
 
-            // Menentukan order berdasarkan jalur pendaftaran
-            let orderCondition;
-            if (jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9) {
-                orderCondition = [
-                    [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'DESC'],
-                    ['id', 'ASC'] // Tambahan pengurutan sekunder jika diperlukan
-                ];
-            } else {
-                orderCondition = ['id'];
-            }
+            if (cacheNya) {
 
-            const resData = await SekolahTujuans.findAll({  
-                // where: {  
-                //     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
-                //     kode_wilayah_kot: kabkota,
-                //     nama_jurusan: {
-                //         [Op.not]: null,
-                //       },
+                res.status(200).json({
+                    'status': 1,
+                    'message': 'Data di ambil dari cache',
+                    'data': JSON.parse(cacheNya)
+                });
+    
+               
+            }else{
+
+                    const whereCondition = {
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                        }
+                    };
                     
-                // }, 
-                where: whereCondition,   
-                // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
-                attributes: [
-                    'npsn', 
-                    [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
-                    [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
-                ],  
-                order: ['id'],
-                order: orderCondition,
-                group: ['npsn'] 
-                  
-            });  
-  
-            // Tambahkan properti nama_npsn ke setiap item dalam resData  
-            // const formattedResData = resData.map(school => {  
-            //     return {  
-            //         ...school.dataValues,  
-            //         nama_npsn: `* ${school.nama} ${school.npsn}`  
-            //     };  
-            // });  
+                    // Hanya tambahkan kondisi kode_wilayah_kot jika kabkota tidak null/undefined
+                    if (kabkota !== undefined && kabkota !== null) {
+                        whereCondition.kode_wilayah_kot = kabkota;
+                    }
 
-            const formattedResData = resData.map(school => {
-                const namaNpsn = `${school.nama} ${school.npsn}`; 
-                return {
-                    ...school.dataValues,
-                    nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
-                };
-            });
-  
-            // If bentuk_pendidikan_id is 15, fetch jurusan data  
-            if (req.body.bentuk_pendidikan_id == 15) {  
-                const jurusanData = await SekolahJurusan.findAll({  
-                    where: {  
-                        id_sekolah_tujuan: formattedResData.map(school => school.id)  
-                    },  
-                    attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
-                    order: ['id'],
-                });  
-  
-                // Format jurusan data  
-                const formattedJurusanData = jurusanData.map(jurusan => {  
-                    return {  
-                        ...jurusan.dataValues,  
-                        id_sekolah_tujuan: jurusan.id_sekolah_tujuan  
-                    };  
-                });  
-  
-                // Combine school and jurusan data  
-                formattedResData.forEach(school => {  
-                    school.jurusan = formattedJurusanData.filter(jurusan => jurusan.id_sekolah_tujuan === school.id);  
-                });  
-            }  
-  
-            if (formattedResData.length > 0) {  
-                res.status(200).json({  
-                    'status': 1,  
-                    'message': 'Data berhasil ditemukan',  
-                    'data': formattedResData  
-                });  
-            } else {  
-                res.status(200).json({  
-                    'status': 0,  
-                    'message': 'Data kosong',  
-                    'data': ''  
-                });  
-            }  
+                    if(jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9){
+                        whereCondition.status_sekolah = 1;
+                    }
+
+                    // Menentukan order berdasarkan jalur pendaftaran
+                    let orderCondition;
+                    if (jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9) {
+                        orderCondition = [
+                            [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'DESC'],
+                            ['id', 'ASC'] // Tambahan pengurutan sekunder jika diperlukan
+                        ];
+                    } else {
+                        orderCondition = ['id'];
+                    }
+
+                    const resData = await SekolahTujuans.findAll({  
+                        // where: {  
+                        //     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                        //     kode_wilayah_kot: kabkota,
+                        //     nama_jurusan: {
+                        //         [Op.not]: null,
+                        //       },
+                            
+                        // }, 
+                        where: whereCondition,   
+                        // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
+                        attributes: [
+                            'npsn', 
+                            [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
+                            [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
+                        ],  
+                        order: ['id'],
+                        order: orderCondition,
+                        group: ['npsn'] 
+                        
+                    });  
+        
+                    // Tambahkan properti nama_npsn ke setiap item dalam resData  
+                    // const formattedResData = resData.map(school => {  
+                    //     return {  
+                    //         ...school.dataValues,  
+                    //         nama_npsn: `* ${school.nama} ${school.npsn}`  
+                    //     };  
+                    // });  
+
+                    const formattedResData = resData.map(school => {
+                        const namaNpsn = `${school.nama} ${school.npsn}`; 
+                        return {
+                            ...school.dataValues,
+                            nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                        };
+                    });
+        
+                    // If bentuk_pendidikan_id is 15, fetch jurusan data  
+                    if (req.body.bentuk_pendidikan_id == 15) {  
+                        const jurusanData = await SekolahJurusan.findAll({  
+                            where: {  
+                                id_sekolah_tujuan: formattedResData.map(school => school.id)  
+                            },  
+                            attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
+                            order: ['id'],
+                        });  
+        
+                        // Format jurusan data  
+                        const formattedJurusanData = jurusanData.map(jurusan => {  
+                            return {  
+                                ...jurusan.dataValues,  
+                                id_sekolah_tujuan: jurusan.id_sekolah_tujuan  
+                            };  
+                        });  
+        
+                        // Combine school and jurusan data  
+                        formattedResData.forEach(school => {  
+                            school.jurusan = formattedJurusanData.filter(jurusan => jurusan.id_sekolah_tujuan === school.id);  
+                        });  
+                    }  
+        
+                    if (formattedResData.length > 0) {  
+
+                        await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER); 
+
+                        res.status(200).json({  
+                            'status': 1,  
+                            'message': 'Data berhasil ditemukan',  
+                            'data': formattedResData  
+                        });  
+                    } else {  
+                        res.status(200).json({  
+                            'status': 0,  
+                            'message': 'Data kosong',  
+                            'data': ''  
+                        });  
+                    }  
+                }
         }  
     } catch (error) {  
         console.error(error);  
