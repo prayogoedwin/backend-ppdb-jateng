@@ -9,7 +9,7 @@ import { Sequelize, Op } from "sequelize";
 import axios from 'axios'; 
 import FormData from 'form-data';
  
-export const generateSuperAdmin = async (req, res) => {
+export const generateSuperAdmin_ = async (req, res) => {
     try {
         // Hash password
         const hashedPassword = await bcrypt.hash('10Juli2024GOgoo=', 10);
@@ -30,6 +30,22 @@ export const generateSuperAdmin = async (req, res) => {
         res.status(200).json({
             status: 1,
             message: 'Berhasil',
+        });
+
+    } catch (error) {
+        console.error('Error creating super admin:', error);
+    }
+};
+
+export const generateSuperAdmin = async (req, res) => {
+    try {
+        // Hash password
+        
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        res.status(200).json({
+            status: 1,
+            message: hashedPassword,
         });
 
     } catch (error) {
