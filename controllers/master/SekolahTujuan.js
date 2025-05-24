@@ -236,35 +236,6 @@ export const getSekolahTujuan = async (req, res) => {
                     group: ['npsn']  
                 });
 
-            }else if(jalur_pendaftaran_id == 5){
-
-                // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
-                resData = await SekolahTujuans.findAll({  
-                    where: {  
-                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
-                        kode_wilayah_kot: kabkota,
-                        nama_jurusan: {
-                            [Op.not]: null,
-                          }
-                    },  
-                    // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
-                    attributes: [
-                        'npsn', 
-                        [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
-                        [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
-                    ],  
-                    group: ['npsn'],
-                    order: [
-                        ['status_sekolah', 'DESC'] // Menggunakan nama alias yang sudah didefinisikan di attributes
-                    ]
-                });
-
-                
             }else{
 
                 // Fetch npsn values from SekolahZonasis
@@ -387,6 +358,21 @@ export const getSekolahTujuan = async (req, res) => {
                 whereCondition.kode_wilayah_kot = kabkota;
             }
 
+            if(jalur_pendaftaran_id != 5 && jalur_pendaftaran_id != 9){
+                whereCondition.status_sekolah = 1;
+            }
+
+            // Menentukan order berdasarkan jalur pendaftaran
+            let orderCondition;
+            if (jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9) {
+                orderCondition = [
+                    [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'DESC'],
+                    ['id', 'ASC'] // Tambahan pengurutan sekunder jika diperlukan
+                ];
+            } else {
+                orderCondition = ['id'];
+            }
+
             const resData = await SekolahTujuans.findAll({  
                 // where: {  
                 //     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
@@ -408,7 +394,8 @@ export const getSekolahTujuan = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
                 ],  
-                order: ['id'],
+                // order: ['id'],
+                order: orderCondition,
                 group: ['npsn'] 
                   
             });  
