@@ -1,6 +1,7 @@
 // Import model Product
 import SekolahTujuans from "../../models/master/SekolahTujuanModel.js";
 import SekolahZonasis from "../../models/master/SekolahZonasiModel.js";
+import SekolahZonasisKhusus from "../../models/master/SekolahZonasiKhususModel.js";
 import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
@@ -213,7 +214,7 @@ export const getSekolahTujuan = async (req, res) => {
             if(cekPendaftar.is_anak_pondok == 1){
 
                  // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
-                 resData = await SekolahTujuans.findAll({  
+                 const resData = await SekolahTujuans.findAll({  
                     where: {  
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
                         kode_wilayah_kot: kabkota,
@@ -344,6 +345,73 @@ export const getSekolahTujuan = async (req, res) => {
                 });  
             }  
   
+        }else if(jalur_pendaftaran_id == 2){
+            let resData;
+
+            // Fetch npsn values from SekolahZonasis
+            const resDataZ = await SekolahZonasisKhusus.findAll({  
+                where: {  
+                    kode_wilayah_kec: cekPendaftar.kecamatan_id  
+                },
+                attributes: ['npsn']  
+            });
+            // console.log("test:"+resDataZ);
+
+            // Extract npsn values from resDataZ
+            // const npsnList = resDataZ.map(s => s.npsn); // Assuming resDataZ is an array of objects
+            const npsnList = resDataZ.map(s => s.npsn).filter(npsn => npsn !== null); // Filter out null values
+
+             // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
+             resData = await SekolahTujuans.findAll({  
+                where: {  
+                    bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
+                    kode_wilayah_kot: kabkota,
+                    status_sekolah: 1,
+                    nama_jurusan: {
+                        [Op.not]: null,
+                      },
+                    npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
+                    
+                },  
+                // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
+                attributes: [
+                    'npsn', 
+                    [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
+                    [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
+                   
+                    
+                ],  
+                group: ['npsn']  
+            });
+
+            const formattedResData = resData.map(school => {
+                const namaNpsn = `${school.nama} ${school.npsn}`; 
+                return {
+                    ...school.dataValues,
+                    nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                };
+            });
+
+            if (formattedResData.length > 0) {  
+                res.status(200).json({  
+                    'status': 1,  
+                    'message': 'Data berhasil ditemukan',  
+                    'data': formattedResData  
+                });  
+            } else {  
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Data kosong',  
+                    'data': ''  
+                });  
+            }  
+
+        
         } else {  
 
             const whereCondition = {
@@ -394,7 +462,7 @@ export const getSekolahTujuan = async (req, res) => {
                     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
                     [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
                 ],  
-                // order: ['id'],
+                order: ['id'],
                 order: orderCondition,
                 group: ['npsn'] 
                   
