@@ -346,6 +346,14 @@ export const getSekolahTujuan = async (req, res) => {
             }  
   
         }else if(jalur_pendaftaran_id == 2){
+
+            const cekPendaftar = await DataPendaftars.findOne({  
+                where: {  
+                    nisn: req.body.nisn,  
+                    is_delete: 0  
+                },  
+            }); 
+            
             let resData;
 
             // Fetch npsn values from SekolahZonasis
