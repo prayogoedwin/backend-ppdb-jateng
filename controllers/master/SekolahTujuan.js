@@ -1298,6 +1298,13 @@ export const dayaTampungDetail = async (req, res) => {
                     ]
                   });
 
+                  res.status(200).json({  
+                    'status': 1,  
+                    'message': 'Data berhasil ditemukan',  
+                    'data': resData  
+                });    
+
+
             }
         
     } catch (error) {  
