@@ -161,7 +161,7 @@ export const getUsersPagination = async (req, res) => {
                 role_: { [Op.in]: [93, 94, 95] },
             };
             console.log('Admin sekolah AAAAAAAAAAAAAA');
-        } else if (user.role_ == 77 || user.role_ == 89) {
+        } else if (user.role_ == 77 && user.role_ == 89) {
             // Super Admin, BPTIK
             whereCondition = {
                 ...whereCondition,
