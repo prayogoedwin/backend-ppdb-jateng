@@ -1282,7 +1282,7 @@ export const dayaTampungDetail = async (req, res) => {
                         status_sekolah: status_sekolahnya,
                         kode_wilayah_kot: kabkota
                       },
-                      attributes: ['nama'] // Hanya ambil kolom nama dari tabel tujuan
+                      attributes: ['nama', 'npsn'] // Hanya ambil kolom nama dari tabel tujuan
                     }],
                     where: {
                       nama_jurusan: {
