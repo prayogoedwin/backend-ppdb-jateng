@@ -157,8 +157,8 @@ export const getUsersPagination = async (req, res) => {
             // Admin sekolah
             whereCondition = {
                 ...whereCondition,
+                sekolah_id: user.sekolah_id,
                 role_: { [Op.in]: [93, 94, 95] },
-                sekolah_id: user.sekolah_id
             };
         } else if (user.role_ == 77 || user.role_ == 89) {
             // Super Admin, BPTIK
