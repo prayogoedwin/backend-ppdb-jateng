@@ -1246,7 +1246,7 @@ export const dayaTampungDetail = async (req, res) => {
                     },  
                     attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 
                         'kuota_zonasi_persentase', 'kuota_zonasi', 'kuota_afirmasi_persentase', 'kuota_afirmasi',
-                        'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_zonasi_khusus_persentase', 'kuota_kuota_zonasi_khusus', 
+                        'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_zonasi_khusus_persentase', 'kuota_zonasi_khusus', 
                         'kuota_pto_persentase', 'kuota_pto'],
                     // attributes: { 
                     //     exclude: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
