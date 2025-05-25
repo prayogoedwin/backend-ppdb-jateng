@@ -122,7 +122,7 @@ export const getUsersPagination = async (req, res) => {
 
     try {
 
-        return res.status(400).json({ status: 0, message: userId });
+        // return res.status(400).json({ status: 0, message: userId });
         // Dapatkan data user berdasarkan userId
         const user = await DataUsers.findOne({
             where: { id: userId }
