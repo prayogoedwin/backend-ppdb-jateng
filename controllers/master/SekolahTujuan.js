@@ -1231,7 +1231,7 @@ export const dayaTampungDetail = async (req, res) => {
     const status_sekolahnya = req.body.status_sekolah;  
     const kabkota = req.body.kabkota;
 
-    const redis_key = 'SekolahDayaTampungDetail-bentuk:'+bentuk_pendidikan_id+'-kabkota:'+kabkota+'-kemitraan:'+kemitraan;
+    const redis_key = 'SekolahDayaTampungDetail-bentuk:'+bentuk_pendidikan_id+'-kabkota:'+kabkota+'-status_sekolah:'+status_sekolahnya;
     try {  
             if(bentuk_pendidikan_id == 13){
              // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
