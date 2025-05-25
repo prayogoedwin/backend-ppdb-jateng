@@ -1246,7 +1246,7 @@ export const dayaTampungDetail = async (req, res) => {
                     },  
                     attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 
                         'kuota_zonasi_persentase', 'kuota_zonasi', 'kuota_afirmasi_persentase', 'kuota_afirmasi',
-                        'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus', 
+                        'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_zonasi_khusus_persentase', 'kuota_kuota_zonasi_khusus', 
                         'kuota_pto_persentase', 'kuota_pto'],
                     // attributes: { 
                     //     exclude: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
@@ -1274,42 +1274,30 @@ export const dayaTampungDetail = async (req, res) => {
 
             }else if(bentuk_pendidikan_id == 15){
 
-                const resData = await SekolahTujuans.findAll({  
-                    where: {  
-                        bentuk_pendidikan_id: bentuk_pendidikan_id,  
-                        status_sekolah: 2,
-                        kode_wilayah_kot: kabkota,
-                        nama_jurusan: {
-                            [Op.not]: null,
-                        },       
-                    },  
-                    attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 
-                        'kuota_zonasi_persentase', 'kuota_zonasi', 'kuota_afirmasi_persentase', 'kuota_afirmasi',
-                        'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus', 
-                        'kuota_pto_persentase', 'kuota_pto'],
+                const resData = await SekolahJurusan.findAll({
+                    include: [{
+                      model: SekolahTujuans,
+                      as: 'sekolahTujuan',
+                      where: {
+                        bentuk_pendidikan_id: bentuk_pendidikan_id,
+                        status_sekolah: status_sekolahnya,
+                        kode_wilayah_kot: kabkota
+                      },
+                      attributes: ['nama'] // Hanya ambil kolom nama dari tabel tujuan
+                    }],
+                    where: {
+                      nama_jurusan: {
+                        [Op.not]: null
+                      }
+                    },
+                    attributes: ['id', 'nama_jurusan', 'npsn', 'daya_tampung', 'is_larang_buta_warna',
+                        'kuota_jarak_terdekat_persentase', 'kuota_jarak_terdekat', 'kuota_afirmasi_persentase', 'kuota_afirmasi',
+                        'kuota_prestasi_persentase', 'kuota_prestasi', 'kuota_prestasi_khusus_persentase', 'kuota_prestasi_khusus'],
                     // attributes: { 
-                    //     exclude: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'] 
-                    //   }
-                    // attributes: [
-                    //     'npsn', 
-                    //     [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
-                    //     [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
-                    //     [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
-                    //     [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
-                    //     [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
-                    //     [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
-                    //     [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
-                    
-                        
-                    // ],  
-                    // group: ['npsn']  
-                });
-
-                res.status(200).json({  
-                    'status': 1,  
-                    'message': 'Data berhasil ditemukan',  
-                    'data': resData  
-                });    
+                    order: [
+                      ['npsn', 'ASC'] // atau order berdasarkan kolom lain yang sesuai
+                    ]
+                  });
 
             }
         
