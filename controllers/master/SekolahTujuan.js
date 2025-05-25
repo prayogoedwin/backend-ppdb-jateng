@@ -1233,6 +1233,20 @@ export const dayaTampungDetail = async (req, res) => {
 
     const redis_key = 'SekolahDayaTampungDetail-bentuk:'+bentuk_pendidikan_id+'-kabkota:'+kabkota+'-status_sekolah:'+status_sekolahnya;
     try {  
+
+        const cacheNya = await redisGet(redis_key);
+
+        if (cacheNya) {
+
+            res.status(200).json({
+                'status': 1,
+                'message': 'Data di ambil dari cache',
+                'data': JSON.parse(cacheNya)
+            });
+
+           
+        }else{
+
             if(bentuk_pendidikan_id == 13){
              // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
                 const resData = await SekolahTujuans.findAll({  
@@ -1265,6 +1279,9 @@ export const dayaTampungDetail = async (req, res) => {
                     // ],  
                     order: ['npsn']  
                 });
+
+                await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER); 
+
 
                 res.status(200).json({  
                     'status': 1,  
@@ -1299,6 +1316,9 @@ export const dayaTampungDetail = async (req, res) => {
                     ]
                   });
 
+                  await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER); 
+
+
                   res.status(200).json({  
                     'status': 1,  
                     'message': 'Data berhasil ditemukan',  
@@ -1306,7 +1326,17 @@ export const dayaTampungDetail = async (req, res) => {
                 });    
 
 
+            }else{
+
+                res.status(404).json({  
+                    'status': 0,  
+                    'message': 'Data tidak ditemukan',  
+                    'data': []  
+                });  
+
             }
+
+        }
         
     } catch (error) {  
         console.error(error);  
