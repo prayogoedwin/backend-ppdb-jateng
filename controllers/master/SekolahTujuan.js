@@ -1235,7 +1235,7 @@ export const dayaTampungDetail = async (req, res) => {
     try {  
             if(bentuk_pendidikan_id == 13){
              // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
-                resData = await SekolahTujuans.findAll({  
+                const resData = await SekolahTujuans.findAll({  
                     where: {  
                         bentuk_pendidikan_id: bentuk_pendidikan_id,  
                         status_sekolah: status_sekolahnya,
@@ -1274,7 +1274,7 @@ export const dayaTampungDetail = async (req, res) => {
 
             }else if(bentuk_pendidikan_id == 15){
 
-                resData = await SekolahTujuans.findAll({  
+                const resData = await SekolahTujuans.findAll({  
                     where: {  
                         bentuk_pendidikan_id: bentuk_pendidikan_id,  
                         status_sekolah: 2,
