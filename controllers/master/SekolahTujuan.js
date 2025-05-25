@@ -1280,7 +1280,7 @@ export const dayaTampungDetail = async (req, res) => {
                     order: ['npsn']  
                 });
 
-                await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER); 
+                await redisSet(redis_key, JSON.stringify(resData), process.env.REDIS_EXPIRE_TIME_MASTER); 
 
 
                 res.status(200).json({  
@@ -1316,7 +1316,7 @@ export const dayaTampungDetail = async (req, res) => {
                     ]
                   });
 
-                  await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER); 
+                  await redisSet(redis_key, JSON.stringify(resData), process.env.REDIS_EXPIRE_TIME_MASTER); 
 
 
                   res.status(200).json({  
