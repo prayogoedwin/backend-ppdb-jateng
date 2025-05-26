@@ -27,11 +27,23 @@ export const cekZonasiByKecamatan = async (req, res) => {
         },
     });
 
-    res.status(200).json({  
-        'status': 0,  
-        'message': 'Data',  
-        'data': resDataZ
-    });  
+    if(resDataZ.length == 0){
+
+        res.status(200).json({  
+            'status': 0,  
+            'message': 'Data Ditemukan',  
+            'data': resDataZ
+        });  
+
+    }else{
+
+        res.status(200).json({  
+            'status': 0,  
+            'message': 'Data Tidak Ditemukan',  
+            'data': []
+        });  
+
+    }
 
 }
 
@@ -43,11 +55,25 @@ export const cekZonasiKhususByKecamatan = async (req, res) => {
         },
     });
 
-    res.status(200).json({  
-        'status': 0,  
-        'message': 'Data',  
-        'data': resDataZ
-    });  
+    if(resDataZ.length == 0){
+
+        res.status(200).json({  
+            'status': 0,  
+            'message': 'Data Ditemukan',  
+            'data': resDataZ
+        });  
+
+    }else{
+
+        res.status(200).json({  
+            'status': 0,  
+            'message': 'Data Tidak Ditemukan',  
+            'data': []
+        });  
+
+    }
+
+    
 
 }
 
