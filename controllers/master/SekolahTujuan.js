@@ -29,7 +29,7 @@ export const cekZonasiByKecamatan = async (req, res) => {
 
     res.status(200).json({  
         'status': 0,  
-        'message': 'Data kosong',  
+        'message': 'Data',  
         'data': resDataZ
     });  
 
@@ -45,7 +45,7 @@ export const cekZonasiKhususByKecamatan = async (req, res) => {
 
     res.status(200).json({  
         'status': 0,  
-        'message': 'Data kosong',  
+        'message': 'Data',  
         'data': resDataZ
     });  
 
