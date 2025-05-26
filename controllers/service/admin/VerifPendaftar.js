@@ -952,12 +952,12 @@ export const getDataPendaftarById = async (req, res) => {
             // Custom value for dok_piagam and dok_kk  
             if (data.dok_kk) {  
 
-                if(data.dok_kk == null){
-                    data.dok_kk = 'a'; 
-                }else{
-                    data.dok_kk =  'b';  
-                }
-                //data.dok_kk = baseUrl + data.dok_kk;  
+                // if(data.dok_kk == null){
+                //     data.dok_kk = 'a'; 
+                // }else{
+                //     data.dok_kk =  'b';  
+                // }
+                data.dok_kk = baseUrl + data.dok_kk;  
             }  
             if (data.dok_pakta_integritas) {  
 
