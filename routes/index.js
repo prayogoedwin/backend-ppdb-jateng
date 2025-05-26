@@ -486,8 +486,9 @@ router.get('/dokumen/not-found', (req, res) => {
             <title>Version Info</title>
         </head>
         <body>
-            <h1>REVISI</h1>   
+           
             <h1>DOKUMEN TIDAK DITEMUKAN</h1>
+             <h1>SILAHKAN REVISI</h1>   
         </body>
         </html>
     `);
