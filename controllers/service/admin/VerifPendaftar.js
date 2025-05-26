@@ -950,20 +950,20 @@ export const getDataPendaftarById = async (req, res) => {
   
             // Custom value for dok_piagam and dok_kk  
             if (data.dok_kk) {  
-                data.dok_kk = baseUrl + convertNameToBase64(data.dok_kk);  
+                data.dok_kk = baseUrl + data.dok_kk;  
             }  
             if (data.dok_pakta_integritas) {  
-                data.dok_pakta_integritas = baseUrl + convertNameToBase64(data.dok_pakta_integritas);  
+                data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
             }  
             if (data.dok_suket_nilai_raport) {  
-                data.dok_suket_nilai_raport = baseUrl + convertNameToBase64(data.dok_suket_nilai_raport);  
+                data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
             }  
             if (data.dok_piagam) {  
-                data.dok_piagam = baseUrl + convertNameToBase64(data.dok_piagam);  
+                data.dok_piagam = baseUrl + data.dok_piagam;  
             }  
 
             if (data.dok_pto) {  
-                data.dok_pto = baseUrl + convertNameToBase64(data.dok_pto);  
+                data.dok_pto = baseUrl + data.dok_pto;  
             }  
   
             // Proses file tambahan dengan downloadable URL  
@@ -971,7 +971,7 @@ export const getDataPendaftarById = async (req, res) => {
                 data.file_tambahan = data.file_tambahan.map(file => {  
                     return {  
                         ...file,  
-                        downloadable: baseUrl + convertNameToBase64(file.filename) // Tambahkan URL downloadable  
+                        downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
                     };  
                 });  
             }  

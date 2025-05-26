@@ -158,8 +158,8 @@ router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 //downloadfile
-router.get('/download/:nisn/:filename', viewFileBase64);
-router.get('/download_new/:nisn/:filename', viewFile);
+router.get('/download/:nisn/:filename', viewFile);
+router.get('/download_new/:nisn/:filename', viewFileBase64);
 // router.get('/geojson', viewGeoJson);
 // router.get('/geojson_redis', viewGeoJsonRedis);
 
