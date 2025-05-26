@@ -1123,7 +1123,8 @@ export const getSekolahTujuanKabkota = async (req, res) => {
         if (req.body.bentuk_pendidikan_id == 15) {  
             const jurusanData = await SekolahJurusan.findAll({  
                 where: {  
-                    id_sekolah_tujuan: formattedResData.map(school => school.id)  
+                    id_sekolah_tujuan: formattedResData.map(school => school.id),  
+                    is_active: true
                 },
                 attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung'],
                 order: ['id']
@@ -1298,7 +1299,8 @@ export const dayaTampungDetail = async (req, res) => {
                       where: {
                         bentuk_pendidikan_id: bentuk_pendidikan_id,
                         status_sekolah: status_sekolahnya,
-                        kode_wilayah_kot: kabkota
+                        kode_wilayah_kot: kabkota,
+                        is_active: true
                       },
                       attributes: ['nama', 'npsn'] // Hanya ambil kolom nama dari tabel tujuan
                     }],
