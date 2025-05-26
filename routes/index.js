@@ -183,7 +183,7 @@ router.post('/api/master/sekolah_tujuan', getSekolahTujuan);
 router.post('/api/master/sekolah_tujuan_with_kabkota', getSekolahTujuanKabkota);
 
 
-router.post('/api/master/daya_tampung_detail', cekZonasiByKecamatan);
+// router.post('/api/master/daya_tampung_detail', cekZonasiByKecamatan);
 
 
 
