@@ -951,53 +951,30 @@ export const getDataPendaftarById = async (req, res) => {
   
             // Custom value for dok_piagam and dok_kk  
             if (data.dok_kk) {  
-
-                // if(data.dok_kk == null){
-                //     data.dok_kk = 'a'; 
-                // }else{
-                //     data.dok_kk =  'b';  
-                // }
                 data.dok_kk = baseUrl + data.dok_kk;  
-            }  
+            }else{
+                data.dok_kk = baseUrlDefault; 
+            } 
             if (data.dok_pakta_integritas) {  
-
-                if(data.dok_pakta_integritas == 'undefined' || data.dok_pakta_integritas == null || data.dok_pakta_integritas == ''){
-                    data.dok_pakta_integritas = baseUrlDefault; 
-                }else{
                     data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
-                }
-               
-            }  
+            }else{
+                data.dok_pakta_integritas = baseUrlDefault; 
+            }
             if (data.dok_suket_nilai_raport) {  
-
-                if(data.dok_suket_nilai_raport == 'undefined' || data.dok_suket_nilai_raport == null || data.dok_suket_nilai_raport == ''){
-                    data.dok_suket_nilai_raport = baseUrlDefault; 
-                }else{
                     data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
-                }
-
-                // data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
-            }  
+            } else{
+                data.dok_suket_nilai_raport = baseUrlDefault; 
+            }
             if (data.dok_piagam) {  
-
-                if(data.dok_piagam == 'undefined' || data.dok_piagam == null || data.dok_piagam == ''){
-                    data.dok_piagam = baseUrlDefault; 
-                }else{
                     data.dok_piagam =  baseUrl + data.dok_piagam;  
-                }
-
-                // data.dok_piagam = baseUrl + data.dok_piagam;  
-            }  
+            }else{
+                data.dok_piagam = baseUrlDefault; 
+            }
 
             if (data.dok_pto) {  
-
-                if(data.dok_pto == 'undefined' || data.dok_pto == null || data.dok_pto == ''){
-                    data.dok_pto = baseUrlDefault; 
-                }else{
-                    data.dok_pto =  baseUrl + data.dok_pto;  
-                }
-
-                // data.dok_pto = baseUrl + data.dok_pto;  
+                data.dok_pto =  baseUrl + data.dok_pto; 
+            }else{
+                data.dok_piagam = baseUrlDefault; 
             }  
   
             // Proses file tambahan dengan downloadable URL  
