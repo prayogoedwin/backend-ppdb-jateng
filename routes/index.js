@@ -471,6 +471,28 @@ router.get('/api/version', (req, res) => {
     `);
 });;
 
+// Buat rute GET di '/version' yang mengirimkan HTML sebagai respons
+router.get('/dokumen/not-found', (req, res) => {
+    // Mengatur header untuk mencegah caching
+    res.set('Cache-Control', 'no-store');
+
+    // Mengirimkan HTML sebagai respons
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Version Info</title>
+        </head>
+        <body>
+            <h1>REVISI</h1>   
+            <h1>DOKUMEN TIDAK DITEMUKAN</h1>
+        </body>
+        </html>
+    `);
+});;
+
 
 
 

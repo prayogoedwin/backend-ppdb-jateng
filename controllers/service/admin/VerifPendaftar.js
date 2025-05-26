@@ -929,6 +929,7 @@ export const getDataPendaftarById = async (req, res) => {
             }
   
             const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+            const baseUrlDefault = `${process.env.BASE_URL}/dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
   
             const data = {  
                 id_: id,  
@@ -950,20 +951,53 @@ export const getDataPendaftarById = async (req, res) => {
   
             // Custom value for dok_piagam and dok_kk  
             if (data.dok_kk) {  
-                data.dok_kk = baseUrl + data.dok_kk;  
+
+                if(data.dok_kk == 'undefined' || data.dok_kk == null || data.dok_kk == ''){
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                }else{
+                    data.dok_kk =  baseUrl + data.dok_kk;  
+                }
+                //data.dok_kk = baseUrl + data.dok_kk;  
             }  
             if (data.dok_pakta_integritas) {  
-                data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+
+                if(data.dok_pakta_integritas == 'undefined' || data.dok_pakta_integritas == null || data.dok_pakta_integritas == ''){
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                }else{
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }
+               
             }  
             if (data.dok_suket_nilai_raport) {  
-                data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+
+                if(data.dok_suket_nilai_raport == 'undefined' || data.dok_suket_nilai_raport == null || data.dok_suket_nilai_raport == ''){
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }else{
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }
+
+                // data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
             }  
             if (data.dok_piagam) {  
-                data.dok_piagam = baseUrl + data.dok_piagam;  
+
+                if(data.dok_piagam == 'undefined' || data.dok_piagam == null || data.dok_piagam == ''){
+                    data.dok_piagam = baseUrlDefault; 
+                }else{
+                    data.dok_piagam =  baseUrl + data.dok_piagam;  
+                }
+
+                // data.dok_piagam = baseUrl + data.dok_piagam;  
             }  
 
             if (data.dok_pto) {  
-                data.dok_pto = baseUrl + data.dok_pto;  
+
+                if(data.dok_pto == 'undefined' || data.dok_pto == null || data.dok_pto == ''){
+                    data.dok_pto = baseUrlDefault; 
+                }else{
+                    data.dok_pto =  baseUrl + data.dok_pto;  
+                }
+
+                // data.dok_pto = baseUrl + data.dok_pto;  
             }  
   
             // Proses file tambahan dengan downloadable URL  
