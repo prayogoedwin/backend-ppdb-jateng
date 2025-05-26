@@ -30,7 +30,7 @@ import { clearCacheByKey, clearAllCache, getAllCacheKeys, getAllCacheKeysAndValu
 
 
 //download
-import { downloadFile, viewFile } from '../middleware/Donlod.js'; 
+import { downloadFile, viewFile, viewFileBase64 } from '../middleware/Donlod.js'; 
 
 // Log Data
 import { LogSiswaLoggedIn, LogAdminLoggedIn } from "../controllers/log/LogLog.js";
@@ -158,7 +158,8 @@ router.post('/api/auth/refresh_token', authenticateRefreshTokenPublic);
 router.post('/admin-api/auth/refresh_token', authenticateRefreshToken);
 
 //downloadfile
-router.get('/download/:nisn/:filename', viewFile);
+router.get('/download/:nisn/:filename', viewFileBase64);
+router.get('/download_new/:nisn/:filename', viewFile);
 // router.get('/geojson', viewGeoJson);
 // router.get('/geojson_redis', viewGeoJsonRedis);
 

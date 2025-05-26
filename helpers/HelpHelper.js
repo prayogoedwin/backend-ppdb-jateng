@@ -419,6 +419,16 @@ export const DomiSmkHelper = (key) => {
 
 // ===========
 
+export const convertNameToBase64 = (name) => {
+
+  // const originalFilename = '2a09324fc3900814d749090a54b3bb2c.pdf';
+  const originalFilename = name || 'default_filename.pdf'; // Use the provided name or a default value
+  const base64Filename = Buffer.from(originalFilename).toString('base64');
+
+  return base64Filename;
+
+}
+
 
 export const klasifikasiPindah = (key) => {
   const data = {

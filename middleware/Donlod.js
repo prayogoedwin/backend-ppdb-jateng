@@ -47,6 +47,8 @@ export const downloadFile =  async (req, res) => {
     }
 };
 
+
+
 export const viewFile = async (req, res) => {
     try {
         const filename = req.params.filename;
@@ -78,6 +80,102 @@ export const viewFile = async (req, res) => {
         });
     } catch (error) {
         console.error('Error View:', error);
+        res.status(500).json({
+            status: 0,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
+export const viewFileTanpaDotPdf = async (req, res) => {
+    try {
+        let filename = req.params.filename;
+        const nisn = req.params.nisn;
+
+        // Jika filename tidak memiliki ekstensi, tambahkan .pdf
+        if (!path.extname(filename)) {
+            filename += '.pdf';
+        }
+
+        const fileDirectory = path.join(__dirname, '../upload/berkas/', nisn);
+        const filePath = path.join(fileDirectory, filename);
+
+        // Cek apakah file ada
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({
+                status: 0,
+                message: 'File tidak ditemukan',
+            });
+        }
+
+        // Set header untuk force download
+        res.set({
+            'Content-Type': 'application/octet-stream',
+            'Content-Disposition': `attachment; filename="${filename}"`,
+            'Content-Length': fs.statSync(filePath).size
+        });
+
+        // Stream file ke client
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({
+            status: 0,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
+export const viewFileBase64 = async (req, res) => {
+    try {
+        const nisn = req.params.nisn;
+        const base64Filename = req.params.filename;
+        
+        // Decode base64 filename
+        let originalFilename;
+        try {
+            originalFilename = Buffer.from(base64Filename, 'base64').toString('utf8');
+        } catch (decodeError) {
+            return res.status(400).json({
+                status: 0,
+                message: 'Format nama file tidak valid',
+            });
+        }
+
+        // Validasi filename untuk mencegah directory traversal
+        if (originalFilename.includes('/') || originalFilename.includes('..')) {
+            return res.status(400).json({
+                status: 0,
+                message: 'Nama file tidak valid',
+            });
+        }
+
+        const fileDirectory = path.join(__dirname, '../upload/berkas/', nisn);
+        const filePath = path.join(fileDirectory, originalFilename);
+
+        // Cek apakah file ada
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({
+                status: 0,
+                message: 'File tidak ditemukan',
+            });
+        }
+
+        // Set header untuk force download
+        res.set({
+            'Content-Type': 'application/octet-stream',
+            'Content-Disposition': `attachment; filename="${originalFilename}"`,
+            'Content-Length': fs.statSync(filePath).size
+        });
+
+        // Stream file ke client
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
+
+    } catch (error) {
+        console.error('Error:', error);
         res.status(500).json({
             status: 0,
             message: 'Internal Server Error',
