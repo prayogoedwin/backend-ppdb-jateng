@@ -523,21 +523,36 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 delete data.id; // Remove original ID from the response  
       
                 // Custom value for dok_piagam and dok_kk  
+                // Custom value for dok_piagam and dok_kk  
                 if (data.dok_kk) {  
                     data.dok_kk = baseUrl + data.dok_kk;  
-                }  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
                 if (data.dok_pakta_integritas) {  
                     data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
-                }  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
                 if (data.dok_suket_nilai_raport) {  
                     data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
-                }  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
                 if (data.dok_piagam) {  
                     data.dok_piagam = baseUrl + data.dok_piagam;  
-                } 
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
+                }  
+
                 if (data.dok_pto) {  
                     data.dok_pto = baseUrl + data.dok_pto;  
-                }  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
       
                 // Proses file tambahan dengan downloadable URL  
                 if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
@@ -643,18 +658,36 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 delete data.id; // Remove original ID from the response  
       
                 // Custom value for dok_piagam and dok_kk  
+                 // Custom value for dok_piagam and dok_kk  
                 if (data.dok_kk) {  
                     data.dok_kk = baseUrl + data.dok_kk;  
-                }  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
                 if (data.dok_pakta_integritas) {  
                     data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
-                }  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
                 if (data.dok_suket_nilai_raport) {  
                     data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
-                }  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
                 if (data.dok_piagam) {  
                     data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
                 }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
       
                 // Proses file tambahan dengan downloadable URL  
                 if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
@@ -762,16 +795,32 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 // Custom value for dok_piagam and dok_kk  
                 if (data.dok_kk) {  
                     data.dok_kk = baseUrl + data.dok_kk;  
-                }  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
                 if (data.dok_pakta_integritas) {  
                     data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
-                }  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
                 if (data.dok_suket_nilai_raport) {  
                     data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
-                }  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
                 if (data.dok_piagam) {  
                     data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
                 }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
       
                 // Proses file tambahan dengan downloadable URL  
                 if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
@@ -877,18 +926,36 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 delete data.id; // Remove original ID from the response  
       
                 // Custom value for dok_piagam and dok_kk  
-                if (data.dok_kk) {  
+                 // Custom value for dok_piagam and dok_kk  
+                 if (data.dok_kk) {  
                     data.dok_kk = baseUrl + data.dok_kk;  
-                }  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
                 if (data.dok_pakta_integritas) {  
                     data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
-                }  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
                 if (data.dok_suket_nilai_raport) {  
                     data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
-                }  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
                 if (data.dok_piagam) {  
                     data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
                 }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
       
                 // Proses file tambahan dengan downloadable URL  
                 if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
