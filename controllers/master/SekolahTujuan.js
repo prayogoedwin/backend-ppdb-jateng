@@ -35,6 +35,22 @@ export const cekZonasiByKecamatan = async (req, res) => {
 
 }
 
+export const cekZonasiKhususByKecamatan = async (req, res) => {
+
+    const resDataZ = await SekolahZonasisKhusus.findAll({  
+        where: {  
+            kode_wilayah_kec: req.body.kecamatan_id  
+        },
+    });
+
+    res.status(200).json({  
+        'status': 0,  
+        'message': 'Data kosong',  
+        'data': resDataZ
+    });  
+
+}
+
 export const getSekolahTujuanPublik = async (req, res) => {
     // const redis_key = 'SekolahTujuansPublik'+req.body.bentuk_pendidikan_id;
     const redis_key = 'SekolahTujuansPublik'+req.body.bentuk_pendidikan_id+req.body.kabkota;
