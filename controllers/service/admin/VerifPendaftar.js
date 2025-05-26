@@ -1301,13 +1301,13 @@ export const verifikasiPendaftarTidakJadi = async (req, res) => {
         return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
     }
 
-    const resTm = await getTimelineSatuan(2);
+    // const resTm = await getTimelineSatuan(2);
         
-    // console.log(resTm);
+    // // console.log(resTm);
 
-    if (resTm?.status != 1) {  
-        return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka' });
-    }
+    // if (resTm?.status != 1) {  
+    //     return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka' });
+    // }
 
     let decodedId;
     try {
