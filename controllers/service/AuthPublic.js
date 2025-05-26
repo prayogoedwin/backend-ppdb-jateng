@@ -7,6 +7,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import Timelines from "../../models/service/TimelineModel.js";
 import EzAppKey from '../../models/config/AppKeyModel.js';
+import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
 // Fungsi untuk generate password acak 5 karakter dari A-Z, 1-9
 const generateRandomPassword = () => {
