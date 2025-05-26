@@ -789,6 +789,15 @@ export const getDataPendaftarCount = async (req, res) => {
 export const getDataPendaftarById = async (req, res) => {  
     const { id } = req.params; // Ambil id dari params URL  
     try {  
+
+        const resTm = await getTimelineSatuan(2);
+        
+        // console.log(resTm);
+
+        if (resTm?.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka' });
+        }
+
         const resData = await DataPendaftars.findOne({  
             where: {  
                 id: decodeId(id),  
@@ -1190,13 +1199,21 @@ export const verifikasiPendaftar = async (req, res) => {
             return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
         }
 
-        const resTm = await Timelines.findOne({  
-            where: { id: 2 }, // Find the timeline by ID  
-            attributes: ['id', 'nama', 'status']  
-        });  
+        // const resTm = await Timelines.findOne({  
+        //     where: { id: 2 }, // Find the timeline by ID  
+        //     attributes: ['id', 'nama', 'status']  
+        // });  
 
-        if (resTm.status != 1) {  
-            return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka :)' });
+        // if (resTm.status != 1) {  
+        //     return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka :)' });
+        // }
+
+        const resTm = await getTimelineSatuan(2);
+        
+        // console.log(resTm);
+
+        if (resTm?.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka' });
         }
 
         console.log('Decoded ID:', decodedId); // For debugging
@@ -1326,6 +1343,15 @@ export const verifikasiPendaftarTidakJadi = async (req, res) => {
 }
 
 export const updatePendaftar = async (req, res) => {
+
+    const resTm = await getTimelineSatuan(2);
+    
+            // console.log(resTm);
+    
+    if (resTm?.status != 1) {  
+        return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka' });
+    }
+
     const { 
         
         id,
