@@ -953,7 +953,7 @@ export const getDataPendaftarById = async (req, res) => {
             if (data.dok_kk) {  
 
                 if(data.dok_kk == null){
-                    data.dok_pakta_integritas = baseUrlDefault; 
+                    data.dok_kk = baseUrlDefault; 
                 }else{
                     data.dok_kk =  baseUrl + data.dok_kk;  
                 }
