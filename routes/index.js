@@ -41,7 +41,7 @@ import { getSekolahAsal } from "../controllers/master/SekolahAsal.js";
 import { getJenisLulusan } from "../controllers/master/JenisLulusan.js";
 import { getJalurPendaftaran } from "../controllers/master/JalurPendaftaran.js";
 import { getSekolahTujuan, getSekolahTujuanPublik, getSekolahTujuanJurusanPublik, getSekolahTujuanKabkota,
-    dayaTampungDetail 
+    dayaTampungDetail, cekZonasiByKecamatan 
  } from "../controllers/master/SekolahTujuan.js";
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
@@ -182,7 +182,11 @@ router.post('/api/master/sekolah_tujuan', getSekolahTujuan);
 
 router.post('/api/master/sekolah_tujuan_with_kabkota', getSekolahTujuanKabkota);
 
-router.post('/api/master/daya_tampung_detail', dayaTampungDetail);
+
+router.post('/api/master/daya_tampung_detail', cekZonasiByKecamatan);
+
+
+
 
 
 
@@ -213,8 +217,6 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 
 //service
 router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
-
-router.post('/admin-api/oriental-servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, getPesertaDidikByNisnTokHendler);
 
 
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
@@ -428,6 +430,11 @@ router.post('/client-api/auth/signout', ipWhitelistMiddleware, appKeynyaIntegrat
 router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKejuaraan);
 router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
 router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
+
+
+router.post('/admin-api/oriental-servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnTokHendler);
+router.post('/admin-api/oriental-servis/cek_zonasi_by_kec', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, dayaTampungDetail);
+
 
 // Define the version as a constant
 const VERSION = '2.0.1'; 
