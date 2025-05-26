@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import FormData from 'form-data';
 import Timelines from "../../models/service/TimelineModel.js";
+import EzAppKey from '../../models/config/AppKeyModel.js';
 
 // Fungsi untuk generate password acak 5 karakter dari A-Z, 1-9
 const generateRandomPassword = () => {
@@ -438,6 +439,53 @@ async function sendOtpToWhatsapp_BAK(phone, message) {
         };
     }
 }
+
+export const mainTenisCek = async (req, res, next) => {
+    try {
+    
+        const redis_key = `Maintenis:${apiKey}`;
+        let keyNya = await redisGet(redis_key);
+
+        if (keyNya) {
+            keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
+            console.log(`[CACHE] Found cached app key for ${apiKey}`);
+        } else {
+            keyNya = await EzAppKey.findOne({
+                where: {
+                    apikey: 'maintenis'
+                }
+            });
+
+            if (!keyNya) {
+                return res.status(403).json({
+                    status: 0,
+                    message: 'Forbidden - Your APP Key is not allowed to access this resource',
+                });
+            }
+
+            await redisSet(
+                redis_key,
+                JSON.stringify(keyNya),
+                process.env.REDIS_EXPIRE_TIME_HARIAN
+            );
+
+            console.log(`[DB] Maintenis(${apiKey}) →`, keyNya);
+
+            return res.status(403).json({
+                status: 1,
+                message: 'Maintenance mode sedang aktif. coba lagi nanti!.',
+                data: keyNya.nama
+            });
+        }
+
+    } catch (error) {
+        console.error('Error checking Maintenance Key:', error);
+        res.status(500).json({
+            status: 0,
+            message: 'Internal Server Error',
+        });
+    }
+};
 
 
 // User logout
