@@ -23,7 +23,7 @@ export const cekZonasiByKecamatan = async (req, res) => {
 
     const resDataZ = await SekolahZonasis.findAll({  
         where: {  
-            kode_wilayah_kec: req.body.kecamatan_id  
+            kode_wilayah_kec: req.body.kode_wilayah_kec  
         },
     });
 
@@ -39,7 +39,7 @@ export const cekZonasiKhususByKecamatan = async (req, res) => {
 
     const resDataZ = await SekolahZonasisKhusus.findAll({  
         where: {  
-            kode_wilayah_kec: req.body.kecamatan_id  
+            kode_wilayah_kec: req.body.kode_wilayah_kec  
         },
     });
 
