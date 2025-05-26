@@ -1242,7 +1242,7 @@ export const getPesertaDidikByNisnTokHendler = async (req, res) => {
         
                 return res.status(200).json({
                     status: 99,
-                    message: 'Anda diperbolehkan untuk mengubah data kebutuhan force majeure',
+                    message: 'NISN SUDAH MELAKUKAN PENDAFTARAN!',
                     data: data
                 });
 
