@@ -955,7 +955,7 @@ export const getDataPendaftarById = async (req, res) => {
                 if(data.dok_kk == null){
                     data.dok_kk = baseUrlDefault; 
                 }else{
-                    data.dok_kk =  baseUrl + data.dok_kk;  
+                    data.dok_kk =  baseUrlDefault;  
                 }
                 //data.dok_kk = baseUrl + data.dok_kk;  
             }  
