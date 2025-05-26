@@ -436,7 +436,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
         if (cekPendaftar) {
 
-            const baseUrlDefault = `${process.env.BASE_URL}dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
+            const baseUrlDefault = null; // Ganti dengan URL dasar yang diinginkan
 
             if(cekPendaftar.is_verified == 2){
 
