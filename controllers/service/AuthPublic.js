@@ -442,7 +442,7 @@ async function sendOtpToWhatsapp_BAK(phone, message) {
 
 export const mainTenisCek = async (req, res, next) => {
     try {
-    
+        const apiKey = 'maintenis'
         const redis_key = `Maintenis:${apiKey}`;
         let keyNya = await redisGet(redis_key);
 
@@ -452,7 +452,7 @@ export const mainTenisCek = async (req, res, next) => {
         } else {
             keyNya = await EzAppKey.findOne({
                 where: {
-                    apikey: 'maintenis'
+                    apikey: apiKey
                 }
             });
 
