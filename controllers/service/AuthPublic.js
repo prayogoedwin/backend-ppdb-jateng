@@ -449,7 +449,7 @@ export const mainTenisCek = async (req, res, next) => {
 
         if (keyNya) {
             keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
-            console.log(`[CACHE] Found cached app key for ${apiKey}`);
+            console.log(`[CACHE] Found cached maintenance key for ${apiKey}`);
         } else {
             keyNya = await EzAppKey.findOne({
                 where: {
@@ -460,7 +460,7 @@ export const mainTenisCek = async (req, res, next) => {
             if (!keyNya) {
                 return res.status(403).json({
                     status: 0,
-                    message: 'Forbidden - Your APP Key is not allowed to access this resource',
+                    message: 'Forbidden - Your maintenance key is not found',
                 });
             }
 
