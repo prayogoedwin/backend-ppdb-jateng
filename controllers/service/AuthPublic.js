@@ -444,12 +444,17 @@ async function sendOtpToWhatsapp_BAK(phone, message) {
 export const mainTenisCek = async (req, res, next) => {
     try {
         const apiKey = 'maintenis'
-        const redis_key = `Maintenis:${apiKey}`;
+        const redis_key = `Maintenis`; 
         let keyNya = await redisGet(redis_key);
 
         if (keyNya) {
             keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
             console.log(`[CACHE] Found cached maintenance key for ${apiKey}`);
+            return res.status(403).json({
+                status: 1,
+                message: 'Maintenance mode sedang aktif. coba lagi nanti!.',
+                data: keyNya.nama
+            });
         } else {
             keyNya = await EzAppKey.findOne({
                 where: {
