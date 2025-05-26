@@ -452,7 +452,7 @@ export const mainTenisCek = async (req, res, next) => {
             console.log(`[CACHE] Found cached maintenance key for ${apiKey}`);
             return res.status(403).json({
                 status: 1,
-                message: 'Maintenance mode sedang aktif. coba lagi nanti!.',
+                message: 'Dari cache.',
                 data: keyNya.nama
             });
         } else {
