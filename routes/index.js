@@ -220,8 +220,8 @@ router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddle
 
 router.post('/admin-api/oriental-servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, getPesertaDidikByNisnTokHendler);
 router.post('/api/master/daya_tampung_detail', dayaTampungDetail);
-router.post('/admin-api/oriental-servis/cek_zonasi_by_kec', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, cekZonasiByKecamatan);
-router.post('/admin-api/oriental-servis/cek_zonasi_khusus_by_kec', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, cekZonasiKhususByKecamatan);
+router.post('/admin-api/oriental-servis/cek_zonasi_by_kec', csrfProtection, ipWhitelistMiddleware, cekZonasiByKecamatan);
+router.post('/admin-api/oriental-servis/cek_zonasi_khusus_by_kec', csrfProtection, ipWhitelistMiddleware, cekZonasiKhususByKecamatan);
 
 
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
