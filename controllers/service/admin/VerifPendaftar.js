@@ -929,7 +929,7 @@ export const getDataPendaftarById = async (req, res) => {
             }
   
             const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
-            const baseUrlDefault = `${process.env.BASE_URL}/dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
+            const baseUrlDefault = `${process.env.BASE_URL}dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
   
             const data = {  
                 id_: id,  
