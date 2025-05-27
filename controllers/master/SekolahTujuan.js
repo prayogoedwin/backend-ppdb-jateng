@@ -1168,7 +1168,8 @@ export const getSekolahTujuanKabkota = async (req, res) => {
                 [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'],
                 [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'],
                 [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'],
-                [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan']
+                [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'],
+                [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah']
             ],
             group: ['npsn'],  
             order: ['status_sekolah']
