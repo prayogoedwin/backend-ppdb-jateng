@@ -1098,7 +1098,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
             if (resData.is_verified == 1) {  
 
-                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Admin';
+                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
                 const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
                                     ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
                                     : '-';
@@ -1113,7 +1113,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
             if (resData.is_verified == 2) {  
 
-                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Admin';
+                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
                 const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
                                     ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
                                     : '-';
@@ -1151,7 +1151,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
                     if (req.user.userId != resData.opened_by) {  
                         //const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
 
-                        const adminName = resData.sedang_diproses_oleh ? resData.sedang_diproses_oleh.nama : 'Admin';
+                        const adminName = resData.sedang_diproses_oleh ? resData.sedang_diproses_oleh.nama : 'Lainnya';
                         const sekolahName = resData.sedang_diproses_oleh && resData.sedang_diproses_oleh.asal_sekolah_admin 
                                             ? resData.sedang_diproses_oleh.asal_sekolah_admin.nama 
                                             : '-';
