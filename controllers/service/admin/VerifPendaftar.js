@@ -1150,7 +1150,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
             const baseUrlDefault = `${process.env.BASE_URL}dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
   
             const data = {  
-                id_: id,  
+                id_: encodeId(data.id),  
                 ...resData.toJSON(), // Convert Sequelize instance to plain object  
             };  
             delete data.id; // Remove original ID from the response  
