@@ -1106,7 +1106,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         
                 return res.status(200).json({
                     status: 96,
-                    message: 'Anda diperbolehkan untuk mengubah data koordinat tanpa batas wilayah karena alasan teknis',
+                    message: 'Anda diperbolehkan untuk mengubah data NIK, silahkan rubah dengan bertanggung jawab!',
                     data: data
                 });
 
