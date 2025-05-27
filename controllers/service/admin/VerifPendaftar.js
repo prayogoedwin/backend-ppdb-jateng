@@ -1018,7 +1018,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
         const resData = await DataPendaftars.findOne({  
             where: {  
-                nisn: decodeId(nisn),  
+                nisn: nisn,  
                 is_delete: 0  
             },  
             include: [  
