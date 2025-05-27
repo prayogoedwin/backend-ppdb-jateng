@@ -1098,9 +1098,14 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
             if (resData.is_verified == 1) {  
 
+                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Admin';
+                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
+                                    ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
+                                    : '-';
+
                 return res.status(200).json({  
                     status: 0,  
-                    message: `Data Sudah Diverifikasi Oleh Operator Lainnya`,  
+                    message: `Data Sudah Diverifikasi Oleh Operator: ${adminName} (${sekolahName})`, 
                     data: [] // Return the data for reference  
                 });  
 
@@ -1108,9 +1113,14 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
             if (resData.is_verified == 2) {  
 
+                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Admin';
+                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
+                                    ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
+                                    : '-';
+
                 return res.status(200).json({  
                     status: 0,  
-                    message: `Data Sudah Ditolak Oleh Operator Lainnya`,  
+                    message: `Data Sudah Ditolak Oleh Operator: ${adminName} (${sekolahName})`,  
                     data: [] // Return the data for reference  
                 });  
 
