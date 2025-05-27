@@ -1141,7 +1141,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
                 // Update the opened_by column  
                 await DataPendaftars.update(  
                     { opened_by: req.user.userId }, // Set the opened_by field  
-                    { where: { id: decodeId(id) } } // Condition to find the correct record  
+                    { where: { id: resData.id } } // Condition to find the correct record  
                 );  
 
             }
@@ -1150,7 +1150,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
             const baseUrlDefault = `${process.env.BASE_URL}dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
   
             const data = {  
-                id_: encodeId(data.id),  
+                id_: encodeId(resData.id),  
                 ...resData.toJSON(), // Convert Sequelize instance to plain object  
             };  
             delete data.id; // Remove original ID from the response  
