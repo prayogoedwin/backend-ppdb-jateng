@@ -359,6 +359,7 @@ router.post('/admin-api/data/tolak_ajuan_akun', ipWhitelistMiddleware, appKeyMid
 router.post('/admin-api/data/tolak_ajuan_akun_karena_pernah_nikah_pny_anak', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/tolak_ajuan_akun_plus_alasan_alamat', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/tolak_ajuan_akun_plus_buka_batas_wilayah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
+router.post('/admin-api/data/tolak_ajuan_akun_plus_update_nik', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar); //96
 
 router.post('/admin-api/data/fm_ajuan_akun', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/batalkan_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
