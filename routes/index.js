@@ -350,7 +350,7 @@ router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMidd
 router.get('/admin-api/data/pendaftaran_data_capil', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereCapil);
 router.get('/admin-api/data/pendaftaran_data_nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereNisn);
 
-router.get('/admin-api/data/pencarian_by_nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByNisn);
+router.get('/admin-api/data/pencarian_by_nisn:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByNisn);
 
 
 
