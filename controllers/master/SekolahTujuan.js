@@ -1172,7 +1172,7 @@ export const getSekolahTujuanKabkota = async (req, res) => {
                 [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah']
             ],
             group: ['npsn'],  
-            order: ['status_sekolah', 'id']
+            order: ['status_sekolah']
         });  
 
         // Format the data
