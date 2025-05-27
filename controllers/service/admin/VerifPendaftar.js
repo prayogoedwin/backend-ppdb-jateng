@@ -975,7 +975,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
                 });
 
                 const newCacheNya = resDatas;
-                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_DATA);
+                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
                 res.status(200).json({
                     status: 1,
@@ -2375,7 +2375,7 @@ export const updatePendaftarToCapill = async (req, res) => {
             }
         );
 
-        await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+        // await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
 
         res.status(200).json({
             status: 1,
@@ -2738,7 +2738,7 @@ export const updatePendaftarCapil = async (req, res) => {
             }
         });
 
-        await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+        // await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
 
         res.status(200).json({
             status: 1,
