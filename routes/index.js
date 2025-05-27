@@ -341,11 +341,11 @@ router.post('/admin-api/master/sekolah_tujuan_jurusan', ipWhitelistMiddleware, a
 router.get('/admin-api/master/sekolah_tujuan_jurusan_detail/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getSekolahTujuanJurusanAdminById);
 router.post('/admin-api/master/sekolah_tujuan_jurusan_update', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, updateSekolahTujuanJurusanAdmin);
 
-
 //menu menu & action admin
 
 // menu pendaftaran
 router.get('/admin-api/data/pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarForVerif);
+// router.get('/admin-api/data/pendaftaran_data_', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_data', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_data_capil', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereCapil);
 router.get('/admin-api/data/pendaftaran_data_nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereNisn);

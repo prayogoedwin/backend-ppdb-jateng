@@ -326,10 +326,30 @@ export const getDataPendaftarForVerifPagination = async (req, res) => {
 };
 
 export const getDataPendaftarByWhereCapil = async (req, res) => {
-    const redis_key = 'DataPendaftarAllinAdmin';
+
+    const kirimDukcapil = req.query.kirim_dukcapil;
+    const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+    const verifikasiAdmin = req.query.is_verified;
+
+    const adminNya = req.user.userId;
+    // const adminNya = 19;
+
+    const dataAdminNya = await DataUsers.findOne({
+        where: {
+            id: adminNya,
+            is_active: 1,
+            is_delete: 0
+        }
+    });
+
+    const roleAdmin = dataAdminNya.role_;
+    const kabKota = dataAdminNya.kabkota_id;
+
+    const redis_key = 'DataPendaftarAllinCapil=Role' + roleAdmin + '|KabKota' + kabKota;
     try {
-        // const cacheNya = await redisGet(redis_key);
-        const cacheNya = false;
+
+        const cacheNya = await redisGet(redis_key);
+        // const cacheNya = false;
         if (cacheNya) {
             res.status(200).json({
                 status: 1,
@@ -337,16 +357,7 @@ export const getDataPendaftarByWhereCapil = async (req, res) => {
                 data: JSON.parse(cacheNya)
             });
         } else {
-            const adminNya = req.user.userId;
-            // const adminNya = 19;
-
-            const dataAdminNya = await DataUsers.findOne({
-                where: {
-                    id: adminNya,
-                    is_active: 1,
-                    is_delete: 0
-                }
-            });
+            
 
             let whereFor = {
                 [Op.or]: [
@@ -373,9 +384,9 @@ export const getDataPendaftarByWhereCapil = async (req, res) => {
 
 
             if (dataAdminNya.role_ != 101) {
-                const kirimDukcapil = req.query.kirim_dukcapil;
-                const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-                const verifikasiAdmin = req.query.is_verified;
+                // const kirimDukcapil = req.query.kirim_dukcapil;
+                // const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+                // const verifikasiAdmin = req.query.is_verified;
 
                 // if (kirimDukcapil != 1) {
                 //     whereFor.verifikasikan_disdukcapil = {
@@ -405,13 +416,11 @@ export const getDataPendaftarByWhereCapil = async (req, res) => {
                 if (verifikasiDukcapil) {
                     whereFor.is_verified_disdukcapil = verifikasiDukcapil;
                 }
-
-
                
             }
 
             if (dataAdminNya.role_ == 101) {
-                const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+                // const verifikasiDukcapil = req.query.verifikasi_dukcapil;
 
                 whereFor.verifikasikan_disdukcapil =  1;
                 whereFor.is_verified !=  1;
@@ -542,6 +551,7 @@ export const getDataPendaftarByWhereCapil = async (req, res) => {
     }
 };
 
+//untuk yang sudah verif
 export const getDataPendaftarByWhere = async (req, res) => {
     const redis_key = 'DataPendaftarAllinAdmin';
     try {
@@ -1090,7 +1100,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
                 return res.status(200).json({  
                     status: 0,  
-                    message: `Data Sudah Diverifikasi Oleh Admin Lainnya`,  
+                    message: `Data Sudah Diverifikasi Oleh Operator Lainnya`,  
                     data: [] // Return the data for reference  
                 });  
 
@@ -1100,7 +1110,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
                 return res.status(200).json({  
                     status: 0,  
-                    message: `Data Sudah Ditolak Oleh Admin Lainnya`,  
+                    message: `Data Sudah Ditolak Oleh Operator Lainnya`,  
                     data: [] // Return the data for reference  
                 });  
 
@@ -1129,10 +1139,17 @@ export const getDataPendaftarByNisn = async (req, res) => {
     
                     // Check if the current user is the one who opened the data  
                     if (req.user.userId != resData.opened_by) {  
-                        const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
+                        //const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
+
+                        const adminName = sedang_diproses_oleh ? sedang_diproses_oleh.nama : 'Admin';
+                        const sekolahName = sedang_diproses_oleh && sedang_diproses_oleh.asal_sekolah_admin 
+                                            ? sedang_diproses_oleh.asal_sekolah_admin.nama 
+                                            : '-';
+
                         return res.status(200).json({  
                             status: 0,  
-                            message: `Data Sedang Diverifikasi Oleh Admin: ${adminName}`,  
+                            // message: `Data Sedang Diverifikasi Oleh Operator: ${adminName}`,  
+                            message: `Data Sedang Diverifikasi Oleh Operator: ${adminName} (${sekolahName})`,  
                             data: [] // Return the data for reference  
                         });  
                     }  
