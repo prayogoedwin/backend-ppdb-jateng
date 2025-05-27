@@ -1105,7 +1105,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
                 return res.status(200).json({  
                     status: 0,  
-                    message: `Data Sudah Diverifikasi Oleh Operator: ${adminName} (${sekolahName})`, 
+                    message: `Data Sudah Diverifikasi Oleh Operator: ${adminName} ${sekolahName}`, 
                     data: [] // Return the data for reference  
                 });  
 
@@ -1120,7 +1120,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
                 return res.status(200).json({  
                     status: 0,  
-                    message: `Data Sudah Ditolak Oleh Operator: ${adminName} (${sekolahName})`,  
+                    message: `Data Sudah Ditolak Oleh Operator: ${adminName} ${sekolahName}`,  
                     data: [] // Return the data for reference  
                 });  
 
@@ -1159,7 +1159,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
                         return res.status(200).json({  
                             status: 0,  
                             // message: `Data Sedang Diverifikasi Oleh Operator: ${adminName}`,  
-                            message: `Data Sedang Diverifikasi Oleh Operator: ${adminName} (${sekolahName})`,  
+                            message: `Data Sedang Diverifikasi Oleh Operator: ${adminName} ${sekolahName}`,  
                             data: [] // Return the data for reference  
                         });  
                     }  
