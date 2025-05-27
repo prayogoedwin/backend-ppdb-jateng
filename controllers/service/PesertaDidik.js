@@ -397,6 +397,30 @@ function toPlainObject(data) {
     }
 }
 
+export const getPesertaDidikByNisnHandlerTes = async (req, res) => {
+    try {
+        // Fungsi untuk menunda selama 30 detik
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        
+        console.log("Menunggu 30 detik sebelum memberikan respons...");
+        await delay(30000); // 30.000 ms = 30 detik
+        
+        // Setelah 30 detik, kirim respons
+        res.status(200).json({
+            status: 1,
+            message: "Data peserta didik",
+            data: null // Anda bisa mengganti dengan data yang sesuai
+        });
+    } catch (error) {
+        console.error("Terjadi kesalahan:", error);
+        res.status(500).json({
+            status: 0,
+            message: "Terjadi kesalahan server",
+            error: error.message
+        });
+    }
+};
+
 export const getPesertaDidikByNisnHandler = async (req, res) => {
     const {nisn,nik} = req.body;
     try {
