@@ -568,8 +568,8 @@ export const createPendaftarTanpaFile = async (req, res) => {
           //   insertData.tanggal_kedatangan_ibu = formattedDateIbu;
           // }
 
-          if (dataCapil.tanggal_kedatangan_ibu !== 0) {
-            insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
+          if (dataCapil.status_kepindahan_ibu !== 0) {
+              insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
             
             // Coba format tanggal
             if (dataCapil.tanggal_kedatangan_ibu) {
@@ -599,7 +599,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
           //   insertData.tanggal_kedatangan_ayah = formattedDateAyah;
           // }
 
-          if (dataCapil.tanggal_kedatangan_ayah !== 0) {
+          if (dataCapil.status_kepindahan_ayah !== 0) {
             insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
             
             // Coba format tanggal
