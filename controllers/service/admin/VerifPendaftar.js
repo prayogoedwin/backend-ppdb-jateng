@@ -1141,9 +1141,9 @@ export const getDataPendaftarByNisn = async (req, res) => {
                     if (req.user.userId != resData.opened_by) {  
                         //const adminName = adminData ? adminData.nama : 'Admin'; // Fallback to 'Admin' if not found  
 
-                        const adminName = sedang_diproses_oleh ? sedang_diproses_oleh.nama : 'Admin';
-                        const sekolahName = sedang_diproses_oleh && sedang_diproses_oleh.asal_sekolah_admin 
-                                            ? sedang_diproses_oleh.asal_sekolah_admin.nama 
+                        const adminName = resData.sedang_diproses_oleh ? resData.sedang_diproses_oleh.nama : 'Admin';
+                        const sekolahName = resData.sedang_diproses_oleh && resDatasedang_diproses_oleh.asal_sekolah_admin 
+                                            ? resData.sedang_diproses_oleh.asal_sekolah_admin.nama 
                                             : '-';
 
                         return res.status(200).json({  
