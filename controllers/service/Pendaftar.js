@@ -519,59 +519,99 @@ export const createPendaftarTanpaFile = async (req, res) => {
 
       if (dataCapil) {
 
+          // if (dataCapil.status_kepindahan_anak !== 0) {
+          //     insertData.status_kepindahan = dataCapil.status_kepindahan_anak;
+      
+          //     // Convert tgl_kepindahan_anak to Date format YMD
+          //     // const date = new Date(dataCapil.tgl_kepindahan_anak); // Assuming tgl_kepindahan_anak is a valid date string
+          //     // const formattedDate = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+          //     // const [day, month, year] = dataCapil.tgl_kepindahan_anak.split('/');
+          //     // const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+          //     let formattedDate = null; // atau nilai default lain
+          //     if (dataCapil.tgl_kepindahan_anak) {
+          //       const [day, month, year] = dataCapil.tgl_kepindahan_anak.split('/');
+          //       formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //     }
+      
+          //     insertData.tanggal_kedatangan = formattedDate;
+          // }
+
           if (dataCapil.status_kepindahan_anak !== 0) {
-              insertData.status_kepindahan = dataCapil.status_kepindahan_anak;
-      
-              // Convert tgl_kepindahan_anak to Date format YMD
-              // const date = new Date(dataCapil.tgl_kepindahan_anak); // Assuming tgl_kepindahan_anak is a valid date string
-              // const formattedDate = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
-              // const [day, month, year] = dataCapil.tgl_kepindahan_anak.split('/');
-              // const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-              let formattedDate = null; // atau nilai default lain
-              if (dataCapil.tgl_kepindahan_anak) {
-                const [day, month, year] = dataCapil.tgl_kepindahan_anak.split('/');
-                formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-              }
-      
-              insertData.tanggal_kedatangan = formattedDate;
+            insertData.status_kepindahan = dataCapil.status_kepindahan_anak;
+            
+            if (dataCapil.tgl_kepindahan_anak) {
+                const dateParts = String(dataCapil.tgl_kepindahan_anak).split('/');
+                if (dateParts.length === 3 && dateParts[0] && dateParts[1] && dateParts[2]) {
+                    insertData.tanggal_kedatangan = 
+                        `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+                }
+            }
           }
 
-          if (dataCapil.status_kepindahan_ibu !== 0) {
-             insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
-    
-            // Convert tgl_kepindahan_anak to Date format YMD
-            // const date = new Date(dataCapil.tgl_kepindahan_ibu); // Assuming tgl_kepindahan_anak is a valid date string
-            // const formattedDateIbu = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
-            // const [day, month, year] = dataCapil.tgl_kepindahan_ibu.split('/');
-            // const formattedDateIbu = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-            let formattedDateIbu = null; // atau nilai default lain
-              if (dataCapil.tgl_kepindahan_ibu) {
-                const [day, month, year] = dataCapil.tgl_kepindahan_ibu.split('/');
-                formattedDateIbu = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-              }
+          // if (dataCapil.status_kepindahan_ibu !== 0) {
+          //    insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
     
-            insertData.tanggal_kedatangan_ibu = formattedDateIbu;
+          //   // Convert tgl_kepindahan_anak to Date format YMD
+          //   // const date = new Date(dataCapil.tgl_kepindahan_ibu); // Assuming tgl_kepindahan_anak is a valid date string
+          //   // const formattedDateIbu = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+          //   // const [day, month, year] = dataCapil.tgl_kepindahan_ibu.split('/');
+          //   // const formattedDateIbu = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+          //   let formattedDateIbu = null; // atau nilai default lain
+          //     if (dataCapil.tgl_kepindahan_ibu) {
+          //       const [day, month, year] = dataCapil.tgl_kepindahan_ibu.split('/');
+          //       formattedDateIbu = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //     }
+    
+          //   insertData.tanggal_kedatangan_ibu = formattedDateIbu;
+          // }
+
+          if (dataCapil.tanggal_kedatangan_ibu !== 0) {
+            insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
+            
+            // Coba format tanggal
+            if (dataCapil.tanggal_kedatangan_ibu) {
+                const dateParts = String(dataCapil.tanggal_kedatangan_ibu).split('/');
+                if (dateParts.length === 3 && dateParts[0] && dateParts[1] && dateParts[2]) {
+                    insertData.tanggal_kedatangan_ibu = 
+                        `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+                }
+            }
           }
 
-          if (dataCapil.status_kepindahan_ayah !== 0) {
-             insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
+          // if (dataCapil.status_kepindahan_ayah !== 0) {
+          //    insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
     
-            // Convert tgl_kepindahan_anak to Date format YMD
-            // const date = new Date(dataCapil.tgl_kepindahan_ayah); // Assuming tgl_kepindahan_anak is a valid date string
-            // const formattedDateAyah = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
-            // const [day, month, year] = dataCapil.tgl_kepindahan_ayah.split('/');
-            // const formattedDateAyah = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //   // Convert tgl_kepindahan_anak to Date format YMD
+          //   // const date = new Date(dataCapil.tgl_kepindahan_ayah); // Assuming tgl_kepindahan_anak is a valid date string
+          //   // const formattedDateAyah = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+          //   // const [day, month, year] = dataCapil.tgl_kepindahan_ayah.split('/');
+          //   // const formattedDateAyah = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-              let formattedDateAyah = null; // atau nilai default lain
-              if (dataCapil.tgl_kepindahan_ayah) {
-                const [day, month, year] = dataCapil.tgl_kepindahan_ayah.split('/');
-                formattedDateAyah = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-              }
+          //     let formattedDateAyah = null; // atau nilai default lain
+          //     if (dataCapil.tgl_kepindahan_ayah) {
+          //       const [day, month, year] = dataCapil.tgl_kepindahan_ayah.split('/');
+          //       formattedDateAyah = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //     }
     
-            insertData.tanggal_kedatangan_ayah = formattedDateAyah;
+          //   insertData.tanggal_kedatangan_ayah = formattedDateAyah;
+          // }
+
+          if (dataCapil.tanggal_kedatangan_ayah !== 0) {
+            insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
+            
+            // Coba format tanggal
+            if (dataCapil.tanggal_kedatangan_ayah) {
+                const dateParts = String(dataCapil.tanggal_kedatangan_ayah).split('/');
+                if (dateParts.length === 3 && dateParts[0] && dateParts[1] && dateParts[2]) {
+                    insertData.tanggal_kedatangan_ayah = 
+                        `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+                }
+            }
           }
+
 
       }
 
