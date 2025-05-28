@@ -416,7 +416,8 @@ export const getDataPendaftarByWhereCapil = async (req, res) => {
                 const verifikasiDukcapil = req.query.verifikasi_dukcapil;
 
                 whereFor.verifikasikan_disdukcapil =  1;
-                whereFor.is_verified !=  1;
+                // whereFor.is_verified !=  1;
+                whereFor.is_verified =  0;
 
                 if(dataAdminNya.kabkota_id != null){
                     whereFor.kabkota_id = dataAdminNya.kabkota_id;
