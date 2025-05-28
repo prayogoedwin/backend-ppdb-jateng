@@ -1361,6 +1361,61 @@ export const getDataPendaftarByNisn = async (req, res) => {
 
             }
 
+            if (resData.is_verified == 3) {  
+
+                const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
+                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
+                                    ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
+                                    : '-';
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Datang Sedang Direvisi oleh calon murid baru`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
+            if (resData.is_verified == 99) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Datang Sedang Direvisi oleh calon murid baru`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
+            if (resData.is_verified == 98) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Datang Sedang Direvisi Kebutuhan Update Alamat oleh calon murid baru`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
+            if (resData.is_verified == 97) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Datang Sedang Direvisi Kebutuhan Update Koordinat Tanpa Batas Wilayah oleh calon murid baru`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
+            if (resData.is_verified == 96) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Datang Sedang Direvisi Kebutuhan Update NIK oleh calon murid baru`,  
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
             const adminNya = req.user.userId;
 
             const dataAdminNya = await DataUsers.findOne({
