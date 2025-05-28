@@ -476,7 +476,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                             'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
                             'is_diterima', 'password_', 'access_token', 'access_token_refresh',
                             'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
-                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by', 'kode_wilayah'
                         ]
                     },
 
@@ -611,7 +611,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                             'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
                             'is_diterima', 'password_', 'access_token', 'access_token_refresh',
                             'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
-                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by', 'kode_wilayah'
                         ]
                     },
 
@@ -746,7 +746,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                             'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
                             'is_diterima', 'password_', 'access_token', 'access_token_refresh',
                             'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
-                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by', 'kode_wilayah'
                         ]
                     },
 
@@ -879,7 +879,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                             'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
                             'is_diterima', 'password_', 'access_token', 'access_token_refresh',
                             'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
-                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by', 'kode_wilayah'
                         ]
                     },
 
@@ -1014,7 +1014,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                             'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
                             'is_diterima', 'password_', 'access_token', 'access_token_refresh',
                             'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
-                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by', 'kode_wilayah'
                         ]
                     },
 
