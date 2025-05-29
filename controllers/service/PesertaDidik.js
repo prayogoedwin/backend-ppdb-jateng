@@ -110,6 +110,48 @@ const getPesertaDidikByNisnTok = async (nisn) => {
     }
 };
 
+// Service function
+const getPesertaDidikByNikTok = async (nik) => {
+    try {
+        const pesertaDidik = await DataPesertaDidiks.findOne({
+            where: { 
+                nik
+            },
+            include: [
+                {
+                model: Sekolah,
+                as: 'data_sekolah', // Tambahkan alias di sini
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
+                include: [{
+                    model: BentukPendidikan,
+                    as: 'bentuk_pendidikan',
+                    attributes: ['id','nama']
+                }]
+            },
+            {
+                model: WilayahVerDapodik,
+                as: 'data_wilayah',
+                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+            }
+            ],
+         
+        });
+
+        if (!pesertaDidik) {
+
+            return false;
+
+        }
+
+        return pesertaDidik;
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+
 const getPesertaDidikAtsByNisn = async (nisn, nik) => {
     try {
         const pesertaDidik = await DataPesertaDidiksAts.findOne({
@@ -151,11 +193,52 @@ const getPesertaDidikAtsByNisn = async (nisn, nik) => {
     }
 };
 
+
 const getPesertaDidikAtsByNisnTok = async (nisn) => {
     try {
         const pesertaDidik = await DataPesertaDidiksAts.findOne({
             where: { 
                 nisn
+            },
+            include: [
+                {
+                model: Sekolah,
+                as: 'data_sekolah', // Tambahkan alias di sini
+                attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
+                include: [{
+                    model: BentukPendidikan,
+                    as: 'bentuk_pendidikan',
+                    attributes: ['id','nama']
+                }]
+            },
+            {
+                model: WilayahVerDapodik,
+                as: 'data_wilayah',
+                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+            }
+            ],
+         
+        });
+
+        if (!pesertaDidik) {
+
+            return false;
+
+        }
+
+        return pesertaDidik;
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+const getPesertaDidikAtsByNikTok = async (nik) => {
+    try {
+        const pesertaDidik = await DataPesertaDidiksAts.findOne({
+            where: { 
+                nik
             },
             include: [
                 {
@@ -1761,7 +1844,7 @@ export const getPesertaDidikByNikTokHendler = async (req, res) => {
                     ]
                 });
 
-                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nik}/`; // Ganti dengan URL dasar yang diinginkan 
   
                 const data = {  
                     id_: encodeId(pendaftarDetail.id),    
@@ -1813,14 +1896,14 @@ export const getPesertaDidikByNikTokHendler = async (req, res) => {
             
 
 
-        let pesertaDidik = await getPesertaDidikByNisnTok(nisn);
+        let pesertaDidik = await getPesertaDidikByNikTok(nik);
 
         
 
         let is_tidak_sekolah = 0;
         if (!pesertaDidik) {
 
-            const pesertaDidikAts = await getPesertaDidikAtsByNisnTok(nisn);
+            const pesertaDidikAts = await getPesertaDidikAtsByNikTok(nik);
             is_tidak_sekolah = 0;
 
             if(!pesertaDidikAts){
@@ -1962,7 +2045,7 @@ export const getPesertaDidikByNikTokHendler = async (req, res) => {
         ? toPlainObject(pesertaDidik.toJSON())
         : toPlainObject(pesertaDidik);
 
-        const dataDukung = getDataDukungByNIKTok(pesertaDidik.nik, nisn, is_pondok, is_tidak_sekolah)
+        const dataDukung = getDataDukungByNIKTok(nik, pesertaDidik.nisn, is_pondok, is_tidak_sekolah)
 
         res.status(200).json({
             status: 1,
