@@ -2,6 +2,7 @@
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
 import { getIntegratorSatuan, parseKodeWilayah } from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
+import DataPesertaDidikSmaSmks from '../../models/service/DataPesertaDidikSmaSmkModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
@@ -68,6 +69,98 @@ const getPesertaDidikByNisn = async (nisn, nik) => {
         throw error;
     }
 };
+
+const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
+    try {
+
+        const redis_key = `DataAllAnakSMASMK`;
+        const cached = await redisGet(redis_key);
+
+        if (cached) {
+
+            console.log(`[REDIS] Cek dari cache: ${redis_key}`);
+
+            const allPesertaDidik = JSON.parse(cached);
+            const pesertaDidik = allPesertaDidik.find(pd => pd.nisn === nisn && pd.nik === nik);
+
+            if (!pesertaDidik) {
+                return false;
+            }
+
+
+        }else{
+
+            
+
+            const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
+                attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah'],
+                where: { 
+                    nisn,
+                    nik, 
+                },
+                // include: [
+                //     {
+                //     model: Sekolah,
+                //     as: 'data_sekolah', // Tambahkan alias di sini
+                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
+                //     include: [{
+                //         model: BentukPendidikan,
+                //         as: 'bentuk_pendidikan',
+                //         attributes: ['id','nama']
+                //     }]
+                // },
+                // {
+                //     model: WilayahVerDapodik,
+                //     as: 'data_wilayah',
+                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                // }
+                //],
+            
+            });
+
+            if (!pesertaDidik) {
+
+                return false;
+
+            }
+
+            const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
+                attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']
+                // include: [
+                //     {
+                //     model: Sekolah,
+                //     as: 'data_sekolah', // Tambahkan alias di sini
+                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
+                //     include: [{
+                //         model: BentukPendidikan,
+                //         as: 'bentuk_pendidikan',
+                //         attributes: ['id','nama']
+                //     }]
+                // },
+                // {
+                //     model: WilayahVerDapodik,
+                //     as: 'data_wilayah',
+                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                // }
+                //],
+            
+            });
+
+            // Simpan semua data ke cache dengan expiry time
+            await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
+
+            console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
+        
+        }
+
+        return pesertaDidik;
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
 
 // Service function
 const getPesertaDidikByNisnTok = async (nisn) => {
@@ -1228,7 +1321,16 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             }
         }
 
+         
+        const pesetaDidikSmaSmk = await getPesertaDidikSmaSmkByNisn(nisn, nik);
+        if (pesetaDidikSmaSmk) {   
             
+            return res.status(200).json({
+                status: 0,
+                message: 'Maaf tidak bisa pengajuan akun nisn anda masih terdaftar di data kelas 10 SMA/SMA'
+            });
+
+        }
 
 
         let pesertaDidik = await getPesertaDidikByNisn(nisn, nik);
