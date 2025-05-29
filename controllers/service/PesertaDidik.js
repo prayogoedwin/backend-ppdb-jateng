@@ -71,7 +71,7 @@ const getPesertaDidikByNisn = async (nisn, nik) => {
     }
 };
 
-const getPesertaDidikSmaSmkByNisnRedis = async (nisn, nik) => {
+const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
     try {
 
         const redis_key = `DataAllAnakSMASMK`;
@@ -166,7 +166,7 @@ const getPesertaDidikSmaSmkByNisnRedis = async (nisn, nik) => {
     }
 };
 
-const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
+const getPesertaDidikSmaSmkByNisnTanpaZRedis = async (nisn, nik) => {
     try {
 
             
