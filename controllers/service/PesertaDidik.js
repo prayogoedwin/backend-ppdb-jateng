@@ -71,7 +71,7 @@ const getPesertaDidikByNisn = async (nisn, nik) => {
     }
 };
 
-const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
+const getPesertaDidikSmaSmkByNisnRedis = async (nisn, nik) => {
     try {
 
         const redis_key = `DataAllAnakSMASMK`;
@@ -87,6 +87,8 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
             if (!pesertaDidik) {
                 return false;
             }
+
+            return pesertaDidik;
 
 
         }else{
@@ -151,16 +153,89 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
             await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
 
             console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
+
+            return pesertaDidik;
         
         }
 
-        return pesertaDidik;
+    
         
     } catch (error) {
         console.error(error);
         throw error;
     }
 };
+
+const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
+    try {
+
+            
+
+            const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
+                attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah'],
+                where: { 
+                    nisn,
+                    nik, 
+                },
+                // include: [
+                //     {
+                //     model: Sekolah,
+                //     as: 'data_sekolah', // Tambahkan alias di sini
+                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
+                //     include: [{
+                //         model: BentukPendidikan,
+                //         as: 'bentuk_pendidikan',
+                //         attributes: ['id','nama']
+                //     }]
+                // },
+                // {
+                //     model: WilayahVerDapodik,
+                //     as: 'data_wilayah',
+                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                // }
+                //],
+            
+            });
+
+            if (!pesertaDidik) {
+
+                return false;
+
+            }
+
+            const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
+                attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']
+                // include: [
+                //     {
+                //     model: Sekolah,
+                //     as: 'data_sekolah', // Tambahkan alias di sini
+                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
+                //     include: [{
+                //         model: BentukPendidikan,
+                //         as: 'bentuk_pendidikan',
+                //         attributes: ['id','nama']
+                //     }]
+                // },
+                // {
+                //     model: WilayahVerDapodik,
+                //     as: 'data_wilayah',
+                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                // }
+                //],
+            
+            });
+
+            return pesertaDidik;
+    
+
+    
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
 
 
 // Service function
