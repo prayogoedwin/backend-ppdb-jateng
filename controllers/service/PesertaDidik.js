@@ -1349,7 +1349,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 is_tidak_sekolah = 0;
                 return res.status(200).json({
                     status: 0,
-                    message: 'NISN tidak ditemukan'
+                    message: 'NISN tidak ditemukan 1'
                 });
                
                 
