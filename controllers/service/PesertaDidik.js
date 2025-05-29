@@ -171,7 +171,7 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
 
             
 
-            const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
+            const pesertaDidikSmaSmk = await DataPesertaDidikSmaSmks.findOne({
                 attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah'],
                 where: { 
                     nisn,
@@ -197,35 +197,12 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
             
             });
 
-            if (!pesertaDidik) {
+            if (!pesertaDidikSmaSmk) {
 
                 return false;
 
             }
-
-            const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
-                attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']
-                // include: [
-                //     {
-                //     model: Sekolah,
-                //     as: 'data_sekolah', // Tambahkan alias di sini
-                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
-                //     include: [{
-                //         model: BentukPendidikan,
-                //         as: 'bentuk_pendidikan',
-                //         attributes: ['id','nama']
-                //     }]
-                // },
-                // {
-                //     model: WilayahVerDapodik,
-                //     as: 'data_wilayah',
-                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
-                // }
-                //],
-            
-            });
-
-            return pesertaDidik;
+            return pesertaDidikSmaSmk;
     
 
     
