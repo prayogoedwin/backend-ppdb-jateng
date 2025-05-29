@@ -1662,6 +1662,340 @@ export const getPesertaDidikByNisnTokHendler = async (req, res) => {
     }
 };
 
+export const getPesertaDidikByNikTokHendler = async (req, res) => {
+    const {nik} = req.body;
+    try {
+        if (!nik) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NIK wajib diisi',
+            });
+        }
+
+        const cekPendaftar = await DataPendaftars.findOne({
+            where: {
+                nik: nik,
+                is_delete: 0
+            },
+            attributes: ['id', 'kode_verifikasi', 'nisn', 'is_verified'],
+        });
+
+        // console.log("Request body:", req.body);
+
+        // if (cekPendaftar.is_verified == 2) {
+        //     return res.status(200).json({
+        //         status: 2,
+        //         message: 'NISN Sudah Terdaftar Sebelumnya',
+        //         data: cekPendaftar.kode_verifikasi
+        //     });
+        // }
+
+
+        if (cekPendaftar) {
+
+        
+
+                //ini FM bisa buka semua
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    // attributes: {
+                    //     exclude: [
+                    //         'created_at', 'created_by', 'updated_at', 'updated_by', 
+                    //         'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                    //         'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                    //         'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                    //         'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                    //         'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                    //         'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                    //     ]
+                    // },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }  
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }  
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }  
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }  
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 99,
+                    message: 'NISN SUDAH MELAKUKAN PENDAFTARAN!',
+                    data: data
+                });
+
+        }
+
+            
+
+
+        let pesertaDidik = await getPesertaDidikByNisnTok(nisn);
+
+        
+
+        let is_tidak_sekolah = 0;
+        if (!pesertaDidik) {
+
+            const pesertaDidikAts = await getPesertaDidikAtsByNisnTok(nisn);
+            is_tidak_sekolah = 0;
+
+            if(!pesertaDidikAts){
+
+                is_tidak_sekolah = 0;
+                return res.status(200).json({
+                    status: 0,
+                    message: 'NISN tidak ditemukan'
+                });
+               
+                
+            }else{
+                
+                // pesertaDidik = pesertaDidikAts;
+                // is_tidak_sekolah = 1;
+
+                // pesertaDidik = {
+                //     ...pesertaDidikAts,
+                //     data_sekolah: {
+                //       nama: 'Terdaftar Sebagai Siswa ATS',
+                //       npsn: '-----'
+                //     }
+                // };
+
+                pesertaDidik = {
+                    ...(typeof pesertaDidikAts.toJSON === 'function'
+                      ? pesertaDidikAts.toJSON()
+                      : pesertaDidikAts),
+                    data_sekolah: {
+                      nama: 'Terdaftar Sebagai ATS | Sekolah Asal:'+ pesertaDidikAts.nama_sekolah,
+                      npsn: '-----'
+                    }
+                  };
+
+                is_tidak_sekolah = 1;
+
+            }
+
+           
+        }
+
+        let is_pondok;
+        let lat_pondok;
+        let lng_pondok;
+        let kode_wilayah_pondok;
+        let kecamatan_pondok;
+        let kabupaten_pondok;
+        let provinsi_pondok;
+        //jika peserta didik ada di pondok ketika SMP atau sudah terdaftar di pondok oleh kemenag
+        if ([56, 68, 71].includes(pesertaDidik.bentuk_pendidikan_id)) {
+
+            const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
+                where: {
+                    nisn: pesertaDidik.nisn
+                }
+            });
+
+            if (dataAnakKemenag) {
+                
+                const wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
+
+                is_pondok = 1;
+                lat_pondok = dataAnakKemenag.lintang_pondok?.toString() || null;
+                lng_pondok = dataAnakKemenag.bujur_pondok?.toString() || null;
+                kode_wilayah_pondok = dataAnakKemenag.kode_wilayah?.toString() || null;
+                kecamatan_pondok = wilayah.kode_kecamatan?.toString() || null;
+                kabupaten_pondok = wilayah.kode_kabupaten?.toString() || null;
+                provinsi_pondok = wilayah.kode_provinsi?.toString() || null;
+
+
+            }else{
+
+                is_pondok = 0;
+                lat_pondok = null;
+                lng_pondok = null;
+                kode_wilayah_pondok= null;
+                kecamatan_pondok = null;
+                kabupaten_pondok = null;
+                provinsi_pondok = null;
+
+            }
+
+            // lat_pondok = pesertaDidik.data_sekolah?.lat?.toString() || null;
+            // lng_pondok = pesertaDidik.data_sekolah?.lng?.toString() || null;
+            // kode_wilayah_pondok = pesertaDidik.data_sekolah?.kode_wilayah?.toString() || null;
+    
+          
+            // const sekolah_id = pesertaDidik.sekolah_id;
+            // const cariPondok = await Sekolah.findOne({
+            //     attributes: ['id', 'npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng'],
+            //     where: { 
+            //         id:sekolah_id
+            //     },
+            // });
+
+            // if (cariPondok) {
+            //     pesertaDidik.lat = pesertaDidik.data_sekolah.lat
+            //     pesertaDidik.lng = pesertaDidik.data_sekolah.lng;
+            //     is_pondok = 1;
+            // }else{
+            //     is_pondok = 0;
+            // }
+
+            // console.log( pesertaDidik.lng_lainnya); 
+
+        }else{
+
+            is_pondok = 0;
+            lat_pondok = null;
+            lng_pondok = null;
+            kode_wilayah_pondok= null;
+            kecamatan_pondok = null;
+            kabupaten_pondok = null;
+            provinsi_pondok = null;
+    
+        }
+
+        // const dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        // const dataKabKota = await getKabupatenKota(dataKec.data_wilayah.mst_kode_wilayah);
+
+        let dataKec = {};
+        let dataKabKota = {};
+        let dataProvinsi = {};
+
+        if (pesertaDidik.data_wilayah) {
+            dataKec = await getKecamatan(pesertaDidik.data_wilayah.mst_kode_wilayah);
+        }
+
+        if (dataKec.mst_kode_wilayah) {
+            dataKabKota = await getKabupatenKota(dataKec.mst_kode_wilayah);
+        }
+
+        if (dataKabKota.mst_kode_wilayah) {
+            dataProvinsi = await getProvinsi(dataKabKota.mst_kode_wilayah);
+        }
+        
+        // Jika pesertaDidik berasal dari model Sequelize, gunakan .toJSON()
+        const finalPeserta = typeof pesertaDidik.toJSON === 'function'
+        ? toPlainObject(pesertaDidik.toJSON())
+        : toPlainObject(pesertaDidik);
+
+        const dataDukung = getDataDukungByNIKTok(pesertaDidik.nik, nisn, is_pondok, is_tidak_sekolah)
+
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil ditemukan',
+            // ss: dataKec,
+            data: {
+                // ...pesertaDidik.toJSON(),
+                // ...(typeof pesertaDidik.toJSON === 'function' ? pesertaDidik.toJSON() : pesertaDidik),
+                ...finalPeserta,
+                data_wilayah_kec: dataKec, // Masukkan data wilayah ke dalam respons
+                data_wilayah_kot: dataKabKota, // Masukkan data wilayah ke dalam respons
+                data_wilayah_prov: dataProvinsi, // Masukkan data wilayah ke dalam respons
+                anak_pondok: is_pondok,
+                ats:  is_tidak_sekolah,
+                lat_pondok: lat_pondok,
+                lng_pondok: lng_pondok,
+                kode_wilayah_pondok: kode_wilayah_pondok,
+                kode_kecamatan_pondok: kecamatan_pondok,
+                kode_kabupaten_pondok: kabupaten_pondok,
+                kode_provinsi_pondok: provinsi_pondok,
+                data_dukung: dataDukung
+
+            }
+        });
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: err.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+};
+
 export const getPesertaDidikByNisnHandlerRevisi = async (req, res) => {
     const { nisn, nik } = req.body;
     try {

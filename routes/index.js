@@ -50,7 +50,7 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 
 //Service
-import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler, getPesertaDidikByNisnTokHendler, getPesertaDidikByNisnHandlerTes } from '../controllers/service/PesertaDidik.js';
+import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler, getPesertaDidikByNisnTokHendler, getPesertaDidikByNisnHandlerTes, getPesertaDidikByNikTokHendler } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, 
     uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, 
@@ -226,6 +226,7 @@ router.post('/api/servis/calon_peserta_didik_tes', csrfProtection, ipWhitelistMi
 
 
 router.post('/admin-api/oriental-servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnTokHendler);
+router.post('/admin-api/oriental-servis/calon_peserta_didik_by_nik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNikTokHendler);
 router.post('/api/master/daya_tampung_detail', dayaTampungDetail);
 router.post('/admin-api/oriental-servis/cek_zonasi_by_kec', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, cekZonasiByKecamatan);
 router.post('/admin-api/oriental-servis/cek_zonasi_khusus_by_kec', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, cekZonasiKhususByKecamatan);
