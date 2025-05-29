@@ -14,6 +14,7 @@ import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import SekolahTujuanModel from '../../models/master/SekolahTujuanModel.js';
 import DataUsers from '../../models/service/DataUsersModel.js';
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
+import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 
 
 
