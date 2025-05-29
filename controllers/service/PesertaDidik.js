@@ -1887,7 +1887,7 @@ export const getPesertaDidikByNikTokHendler = async (req, res) => {
         
                 return res.status(200).json({
                     status: 99,
-                    message: 'NISN SUDAH MELAKUKAN PENDAFTARAN!',
+                    message: 'NIK SUDAH MELAKUKAN PENDAFTARAN!',
                     data: data
                 });
 
@@ -1911,7 +1911,7 @@ export const getPesertaDidikByNikTokHendler = async (req, res) => {
                 is_tidak_sekolah = 0;
                 return res.status(200).json({
                     status: 0,
-                    message: 'NISN tidak ditemukan'
+                    message: 'NIK tidak ditemukan'
                 });
                
                 
@@ -2376,46 +2376,6 @@ const getDataDukungByNIKTok = async (nik, nisn, anak_pondok, ats) => {
                 message: 'NIK is required',
             });
         }
-
-        // Fetch data anak miskin and data anak panti by NIK
-        // const //anakMiskin = await DataAnakMiskins.findOne({ where: { nik: nisn } });
-        // const anakMiskin = await DataAnakMiskins.findOne({
-        //     where: {
-        //         [Op.or]: [
-        //             { nik: nisn }, // Condition where nik equals nisn
-        //             { nik: nik } // Condition where nik equals a specific nik
-        //         ]
-        //     }
-        // });
-
-        // Mengambil username dan password dari variabel lingkungan
-        // const username = process.env.API_USERNAME;
-        // const password = process.env.API_PASSWORD;
-
-
-        // const integrasi = await getIntegratorSatuan(2);
-
-        // let anakMiskin;
-
-        // if(integrasi?.is_active == 1){
-
-        //      //Melakukan permintaan ke API untuk mendapatkan data anak miskin
-        //     // anakMiskin = await axios.post('https://dtjateng.dinsos.jatengprov.go.id/api/disdik/cek-data-nik', {
-        //     //     username: process.env.API_USERNAME, // Ambil username dari variabel lingkungan
-        //     //     password: process.env.API_PASSWORD ,
-        //     //     nik: nik // Mengirimkan NIK dalam format JSON
-        //     // });
-
-        //     anakMiskin = false;
-
-        // }else{
-
-        //     // anakMiskin = false;
-        //     anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
-            
-
-        // }
-
        
         // const anakMiskin = await DataAnakMiskins.findOne({ where: { nik } });
 
@@ -2455,53 +2415,6 @@ const getDataDukungByNIKTok = async (nik, nisn, anak_pondok, ats) => {
 
             };
         }
-
-
-        // if (anakMiskin) {
-        //     dataAnakMiskin = {
-        //         anak_miskin: 1,
-        //         data_anak_miskin: anakMiskin.toJSON()
-        //     };
-        // } else {
-        //     dataAnakMiskin = {
-        //         anak_miskin: 0,
-        //         data_anak_miskin: []
-        //     };
-        // }
-
-
-        // Memeriksa status respons dari API
-        // if (response.data.status === false) {
-        // if (anakMiskin === false) {
-
-        //     dataAnakMiskin = {
-        //         anak_miskin: 0,
-        //         data_anak_miskin: []
-        //     };
-
-        // } else {
-
-        //     if (anakMiskin.data.status != false) {
-        //         if(anakMiskin.data.priortias == '-'){
-        //             dataAnakMiskin = {
-        //                 anak_miskin: 0,
-        //                 data_anak_miskin: []
-        //             };
-        //         }else{
-        //             dataAnakMiskin = {
-        //                 anak_miskin: 1,
-        //                 data_anak_miskin: anakMiskin.data // Mengambil data dari respons API
-        //             };
-        //         }
-                
-        //     }else{
-        //         dataAnakMiskin = {
-        //             anak_miskin: 0,
-        //             data_anak_miskin: []
-        //         };
-        //     }
-        // }
-
        
         if (anakPanti) {
             dataAnakPanti = {
