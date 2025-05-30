@@ -791,8 +791,8 @@ export const getDataPendaftarByWhereCapilRedis = async (req, res) => {
 export const getDataPendaftarByWhere = async (req, res) => {
     const redis_key = 'DataPendaftarAllinAdmin';
     try {
-        const cacheNya = await redisGet(redis_key);
-        // const cacheNya = false;
+        // const cacheNya = await redisGet(redis_key);
+        const cacheNya = false;
         if (cacheNya) {
 
             // res.status(200).json({
@@ -1033,6 +1033,7 @@ export const getDataPendaftarByWhere = async (req, res) => {
         });
     }
 };
+
 
 export const getDataPendaftarByWhereNisn = async (req, res) => {
     // const redis_key = 'DataPendaftarAllinAdmin';
