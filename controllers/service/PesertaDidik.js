@@ -670,7 +670,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         const cekPendaftar = await DataPendaftars.findOne({
             where: {
                 nisn: nisn,
-                nik: nik,
+                // nik: nik,
                 is_delete: 0
             },
             attributes: ['id', 'kode_verifikasi', 'nisn', 'is_verified'],
@@ -690,6 +690,13 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
         if (cekPendaftar) {
 
             const baseUrlDefault = null; // Ganti dengan URL dasar yang diinginkan
+
+            if(cekPendaftar.nik != nik){
+                return res.status(200).json({
+                    status: 2,
+                    message: 'Data yang diinputkan tidak sesuai',
+                });
+            }
 
             if(cekPendaftar.is_verified == 2){
 

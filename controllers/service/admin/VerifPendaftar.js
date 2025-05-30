@@ -1222,8 +1222,9 @@ export const getDataPendaftarCount = async (req, res) => {
                     verifikasikan_disdukcapil: 1,
                     [Op.or]: [
                         { is_verified_disdukcapil: { [Op.is]: null } },
-                        { is_verified_disdukcapil: 0 }
-                    ]
+                        { is_verified_disdukcapil: 0 },
+                    ],
+                    is_verified : 0
                 }
             });
 
