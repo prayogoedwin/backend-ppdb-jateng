@@ -1034,7 +1034,6 @@ export const getDataPendaftarByWhere = async (req, res) => {
     }
 };
 
-
 export const getDataPendaftarByWhereNisn = async (req, res) => {
     // const redis_key = 'DataPendaftarAllinAdmin';
     try {
