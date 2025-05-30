@@ -795,11 +795,22 @@ export const getDataPendaftarByWhere = async (req, res) => {
         // const cacheNya = false;
         if (cacheNya) {
 
+            // res.status(200).json({
+            //     status: 1,
+            //     message: 'Data diambil dari cache',
+            //     data: JSON.parse(cacheNya)
+            // });
+
+            const cachedData = JSON.parse(cacheNya);
             res.status(200).json({
                 status: 1,
                 message: 'Data diambil dari cache',
-                data: JSON.parse(cacheNya)
+                currentPage: cachedData.currentPage,
+                totalPages: cachedData.totalPages,
+                totalItems: cachedData.totalItems,
+                data: cachedData.data
             });
+
         } else {
             const adminNya = req.user.userId;
             // const adminNya = 19;
@@ -975,7 +986,14 @@ export const getDataPendaftarByWhere = async (req, res) => {
                     return jsonItem;
                 });
 
-                const newCacheNya = resDatas;
+                const redisData = {
+                    currentPage: page,
+                    totalPages: Math.ceil(count / limit),
+                    totalItems: count,
+                    data: resDatas
+                };
+
+                const newCacheNya = redisData;
                 await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
                 res.status(200).json({
@@ -986,6 +1004,16 @@ export const getDataPendaftarByWhere = async (req, res) => {
                     totalItems: count,
                     data: resDatas
                 });
+
+                // res.status(200).json({
+                //     status: 1,
+                //     message: 'Data berhasil ditemukan',
+                //     currentPage: page,
+                //     totalPages: Math.ceil(count / limit),
+                //     totalItems: count,
+                //     data: resDatas
+                // });
+
             } else {
                 res.status(200).json({
                     status: 0,
