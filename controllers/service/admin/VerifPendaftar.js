@@ -1244,14 +1244,24 @@ export const getDataPendaftarCount = async (req, res) => {
                 }
             });
 
+            const countVerifikasikan1AndVerifiedCapil0AndVerified1 = await DataPendaftars.count({
+                where: {
+                    ...whereFor,
+                    verifikasikan_disdukcapil: 1,
+                    is_verified_disdukcapil: 0,
+                    is_verified : 1
+                }
+            });
+
             const countVerifikasikan1AndVerifiedNullOr0 = await DataPendaftars.count({
                 where: {
                     ...whereFor,
                     verifikasikan_disdukcapil: 1,
-                    [Op.or]: [
-                        { is_verified_disdukcapil: { [Op.is]: null } },
-                        { is_verified_disdukcapil: 0 },
-                    ],
+                    is_verified_disdukcapil: 0,
+                    // [Op.or]: [
+                    //     { is_verified_disdukcapil: { [Op.is]: null } },
+                    //     { is_verified_disdukcapil: 0 },
+                    // ],
                     is_verified : 0
                 }
             });
@@ -1259,6 +1269,7 @@ export const getDataPendaftarCount = async (req, res) => {
             const counts = {
                 verifikasikan_disdukcapil_1: countVerifikasikan1,
                 verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_1: countVerifikasikan1AndVerified1,
+                verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_and_is_verified_1: countVerifikasikan1AndVerifiedCapil0AndVerified1, //sempat di ajukan capil, belum di aksi, sudah di verifikasi operator
                 verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_null: countVerifikasikan1AndVerifiedNullOr0
             };
 
