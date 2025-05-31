@@ -1372,6 +1372,16 @@ export const getDataPendaftarByNisn = async (req, res) => {
   
         if (resData != null) {  
 
+            if (resData.verifikasikan_disdukcapil == 1 && resData.is_verified_disdukcapil != 1) {  
+
+                return res.status(200).json({  
+                    status: 0,  
+                    message: `Data Sedang Menunggu Aksi Dukcapil: ${resData.data_wilayah_kot.nama}`, 
+                    data: [] // Return the data for reference  
+                });  
+
+            }
+
             if (resData.is_verified == 1) {  
 
                 const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
