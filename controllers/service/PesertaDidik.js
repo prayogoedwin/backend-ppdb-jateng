@@ -127,38 +127,31 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
 
             }
 
-            const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
-                attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']
-                // include: [
-                //     {
-                //     model: Sekolah,
-                //     as: 'data_sekolah', // Tambahkan alias di sini
-                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
-                //     include: [{
-                //         model: BentukPendidikan,
-                //         as: 'bentuk_pendidikan',
-                //         attributes: ['id','nama']
-                //     }]
-                // },
-                // {
-                //     model: WilayahVerDapodik,
-                //     as: 'data_wilayah',
-                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
-                // }
-                //],
-            
-            });
-
-            // Simpan semua data ke cache dengan expiry time
-            await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
-
-            console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
-
             return pesertaDidik;
         
         }
 
     
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getPesertaDidikSmaSmkAll = async (req, res) => {
+    try {
+
+        const redis_key = `DataAllAnakSMASMK`;
+        const cached = await redisGet(redis_key);
+
+        const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
+            attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']        
+        });
+
+        // Simpan semua data ke cache dengan expiry time
+        await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
+        console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
         
     } catch (error) {
         console.error(error);
@@ -1381,7 +1374,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             
             return res.status(200).json({
                 status: 0,
-                message: 'Maaf tidak bisa pengajuan akun nisn anda masih terdaftar di data kelas 10 SMA/SMA'
+                message: 'Maaf tidak bisa pengajuan akun nisn anda masih terdaftar di data kelas SMA/SMK'
             });
 
         }

@@ -50,7 +50,7 @@ import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controll
 import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 
 //Service
-import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler, getPesertaDidikByNisnTokHendler, getPesertaDidikByNisnHandlerTes, getPesertaDidikByNikTokHendler } from '../controllers/service/PesertaDidik.js';
+import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler, getPesertaDidikByNisnTokHendler, getPesertaDidikByNisnHandlerTes, getPesertaDidikByNikTokHendler, getPesertaDidikSmaSmkAll } from '../controllers/service/PesertaDidik.js';
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, 
     uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, 
@@ -176,6 +176,10 @@ router.delete('/rahasia-api/internal/clear_all_cache', clearAllCache); // Clear 
 router.get('/rahasia-api/internal/cache/keys', getAllCacheKeys); // Get all cache keys
 router.get('/rahasia-api/internal/cache/key_values', getAllCacheKeysAndValues);
 router.delete('/rahasia-api/internal/cache/clear_cache_by_prefix', simpleAuthMiddleware, clearCacheByPrefix);
+
+router.get('/rahasia-api/internal/cache/generate_cache_sma_smk', getPesertaDidikSmaSmkAll);
+
+
 
 // Master Data
 router.get('/api/master/status_domisili', getStatusDomisili);

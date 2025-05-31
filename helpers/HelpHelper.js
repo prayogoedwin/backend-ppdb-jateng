@@ -6,6 +6,9 @@ import Timelines from "../models/service/TimelineModel.js";
 import FileTambahans from "../models/master/FileTambahanModel.js";
 import SekolahTujuan from "../models/master/SekolahTujuanModel.js";
 import SekolahJurusan from "../models/master/SekolahJurusanModel.js";
+
+import SekolahZonasiKhusus from "../models/master/SekolahZonasiKhususModel.js";
+
 import EzIntegrator from "../models/config/EzIntegrator.js";
 // import EzSekolahTujuans from '../models/master/EzSekolahTujuansModel.js'; // Adjusted path to EzSekolahTujuans model
 // import EzWilayahVerDapodiks from '../models/master/WilayahVerDapodikModel.js'; // Adjusted path to WilayahVerDapodik model
@@ -238,6 +241,49 @@ export const getSekolahJurusanById = async (sekolah_tujuan_id, jurusan_id) => {
     return null;
   }
 };
+
+export const SekolahZonasiKhususByNpsn = async (npsn) => {
+
+  const redis_key = `zonasi_khusus:by_npsn:${npsn}`;
+
+  try {
+    // 1) Cek Redis
+    const cached = await redisGet(redis_key);
+    if (cached) {
+      const data = JSON.parse(cached);
+      console.log(`[CACHE] SekolahZonasiKhususByNpsn(${npsn} →`, data);
+      return data;
+    }
+
+    // 2) Ambil dari DB
+    const resZonKh = await SekolahZonasiKhusus.findAll({
+      where: {
+        npsn: npsn,
+      }
+    });
+
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resZonKh) {
+      const data = resZonKh.toJSON();
+      await redisSet(
+        redis_key,
+        JSON.stringify(data),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
+      );
+      console.log(`[DB] SekolahZonasiKhususByNpsn(${npsn} →`, data);
+      return data;
+    }
+
+    // 4) Kalau tidak ketemu
+    console.log(`[DB] SekolahZonasiKhususByNpsn(${npsn} →`, data);
+    return null;
+
+  } catch (err) {
+    console.log(`[Error] SekolahZonasiKhususByNpsn(${npsn} →`, data);
+    return null;
+  }
+
+}
 
 
 export const getTimelineSatuan = async (id) => {
