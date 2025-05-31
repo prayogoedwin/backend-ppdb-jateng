@@ -93,7 +93,8 @@ import { getDataPendaftarForVerif,
     getDataPendaftarByWhereCapil,
     getDataPendaftarByWhereNisn,
     getDataPendaftarByNisn,
-    getDataPendaftarCount
+    getDataPendaftarCount,
+    getDataPendaftarByWhereHanyaUntukAdmin
 } from "../controllers/service/admin/VerifPendaftar.js";
 
 //timenline
@@ -352,6 +353,10 @@ router.get('/admin-api/data/pendaftaran_data_capil', ipWhitelistMiddleware, appK
 router.get('/admin-api/data/pendaftaran_data_nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereNisn);
 
 router.get('/admin-api/data/pencarian_by_nisn/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByNisn);
+
+router.get('/admin-api/data/sudah_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereHanyaUntukAdmin);
+
+
 
 
 

@@ -1040,7 +1040,7 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default page is 1
     const limit = parseInt(req.query.limit) || 10; // Default limit is 10
     const offset = (page - 1) * limit;
-    const { nisn, sekolah_tujuan_idn } = req.query;
+    const { nisn, sekolah_tujuan_id } = req.query;
 
     // const redis_key = 'DataPendaftarAllinAdmin-IdSekolah:';
     const redis_key = `DataPendaftarAllinAdmin:IdSekolah:${sekolah_tujuan_id}--page:${page}--limit:${limit}--offset:${offset}`;
@@ -1121,7 +1121,11 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                             {
                                 model: SekolahTujuanModel,
                                 as: 'asal_sekolah_verifikator',
-                                attributes: ['id', 'nama'] // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                                attributes: ['id', 'nama'], // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                                where: {
+                                    id: sekolah_tujuan_id
+                                },
+                                required: true // INNER JOIN
                             }
                             
                         ],
