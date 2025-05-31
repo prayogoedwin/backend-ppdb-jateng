@@ -1036,17 +1036,18 @@ export const getDataPendaftarByWhere = async (req, res) => {
 
 //untuk yang sudah verif
 export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
-    const redis_key = 'DataPendaftarAllinAdmin';
+
+    const page = parseInt(req.query.page) || 1; // Default page is 1
+    const limit = parseInt(req.query.limit) || 10; // Default limit is 10
+    const offset = (page - 1) * limit;
+    const { nisn, sekolah_tujuan_idn } = req.query;
+
+    // const redis_key = 'DataPendaftarAllinAdmin-IdSekolah:';
+    const redis_key = `DataPendaftarAllinAdmin:IdSekolah:${sekolah_tujuan_id}--page:${page}--limit:${limit}--offset:${offset}`;
     try {
         // const cacheNya = await redisGet(redis_key);
         const cacheNya = false;
         if (cacheNya) {
-
-            res.status(200).json({
-                status: 1,
-                message: 'Data diambil dari cache',
-                data: JSON.parse(cacheNya)
-            });
 
             const cachedData = JSON.parse(cacheNya);
             res.status(200).json({
@@ -1077,90 +1078,12 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                 ]
             };
 
-            // Parameter pencarian opsional
-            const { nisn, nama } = req.query;
-            //  if (nisn) {
-            //      whereFor.nisn = nisn; // Tambahkan kondisi pencarian berdasarkan NISN
-            //  }
-            
-
-            if (nisn) {
-                whereFor.nisn = nisn;
-            }
-            
- 
-             if (nama) {
-                 whereFor.nama_lengkap = { [Op.iLike]: `%${nama}%` }; // Add LIKE condition for nama_lengkap
-             }
-
-
-            if (dataAdminNya.role_ != 101) {
-                const kirimDukcapil = req.query.kirim_dukcapil;
-                const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-                const verifikasiAdmin = req.query.is_verified;
-
-                // if (kirimDukcapil != 1) {
-                //     whereFor.verifikasikan_disdukcapil = {
-                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                //     };
-                // }
-                // if (verifikasiDukcapil != 1) {
-                //     whereFor.is_verified_disdukcapil = {
-                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                //     };
-                // }
-
-                // if (verifikasiAdmin != 1) {
-                //     whereFor.is_verified = {
-                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                //     };
-                // }
-
-                if (verifikasiAdmin) {
-                    whereFor.is_verified = verifikasiAdmin;
-                }
-
-                if (kirimDukcapil) {
-                    whereFor.verifikasikan_disdukcapil = kirimDukcapil;
-                }
-
-                if (verifikasiDukcapil) {
-                    whereFor.is_verified_disdukcapil = verifikasiDukcapil;
-                }
-
-
-               
-            }
-
-            if (dataAdminNya.role_ == 101) {
-                const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-
-                whereFor.verifikasikan_disdukcapil =  1;
-                whereFor.is_verified !=  1;
-
-                if(dataAdminNya.kabkota_id != null){
-                    whereFor.kabkota_id = dataAdminNya.kabkota_id;
-                }
-        
-                // if (verifikasiDukcapil != 1) {
-                //     whereFor.is_verified_disdukcapil = {
-                //         [Sequelize.Op.or]: [0, null], // Mencari data dengan nilai 0 atau null
-                //     };
-                // }
-                if (verifikasiDukcapil) {
-                    whereFor.is_verified_disdukcapil = verifikasiDukcapil;
-                }
-
-               
-            }
-
-          
-            
+            whereFor.is_verified = 1;           
 
             // Pagination logic
-            const page = parseInt(req.query.page) || 1; // Default page is 1
-            const limit = parseInt(req.query.limit) || 10; // Default limit is 10
-            const offset = (page - 1) * limit;
+            // const page = parseInt(req.query.page) || 1; // Default page is 1
+            // const limit = parseInt(req.query.limit) || 10; // Default limit is 10
+            // const offset = (page - 1) * limit;
 
             const { count, rows } = await DataPendaftars.findAndCountAll({
                 attributes: { exclude: ['password_'] },
