@@ -1309,21 +1309,20 @@ export const getDataPendaftarByWhereNisn = async (req, res) => {
                 whereFor.nisn = nisn;
             }
 
+            const kirimDukcapil = req.query.kirim_dukcapil;
+            const verifikasiDukcapil = req.query.verifikasi_dukcapil;
+            const verifikasiAdmin = req.query.is_verified;
+            if (verifikasiAdmin) {
+                whereFor.is_verified = verifikasiAdmin;
+            }
 
-                const kirimDukcapil = req.query.kirim_dukcapil;
-                const verifikasiDukcapil = req.query.verifikasi_dukcapil;
-                const verifikasiAdmin = req.query.is_verified;
-                if (verifikasiAdmin) {
-                    whereFor.is_verified = verifikasiAdmin;
-                }
+            if (kirimDukcapil) {
+                whereFor.verifikasikan_disdukcapil = kirimDukcapil;
+            }
 
-                if (kirimDukcapil) {
-                    whereFor.verifikasikan_disdukcapil = kirimDukcapil;
-                }
-
-                if (verifikasiDukcapil) {
-                    whereFor.is_verified_disdukcapil = verifikasiDukcapil;
-                }
+            if (verifikasiDukcapil) {
+                whereFor.is_verified_disdukcapil = verifikasiDukcapil;
+            }
 
             // Pagination logic
             const page = parseInt(req.query.page) || 1; // Default page is 1
@@ -1632,7 +1631,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
             }
 
             if (resData.is_verified == 1) {  
-
+                //untuk cek yang verifikasi
                 const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
                 const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
                                     ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
@@ -1647,7 +1646,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
             }
 
             if (resData.is_verified == 2) {  
-
+                //untuk cek yang menolak
                 const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
                 const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
                                     ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
