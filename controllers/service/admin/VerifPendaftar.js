@@ -1117,14 +1117,14 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                         model: DataUsers,
                         as: 'diverifikasi_oleh',
                         attributes: ['id', 'nama', 'sekolah_id'],
+                        where: {
+                            id: sekolah_tujuan_id
+                        },
                         include: [
                             {
                                 model: SekolahTujuanModel,
                                 as: 'asal_sekolah_verifikator',
                                 attributes: ['id', 'nama'], // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
-                                where: {
-                                    id: sekolah_tujuan_id
-                                },
                                 required: true // INNER JOIN
                             }
                             
