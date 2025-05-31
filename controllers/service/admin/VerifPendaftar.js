@@ -1633,8 +1633,8 @@ export const getDataPendaftarByNisn = async (req, res) => {
             if (resData.is_verified == 1) {  
                 //untuk cek yang verifikasi
                 const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
-                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
-                                    ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
+                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_verifikator 
+                                    ? resData.diverifikasi_oleh.asal_sekolah_verifikator.nama 
                                     : '-';
 
                 return res.status(200).json({  
@@ -1648,8 +1648,8 @@ export const getDataPendaftarByNisn = async (req, res) => {
             if (resData.is_verified == 2) {  
                 //untuk cek yang menolak
                 const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
-                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
-                                    ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
+                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_verifikator 
+                                    ? resData.diverifikasi_oleh.asal_sekolah_verifikator.nama 
                                     : '-';
 
                 return res.status(200).json({  
@@ -1663,8 +1663,8 @@ export const getDataPendaftarByNisn = async (req, res) => {
             if (resData.is_verified == 3) {  
 
                 const adminName = resData.diverifikasi_oleh ? resData.diverifikasi_oleh.nama : 'Lainnya';
-                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_admin 
-                                    ? resData.diverifikasi_oleh.asal_sekolah_admin.nama 
+                const sekolahName = resData.diverifikasi_oleh && resData.diverifikasi_oleh.asal_sekolah_verifikator 
+                                    ? resData.diverifikasi_oleh.asal_sekolah_verifikator.nama 
                                     : '-';
 
                 return res.status(200).json({  
