@@ -1118,7 +1118,7 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                         as: 'diverifikasi_oleh',
                         attributes: ['id', 'nama', 'sekolah_id'],
                         where: {
-                            id: sekolah_tujuan_id
+                            sekolah_id: sekolah_tujuan_id
                         },
                         include: [
                             {
