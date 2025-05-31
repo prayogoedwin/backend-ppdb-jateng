@@ -1042,12 +1042,14 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
     const offset = (page - 1) * limit;
     const { nisn, sekolah_tujuan_id } = req.query;
 
+
+
     // const redis_key = 'DataPendaftarAllinAdmin-IdSekolah:';
     const redis_key = `DataPendaftarAllinAdmin:IdSekolah:${sekolah_tujuan_id}--page:${page}--limit:${limit}--offset:${offset}`;
     try {
-        // const cacheNya = await redisGet(redis_key);
-        const cacheNya = false;
-        if (cacheNya) {
+        const cacheNya = await redisGet(redis_key);
+        // const cacheNya = false;
+        if (cacheNya && !nisn) {
 
             const cachedData = JSON.parse(cacheNya);
             res.status(200).json({
@@ -1078,7 +1080,11 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                 ]
             };
 
-            whereFor.is_verified = 1;           
+            whereFor.is_verified = 1;   
+            
+            if(nisn != ''){
+                whereFor.nisn = nisn;   
+            }
 
             // Pagination logic
             // const page = parseInt(req.query.page) || 1; // Default page is 1
@@ -1167,9 +1173,12 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                     data: resDatas
                 };
 
-                const newCacheNya = redisData;
-                await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
-
+                if(nisn == ''){
+                    const newCacheNya = redisData;
+                    await redisSet(redis_key, JSON.stringify(newCacheNya), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+                }
+    
+               
                 res.status(200).json({
                     status: 1,
                     message: 'Data berhasil ditemukan',
