@@ -380,7 +380,7 @@ export const updateSekolahTujuanAdmin = [
             kuota_prestasi_khusus_persentase,
             kuota_prestasi_khusus,
             kuota_pto_persentase,
-            kuota_pto,
+            kuota_pto, 
         } = req.body;
 
 
