@@ -493,6 +493,58 @@ export const mainTenisCek = async (req, res, next) => {
     }
 };
 
+    // export const authCekAdmin = async (req, res, next) => {
+    //     try {
+    //         const apiKey = 'waktu_kerja_admin'
+    //         const redis_key = `waktu_kerja_admin`; 
+    //         let keyNya = await redisGet(redis_key);
+
+    //         if (keyNya) {
+    //             keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
+    //             console.log(`[CACHE] Found cached waktu_kerja_admin key for ${apiKey}`);
+    //             return res.status(403).json({
+    //                 status: 1,
+    //                 message: 'Dari cache.',
+    //                 data: keyNya.nama
+    //             });
+    //         } else {
+    //             keyNya = await EzAppKey.findOne({
+    //                 where: {
+    //                     apikey: apiKey
+    //                 }
+    //             });
+
+    //             if (!keyNya) {
+    //                 return res.status(403).json({
+    //                     status: 0,
+    //                     message: 'Forbidden - Your waktu_kerja_admin key is not found',
+    //                 });
+    //             }
+
+    //             await redisSet(
+    //                 redis_key,
+    //                 JSON.stringify(keyNya),
+    //                 process.env.REDIS_EXPIRE_TIME_HARIAN
+    //             );
+
+    //             console.log(`[DB] waktu_kerja_admin(${apiKey}) →`, keyNya);
+
+    //             return res.status(403).json({
+    //                 status: 1,
+    //                 message: ' Maaf mode sedang aktif. coba lagi nanti!.',
+    //                 data: keyNya.nama
+    //             });
+    //         }
+
+    //     } catch (error) {
+    //         console.error('Error checking Maintenance Key:', error);
+    //         res.status(500).json({
+    //             status: 0,
+    //             message: 'Internal Server Error',
+    //         });
+    //     }
+    // };
+
 
 // User logout
 export const logoutUser = [
