@@ -154,7 +154,7 @@ export const getPesertaDidikSmaSmkAll = async (req, res) => {
         console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
         return res.status(200).json({
             status: 0,
-            message: 'Berhasil generate cache'
+            message: 'Berhasil generate cache siswa sma smk dengan key: DataAllAnakSMASMK'
         });
         
     } catch (error) {
