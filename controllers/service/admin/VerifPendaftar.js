@@ -2095,7 +2095,49 @@ export const updatePassworPendaftar = async (req, res) => {
             message: error.message,    
         });    
     }    
+} 
+
+export const resetOpenedBy = async (req, res) => {    
+    const { id } = req.params; // Ambil id dari params URL    
+    try {    
+        const resData = await DataPendaftars.findOne({    
+            where: {    
+                id: decodeId(id),    
+                is_delete: 0    
+            }
+        });    
+    
+        if (resData != null) {    
+            // Update password_ field with hashed password  
+            const defaultPassword = 'P@ssw0rd';  
+            const hashedPassword = await bcrypt.hash(defaultPassword, 10);  
+  
+            await DataPendaftars.update(  
+                { opened_by: 0 }, // Set the password_ field  
+                { where: { id: decodeId(id) } } // Condition to find the correct record  
+            );  
+
+            res.status(200).json({    
+                'status': 1,    
+                'message': 'Berhasil reset status opened_by menjadi 0',    
+            });  
+  
+            // Additional logic remains unchanged...  
+            // (The rest of your existing logic for handling verification and response)  
+        } else {    
+            res.status(200).json({    
+                'status': 0,    
+                'message': 'Data tidak ditemukan',    
+            });    
+        }    
+    } catch (error) {    
+        res.status(500).json({    
+            status: 0,    
+            message: error.message,    
+        });    
+    }    
 }  
+
 
 export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {  
     const { id } = req.params; // Ambil id dari params URL  

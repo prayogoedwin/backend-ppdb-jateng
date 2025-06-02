@@ -79,6 +79,7 @@ import { getDataPendaftarForVerif,
     getDataPendaftarForVerifPagination, 
     getDataPendaftarById, 
     getDataPendaftarByIdKhususAfterVerif,
+    resetOpenedBy,
     verifikasiPendaftar, 
     verifikasiPendaftarTidakJadi, 
     updatePendaftar,
@@ -361,9 +362,6 @@ router.get('/admin-api/data/pencarian_by_nisn/:nisn', ipWhitelistMiddleware, app
 router.get('/admin-api/data/sudah_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereHanyaUntukAdmin);
 
 
-
-
-
 // router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_count', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarCount);
 
@@ -373,6 +371,7 @@ router.get('/admin-api/data/pendaftar_reset_password/:id', ipWhitelistMiddleware
 
 
 router.get('/admin-api/data/pendaftar_detail_after_verif/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByIdKhususAfterVerif);
+router.get('/admin-api/data/pendaftar_reset_opened_by/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, resetOpenedBy);
 
 router.post('/admin-api/data/pendaftar_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/tolak_ajuan_akun', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
