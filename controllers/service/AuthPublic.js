@@ -450,9 +450,9 @@ export const mainTenisCek = async (req, res, next) => {
         if (keyNya) {
             keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
             console.log(`[CACHE] Found cached maintenance key for ${apiKey}`);
-            return res.status(403).json({
+            return res.status(200).json({
                 status: 1,
-                message: 'Dari cache.',
+                message: 'Mode Maintenance.'+keyNya.nama,
                 data: keyNya.nama
             });
         } else {
@@ -477,9 +477,9 @@ export const mainTenisCek = async (req, res, next) => {
 
             console.log(`[DB] Maintenis(${apiKey}) →`, keyNya);
 
-            return res.status(403).json({
+            return res.status(200).json({
                 status: 1,
-                message: 'Maintenance mode sedang aktif. coba lagi nanti!.',
+                message: 'Mode Maintenance.'+keyNya.nama,
                 data: keyNya.nama
             });
         }
