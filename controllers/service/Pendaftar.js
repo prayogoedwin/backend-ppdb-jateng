@@ -992,10 +992,12 @@ export const aktivasiAkunPendaftar = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const resTm = await Timelines.findOne({  
-          where: { id: 3 }, // Find the timeline by ID  
-          attributes: ['id', 'nama', 'status']  
-        });  
+        const resTm = await getTimelineSatuan(3);
+
+        // const resTm = await Timelines.findOne({  
+        //   where: { id: 3 }, // Find the timeline by ID  
+        //   attributes: ['id', 'nama', 'status']  
+        // });  
 
         if (resTm.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Aktivasi Belum Dibuka :)' });
