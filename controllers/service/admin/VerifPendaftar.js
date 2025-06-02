@@ -2098,23 +2098,23 @@ export const updatePassworPendaftar = async (req, res) => {
 } 
 
 export const resetOpenedBy = async (req, res) => {    
-    const { id } = req.params; // Ambil id dari params URL    
+    const { nisn } = req.params; // Ambil id dari params URL    
     try {    
         const resData = await DataPendaftars.findOne({    
             where: {    
-                id: decodeId(id),    
+                nisn: nisn,    
                 is_delete: 0    
             }
         });    
     
         if (resData != null) {    
             // Update password_ field with hashed password  
-            const defaultPassword = 'P@ssw0rd';  
-            const hashedPassword = await bcrypt.hash(defaultPassword, 10);  
+            // const defaultPassword = 'P@ssw0rd';  
+            // const hashedPassword = await bcrypt.hash(defaultPassword, 10);  
   
             await DataPendaftars.update(  
                 { opened_by: 0 }, // Set the password_ field  
-                { where: { id: decodeId(id) } } // Condition to find the correct record  
+                { where: { nisn: nisn } } // Condition to find the correct record  
             );  
 
             res.status(200).json({    
