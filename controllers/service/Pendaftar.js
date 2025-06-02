@@ -1062,7 +1062,7 @@ export const aktivasiAkunPendaftar = async (req, res) => {
             
             return res.status(200).json({
                 status: 0,
-                message: 'Maaf tidak bisa aktivasi akun nisn anda masih terdaftar aktif di data kelas SMA/SMK'
+                message: 'Maaf tidak bisa aktivasi akun, nisn anda masih terdaftar aktif di data kelas SMA/SMK'
             });
 
         }
