@@ -522,6 +522,8 @@ export const updateSekolahTujuanJurusanAdmin = [
             kuota_prestasi_persentase,
             kuota_prestasi_khusus,
             kuota_prestasi_khusus_persentase,
+            nama_jurusan,
+            is_larang_buta_warna
         } = req.body;
 
 
@@ -546,6 +548,8 @@ export const updateSekolahTujuanJurusanAdmin = [
                 kuota_prestasi,
                 kuota_prestasi_khusus_persentase,
                 kuota_prestasi_khusus,
+                nama_jurusan,
+                is_larang_buta_warna,
                 updated_at: new Date(), // Set the current date and time
                 updated_by: req.user.userId, // Use user ID from token
                 updated_by_ip: req.ip
