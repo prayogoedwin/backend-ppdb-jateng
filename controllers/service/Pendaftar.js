@@ -988,7 +988,7 @@ export const aktivasiAkunPendaftar_BAK = async (req, res) => {
 };
 
 
-const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
+const getPesertaDidikSmaSmkByNisn = async (nisn) => {
   try {
 
       const redis_key = `DataAllAnakSMASMK`;
@@ -999,7 +999,7 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
           console.log(`[REDIS] Cek dari cache: ${redis_key}`);
 
           const allPesertaDidik = JSON.parse(cached);
-          const pesertaDidik = allPesertaDidik.find(pd => pd.nisn === nisn && pd.nik === nik);
+          const pesertaDidik = allPesertaDidik.find(pd => pd.nisn === nisn);
 
           if (!pesertaDidik) {
               return false;
@@ -1057,7 +1057,7 @@ export const aktivasiAkunPendaftar = async (req, res) => {
             return res.status(200).json({ status: 0, message: 'Aktivasi Belum Dibuka :)' });
         }
 
-        const pesetaDidikSmaSmk = await getPesertaDidikSmaSmkByNisn(nisn, nik);
+        const pesetaDidikSmaSmk = await getPesertaDidikSmaSmkByNisn(nisn);
         if (pesetaDidikSmaSmk) {   
             
             return res.status(200).json({
