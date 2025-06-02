@@ -152,6 +152,10 @@ export const getPesertaDidikSmaSmkAll = async (req, res) => {
         // Simpan semua data ke cache dengan expiry time
         await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
         console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
+        return res.status(200).json({
+            status: 0,
+            message: 'Berhasil generate cache'
+        });
         
     } catch (error) {
         console.error(error);

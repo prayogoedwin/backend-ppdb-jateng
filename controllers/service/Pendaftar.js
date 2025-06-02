@@ -11,6 +11,7 @@ import WilayahVerDapodik from '../../models/master/WilayahVerDapodikModel.js';
 import { getTimelineSatuan } from '../../helpers/HelpHelper.js';
 import Timelines from "../../models/service/TimelineModel.js";
 import DataUsers from '../../models/service/DataUsersModel.js';
+import DataPesertaDidikSmaSmks from '../../models/service/DataPesertaDidikSmaSmkModel.js';
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -986,6 +987,59 @@ export const aktivasiAkunPendaftar_BAK = async (req, res) => {
         }
 };
 
+
+const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
+  try {
+
+      const redis_key = `DataAllAnakSMASMK`;
+      const cached = await redisGet(redis_key);
+
+      if (cached) {
+
+          console.log(`[REDIS] Cek dari cache: ${redis_key}`);
+
+          const allPesertaDidik = JSON.parse(cached);
+          const pesertaDidik = allPesertaDidik.find(pd => pd.nisn === nisn && pd.nik === nik);
+
+          if (!pesertaDidik) {
+              return false;
+          }
+
+          return pesertaDidik;
+
+
+      }else{
+
+          
+
+          const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
+              attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah'],
+              where: { 
+                  nisn,
+                  nik, 
+              },
+              
+          
+          });
+
+          if (!pesertaDidik) {
+
+              return false;
+
+          }
+
+          return pesertaDidik;
+      
+      }
+
+  
+      
+  } catch (error) {
+      console.error(error);
+      throw error;
+  }
+};
+
 // User aktivasi
 export const aktivasiAkunPendaftar = async (req, res) => {
         const { nisn, kode_verifikasi, password } = req.body;
@@ -1001,6 +1055,16 @@ export const aktivasiAkunPendaftar = async (req, res) => {
 
         if (resTm.status != 1) {  
             return res.status(200).json({ status: 0, message: 'Aktivasi Belum Dibuka :)' });
+        }
+
+        const pesetaDidikSmaSmk = await getPesertaDidikSmaSmkByNisn(nisn, nik);
+        if (pesetaDidikSmaSmk) {   
+            
+            return res.status(200).json({
+                status: 0,
+                message: 'Maaf tidak bisa aktivasi akun nisn anda masih terdaftar aktif di data kelas SMA/SMK'
+            });
+
         }
 
         try {
