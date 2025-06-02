@@ -186,7 +186,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
                             [Op.not]: null,
                           }  
                     },  
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
+                    //attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
                 });  
             } else {  
                 resData = await SekolahTujuans.findAll({  
@@ -196,7 +196,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
                             [Op.not]: null,
                           }  
                     },  
-                    attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
+                    //attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
                 });  
             }  
   
@@ -207,7 +207,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
                         where: {  
                             id_sekolah_tujuan: resData.map(school => school.id)  
                         },  
-                        attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                        //attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
                     });  
   
                     // Format the response to include jurusan  
