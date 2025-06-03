@@ -240,6 +240,15 @@ export const getUserById = async (req, res) => {
                 id: decodeId(id),
                 is_delete: 0
             },
+            include: [
+                {
+                    model: SekolahTujuanModel,
+                    as: 'sekolah',
+                    attributes: ['id', 'nama', 'bentuk_pendidikan_id'], // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
+                    required: true // INNER JOIN
+                }
+                
+            ],
             
         });
         if(resData != null){
