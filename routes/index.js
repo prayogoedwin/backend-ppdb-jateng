@@ -466,7 +466,7 @@ router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIn
 router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
 
 // Define the version as a constant
-const VERSION = '2.0.9'; 
+const VERSION = '2.0.10'; 
 const APPNAME = 'Backend PPDB';
 
 // // Create a GET route at '/' that sends the version as a JSON response
