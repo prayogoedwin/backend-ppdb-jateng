@@ -2167,6 +2167,11 @@ export const getDataPendaftarByIdKhususAfterVerif = async (req, res) => {
                     model: WilayahVerDapodik,  
                     as: 'data_wilayah_prov',  
                     attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                }, 
+                {  
+                    model: WilayahVerDapodik,  
+                    as: 'data_wilayah_mutasi',  
+                    attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
                 },  
                 {
                     model: StatusDomisilis,
