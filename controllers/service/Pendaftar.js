@@ -1011,12 +1011,10 @@ const getPesertaDidikSmaSmkByNisn = async (nisn) => {
       }else{
 
           
-
           const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
               attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah'],
               where: { 
                   nisn,
-                  nik, 
               },
               
           
