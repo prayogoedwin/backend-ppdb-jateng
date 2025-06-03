@@ -493,6 +493,58 @@ export const mainTenisCek = async (req, res, next) => {
     }
 };
 
+export const mainTenisPublikCek = async (req, res, next) => {
+    try {
+        const apiKey = 'maintenis_publik'
+        const redis_key = `Maintenis_Publik`; 
+        let keyNya = await redisGet(redis_key);
+
+        if (keyNya) {
+            keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
+            console.log(`[CACHE] Found cached maintenance publik key for ${apiKey}`);
+            return res.status(200).json({
+                status: 1,
+                message: 'Mode Maintenance Public.'+keyNya.nama,
+                data: keyNya.nama
+            });
+        } else {
+            keyNya = await EzAppKey.findOne({
+                where: {
+                    apikey: apiKey
+                }
+            });
+
+            if (!keyNya) {
+                return res.status(403).json({
+                    status: 0,
+                    message: 'Forbidden - Your maintenance key is not found',
+                });
+            }
+
+            await redisSet(
+                redis_key,
+                JSON.stringify(keyNya),
+                process.env.REDIS_EXPIRE_TIME_HARIAN
+            );
+
+            console.log(`[DB] Maintenis(${apiKey}) →`, keyNya);
+
+            return res.status(200).json({
+                status: 1,
+                message: 'Mode Maintenance Public.'+keyNya.nama,
+                data: keyNya.nama
+            });
+        }
+
+    } catch (error) {
+        console.error('Error checking Maintenance Key:', error);
+        res.status(500).json({
+            status: 0,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
     // export const authCekAdmin = async (req, res, next) => {
     //     try {
     //         const apiKey = 'waktu_kerja_admin'

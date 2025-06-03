@@ -64,7 +64,7 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
-import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser, loginTanpaOtp, mainTenisCek } from '../controllers/service/AuthPublic.js';
+import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser, loginTanpaOtp, mainTenisCek, mainTenisPublikCek } from '../controllers/service/AuthPublic.js';
 
 //akun client api
 import { loginClient, logoutClient } from '../controllers/service/integration/Auth.js';
@@ -169,6 +169,7 @@ router.get('/download_new/:nisn/:filename', viewFileBase64);
 // router.get('/geojson_redis', viewGeoJsonRedis);
 
 router.get('/api/cek_status_maintenis', mainTenisCek);
+router.get('/api/cek_status_maintenis_publik', mainTenisPublikCek);
 
 
 
