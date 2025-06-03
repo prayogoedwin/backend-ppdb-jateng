@@ -993,6 +993,88 @@ export const getSekolahTujuan = async (req, res) => {
             }  
 
         
+        } else if(jalur_pendaftaran_id == 4){
+
+            const cekPendaftar = await DataPendaftars.findOne({  
+                where: {  
+                    nisn: req.body.nisn,  
+                    is_delete: 0  
+                },  
+            }); 
+
+            if(kabkota == cekPendaftar.kabkota_id){
+
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Silahkan pilih kabupaten/kota sesuai dengan kabupaten/kota sesuai surat tugas mutasi anda',  
+                    'data': ''  
+                });  
+
+            }
+
+            if(kabkota == cekPendaftar.kabkota_id_mutasi){
+
+                resData = await SekolahTujuans.findAll({  
+                    where: {  
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
+                        kode_wilayah_kot: kabkota,
+                        status_sekolah: 1,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                          },
+                        npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
+                        
+                    },  
+                    // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
+                    attributes: [
+                        'npsn', 
+                        [Sequelize.fn('MIN', Sequelize.col('id')), 'id'], // Get the minimum id for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('nama')), 'nama'], // Get the minimum name for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('lat')), 'lat'], // Get the minimum latitude for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('lng')), 'lng'], // Get the minimum longitude for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('daya_tampung')), 'daya_tampung'], // Get the minimum capacity for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('alamat_jalan')), 'alamat_jalan'], // Get the minimum address for each npsn
+                        [Sequelize.fn('MIN', Sequelize.col('status_sekolah')), 'status_sekolah'] // Get the minimum address for each npsn
+                       
+                        
+                    ],  
+                    group: ['npsn']  
+                });
+    
+                const formattedResData = resData.map(school => {
+                    const namaNpsn = `${school.nama} ${school.npsn}`; 
+                    return {
+                        ...school.dataValues,
+                        nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                    };
+                });
+    
+                if (formattedResData.length > 0) {  
+                    res.status(200).json({  
+                        'status': 1,  
+                        'message': 'Data berhasil ditemukan',  
+                        'data': formattedResData  
+                    });  
+                } else {  
+                    res.status(200).json({  
+                        'status': 0,  
+                        'message': 'Data kosong',  
+                        'data': ''  
+                    });  
+                }  
+
+            }else{
+
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Silahkan pilih kabupaten/kota sesuai dengan kabupaten/kota sesuai surat tugas mutasi anda',  
+                    'data': ''  
+                });  
+
+            }
+
+
+        
         } else {  
 
             const redis_key = 'SekolahTujuansPublikWithJalur'+req.body.bentuk_pendidikan_id+req.body.kabkota+'-Jalur:'+jalur_pendaftaran_id;
