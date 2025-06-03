@@ -499,7 +499,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    
+    kabkota_id_mutasi: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
     
 }, {
     freezeTableName: true,
