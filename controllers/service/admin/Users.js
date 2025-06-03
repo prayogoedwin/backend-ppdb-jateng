@@ -246,7 +246,6 @@ export const getUserById = async (req, res) => {
                     model: SekolahTujuanModel,
                     as: 'asal_sekolah_admin',
                     attributes: ['id', 'nama', 'bentuk_pendidikan_id'], // Ganti 'nama_sekolah' dengan nama kolom yang sesuai di model SekolahTujuanModel
-                    required: true // INNER JOIN
                 }
                 
             ],
