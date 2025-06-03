@@ -5,6 +5,7 @@ import { Op } from 'sequelize';
 import { redisGet, redisSet } from '../../../redis.js';
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import Timelines from "../../../models/service/TimelineModel.js";
+import { getTimelineSatuan } from '../../../helpers/HelpHelper.js';
 
 
 // export const getSekolahTujuanAdmin = async (req, res) => {
@@ -302,13 +303,20 @@ export const updateSekolahTujuanProfil = async (req, res) => {
     const {id, lat, lng} = req.body;
 
     try {
-        const countStatusZero = await Timelines.count({
-            where: {
-                status: 1
-            }
-        });
+        // const countStatusZero = await Timelines.count({
+        //     where: {
+        //         status: 1
+        //     }
+        // });
 
-        if(countStatusZero > 0){
+        const resTm = await getTimelineSatuan(4);
+
+        // if (resTm.status != 1) {
+        //     return res.status(400).json({ status: 0, message: "Pendaftaran belum dibuka." });
+        // }
+
+        //if(countStatusZero > 0){
+        if (resTm.status == 1) {
 
             return res.status(200).json({
                 status: 0,
