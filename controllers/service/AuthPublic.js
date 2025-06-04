@@ -374,6 +374,11 @@ export const loginTanpaOtp = [
                     nisn: user.nisn,
                     nama: nameParts[0],
                     nama_lengkap: fullName,
+                    kabkota_kk: user.kabkota_id,
+                    kabkota_mutasi: user.kabkota_id_mutasi,
+                    ats: user.is_tidak_sekolah,
+                    anak_panti: user.is_anak_panti,
+                    anak_miskin: user.is_anak_keluarga_tidak_mampu,
                     accessToken,
                     refreshToken,
                     timline_dafatar_sekolah: resTimeline
