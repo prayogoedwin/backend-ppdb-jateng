@@ -2076,7 +2076,7 @@ export const updatePassworPendaftar = async (req, res) => {
                 { where: { id: decodeId(id) } } // Condition to find the correct record  
             );  
 
-            res.status(200).json({    
+            return res.status(200).json({    
                 'status': 1,    
                 'message': 'Berhasil update password menjadi P@ssw0rd',    
             });  
@@ -2084,13 +2084,13 @@ export const updatePassworPendaftar = async (req, res) => {
             // Additional logic remains unchanged...  
             // (The rest of your existing logic for handling verification and response)  
         } else {    
-            res.status(200).json({    
+            return res.status(200).json({    
                 'status': 0,    
                 'message': 'Data tidak ditemukan',    
             });    
         }    
     } catch (error) {    
-        res.status(500).json({    
+        return res.status(500).json({    
             status: 0,    
             message: error.message,    
         });    
@@ -2117,7 +2117,7 @@ export const resetOpenedBy = async (req, res) => {
                 { where: { nisn: nisn } } // Condition to find the correct record  
             );  
 
-            res.status(200).json({    
+            return res.status(200).json({    
                 'status': 1,    
                 'message': 'Berhasil reset status opened_by menjadi 0',    
             });  
@@ -2125,13 +2125,13 @@ export const resetOpenedBy = async (req, res) => {
             // Additional logic remains unchanged...  
             // (The rest of your existing logic for handling verification and response)  
         } else {    
-            res.status(200).json({    
+            return res.status(200).json({    
                 'status': 0,    
                 'message': 'Data tidak ditemukan',    
             });    
         }    
     } catch (error) {    
-        res.status(500).json({    
+        return res.status(500).json({    
             status: 0,    
             message: error.message,    
         });    
