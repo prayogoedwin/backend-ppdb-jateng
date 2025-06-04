@@ -1437,24 +1437,40 @@ export const getDataPendaftarCount = async (req, res) => {
                 }
             });
 
+            const countVerifikasikan1AndMasihRevisiCMB = await DataPendaftars.count({
+                verifikasikan_disdukcapil: 1,
+                is_verified_disdukcapil: 0,
+                is_verified: { 
+                    [Op.and]: [
+                        { [Op.ne]: 0 },
+                        { [Op.ne]: 1 }
+                    ]
+                }
+            });
+
             const countVerifikasikan1AndVerifiedNullOr0 = await DataPendaftars.count({
                 where: {
                     ...whereFor,
                     verifikasikan_disdukcapil: 1,
                     is_verified_disdukcapil: 0,
-                    // [Op.or]: [
-                    //     { is_verified_disdukcapil: { [Op.is]: null } },
-                    //     { is_verified_disdukcapil: 0 },
-                    // ],
                     is_verified : 0
                 }
             });
 
+            // const counts = {
+            //     verifikasikan_disdukcapil_1: countVerifikasikan1,
+            //     verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_1: countVerifikasikan1AndVerified1,
+            //     verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_and_is_verified_1: countVerifikasikan1AndVerifiedCapil0AndVerified1, //sempat di ajukan capil, belum di aksi, sudah di verifikasi operator
+            //     : countVerifikasikan1AndMasihRevisiCMB
+            //     verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_null: countVerifikasikan1AndVerifiedNullOr0
+            // };
+
             const counts = {
-                verifikasikan_disdukcapil_1: countVerifikasikan1,
-                verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_1: countVerifikasikan1AndVerified1,
-                verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_and_is_verified_1: countVerifikasikan1AndVerifiedCapil0AndVerified1, //sempat di ajukan capil, belum di aksi, sudah di verifikasi operator
-                verifikasikan_disdukcapil_1_and_verifikasi_dukcapil_0_null: countVerifikasikan1AndVerifiedNullOr0
+                kirim_dukcapil: countVerifikasikan1,
+                kirim_dukcapil_sudah_aksi: countVerifikasikan1AndVerified1,
+                kirim_dukcapil_belum_sempat_aksi_tapi_sudah_clear_operator_sekolah: countVerifikasikan1AndVerifiedCapil0AndVerified1, //sempat di ajukan capil, belum di aksi, sudah di verifikasi operator
+                kirim_dukcapil_tapi_sedang_direvisi_cmb : countVerifikasikan1AndMasihRevisiCMB,
+                menunggu_aksi_capil: countVerifikasikan1AndVerifiedNullOr0
             };
 
             await redisSet(redis_key, JSON.stringify(counts), process.env.REDIS_EXPIRE_TIME_SOURCE_REKAP);
