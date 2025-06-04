@@ -1469,7 +1469,7 @@ export const getDataPendaftarCount = async (req, res) => {
                 kirim_dukcapil: countVerifikasikan1,
                 kirim_dukcapil_sudah_aksi: countVerifikasikan1AndVerified1,
                 kirim_dukcapil_belum_sempat_aksi_tapi_sudah_clear_operator_sekolah: countVerifikasikan1AndVerifiedCapil0AndVerified1, //sempat di ajukan capil, belum di aksi, sudah di verifikasi operator
-                kirim_dukcapil_tapi_sedang_direvisi_cmb : countVerifikasikan1AndMasihRevisiCMB,
+                kirim_dukcapil_tapi_sedang_dikembalikan_ke_cmb_oleh_operator_sekolah : countVerifikasikan1AndMasihRevisiCMB,
                 menunggu_aksi_capil: countVerifikasikan1AndVerifiedNullOr0
             };
 
