@@ -59,7 +59,7 @@ const uploadFiles = upload.fields([
 ]);
 
 //Generate Verification Code
-const generateVerificationCode = async () => {
+const generateVerificationCode_OLD = async () => {
     const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ3456789';
     let code;
     let exists = true;
@@ -78,7 +78,7 @@ const generateVerificationCode = async () => {
     return code;
 };
 
-const generateVerificationCodeNew = async (nisn) => {
+const generateVerificationCode = async (nisn) => {
   const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ3456789';
   let randomCode = '';
   
