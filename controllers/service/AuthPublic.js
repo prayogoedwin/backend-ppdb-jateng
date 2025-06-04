@@ -374,6 +374,7 @@ export const loginTanpaOtp = [
                     nisn: user.nisn,
                     nama: nameParts[0],
                     nama_lengkap: fullName,
+                    status_domisili: user.status_domisili,
                     kabkota_kk: user.kabkota_id,
                     kabkota_mutasi: user.kabkota_id_mutasi,
                     ats: user.is_tidak_sekolah,
