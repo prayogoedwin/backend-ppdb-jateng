@@ -78,6 +78,26 @@ const generateVerificationCode = async () => {
     return code;
 };
 
+const generateVerificationCodeNew = async (nisn) => {
+  const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ3456789';
+  let randomCode = '';
+  
+  // Generate 4 karakter huruf random
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomCode += characters[randomIndex];
+  }
+  
+  // Ambil timestamp sekarang (dalam milidetik)
+  // const timestamp = Date.now();
+  
+  // Gabungkan NISN + randomCode + timestamp
+  // const code = `${nisn}${randomCode}${timestamp}`;
+  const code = `${nisn}${randomCode}`;
+  
+  return code;
+};
+
 // export const createPendaftar = async (req, res) => {
 //   const timeoutPromise = new Promise((_, reject) => 
 //       setTimeout(() => reject(new Error('Pendaftaran melebihi batas waktu 30 detik')), 30000)
@@ -827,6 +847,11 @@ export const getPendaftarDetail = async (req, res) => {
               as: 'data_wilayah_prov',
               attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
           },
+          {  
+              model: WilayahVerDapodik,  
+              as: 'data_wilayah_mutasi',  
+              attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+          },  
           {
             model: SekolahAsalWilayah,
             as: 'wilayah_sekolah_asal',
