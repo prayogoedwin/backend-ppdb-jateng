@@ -1391,11 +1391,16 @@ export const getDataPendaftarCount = async (req, res) => {
                 }
             });
 
+            // let whereFor = {
+            //     [Op.or]: [
+            //         { is_delete: { [Op.is]: null } },
+            //         { is_delete: 0 }
+            //     ]
+            // };
+
+
             let whereFor = {
-                [Op.or]: [
-                    { is_delete: { [Op.is]: null } },
-                    { is_delete: 0 }
-                ]
+                is_delete: 0
             };
 
 
