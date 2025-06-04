@@ -1446,11 +1446,15 @@ export const getDataPendaftarCount = async (req, res) => {
                 verifikasikan_disdukcapil: 1,
                 is_verified_disdukcapil: 0,
                 is_verified: { 
-                    [Op.and]: [
-                        { [Op.ne]: 0 },
-                        { [Op.ne]: 1 }
-                    ]
+                    [Op.ne]: 0,
+                    [Op.ne]: 1
                 }
+                // is_verified: { 
+                //     [Op.and]: [
+                //         { [Op.ne]: 0 },
+                //         { [Op.ne]: 1 }
+                //     ]
+                // }
             });
 
             const countVerifikasikan1AndVerifiedNullOr0 = await DataPendaftars.count({
