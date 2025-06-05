@@ -2393,6 +2393,7 @@ export const verifikasiPendaftar = async (req, res) => {
                     verified_by: req.user.userId, // Extracted from token
                     kabkota_id_mutasi,
                     opened_by: 0, // Set opened_by to 0  
+                    is_active: 0, //set to non active
                     cek_list_dok
                 },
                 {
