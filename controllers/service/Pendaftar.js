@@ -226,7 +226,7 @@ export const createPendaftar = async (req, res) => {
                 // nilai_raport = JSON.stringify(nilai_raport);
 
                 // Menghasilkan kode verifikasi unik
-                const kode_verifikasi = await generateVerificationCode();
+                const kode_verifikasi = await generateVerificationCode(nisn);
                 const hashedPassword = await bcrypt.hash('CPD123#=', 10);
 
                 // Get file paths
@@ -466,7 +466,7 @@ export const createPendaftarTanpaFile = async (req, res) => {
      
 
       // Generate kode verifikasi dan hash password
-      const kode_verifikasi = await generateVerificationCode();
+      const kode_verifikasi = await generateVerificationCode(nisn);
       const hashedPassword = await bcrypt.hash("CPD123#=", 10);
 
       // Siapkan data untuk insert ke database
