@@ -336,13 +336,24 @@ export const countPendaftar = async (req, res) => {
       const perangkinganSmaCount = await DataPerangkingans.count({ where: wherePerangkinganSmaCount });
       const perangkinganSmkCount = await DataPerangkingans.count({ where: wherePerangkinganSmkCount });
 
+      // let sekolahFilter = sekolah_id != 0 ? `WHERE sekolah_tujuan_id = ${sekolah_id}` : "";
+      // let sekolahFilter2 = sekolah_id != 0 ? `AND sekolah_tujuan_id = ${sekolah_id}` : "";
+
+      // if (start_date && end_date) {
+      //     const dateFilter = `AND created_at BETWEEN '${start_date}' AND '${end_date}'`;
+      //     sekolahFilter += ` ${dateFilter}`;
+      //     sekolahFilter2 += ` ${dateFilter}`;
+      // }
+
       let sekolahFilter = sekolah_id != 0 ? `WHERE sekolah_tujuan_id = ${sekolah_id}` : "";
       let sekolahFilter2 = sekolah_id != 0 ? `AND sekolah_tujuan_id = ${sekolah_id}` : "";
 
       if (start_date && end_date) {
-          const dateFilter = `AND created_at BETWEEN '${start_date}' AND '${end_date}'`;
-          sekolahFilter += ` ${dateFilter}`;
-          sekolahFilter2 += ` ${dateFilter}`;
+        const dateFilter = `created_at BETWEEN '${start_date} 00:00:00' AND '${end_date} 23:59:59'`;
+        
+        // Handle kasus WHERE/AND dengan benar
+        sekolahFilter += sekolahFilter ? ` AND ${dateFilter}` : ` WHERE ${dateFilter}`;
+        sekolahFilter2 += ` AND ${dateFilter}`;
       }
 
       const queryJenjangPpendidikan = `
