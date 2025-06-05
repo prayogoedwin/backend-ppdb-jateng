@@ -36,10 +36,32 @@ export const countPendaftar = async (req, res) => {
           [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
       };
 
+      // if (start_date) {
+
+      //   if (start_date && end_date) {
+      //     whereClause.created_at = { [Op.between]: [start_date, end_date] };
+      //   }else if (start_date) {
+      //     whereClause.created_at = { [Op.gte]: start_date };
+      //   }
+      // }
+
       if (start_date && end_date) {
-        if(start_date === 'null' || end_date === 'null'){
-          whereClause.created_at = { [Op.between]: [start_date, end_date] };
-        }
+        // Range tanggal (antara start_date dan end_date)
+        whereClause.created_at = { 
+            [Op.between]: [
+                new Date(`${start_date} 00:00:00`), 
+                new Date(`${end_date} 23:59:59`)
+            ] 
+        };
+      } else if (start_date) {
+          // Hanya tanggal tertentu (misal: 2025-06-05)
+          const nextDay = new Date(start_date);
+          nextDay.setDate(nextDay.getDate() + 1); // Tambah 1 hari (untuk batas atas)
+      
+          whereClause.created_at = { 
+              [Op.gte]: new Date(`${start_date} 00:00:00`), // Mulai dari awal hari
+              [Op.lt]: nextDay // Sampai sebelum hari berikutnya
+          };
       }
 
       const pendaftarCount = await DataPendaftars.count({ where: whereClause });
