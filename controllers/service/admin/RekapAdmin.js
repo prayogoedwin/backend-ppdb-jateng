@@ -37,7 +37,9 @@ export const countPendaftar = async (req, res) => {
       };
 
       if (start_date && end_date) {
+        if(start_date === 'null' || end_date === 'null'){
           whereClause.created_at = { [Op.between]: [start_date, end_date] };
+        }
       }
 
       const pendaftarCount = await DataPendaftars.count({ where: whereClause });
@@ -412,7 +414,6 @@ export const countPendaftar = async (req, res) => {
       });
   }
 };
-
 
 export const countCheckedPesertaDidiks = async (req, res) => {
   try {
