@@ -81,6 +81,7 @@ import { getDataPendaftarForVerif,
     getDataPendaftarByIdKhususAfterVerif,
     resetOpenedBy,
     verifikasiPendaftar, 
+    perintahCekUlangPendaftaranTerverif, //api cek ulang
     updateKotaMutasi, //untuk update yang sudah terlanjur daftar
     verifikasiPendaftarTidakJadi, 
     updatePendaftar,
@@ -381,6 +382,8 @@ router.post('/admin-api/data/tolak_ajuan_akun_plus_alasan_alamat', ipWhitelistMi
 router.post('/admin-api/data/tolak_ajuan_akun_plus_buka_batas_wilayah', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/tolak_ajuan_akun_plus_update_nik', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar); //96
 router.post('/admin-api/data/tolak_ajuan_akun_sepenuhnya', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar); //95
+
+router.post('/admin-api/data/perintah_cek_ulang', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, perintahCekUlangPendaftaranTerverif); //api cek ulang
 
 router.post('/admin-api/data/fm_ajuan_akun', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
 router.post('/admin-api/data/batalkan_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken,  logAccessAdmin, verifikasiPendaftar);
