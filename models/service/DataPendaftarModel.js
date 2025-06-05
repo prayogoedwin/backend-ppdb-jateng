@@ -502,6 +502,10 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
     kabkota_id_mutasi: {
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    cek_ulang: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
     }
     
 }, {
