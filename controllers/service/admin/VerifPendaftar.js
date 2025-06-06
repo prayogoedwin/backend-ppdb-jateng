@@ -1265,7 +1265,8 @@ export const getDataPendaftarByWhereHanyaUntukCekLagi = async (req, res) => {
             };
 
             whereFor.is_verified = 1;   
-            whereFor.cek_ulang = 1;   
+            whereFor.cek_ulang = 1;  
+            whereFor.verified_by = adminNya;    
             
             if(nisn != ''){
                 whereFor.nisn = nisn;   
