@@ -2677,7 +2677,6 @@ export const updateAfterCekLagiPendaftar = async (req, res) => {
                     updated_by: req.user.userId, // Extracted from token
                     verified_at: new Date(), // Set the current date and time
                     verified_by: req.user.userId, // Extracted from token
-                    kabkota_id_mutasi,
                     opened_by: 0, // Set opened_by to 0  
                     cek_list_dok
                 },
