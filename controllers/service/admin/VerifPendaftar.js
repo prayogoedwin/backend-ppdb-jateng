@@ -2608,6 +2608,102 @@ export const verifikasiPendaftar = async (req, res) => {
         }
 }
 
+export const updateAfterCekLagiPendaftar = async (req, res) => {
+        const { id, status_shdk, is_usia_domisili, is_nama_ortu_sesuai} = req.body;
+
+        if (!id) {
+            return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
+        }
+
+        let decodedId;
+        try {
+            decodedId = decodeId(id);
+            if (!decodedId) {
+                return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+            }
+        } catch (err) {
+            console.error('Error decoding ID:', err);
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        // const resTm = await Timelines.findOne({  
+        //     where: { id: 2 }, // Find the timeline by ID  
+        //     attributes: ['id', 'nama', 'status']  
+        // });  
+
+        // if (resTm.status != 1) {  
+        //     return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka :)' });
+        // }
+
+        const resTm = await getTimelineSatuan(2);
+        
+        // console.log(resTm);
+
+        if (resTm?.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Verifikasi Belum Dibuka' });
+        }
+
+        console.log('Decoded ID:', decodedId); // For debugging
+
+        try {
+            const resData = await DataPendaftars.findOne({
+                where: {
+                    id: decodedId,
+                    is_delete: 0
+                }
+            });
+
+            if (!resData) {
+                return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+            }
+
+            let is_tidak_boleh_domisili_by_if
+            if(is_usia_domisili == 1 && is_nama_ortu_sesuai == 1 && status_shdk == 1){
+
+                is_tidak_boleh_domisili_by_if = 0;
+
+            }else{
+
+                is_tidak_boleh_domisili_by_if = 1;
+
+            }
+
+            await DataPendaftars.update(
+                {
+                    status_shdk,
+                    is_nama_ortu_sesuai,
+                    is_usia_domisili,
+                    updated_at: new Date(), // Set the current date and time
+                    updated_by: req.user.userId, // Extracted from token
+                    verified_at: new Date(), // Set the current date and time
+                    verified_by: req.user.userId, // Extracted from token
+                    kabkota_id_mutasi,
+                    opened_by: 0, // Set opened_by to 0  
+                    cek_list_dok
+                },
+                {
+                    where: {
+                        id: decodedId,
+                        is_delete: 0
+                    }
+                }
+            );
+
+            await clearCacheByKeyFunction('DataPendaftarAllinAdmin');
+
+            res.status(200).json({
+                status: 1,
+                message: 'Berhasil perbaharui data',
+            });
+        } catch (error) {
+            console.error('Error updating data:', error);
+            res.status(500).json({
+                status: 0,
+                message: error.message,
+            });
+        }
+}
+
 export const updateKotaMutasi = async (req, res) => {
     const { id, kabkota_id_mutasi} = req.body;
 
