@@ -97,7 +97,8 @@ import { getDataPendaftarForVerif,
     getDataPendaftarByWhereNisn,
     getDataPendaftarByNisn,
     getDataPendaftarCount,
-    getDataPendaftarByWhereHanyaUntukAdmin
+    getDataPendaftarByWhereHanyaUntukAdmin,
+    getDataPendaftarByWhereHanyaUntukCekLagi
 } from "../controllers/service/admin/VerifPendaftar.js";
 
 //timenline
@@ -117,7 +118,7 @@ import { getSertifikats, insertSertifikat } from "../controllers/service/integra
 
 
 //rekap
-import { countPendaftar, countCheckedPesertaDidiks, listCheckedPesertaDidiks, countPendaftarFrontend } from "../controllers/service/admin/RekapAdmin.js";
+import { countPendaftar, countCheckedPesertaDidiks, listCheckedPesertaDidiks, countPendaftarFrontend, countPendaftarPerTanggal } from "../controllers/service/admin/RekapAdmin.js";
 
 // // Terapkan logAccessMiddleware ke semua route
 // router.use(logAccessMiddleware);
@@ -360,6 +361,7 @@ router.get('/admin-api/data/pendaftaran_data_nisn', ipWhitelistMiddleware, appKe
 router.get('/admin-api/data/pencarian_by_nisn/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByNisn);
 
 router.get('/admin-api/data/sudah_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereHanyaUntukAdmin);
+router.get('/admin-api/data/sudah_verifikasi_cek_ulang', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereHanyaUntukCekLagi);
 
 
 // router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
@@ -421,6 +423,8 @@ router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddlewa
 //rekap
 // router.get('/admin-api/rekap/pendaftar/:sekolah_id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, countPendaftar);
 router.get('/admin-api/rekap/pendaftar/:sekolah_id?/:start_date?/:end_date?', ipWhitelistMiddleware, appKeyMiddleware, countPendaftar);
+router.get('/admin-api/rekap/pendaftar_per_tanggal', ipWhitelistMiddleware, appKeyMiddleware, countPendaftarPerTanggal);
+
 router.get('/api/rekap/pendaftar/', ipWhitelistMiddleware, appKeyMiddleware, countPendaftarFrontend);
 
 
