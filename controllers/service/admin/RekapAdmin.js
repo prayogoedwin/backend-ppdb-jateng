@@ -448,6 +448,69 @@ export const countPendaftar = async (req, res) => {
   }
 };
 
+export const countPendaftarPerTanggal = async (req, res) => {
+
+      const redis_key = `RekapPertanggalPendaftar`;
+
+      try {
+      
+        const cacheNya = await redisGet(redis_key); // ambil dari Redis
+        if (cacheNya) {
+          console.log(`[CACHE] →`, redis_key);
+            return res.status(200).json({
+                success: true,
+                message: 'Data diambil dari cache',
+                data: JSON.parse(cacheNya)
+            });
+        }
+        // Mengambil semua data pendaftar yang tidak dihapus
+        const allData = await DataPendaftars.findAll({
+            where: {
+                is_delete: 0
+            },
+            attributes: [
+                [sequelize.fn('DATE', sequelize.col('created_at')), 'tanggal'],
+                [sequelize.fn('COUNT', sequelize.col('*')), 'ajuan_akun'],
+                [sequelize.literal(`COUNT(CASE WHEN sekolah_asal_id = 1 THEN 1 END)`), 'dalam_provinsi'],
+                [sequelize.literal(`COUNT(CASE WHEN sekolah_asal_id = 2 THEN 1 END)`), 'luar_provinsi'],
+                [sequelize.literal(`COUNT(CASE WHEN is_anak_keluarga_tidak_mampu = '1' THEN 1 END)`), 'Anak_keluarga_tidak_mampu'],
+                [sequelize.literal(`COUNT(CASE WHEN is_anak_pondok = 1 THEN 1 END)`), 'anak_pondok'],
+                [sequelize.literal(`COUNT(CASE WHEN is_tidak_sekolah = '1' THEN 1 END)`), 'ats'],
+                [sequelize.literal(`COUNT(CASE WHEN is_anak_panti = '1' THEN 1 END)`), 'anak_panti'],
+                [sequelize.literal(`COUNT(CASE WHEN is_anak_guru_jateng = '1' THEN 1 END)`), 'anak_guru'],
+                [sequelize.literal(`COUNT(CASE WHEN status_domisili = 2 THEN 1 END)`), 'domisili_utasi'],
+                [sequelize.literal(`COUNT(CASE WHEN is_verified = 1 THEN 1 END)`), 'terverifikasi'],
+                [sequelize.literal(`COUNT(CASE WHEN is_verified = 1 AND is_active = 1 THEN 1 END)`), 'teraktivasi']
+            ],
+            group: [sequelize.fn('DATE', sequelize.col('created_at'))],
+            order: [[sequelize.fn('DATE', sequelize.col('created_at')), 'ASC']],
+            raw: true
+        });
+
+        await redisSet(
+          redis_key,
+          JSON.stringify(allData),
+          process.env.REDIS_EXPIRE_TIME_SOURCE_REKAP
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Berhasil hitung data",
+            data: allData
+        });
+
+        // return allData;
+    } catch (error) {
+        console.error("Error hitung data:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error hitung data",
+            error: error.message
+        });
+    }
+
+}
+
 export const countCheckedPesertaDidiks = async (req, res) => {
   try {
       const count = await DataPesertaDidiks.count({
