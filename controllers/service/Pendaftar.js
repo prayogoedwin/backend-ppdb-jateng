@@ -275,6 +275,7 @@ export const createPendaftar = async (req, res) => {
                     is_anak_panti,
                     is_anak_keluarga_tidak_mampu,
                     is_anak_guru_jateng,
+                    is_anak_pondok,
                     kode_verifikasi,
                     created_by: req.ip,
                     password_:hashedPassword,
