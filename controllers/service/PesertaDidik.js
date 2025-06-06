@@ -3,6 +3,7 @@ import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
 import { getIntegratorSatuan, parseKodeWilayah } from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import DataPesertaDidikSmaSmks from '../../models/service/DataPesertaDidikSmaSmkModel.js';
+import DataAnakKkos from '../../models/service/DataAnakKkoModel.js';
 import PemadananDukcapil from '../../models/service/PemadananDukcapilModel.js';
 import DataAnakPantis from '../../models/service/DataAnakPantiModel.js';
 import DataAnakMiskins from '../../models/service/DataAnakMiskinModel.js';
@@ -139,6 +140,74 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
     }
 };
 
+
+const getPesertaKkoByNisn = async (nisn, nik) => {
+    try {
+
+        const redis_key = `DataKkoAll`;
+        const cached = await redisGet(redis_key);
+
+        if (cached) {
+
+            console.log(`[REDIS] Cek dari cache: ${redis_key}`);
+
+            const allPesertaDidik = JSON.parse(cached);
+            const pesertaDidik = allPesertaDidik.find(pd => pd.nisn === nisn && pd.nik === nik);
+
+            if (!pesertaDidik) {
+                return false;
+            }
+
+            return pesertaDidik;
+
+
+        }else{
+
+            
+
+            const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
+               attributes: ['nisn', 'nik' ,'nama_calon_murid_baru'],  
+                where: { 
+                    nisn,
+                    nik, 
+                },
+                // include: [
+                //     {
+                //     model: Sekolah,
+                //     as: 'data_sekolah', // Tambahkan alias di sini
+                //     attributes: ['npsn', 'nama', 'bentuk_pendidikan_id', 'lat', 'lng', 'kode_wilayah'],
+                //     include: [{
+                //         model: BentukPendidikan,
+                //         as: 'bentuk_pendidikan',
+                //         attributes: ['id','nama']
+                //     }]
+                // },
+                // {
+                //     model: WilayahVerDapodik,
+                //     as: 'data_wilayah',
+                //     attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                // }
+                //],
+            
+            });
+
+            if (!pesertaDidik) {
+
+                return false;
+
+            }
+
+            return pesertaDidik;
+        
+        }
+
+    
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
 export const getPesertaDidikSmaSmkAll = async (req, res) => {
     try {
 
@@ -162,6 +231,32 @@ export const getPesertaDidikSmaSmkAll = async (req, res) => {
         throw error;
     }
 };
+
+export const getKkoAll = async (req, res) => {
+    try {
+
+        const redis_key = `DataKkoAll`;
+        // const cached = await redisGet(redis_key);
+
+        const pesertaDidikAll = await DataAnakKkos.findAll({
+            attributes: ['nisn', 'nik' ,'nama_calon_murid_baru']        
+        });
+
+        // Simpan semua data ke cache dengan expiry time
+        await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
+        console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
+        return res.status(200).json({
+            status: 0,
+            message: 'Berhasil generate cache siswa kko dengan key: DataKkoAll'
+        });
+        
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+
 
 const getPesertaDidikSmaSmkByNisnTanpaZRedis = async (nisn, nik) => {
     try {
@@ -1378,10 +1473,22 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
             
             return res.status(200).json({
                 status: 0,
-                message: 'Maaf tidak bisa pengajuan akun nisn anda masih terdaftar di data kelas SMA/SMK'
+                message: 'Maaf tidak bisa pengajuan akun, nisn anda masih terdaftar di data kelas SMA/SMK'
             });
 
         }
+
+        const pesetaKko = await getPesertaKkoByNisn(nisn, nik);
+        if (pesetaKko) {   
+            
+            return res.status(200).json({
+                status: 0,
+                message: 'Maaf tidak bisa pengajuan akun, nisn anda sudah terdaftar di data CMB KKO, konfirmasi ke operator'
+            });
+
+        }
+
+        
 
 
         let pesertaDidik = await getPesertaDidikByNisn(nisn, nik);
