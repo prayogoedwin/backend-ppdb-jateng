@@ -269,6 +269,7 @@ export const countPendaftar = async (req, res) => {
         dikirimDukcapilCount = await DataPendaftars.count({
           where: {
               verifikasikan_disdukcapil: 1,
+              is_verified: { [Op.ne]: 1 },
               [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
           },
           include: [
@@ -290,7 +291,11 @@ export const countPendaftar = async (req, res) => {
 
       }else{
         dikirimDukcapilCount = await DataPendaftars.count({
-            where: { ...whereClause, verifikasikan_disdukcapil: 1 }
+            where: { 
+              ...whereClause, 
+              verifikasikan_disdukcapil: 1,
+              is_verified: { [Op.ne]: 1 } 
+             }
         });
       }
 
@@ -474,11 +479,11 @@ export const countPendaftarPerTanggal = async (req, res) => {
                 [sequelize.literal(`COUNT(CASE WHEN sekolah_asal_id = 1 THEN 1 END)`), 'dalam_provinsi'],
                 [sequelize.literal(`COUNT(CASE WHEN sekolah_asal_id = 2 THEN 1 END)`), 'luar_provinsi'],
                 [sequelize.literal(`COUNT(CASE WHEN is_anak_keluarga_tidak_mampu = '1' THEN 1 END)`), 'Anak_keluarga_tidak_mampu'],
-                [sequelize.literal(`COUNT(CASE WHEN is_anak_pondok = 1 THEN 1 END)`), 'anak_pondok'],
+                [sequelize.literal(`COUNT(CASE WHEN status_domisili = 3 THEN 1 END)`), 'anak_pondok'],
                 [sequelize.literal(`COUNT(CASE WHEN is_tidak_sekolah = '1' THEN 1 END)`), 'ats'],
                 [sequelize.literal(`COUNT(CASE WHEN is_anak_panti = '1' THEN 1 END)`), 'anak_panti'],
                 [sequelize.literal(`COUNT(CASE WHEN is_anak_guru_jateng = '1' THEN 1 END)`), 'anak_guru'],
-                [sequelize.literal(`COUNT(CASE WHEN status_domisili = 2 THEN 1 END)`), 'domisili_utasi'],
+                [sequelize.literal(`COUNT(CASE WHEN status_domisili = 2 THEN 1 END)`), 'domisili_mutasi'],
                 [sequelize.literal(`COUNT(CASE WHEN is_verified = 1 THEN 1 END)`), 'terverifikasi'],
                 [sequelize.literal(`COUNT(CASE WHEN is_verified = 1 AND is_active = 1 THEN 1 END)`), 'teraktivasi']
             ],
