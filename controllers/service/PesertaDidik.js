@@ -166,7 +166,7 @@ const getPesertaKkoByNisn = async (nisn, nik) => {
             
 
             const pesertaDidik = await DataPesertaDidikSmaSmks.findOne({
-               attributes: ['nisn', 'nik' ,'nama_calon_murid_baru'],  
+               attributes: ['nisn', 'nik' ,'nama'],  
                 where: { 
                     nisn,
                     nik, 
