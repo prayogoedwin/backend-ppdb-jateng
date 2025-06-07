@@ -529,6 +529,8 @@ DataPesertaDidiks.belongsTo(DataUsers, { as: 'sedang_diproses_oleh', foreignKey:
 DataPesertaDidiks.belongsTo(SekolahAsals, { as: 'wilayah_sekolah_asal', foreignKey: 'sekolah_asal_id', targetKey: 'id' });
 DataPesertaDidiks.belongsTo(JenisKejuaraans, { as: 'jenis_kejuaraan', foreignKey: 'kejuaraan_id', targetKey: 'id' });
 
+DataPesertaDidiks.belongsTo(DataUsers, { as: 'diverifikasi_oleh_dukcapil', foreignKey: 'disdukcapil_by', targetKey: 'id' });
+
 
 export default DataPesertaDidiks;
 

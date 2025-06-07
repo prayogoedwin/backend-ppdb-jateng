@@ -498,7 +498,13 @@ export const getDataPendaftarByWhereCapil = async (req, res) => {
                            
                         ]
                         
-                    }
+                    },
+                    {
+                        model: DataUsers,
+                        as: 'diverifikasi_oleh_dukcapil',
+                        attributes: ['id', 'nama', 'kabkota_id'],
+                        
+                    },
                 ],
                 where: whereFor,
                 limit,
