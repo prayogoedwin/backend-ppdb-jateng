@@ -3207,6 +3207,7 @@ export const updatePendaftarByUser = async (req, res) => {
         lat,
         lng,
         no_wa,
+        email,
         tanggal_cetak_kk,
         kejuaraan_id,
         nama_kejuaraan,
@@ -3301,6 +3302,7 @@ export const updatePendaftarByUser = async (req, res) => {
                 lat,
                 lng,
                 no_wa,
+                email,
                 tanggal_cetak_kk: tanggal_cetak_kk ? new Date(tanggal_cetak_kk) : null,
                 kejuaraan_id: kejuaraan_id || 0,
                 nama_kejuaraan,
@@ -3335,10 +3337,10 @@ export const updatePendaftarByUser = async (req, res) => {
         );
 
         const responseData = {
-            id: updatedPendaftar.id,
-            nisn: updatedPendaftar.nisn,
-            nama_lengkap: updatedPendaftar.nama_lengkap,
-            kode_verifikasi: updatedPendaftar.kode_verifikasi,
+            id: id,
+            nisn: nisn,
+            nama_lengkap: nama_lengkap,
+            kode_verifikasi: resData.kode_verifikasi,
         };
 
         res.status(200).json({
