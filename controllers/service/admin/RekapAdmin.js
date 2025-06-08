@@ -263,15 +263,16 @@ export const countPendaftar = async (req, res) => {
         });
       }
 
-      let  dikirimDukcapilCount = 0;
+      let  countVerifikasikan1 = 0;
       if (sekolah_id != 0) {
 
-        dikirimDukcapilCount = await DataPendaftars.count({
-          where: {
-              verifikasikan_disdukcapil: 1,
-              is_verified: { [Op.ne]: 1 },
-              [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
-          },
+        countVerifikasikan1 = await DataPendaftars.count({
+          // where: {
+          //     verifikasikan_disdukcapil: 1,
+          //     is_verified: { [Op.ne]: 1 },
+          //     [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+          // },
+          where: { ...whereClause, verifikasikan_disdukcapil: 1 },
           include: [
             {
                 model: DataUsers,
@@ -290,22 +291,26 @@ export const countPendaftar = async (req, res) => {
       });
 
       }else{
-        dikirimDukcapilCount = await DataPendaftars.count({
+        countVerifikasikan1 = await DataPendaftars.count({
             where: { 
               ...whereClause, 
               verifikasikan_disdukcapil: 1,
-              is_verified: { [Op.ne]: 1 } 
              }
         });
       }
 
-      let verifDukcapilCount = 0;
+      let countVerifikasikan1AndVerified1 = 0;
       if (sekolah_id != 0) {
 
-        verifDukcapilCount = await DataPendaftars.count({
-          where: {
-            is_verified_disdukcapil: 1,
-              [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+        countVerifikasikan1AndVerified1 = await DataPendaftars.count({
+          // where: {
+          //   is_verified_disdukcapil: 1,
+          //     [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+          // },
+          where: { 
+              ...whereClause, 
+              verifikasikan_disdukcapil: 1,
+              is_verified_disdukcapil: 1,
           },
           include: [
             {
@@ -325,10 +330,150 @@ export const countPendaftar = async (req, res) => {
       });
 
       }else{
-        verifDukcapilCount = await DataPendaftars.count({
-            where: { ...whereClause, is_verified_disdukcapil: 1 }
+        countVerifikasikan1AndVerified1 = await DataPendaftars.count({
+            where: { ...whereClause, verifikasikan_disdukcapil: 1, is_verified_disdukcapil: 1 }
         });
       }
+
+      let countVerifikasikan1AndVerifiedCapil0AndVerified1 = 0;
+      if (sekolah_id != 0) {
+
+        countVerifikasikan1AndVerifiedCapil0AndVerified1 = await DataPendaftars.count({
+          // where: {
+          //   is_verified_disdukcapil: 1,
+          //     [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+          // },
+          where: { 
+              ...whereClause, 
+              verifikasikan_disdukcapil: 1,
+              is_verified_disdukcapil: 0,
+              is_verified : 1
+          },
+          include: [
+            {
+                model: DataUsers,
+                as: "diverifikasi_oleh", // Sesuai alias di model
+                required: true,
+                include: [
+                    {
+                        model: SekolahTujuanModel,
+                        as: "asal_sekolah_verifikator", // Sesuai alias di model
+                        required: true,
+                        where: { id: sekolah_id }
+                    }
+                ]
+            }
+        ]
+      });
+
+      }else{
+        countVerifikasikan1AndVerifiedCapil0AndVerified1 = await DataPendaftars.count({ 
+          where: { 
+              ...whereClause, 
+              verifikasikan_disdukcapil: 1,
+              is_verified_disdukcapil: 0,
+              is_verified : 1
+          },
+
+        });
+      }
+
+      let countVerifikasikan1AndMasihRevisiCMB = 0;
+      if (sekolah_id != 0) {
+
+        countVerifikasikan1AndMasihRevisiCMB = await DataPendaftars.count({
+          // where: {
+          //   is_verified_disdukcapil: 1,
+          //     [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+          // },
+          where: { 
+              ...whereClause, 
+              verifikasikan_disdukcapil: 1,
+              is_verified_disdukcapil: 0,
+              is_verified: { 
+                    [Op.and]: [
+                        { [Op.ne]: 0 },
+                        { [Op.ne]: 1 }
+                    ]
+                }
+          },
+          include: [
+            {
+                model: DataUsers,
+                as: "diverifikasi_oleh", // Sesuai alias di model
+                required: true,
+                include: [
+                    {
+                        model: SekolahTujuanModel,
+                        as: "asal_sekolah_verifikator", // Sesuai alias di model
+                        required: true,
+                        where: { id: sekolah_id }
+                    }
+                ]
+            }
+        ]
+      });
+
+      }else{
+        countVerifikasikan1AndMasihRevisiCMB = await DataPendaftars.count({
+            where: { ...whereClause, 
+              verifikasikan_disdukcapil: 1,
+              is_verified_disdukcapil: 0,
+              is_verified: { 
+                        [Op.and]: [
+                            { [Op.ne]: 0 },
+                            { [Op.ne]: 1 }
+                        ]
+                    }
+            }
+        });
+      }
+
+       let countVerifikasikan1AndVerifiedNullOr0 = 0;
+        if (sekolah_id != 0) {
+
+          countVerifikasikan1AndVerifiedNullOr0 = await DataPendaftars.count({
+            // where: {
+            //   is_verified_disdukcapil: 1,
+            //     [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+            // },
+            where: { 
+                ...whereClause, 
+                verifikasikan_disdukcapil: 1,
+                is_verified_disdukcapil: 0,
+                is_verified: 0
+            },
+            include: [
+              {
+                  model: DataUsers,
+                  as: "diverifikasi_oleh", // Sesuai alias di model
+                  required: true,
+                  include: [
+                      {
+                          model: SekolahTujuanModel,
+                          as: "asal_sekolah_verifikator", // Sesuai alias di model
+                          required: true,
+                          where: { id: sekolah_id }
+                      }
+                  ]
+              }
+          ]
+        });
+
+        }else{
+          countVerifikasikan1AndVerifiedNullOr0 = await DataPendaftars.count({
+              where: { ...whereClause, 
+                verifikasikan_disdukcapil: 1,
+                is_verified_disdukcapil: 0,
+                is_verified: { 
+                          [Op.and]: [
+                              { [Op.ne]: 0 },
+                              { [Op.ne]: 1 }
+                          ]
+                      }
+              }
+          });
+        }
 
       let wherePerangkinganSmaCount = { ...whereClause, bentuk_pendidikan_id: 13 };
       let wherePerangkinganSmkCount = { ...whereClause, bentuk_pendidikan_id: 15 };
@@ -421,13 +566,21 @@ export const countPendaftar = async (req, res) => {
           pendaftar_jenis_kelamin: genderCounts,
           pendaftar_terverifikasi: verifiedCount,
           pendaftar_aktivasi: activatedCount,
-          pendaftar_dikirim_kecapil: dikirimDukcapilCount,
-          pendaftar_diverif_capil: verifDukcapilCount,
+          // pendaftar_dikirim_kecapil: dikirimDukcapilCount,
+          // pendaftar_diverif_capil: verifDukcapilCount,
           daftar_sma: perangkinganSmaCount,
           daftar_smk: perangkinganSmkCount,
           jenjang_pendidikan: jenjangPpendidikan,
           jalur_pendaftaran_sma: jaluePendaftaranSMA,
-          jalur_pendaftaran_smk: jaluePendaftaranSMK
+          jalur_pendaftaran_smk: jaluePendaftaranSMK,
+
+          masuk_dukcapil: countVerifikasikan1,
+          masuk_dukcapil_sudah_aksi: countVerifikasikan1AndVerified1,
+          masuk_dukcapil_belum_aksi_tp_sudah_clear_oleh_operator_sekolah: countVerifikasikan1AndVerifiedCapil0AndVerified1, //sempat di ajukan capil, belum di aksi, sudah di verifikasi operator
+          masuk_dukcapil_tapi_sedang_dikembalikan_ke_cmb_oleh_operator_sekolah : countVerifikasikan1AndMasihRevisiCMB,
+          masuk_dukcapil_menunggu_aksi: countVerifikasikan1AndVerifiedNullOr0
+
+
       };
 
       // await redisSet(redis_key, JSON.stringify(result));
