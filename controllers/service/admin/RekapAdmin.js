@@ -465,12 +465,13 @@ export const countPendaftar = async (req, res) => {
               where: { ...whereClause, 
                 verifikasikan_disdukcapil: 1,
                 is_verified_disdukcapil: 0,
-                is_verified: { 
-                          [Op.and]: [
-                              { [Op.ne]: 0 },
-                              { [Op.ne]: 1 }
-                          ]
-                      }
+                is_verified: 0
+                // is_verified: { 
+                //           [Op.and]: [
+                //               { [Op.ne]: 0 },
+                //               { [Op.ne]: 1 }
+                //           ]
+                //       }
               }
           });
         }
