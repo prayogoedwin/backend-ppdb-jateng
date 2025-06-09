@@ -2680,6 +2680,7 @@ export const updateAfterCekLagiPendaftar = async (req, res) => {
                     is_nama_ortu_sesuai,
                     is_usia_domisili,
                     cek_ulang: 2,
+                    is_tidak_boleh_domisili: is_tidak_boleh_domisili_by_if,
                     updated_at: new Date(), // Set the current date and time
                     updated_by: req.user.userId, // Extracted from token
                     verified_at: new Date(), // Set the current date and time
