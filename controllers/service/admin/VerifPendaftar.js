@@ -1088,10 +1088,10 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
 
             whereFor.is_verified = 1;  
             
-            if(is_active === 1){
-                 whereFor.is_active = 1;  
-            }else if(is_active === 0){
+            if(is_active == 0){
                 whereFor.is_active = 0;  
+            }else if(is_active == 1){
+                whereFor.is_active = 1;
             }
             
             if(nisn != ''){
