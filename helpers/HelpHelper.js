@@ -6,6 +6,7 @@ import Timelines from "../models/service/TimelineModel.js";
 import FileTambahans from "../models/master/FileTambahanModel.js";
 import SekolahTujuan from "../models/master/SekolahTujuanModel.js";
 import SekolahJurusan from "../models/master/SekolahJurusanModel.js";
+import EzAppKey from '../models/config/AppKeyModel.js';
 
 import SekolahZonasiKhusus from "../models/master/SekolahZonasiKhususModel.js";
 
@@ -536,3 +537,37 @@ export function parseKodeWilayah(kodeKelurahan) {
       kode_provinsi: kodeProvinsi
   };
 }
+
+export const checkMaintenancePublicStatus = async (apiKey) => {
+    try {
+        const redis_key = `Maintenis_Publik`;
+        let maintenanceData = await redisGet(redis_key);
+
+        if (maintenanceData) {
+            maintenanceData = JSON.parse(maintenanceData);
+            console.log(`[CACHE] Found cached maintenance publik key for ${apiKey}`);
+            return maintenanceData.nama;
+        }
+
+        maintenanceData = await EzAppKey.findOne({
+            where: { apikey: apiKey }
+        });
+
+        if (!maintenanceData) {
+            return null;
+        }
+
+        await redisSet(
+            redis_key,
+            JSON.stringify(maintenanceData),
+            process.env.REDIS_EXPIRE_TIME_HARIAN
+        );
+
+        console.log(`[DB] Maintenis(${apiKey}) →`, maintenanceData);
+        return maintenanceData.nama;
+
+    } catch (error) {
+        console.error('Error checking Maintenance Key:', error);
+        throw error; // Let the caller handle the error
+    }
+};

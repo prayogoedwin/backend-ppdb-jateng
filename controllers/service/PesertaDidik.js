@@ -1,6 +1,6 @@
 // controllers/PesertaDidik.js
 import DataPesertaDidiks from '../../models/service/DataPesertaDidikModel.js';
-import { getIntegratorSatuan, parseKodeWilayah } from '../../helpers/HelpHelper.js';
+import { getIntegratorSatuan, parseKodeWilayah, checkMaintenancePublicStatus } from '../../helpers/HelpHelper.js';
 import DataPesertaDidiksAts from '../../models/service/DataPesertaDidikAtsModel.js';
 import DataPesertaDidikSmaSmks from '../../models/service/DataPesertaDidikSmaSmkModel.js';
 import DataAnakKkos from '../../models/service/DataAnakKkoModel.js';
@@ -745,6 +745,21 @@ export const getPesertaDidikByNisnHandlerTes = async (req, res) => {
 export const getPesertaDidikByNisnHandler = async (req, res) => {
     const {nisn,nik} = req.body;
     try {
+
+        const apiKey = 'maintenis_publik';
+        const maintenanceData = await checkMaintenancePublicStatus(apiKey);
+
+        if(maintenanceData == 1){
+
+            return res.status(200).json({
+                status: 2,
+                message: 'Mode Maintenance Public.' + apiKey,
+                data: 'on'
+            });
+
+        }
+
+
         if (!nisn) {
             return res.status(400).json({
                 status: 0,
@@ -1515,7 +1530,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
                 is_tidak_sekolah = 0;
                 return res.status(200).json({
                     status: 0,
-                    message: 'NISN tidak ditemukan 1'
+                    message: 'NISN tidak ditemukan pada data peserta didik maupun data ATS'
                 });
                
                 
