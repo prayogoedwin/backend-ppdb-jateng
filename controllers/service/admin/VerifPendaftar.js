@@ -1046,12 +1046,12 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default page is 1
     const limit = parseInt(req.query.limit) || 10; // Default limit is 10
     const offset = (page - 1) * limit;
-    const { nisn, sekolah_tujuan_id } = req.query;
+    const { nisn, sekolah_tujuan_id, is_active } = req.query;
 
 
 
     // const redis_key = 'DataPendaftarAllinAdmin-IdSekolah:';
-    const redis_key = `DataPendaftarAllinAdmin:IdSekolah:${sekolah_tujuan_id}--page:${page}--limit:${limit}--offset:${offset}`;
+    const redis_key = `DataPendaftarAllinAdmin:IdSekolah:${sekolah_tujuan_id}--page:${page}--limit:${limit}--offset:${offset}--is_active:${is_active}`;
     try {
         const cacheNya = await redisGet(redis_key);
         // const cacheNya = false;
@@ -1086,7 +1086,13 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                 ]
             };
 
-            whereFor.is_verified = 1;   
+            whereFor.is_verified = 1;  
+            
+            if(is_active == 1){
+                 whereFor.is_active = 1;  
+            }else if(is_active == 0){
+                whereFor.is_active = 0;  
+            }
             
             if(nisn != ''){
                 whereFor.nisn = nisn;   
