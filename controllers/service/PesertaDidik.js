@@ -753,7 +753,7 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
 
             return res.status(200).json({
                 status: 2,
-                message: 'Mode Maintenance Public.' + apiKey,
+                message: 'Saat ini sistem sedang dalam masa perbaikan : ',
                 data: 1
             });
 
