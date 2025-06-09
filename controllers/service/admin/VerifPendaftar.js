@@ -1159,6 +1159,7 @@ export const getDataPendaftarByWhereHanyaUntukAdmin = async (req, res) => {
                     }
                 ],
                 where: whereFor,
+                order: [['created_at', 'DESC']], // Added this line for ordering
                 limit,
                 offset
             });
