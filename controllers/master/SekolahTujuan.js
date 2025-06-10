@@ -1002,7 +1002,7 @@ export const getSekolahTujuan = async (req, res) => {
                 },  
             }); 
 
-             if(cekPendaftar.status_domisili != 2){
+             if(cekPendaftar.status_domisili != 2 && cekPendaftar.is_anak_guru_jateng != 1){
 
                 return res.status(200).json({  
                     'status': 0,  
