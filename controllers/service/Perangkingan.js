@@ -16623,9 +16623,9 @@ export const createPerangkingan = async (req, res) => {
             is_tidak_sekolah: anak_tidak_sekolah,
             is_anak_panti: anak_panti,
             is_anak_keluarga_tidak_mampu: anak_tidak_mampu,
+            is_disabilitas: anak_disabilitas,
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
             // is_pip: pendaftar.is_pip,
-            is_disabilitas: anak_disabilitas,
             is_buta_warna,
             created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
