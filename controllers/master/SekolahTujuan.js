@@ -1012,7 +1012,7 @@ export const getSekolahTujuan = async (req, res) => {
 
             }
 
-            if(kabkota == cekPendaftar.kabkota_id){
+            if(kabkota == cekPendaftar.kabkota_id && cekPendaftar.is_anak_guru_jateng != 1){
 
                 return res.status(200).json({  
                     'status': 0,  
