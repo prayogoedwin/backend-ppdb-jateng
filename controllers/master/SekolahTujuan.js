@@ -943,7 +943,7 @@ export const getSekolahTujuan = async (req, res) => {
             const npsnList = resDataZ.map(s => s.npsn).filter(npsn => npsn !== null); // Filter out null values
 
              // Fetch data from SekolahTujuans where npsn is in the list from resDataZ
-             resData = await SekolahTujuans.findAll({  
+            resData = await SekolahTujuans.findAll({  
                 where: {  
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
                     kode_wilayah_kot: kabkota,
@@ -1012,9 +1012,10 @@ export const getSekolahTujuan = async (req, res) => {
 
             }
 
+            let resData;
             if(kabkota == cekPendaftar.kabkota_id_mutasi){
 
-                const resData = await SekolahTujuans.findAll({  
+                resData = await SekolahTujuans.findAll({  
                     where: {  
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
                         kode_wilayah_kot: kabkota,
