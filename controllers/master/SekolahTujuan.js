@@ -1002,6 +1002,16 @@ export const getSekolahTujuan = async (req, res) => {
                 },  
             }); 
 
+             if(cekPendaftar.status_domisili != 2){
+
+                return res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Anda tidak terdaftar dengan status domisili mutasi',  
+                    'data': ''  
+                });  
+
+            }
+
             if(kabkota == cekPendaftar.kabkota_id){
 
                 return res.status(200).json({  
