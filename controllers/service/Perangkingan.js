@@ -16337,7 +16337,7 @@ export const cekPerangkingan = async (req, res) => {
 }
 
 // Function to handle POST request
-export const createPerangkingan = async (req, res) => {
+export const createPerangkinganBAK = async (req, res) => {
 
     try {
         const {
@@ -16461,6 +16461,170 @@ export const createPerangkingan = async (req, res) => {
             is_anak_keluarga_tidak_mampu: anak_tidak_mampu,
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
             is_pip: pendaftar.is_pip,
+            is_disabilitas: anak_disabilitas,
+            is_buta_warna,
+            created_at: new Date(), // Set the current date and time
+            created_by: id_pendaftar_decode,
+            created_by_ip: req.ip,
+            daftar_ulang_by: 0,
+            order_berdasar: 0,
+            kode_kecamatan: pendaftar.kecamatan_id
+        };
+
+        const newPerangkingan = await DataPerangkingans.create(newPerangkinganData);
+
+        const datas = {
+            ...newPerangkinganData,
+            id_pendaftar_: id_pendaftar, // Menambahkan ID ke dalam data yang dikembalikan
+            id_perangkingan_: encodeId(newPerangkingan.id), // Menambahkan ID ke dalam data yang dikembalikan  
+        }
+        delete datas.id_pendaftar; 
+
+        res.status(201).json({
+            status: 1,
+            message: 'Daftar berhasil dibuat',
+            data: datas
+        });
+    } catch (error) {
+        console.error('Error daftar:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat proses daftar'
+        });
+    }
+}
+
+// Function to handle POST request
+export const createPerangkingan = async (req, res) => {
+
+    try {
+        const {
+            id_pendaftar,
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            jarak,
+            nisn,
+            is_buta_warna,
+            anak_tidak_mampu,
+            anak_panti,
+            anak_disabilitas,
+            anak_tidak_sekolah,
+            is_anak_guru_jateng,
+            anak_pondok,
+        } = req.body;
+
+        let id_pendaftar_decode = decodeId(id_pendaftar);
+
+         // Retrieve data from DataPendaftarModel
+         const pendaftar = await DataPendaftars.findOne({
+            where: {
+                id: id_pendaftar_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!pendaftar) {
+            return res.status(200).json({ status: 0, message: 'Pendaftar tidak ditemukan' });
+        }
+
+
+        if (!pendaftar.is_verified == 2) {
+            return res.status(200).json({ status: 0, message: 'Status anda sedang diminta untuk revisi, tidak dapat mendaftar sekolah sekarang!' });
+        }
+
+        // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
+        const nilai_akhir = (pendaftar.nilai_raport_rata || 0) + (pendaftar.nilai_prestasi || 0)  + (pendaftar.nilai_organisasi || 0);
+
+        // Count existing entries with the same NISN that are not deleted
+        const count = await DataPerangkingans.count({
+            where: {
+                nisn,
+                is_delete: 0
+            }
+        });   
+        
+        if(count >= 1){
+               return res.status(200).json({ status: 0, message: 'Hanya boleh mendaftar 1 pilihan' });
+        }
+
+        const no_pendaftaran = await generatePendaftaranNumber(bentuk_pendidikan_id);
+
+        const umur = await calculateAge(pendaftar.tanggal_lahir);
+
+        // let anak_tidak_mampu = pendaftar.is_anak_keluarga_tidak_mampu;
+        // let anak_panti = pendaftar.is_anak_panti;
+        // let anak_disabilitas =  pendaftar.is_disabilitas;
+        // let anak_tidak_sekolah = pendaftar.is_tidak_sekolah;
+        // let is_anak_guru_jateng= pendaftar.is_anak_guru_jateng;
+
+        // if(jalur_pendaftaran_id == 5 || jalur_pendaftaran_id == 9){
+        //     if(pendaftar.status_domisili == 1 && pendaftar.is_anak_keluarga_tidak_mampu == 1){
+        //         anak_tidak_mampu = 1;
+        //         anak_panti = 0;
+        //         anak_disabilitas = 0;
+        //         anak_tidak_sekolah = 0;
+        //         is_anak_guru_jateng = 0;
+        //     }
+
+        //     if(pendaftar.status_domisili == 4 && pendaftar.is_anak_panti == 1){
+        //         anak_tidak_mampu = 0;
+        //         anak_panti = 1;
+        //         anak_disabilitas = 0;
+        //         anak_tidak_sekolah = 0;
+        //         is_anak_guru_jateng = 0;
+        //     }
+
+        //     if(pendaftar.status_domisili == 1 && pendaftar.is_disabilitas == 1){
+        //         anak_tidak_mampu = 0;
+        //         anak_panti = 0;
+        //         anak_disabilitas = 1;
+        //         anak_tidak_sekolah = 0;
+        //         is_anak_guru_jateng = 0;
+        //     }
+
+        //     if(pendaftar.status_domisili == 1 && pendaftar.is_tidak_sekolah == 1){
+        //         anak_tidak_mampu = 0;
+        //         anak_panti = 0;
+        //         anak_disabilitas = 0;
+        //         anak_tidak_sekolah = 1;
+        //         is_anak_guru_jateng = 0;
+        //     }
+        // }else{
+
+        //     anak_tidak_mampu = 0;
+        //     anak_panti = 0;
+        //     anak_disabilitas = pendaftar.is_disabilitas;
+        //     anak_tidak_sekolah = 0;
+        //     is_anak_guru_jateng = pendaftar.is_anak_guru_jateng;
+
+        // }
+        
+        const newPerangkinganData = {
+            id_pendaftar: id_pendaftar_decode,
+            no_pendaftaran,
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+            nisn,
+            nik: pendaftar.nik,
+            nama_lengkap: pendaftar.nama_lengkap,
+            tanggal_lahir: new Date(pendaftar.tanggal_lahir),
+            umur: umur,
+            tahun_lulus: pendaftar.tahun_lulus ? pendaftar.tahun_lulus : 0,
+            umur_sertifikat: pendaftar.umur_sertifikat ? pendaftar.umur_sertifikat : 0,
+            jarak,
+            nilai_raport: pendaftar.nilai_raport_rata,
+            nilai_prestasi: pendaftar.nilai_prestasi,
+            nilai_organisasi: pendaftar.nilai_organisasi,
+            nilai_akhir,
+            is_tidak_sekolah: anak_tidak_sekolah,
+            is_anak_panti: anak_panti,
+            is_anak_keluarga_tidak_mampu: anak_tidak_mampu,
+            is_anak_guru_jateng: is_anak_guru_jateng,
+            // is_pip: pendaftar.is_pip,
             is_disabilitas: anak_disabilitas,
             is_buta_warna,
             created_at: new Date(), // Set the current date and time
