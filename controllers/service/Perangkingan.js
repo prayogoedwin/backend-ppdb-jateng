@@ -16188,7 +16188,26 @@ export const cekPerangkingan = async (req, res) => {
         //jika status domisili TIDAK "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili != 2){
 
-            if(jalur_pendaftaran_id == 4){
+            if(pendaftar.is_anak_guru_jateng == 1){
+               
+                    const npsn_sekolah = await SekolahTujuan.findOne({
+                        where: {
+                            id: sekolah_tujuan_id,
+                        },
+                        attributes: ['npsn' 
+                            ] 
+                    });
+
+                    if(jalur_pendaftaran_id == 4){
+
+                        if(pendaftar.npsn_anak_guru != npsn_sekolah.npsn){ {
+                            return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai anak guru jateng  dan saat ini daftar di jalur mutasi, silahkan mendaftar di sekolah yang sesuai dengan sekolah tempat orang tua anda mengajar (yang sudah terdata sebelumnya)' });
+                            }
+                        }
+                    }    
+            }
+
+            if(jalur_pendaftaran_id == 4 && pendaftar.is_anak_guru_jateng != 1){
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali", Anda tidak diperbolehkan daftar jalur mutasi (SMA)' });
             }
 
