@@ -1012,6 +1012,8 @@ export const getSekolahTujuan = async (req, res) => {
 
             }
 
+            
+
             if(kabkota == cekPendaftar.kabkota_id_mutasi){
 
                 resData = await SekolahTujuans.findAll({  
@@ -1022,7 +1024,7 @@ export const getSekolahTujuan = async (req, res) => {
                         nama_jurusan: {
                             [Op.not]: null,
                           },
-                        npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
+                        // npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
                         
                     },  
                     // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
