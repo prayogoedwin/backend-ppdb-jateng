@@ -381,6 +381,7 @@ export const loginTanpaOtp = [
                     anak_panti: user.is_anak_panti,
                     anak_miskin: user.is_anak_keluarga_tidak_mampu,
                     anak_guru: user.is_anak_guru_jateng,
+                    disabilitas: user.is_disabilitas,
                     accessToken,
                     refreshToken,
                     timline_dafatar_sekolah: resTimeline
