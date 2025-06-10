@@ -123,7 +123,7 @@ export const getPerangkinganSaya = async (req, res) => {
             });
 
             const resDatas = resData.map(item => {
-                const jsonItem = item.toJSON();
+                const jsonItem = item.toJSON(); //keluarkan penanda 4 afirmasi
                 jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
                 jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
                 delete jsonItem.id; // Hapus kolom id dari output JSON
