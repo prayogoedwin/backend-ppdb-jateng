@@ -123,6 +123,22 @@ export const countPendaftar = async (req, res) => {
         where: whereMiskin
       });
 
+      const whereAnakGuru = {
+        ...whereClause,
+        is_anak_guru_jateng: '1'
+      };
+      const pendaftarAnakGuru = await DataPendaftars.count({
+        where: whereAnakGuru
+      });
+
+      const whereAts = {
+        ...whereClause,
+        is_tidak_sekolah: '1'
+      };
+      const pendaftarAts = await DataPendaftars.count({
+        where: whereAts
+      });
+
       const whereAdaKepindahan = {
         ...whereClause,
         status_kepindahan: { 
@@ -555,6 +571,10 @@ export const countPendaftar = async (req, res) => {
 
           pendaftar_abk: pendaftarAbk,
           pendaftar_miskin: pendaftarMiskin,
+
+          pendaftar_anak_guru: pendaftarAnakGuru,
+          pendaftar_ats: pendaftarAts,
+          
           pendaftar_ada_kepindahan: pendaftarAdaKepindahan,
           pendaftar_ada_kepindahan_ibu: pendaftarAdaKepindahanIbu,
           pendaftar_ada_kepindahan_ayah: pendaftarAdaKepindahanAyah,
