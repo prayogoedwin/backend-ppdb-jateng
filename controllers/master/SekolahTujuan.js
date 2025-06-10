@@ -905,13 +905,13 @@ export const getSekolahTujuan = async (req, res) => {
             }  
   
             if (formattedResData.length > 0) {  
-                res.status(200).json({  
+                return res.status(200).json({  
                     'status': 1,  
                     'message': 'Data berhasil ditemukan',  
                     'data': formattedResData  
                 });  
             } else {  
-                res.status(200).json({  
+                return res.status(200).json({  
                     'status': 0,  
                     'message': 'Data kosong',  
                     'data': ''  
@@ -979,13 +979,13 @@ export const getSekolahTujuan = async (req, res) => {
             });
 
             if (formattedResData.length > 0) {  
-                res.status(200).json({  
+                return res.status(200).json({  
                     'status': 1,  
                     'message': 'Data berhasil ditemukan',  
                     'data': formattedResData  
                 });  
             } else {  
-                res.status(200).json({  
+                return res.status(200).json({  
                     'status': 0,  
                     'message': 'Data kosong',  
                     'data': ''  
@@ -1004,7 +1004,7 @@ export const getSekolahTujuan = async (req, res) => {
 
             if(kabkota == cekPendaftar.kabkota_id){
 
-                res.status(200).json({  
+                return res.status(200).json({  
                     'status': 0,  
                     'message': 'Silahkan pilih kabupaten/kota sesuai dengan kabupaten/kota sesuai surat tugas mutasi anda',  
                     'data': ''  
@@ -1012,11 +1012,9 @@ export const getSekolahTujuan = async (req, res) => {
 
             }
 
-            
-
             if(kabkota == cekPendaftar.kabkota_id_mutasi){
 
-                resData = await SekolahTujuans.findAll({  
+                const resData = await SekolahTujuans.findAll({  
                     where: {  
                         bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,  
                         kode_wilayah_kot: kabkota,
@@ -1024,7 +1022,7 @@ export const getSekolahTujuan = async (req, res) => {
                         nama_jurusan: {
                             [Op.not]: null,
                           },
-                        // npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
+                        npsn: { [Op.in]: npsnList }, // Use Op.in to filter by npsn
                         
                     },  
                     // attributes: ['id', 'nama', 'npsn', 'lat', 'lng', 'daya_tampung', 'alamat_jalan'],
@@ -1052,13 +1050,13 @@ export const getSekolahTujuan = async (req, res) => {
                 });
     
                 if (formattedResData.length > 0) {  
-                    res.status(200).json({  
+                    return res.status(200).json({  
                         'status': 1,  
                         'message': 'Data berhasil ditemukan',  
                         'data': formattedResData  
                     });  
                 } else {  
-                    res.status(200).json({  
+                    return res.status(200).json({  
                         'status': 0,  
                         'message': 'Data kosong',  
                         'data': ''  
@@ -1085,7 +1083,7 @@ export const getSekolahTujuan = async (req, res) => {
 
             if (cacheNya) {
 
-                res.status(200).json({
+                return res.status(200).json({
                     'status': 1,
                     'message': 'Data di ambil dari cache',
                     'data': JSON.parse(cacheNya)
@@ -1192,13 +1190,13 @@ export const getSekolahTujuan = async (req, res) => {
 
                         await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER); 
 
-                        res.status(200).json({  
+                        return res.status(200).json({  
                             'status': 1,  
                             'message': 'Data berhasil ditemukan',  
                             'data': formattedResData  
                         });  
                     } else {  
-                        res.status(200).json({  
+                        return res.status(200).json({  
                             'status': 0,  
                             'message': 'Data kosong',  
                             'data': ''  
@@ -1208,7 +1206,7 @@ export const getSekolahTujuan = async (req, res) => {
         }  
     } catch (error) {  
         console.error(error);  
-        res.status(500).json({  
+        return res.status(500).json({  
             'status': 0,  
             'message': 'Terjadi kesalahan pada server',  
             'data': ''  
