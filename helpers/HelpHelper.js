@@ -246,12 +246,12 @@ export const getSekolahJurusanById = async (sekolah_tujuan_id, jurusan_id) => {
 export const SekolahZonasiKhususByNpsn = async (npsn) => {
 
   const redis_key = `zonasi_khusus:by_npsn:${npsn}`;
-
+  let data;
   try {
     // 1) Cek Redis
     const cached = await redisGet(redis_key);
     if (cached) {
-      const data = JSON.parse(cached);
+      data = JSON.parse(cached);
       console.log(`[CACHE] SekolahZonasiKhususByNpsn(${npsn} →`, data);
       return data;
     }
@@ -264,8 +264,9 @@ export const SekolahZonasiKhususByNpsn = async (npsn) => {
     });
 
     // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+
     if (resZonKh) {
-      const data = resZonKh.toJSON();
+      data = resZonKh;
       await redisSet(
         redis_key,
         JSON.stringify(data),
@@ -280,7 +281,7 @@ export const SekolahZonasiKhususByNpsn = async (npsn) => {
     return null;
 
   } catch (err) {
-    console.log(`[Error] SekolahZonasiKhususByNpsn(${npsn} →`, data);
+   
     return null;
   }
 

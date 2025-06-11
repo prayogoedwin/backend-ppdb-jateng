@@ -11915,7 +11915,9 @@ export const getPerangkingan = async (req, res) => {
                     limit: resSek.kuota_pto
                 })).length;
     
+                
                 let countZonasiKhusus = 0;
+
                 let zonKhData = []; // Untuk menyimpan data per zonasi khusus
                 let totalZonasiKhusus = 0; // Untuk menyimpan total keseluruhan
                 if(resSek.kuota_zonasi_khusus > 0){
@@ -17732,7 +17734,7 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
     let totalZonasiKhusus = 0; // Untuk menyimpan total keseluruhan
     if(resSek.kuota_zonasi_khusus > 0){
         
-        npsn = resSek.npsn;
+        const npsn = resSek.npsn;
         const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
 
         for (const zonKh of resZonKh) {
