@@ -497,7 +497,7 @@ router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIn
 router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
 
 
-router.get('/rekap-api/external/jenis_kejuaraan', logAccessClient, appKeynyaIntegrator, pendaftarHarian);
+router.get('/rekap-api/external/rekap_harian', logAccessClient, appKeynyaIntegrator, pendaftarHarian);
 
 // Define the version as a constant
 const VERSION = '2.0.18'; 
