@@ -11920,7 +11920,7 @@ export const getPerangkingan = async (req, res) => {
                 let totalZonasiKhusus = 0; // Untuk menyimpan total keseluruhan
                 if(resSek.kuota_zonasi_khusus > 0){
 
-                    npsn = resSek.npsn;
+                    const npsn = resSek.npsn;
                     const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
 
 
