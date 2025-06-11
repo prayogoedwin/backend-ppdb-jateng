@@ -16171,8 +16171,7 @@ export const cekPerangkingan = async (req, res) => {
                         where: {
                             id: sekolah_tujuan_id,
                         },
-                        attributes: ['npsn' 
-                            ] 
+                        attributes: ['npsn'] 
                     });
 
                     if(jalur_pendaftaran_id == 4){
