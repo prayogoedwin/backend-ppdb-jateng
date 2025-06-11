@@ -6,11 +6,16 @@ import { Sequelize, Op } from "sequelize";
 
 export const cekZonasiKhususByKecamatanZ = async (req, res) => {
 
-    const resDataZ = await SekolahZonasisKhusus.findAll({  
-        where: {  
-            kode_wilayah_kec: req.body.kode_wilayah_kec  
-        },
-    });
+     const kec = req.body.kode_wilayah_kec;
+    if(kec != 'all'){
+        const resDataZ = await SekolahZonasisKhusus.findAll({  
+            where: {  
+                kode_wilayah_kec: req.body.kode_wilayah_kec  
+            },
+        });
+    }else{
+        const resDataZ = await SekolahZonasis.findAll();
+    }
 
     if(!resDataZ){
 
@@ -35,11 +40,17 @@ export const cekZonasiKhususByKecamatanZ = async (req, res) => {
 
 export const cekZonasiKhususBySekolahZ = async (req, res) => {
 
-    const resDataZ = await SekolahZonasisKhusus.findAll({  
-        where: {  
-            npsn: req.body.npsn  
-        },
-    });
+    const npsn = req.body.npsn;
+    if(npsn != 'all'){
+        const resDataZ = await SekolahZonasisKhusus.findAll({  
+                where: {  
+                    npsn: req.body.npsn  
+                },
+        });
+    }else{
+        const resDataZ = await SekolahZonasisKhusus.findAll();
+    }
+    
 
     if(!resDataZ){
 
