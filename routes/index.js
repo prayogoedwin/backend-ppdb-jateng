@@ -46,8 +46,8 @@ import { getSekolahTujuan, getSekolahTujuanPublik, getSekolahTujuanJurusanPublik
 import { getJenisKejuaraan } from "../controllers/master/JenisKejuaraan.js";
 import { getProvinsi, getKabkota, getKecamatan, getKelurahan } from '../controllers/master/WilayahVerDapodik.js';
 
-import { cekZonasiByKecamatan, cekZonasiBySekolah } from '../controllers/master/Zonasi.js';
-import { cekZonasiKhususByKecamatan, cekZonasiKhususBySekolah } from '../controllers/master/ZonasiKhusus.js';
+import { cekZonasiByKecamatanZ, cekZonasiBySekolahZ } from '../controllers/master/Zonasi.js';
+import { cekZonasiKhususByKecamatanZ, cekZonasiKhususBySekolahZ } from '../controllers/master/ZonasiKhusus.js';
 
 //kebutuhan beranda
 import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
@@ -433,11 +433,11 @@ router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, 
 router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetLoggedInById);
 
 //menu zonasi
-router.post('/admin-api/zonasi/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiByKecamatan);
-router.post('/admin-api/zonasi/per_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiBySekolah);
+router.post('/admin-api/zonasi/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiByKecamatanZ);
+router.post('/admin-api/zonasi/per_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiBySekolahZ);
 
-router.post('/admin-api/zonasi_khusus/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususByKecamatan);
-router.post('/admin-api/zonasi_khusus/per_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususBySekolah);
+router.post('/admin-api/zonasi_khusus/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususByKecamatanZ);
+router.post('/admin-api/zonasi_khusus/per_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususBySekolahZ);
 
 
 

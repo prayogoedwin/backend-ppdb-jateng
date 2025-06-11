@@ -4,7 +4,7 @@ import { Sequelize, Op } from "sequelize";
 
 
 
-export const cekZonasiByKecamatan = async (req, res) => {
+export const cekZonasiByKecamatanZ = async (req, res) => {
 
     const resDataZ = await SekolahZonasis.findAll({  
         where: {  
@@ -33,7 +33,7 @@ export const cekZonasiByKecamatan = async (req, res) => {
 
 }
 
-export const cekZonasiBySekolah = async (req, res) => {
+export const cekZonasiBySekolahZ = async (req, res) => {
 
     const resDataZ = await SekolahZonasis.findAll({  
         where: {  
