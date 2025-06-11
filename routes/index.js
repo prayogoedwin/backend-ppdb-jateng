@@ -433,10 +433,12 @@ router.get('/admin-api/setting/user_reset_password/:id', ipWhitelistMiddleware, 
 router.get('/admin-api/setting/user_reset_status_login/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, resetLoggedInById);
 
 //menu zonasi
-router.post('/admin-api/zonasi/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiByKecamatanZ);
+//router.post('/admin-api/zonasi/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiByKecamatanZ);
+router.post('/admin-api/zonasi/per_kecamatan', csrfProtection, logAccessAdmin, cekZonasiByKecamatanZ);
 router.post('/admin-api/zonasi/per_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiBySekolahZ);
 
-router.post('/admin-api/zonasi_khusus/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususByKecamatanZ);
+//router.post('/admin-api/zonasi_khusus/per_kecamatan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususByKecamatanZ);
+router.post('/admin-api/zonasi_khusus/per_kecamatan', csrfProtection, logAccessAdmin, cekZonasiKhususByKecamatanZ);
 router.post('/admin-api/zonasi_khusus/per_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccessAdmin, cekZonasiKhususBySekolahZ);
 
 

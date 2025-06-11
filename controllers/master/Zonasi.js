@@ -1,4 +1,5 @@
 import SekolahZonasis from "../../models/master/SekolahZonasiModel.js";
+import EzWilayahVerDapodiks from '../../models/master/WilayahVerDapodikModel.js';
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 import { Sequelize, Op } from "sequelize";
 
@@ -6,15 +7,49 @@ import { Sequelize, Op } from "sequelize";
 
 export const cekZonasiByKecamatanZ = async (req, res) => {
 
+    let resDataZ;
     const kec = req.body.kode_wilayah_kec;
     if(kec != 'all'){
-        const resDataZ = await SekolahZonasis.findAll({  
+        resDataZ = await SekolahZonasis.findAll({  
+            include: [
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kecamatan',
+                        foreignKey: 'kode_wilayah_kec',
+                        targetKey: 'kode_wilayah',
+                        attributes: ['nama','kode_wilayah']
+                    },
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kota',
+                        foreignKey: 'kode_wilayah_kot',
+                        targetKey: 'kode_wilayah',
+                        attributes: ['nama','kode_wilayah']
+                    }
+                ],
             where: {  
                 kode_wilayah_kec: req.body.kode_wilayah_kec  
             },
         });
     }else{
-        const resDataZ = await SekolahZonasis.findAll();
+        resDataZ = await SekolahZonasis.findAll({
+            include: [
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kecamatan',
+                        foreignKey: 'kode_wilayah_kec',
+                        targetKey: 'kode_wilayah',
+                         attributes: ['nama','kode_wilayah']
+                    },
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kota',
+                        foreignKey: 'kode_wilayah_kot',
+                        targetKey: 'kode_wilayah',
+                        attributes: ['nama','kode_wilayah']
+                    }
+                ]
+        });
     }
 
     if(!resDataZ){
@@ -45,16 +80,16 @@ export const cekZonasiBySekolahZ = async (req, res) => {
     //         npsn: req.body.npsn  
     //     },
     // });
-
+    let resDataZ;
     const npsn = req.body.npsn;
     if(npsn != 'all'){
-        const resDataZ = await SekolahZonasis.findAll({  
+        resDataZ = await SekolahZonasis.findAll({  
                 where: {  
                     npsn: req.body.npsn  
                 },
         });
     }else{
-        const resDataZ = await SekolahZonasis.findAll();
+        resDataZ = await SekolahZonasis.findAll();
     }
 
     if(!resDataZ){

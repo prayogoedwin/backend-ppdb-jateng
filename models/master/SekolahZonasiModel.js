@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../../config/Database.js";
+import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
 
 const { DataTypes } = Sequelize;
 
@@ -43,5 +44,18 @@ const EzSekolahZonasis = db.define('ez_sekolah_zonasi', {
 });
 
 export default EzSekolahZonasis;
+
+// Di file model SekolahZonasis
+EzSekolahZonasis.belongsTo(EzWilayahVerDapodiks, {
+  foreignKey: 'kode_wilayah_kec',
+  targetKey: 'kode_wilayah',
+  as: 'kecamatan'
+});
+
+EzSekolahZonasis.belongsTo(EzWilayahVerDapodiks, {
+  foreignKey: 'kode_wilayah_kot',
+  targetKey: 'kode_wilayah',
+  as: 'kota'
+});// Di file model SekolahZonasis
 
 
