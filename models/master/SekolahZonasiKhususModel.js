@@ -45,18 +45,16 @@ const EzSekolahZonasisKhusus = db.define('ez_sekolah_zonasi_khusus', {
 
 export default EzSekolahZonasisKhusus;
 
-// Di file model SekolahZonasis
 EzSekolahZonasisKhusus.belongsTo(EzWilayahVerDapodiks, {
   foreignKey: 'kode_wilayah_kec',
   targetKey: 'kode_wilayah',
-  as: 'kecamatan_khusus'
+  as: 'kecamatan'
 });
 
 EzSekolahZonasisKhusus.belongsTo(EzWilayahVerDapodiks, {
   foreignKey: 'kode_wilayah_kot',
   targetKey: 'kode_wilayah',
-  as: 'kota_khusus'
-});// Di file model SekolahZonasis
-
+  as: 'kota'
+});
 
 
