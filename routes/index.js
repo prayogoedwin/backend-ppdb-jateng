@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from 'dotenv';
+import db from '../config/Database.js';
 
 dotenv.config();
 const router = express.Router();
@@ -122,7 +123,7 @@ import { getSertifikats, insertSertifikat } from "../controllers/service/integra
 
 
 //rekap
-import { countPendaftar, countCheckedPesertaDidiks, listCheckedPesertaDidiks, countPendaftarFrontend, countPendaftarPerTanggal } from "../controllers/service/admin/RekapAdmin.js";
+import { countPendaftar, countCheckedPesertaDidiks, listCheckedPesertaDidiks, countPendaftarFrontend, countPendaftarPerTanggal, pendaftarHarian } from "../controllers/service/admin/RekapAdmin.js";
 
 // // Terapkan logAccessMiddleware ke semua route
 // router.use(logAccessMiddleware);
@@ -494,6 +495,9 @@ router.post('/client-api/auth/signout', ipWhitelistMiddleware, appKeynyaIntegrat
 router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKejuaraan);
 router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
 router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, logAccessClient, insertSertifikat);
+
+
+router.get('/rekap-api/external/jenis_kejuaraan', logAccessClient, appKeynyaIntegrator, pendaftarHarian);
 
 // Define the version as a constant
 const VERSION = '2.0.18'; 

@@ -1177,4 +1177,54 @@ export const countPendaftarFrontend = async (req, res) => {
   }
 };
 
+export const pendaftarHarian = async (req, res) => {
+
+  try {
+
+    const query = `
+            SELECT
+                DATE(created_at) AS tanggal,
+                COUNT(*) AS ajuan_akun,
+                COUNT(CASE WHEN sekolah_asal_id = 1 THEN 1 END) AS dalam_provinsi,
+                COUNT(CASE WHEN sekolah_asal_id = 2 THEN 1 END) AS luar_provinsi,
+                COUNT(CASE WHEN is_anak_keluarga_tidak_mampu = '1' THEN 1 END) AS Anak_keluarga_tidak_mampu,
+                COUNT(CASE WHEN status_domisili = 3 THEN 1 END) AS anak_pondok,
+                COUNT(CASE WHEN is_tidak_sekolah = '1' THEN 1 END) AS ats,
+                COUNT(CASE WHEN is_anak_panti = '1' THEN 1 END) AS anak_panti,
+                COUNT(CASE WHEN is_anak_guru_jateng = '1' THEN 1 END) AS anak_guru,
+                COUNT(CASE WHEN status_domisili = 2 THEN 1 END) AS domisili_mutasi,
+                COUNT(CASE WHEN is_verified = 1 THEN 1 END) AS terverifikasi,
+                COUNT(CASE WHEN is_verified = 1 AND is_active = 1 THEN 1 END) AS teraktivasi
+            FROM
+                ez_pendaftar
+            WHERE
+                is_delete = 0
+            GROUP BY
+                DATE(created_at)
+            ORDER BY
+                DATE(created_at) ASC
+        `;
+
+        const [results] = await db.query(query);
+        
+        res.json({
+            status: 1,
+            message: 'Data statistik pendaftaran harian berhasil diambil',
+            data: results,
+
+        });
+    
+  } catch (error) {
+
+    console.error("Error hitung data:", error);
+      res.status(500).json({
+          status: 0,
+          message: "Error hitung data",
+          error: error.message
+      });
+    
+  }
+
+}
+
 
