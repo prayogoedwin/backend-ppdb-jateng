@@ -12164,7 +12164,7 @@ export const getPerangkingan = async (req, res) => {
                 // });
                 const resSek = await getSekolahTujuanById(sekolah_tujuan_id);
 
-                npsn = resSek.npsn;
+                const npsn = resSek.npsn;
                 const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
 
                 let resData = [];
