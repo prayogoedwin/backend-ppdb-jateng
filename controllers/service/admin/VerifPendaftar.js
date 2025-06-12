@@ -1782,7 +1782,7 @@ export const getDataPendaftarByNisn = async (req, res) => {
   
         if (resData != null) {  
 
-            if (resData.verifikasikan_disdukcapil == 1 && resData.is_verified_disdukcapil != 1) {  
+            if (resData.verifikasikan_disdukcapil == 1 && resData.is_verified_disdukcapil != 1 && resData.is_verified == 0) {  
 
                 return res.status(200).json({  
                     status: 0,  
