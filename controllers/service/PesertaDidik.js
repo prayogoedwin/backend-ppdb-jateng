@@ -2438,7 +2438,7 @@ export const getPesertaDidikByNisnHandlerUntukRevisi = async (req, res) => {
             return res.status(200).json({
                 status: 0,
                 message: 'NISN Tidak Terdaftar, Ini Hanya Untuk Pengecekan NISN yang sudah terdaftar status revisi!',
-                data: cekPendaftar.kode_verifikasi
+                data: ''
             });
 
         }
