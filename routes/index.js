@@ -192,6 +192,8 @@ router.get('/rahasia-api/internal/cache/keys', getAllCacheKeys); // Get all cach
 router.get('/rahasia-api/internal/cache/key_values', getAllCacheKeysAndValues);
 router.delete('/rahasia-api/internal/cache/clear_cache_by_prefix', simpleAuthMiddleware, clearCacheByPrefix);
 
+router.delete('/rahasia-api/internal/cache/clear_cache_by_prefix_open', clearCacheByPrefix);
+
 router.get('/rahasia-api/internal/cache/generate_cache_sma_smk', getPesertaDidikSmaSmkAll);
 
 router.get('/rahasia-api/internal/cache/generate_siswa_kko', getKkoAll);
