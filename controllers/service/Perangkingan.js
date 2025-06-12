@@ -248,7 +248,7 @@ export const getPerangkinganDetail = async (req, res) => {
                     {
                         model: StatusDomisilis,
                         as: 'status_domisili_name',
-                        attributes: ['nama']
+                        attributes: ['id','nama']
                     },
                     {
                         model: WilayahVerDapodik,
