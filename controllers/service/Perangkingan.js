@@ -273,7 +273,12 @@ export const getPerangkinganDetail = async (req, res) => {
                         model: JenisKejuaraans,
                         as: 'jenis_kejuaraan',
                         attributes: ['nama']
-                    }
+                    },
+                    {  
+                        model: WilayahVerDapodik,  
+                        as: 'data_wilayah_mutasi',  
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                    },  
                 ],
             });
 
