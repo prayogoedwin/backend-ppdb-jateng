@@ -71,20 +71,54 @@ export const cekZonasiKhususByKecamatanZ = async (req, res) => {
     }
 
 }
+
+
 export const cekZonasiKhususBySekolahZ = async (req, res) => {
 
     let resDataZ;
     const npsn = req.body.npsn;
     if(npsn != 'all'){
         resDataZ = await EzSekolahZonasisKhusus.findAll({  
-                where: {  
-                    npsn: req.body.npsn  
-                },
+            include: [
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kecamatan',
+                        foreignKey: 'kode_wilayah_kec',
+                        targetKey: 'kode_wilayah',
+                        attributes: ['nama','kode_wilayah']
+                    },
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kota',
+                        foreignKey: 'kode_wilayah_kot',
+                        targetKey: 'kode_wilayah',
+                        attributes: ['nama','kode_wilayah']
+                    }
+                ],
+            where: {  
+                npsn: req.body.npsn  
+            },
         });
     }else{
-        resDataZ = await EzSekolahZonasisKhusus.findAll();
+        resDataZ = await EzSekolahZonasisKhusus.findAll({
+            include: [
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kecamatan',
+                        foreignKey: 'kode_wilayah_kec',
+                        targetKey: 'kode_wilayah',
+                         attributes: ['nama','kode_wilayah']
+                    },
+                    {
+                        model: EzWilayahVerDapodiks,
+                        as: 'kota',
+                        foreignKey: 'kode_wilayah_kot',
+                        targetKey: 'kode_wilayah',
+                        attributes: ['nama','kode_wilayah']
+                    }
+                ]
+        });
     }
-    
 
     if(!resDataZ){
 
