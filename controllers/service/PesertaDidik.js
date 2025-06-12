@@ -1695,6 +1695,768 @@ export const getPesertaDidikByNisnHandler = async (req, res) => {
     }
 };
 
+export const getPesertaDidikByNisnHandlerUntukRevisi = async (req, res) => {
+    const {nisn,nik} = req.body;
+    try {
+
+        const apiKey = 'maintenis_publik';
+        const maintenanceData = await checkMaintenancePublicStatus(apiKey);
+
+        if(maintenanceData == 1){
+
+            return res.status(200).json({
+                status: 2,
+                message: 'Saat ini sistem sedang dalam masa perbaikan : ',
+                data: 1
+            });
+
+        }
+
+
+        if (!nisn) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NISN wajib diisi',
+            });
+        }
+
+        if (!nik) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NIK wajib diisi',
+            });
+        }
+
+        const cekPendaftar = await DataPendaftars.findOne({
+            where: {
+                nisn: nisn,
+                nik: nik,
+                is_delete: 0
+            },
+            attributes: ['id', 'kode_verifikasi', 'nisn', 'is_verified'],
+        });
+
+        // console.log("Request body:", req.body);
+
+        // if (cekPendaftar.is_verified == 2) {
+        //     return res.status(200).json({
+        //         status: 2,
+        //         message: 'NISN Sudah Terdaftar Sebelumnya',
+        //         data: cekPendaftar.kode_verifikasi
+        //     });
+        // }
+
+
+        if (cekPendaftar) {
+
+            const baseUrlDefault = null; // Ganti dengan URL dasar yang diinginkan
+
+            
+            if(cekPendaftar.is_verified == 2){
+
+                      //ini revisi biasa
+
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                // Custom value for dok_piagam and dok_kk  
+                if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
+                }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 3,
+                    message: 'Anda diperbolehkan untuk revisi data sementara',
+                    data: data
+                });
+
+            };
+
+            if(cekPendaftar.is_verified == 99){
+
+                //ini FM bisa buka semua
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                 // Custom value for dok_piagam and dok_kk  
+                if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
+                }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 99,
+                    message: 'Anda diperbolehkan untuk mengubah data kebutuhan force majeure',
+                    data: data
+                });
+
+            };
+
+            if(cekPendaftar.is_verified == 98){
+
+                //ini FM bisa buka semua
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
+                }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 98,
+                    message: 'Anda diperbolehkan untuk mengubah data alamat dan wilayah',
+                    data: data
+                });
+
+            };
+
+            if(cekPendaftar.is_verified == 97){
+
+                //ini FM bisa buka semua
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                 // Custom value for dok_piagam and dok_kk  
+                 if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
+                }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 97,
+                    message: 'Anda diperbolehkan untuk mengubah data koordinat tanpa batas wilayah karena alasan teknis',
+                    data: data
+                });
+
+            };
+
+            if(cekPendaftar.is_verified == 96){
+
+                //ini FM bisa updare NIK
+                const pendaftarDetail = await DataPendaftars.findOne({
+                   
+                    attributes: {
+                        exclude: [
+                            'created_at', 'created_by', 'updated_at', 'updated_by', 
+                            'activated_at', 'activated_by', 'is_active', 'verified_at', 
+                            'verified_by', 'is_verified', 'deleted_at', 'deleted_by', 
+                            'is_delete', 'saved_at', 'saved_by', 'is_saved', 'no_urut', 
+                            'is_diterima', 'password_', 'access_token', 'access_token_refresh',
+                            'verifikasikan_disdukcapil', 'is_verified_disdukcapil',
+                            'disdukcapil_by', 'disdukcapil_at', 'otp_expiration', 'opened_by'
+                        ]
+                    },
+
+                    where: {
+                        id: cekPendaftar.id
+                    },
+                    include: [
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kec',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_kot',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: WilayahVerDapodik,
+                            as: 'data_wilayah_prov',
+                            attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah', 'kode_dagri']
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'diverifikasi_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_verifikator',
+                                    attributes: ['id', 'nama']
+                                }
+                            ],
+                        },
+                        {
+                            model: DataUsers,
+                            as: 'sedang_diproses_oleh',
+                            attributes: ['id', 'nama', 'sekolah_id'],
+                            include: [
+                                {
+                                    model: SekolahTujuanModel,
+                                    as: 'asal_sekolah_admin',
+                                    attributes: ['id', 'nama']
+                                }
+                            ]
+                        },
+                    ]
+                });
+
+                const baseUrl = `${process.env.BASE_URL}download/${pendaftarDetail.nisn}/`; // Ganti dengan URL dasar yang diinginkan 
+  
+                const data = {  
+                    id_: encodeId(pendaftarDetail.id),    
+                    ...pendaftarDetail.toJSON(), // Convert Sequelize instance to plain object  
+                    data_sekolah: pendaftarDetail.data_sekolah || { // Tambahkan struktur data_sekolah
+                        npsn: null,
+                        nama: null,
+                        bentuk_pendidikan_id: null,
+                        bentuk_pendidikan: {
+                            id: null,
+                            nama: null
+                        }
+                    }
+                };  
+                delete data.id; // Remove original ID from the response  
+      
+                // Custom value for dok_piagam and dok_kk  
+                 // Custom value for dok_piagam and dok_kk  
+                 if (data.dok_kk) {  
+                    data.dok_kk = baseUrl + data.dok_kk;  
+                }else{
+                    data.dok_kk = baseUrlDefault; 
+                }
+                if (data.dok_pakta_integritas) {  
+                    data.dok_pakta_integritas = baseUrl + data.dok_pakta_integritas;  
+                }else{
+                    data.dok_pakta_integritas = baseUrlDefault; 
+                } 
+
+                if (data.dok_suket_nilai_raport) {  
+                    data.dok_suket_nilai_raport = baseUrl + data.dok_suket_nilai_raport;  
+                }else{
+                    data.dok_suket_nilai_raport = baseUrlDefault; 
+                }
+
+                if (data.dok_piagam) {  
+                    data.dok_piagam = baseUrl + data.dok_piagam;  
+                }else{
+                    data.dok_piagam = baseUrlDefault; 
+                }  
+
+                if (data.dok_pto) {  
+                    data.dok_pto = baseUrl + data.dok_pto;  
+                }else{
+                    data.dok_pto = baseUrlDefault; 
+                }
+      
+      
+                // Proses file tambahan dengan downloadable URL  
+                if (data.file_tambahan && Array.isArray(data.file_tambahan)) {  
+                    data.file_tambahan = data.file_tambahan.map(file => {  
+                        return {  
+                            ...file,  
+                            downloadable: baseUrl + file.filename // Tambahkan URL downloadable  
+                        };  
+                    });  
+                }  
+        
+                return res.status(200).json({
+                    status: 96,
+                    message: 'Anda diperbolehkan untuk mengubah data NIK, silahkan rubah dengan bertanggung jawab!',
+                    data: data
+                });
+
+            };
+
+            // if(cekPendaftar.is_verified != 2 || cekPendaftar.is_verified != 99 || cekPendaftar.is_verified != 98 || cekPendaftar.is_verified != 97 || cekPendaftar.is_verified != 96 || cekPendaftar.is_verified != 95){
+            //     return res.status(200).json({
+            //         status: 2,
+            //         message: 'NISN Sudah Terdaftar Sebelumnya',
+            //         data: cekPendaftar
+            //      });
+            // }
+        }else{
+
+            return res.status(200).json({
+                status: 0,
+                message: 'NISN Tidak Terdaftar, Ini Hanya Untuk Pengecekan NISN yang sudah terdaftar status revisi!',
+                data: cekPendaftar.kode_verifikasi
+            });
+
+        }
+
+         
+       
+
+       
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: err.message || 'Terjadi kesalahan saat mengambil data'
+        });
+    }
+};
+
+
 export const getPesertaDidikByNisnTokHendler = async (req, res) => {
     const {nisn} = req.body;
     try {
