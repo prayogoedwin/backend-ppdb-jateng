@@ -140,7 +140,6 @@ const getPesertaDidikSmaSmkByNisn = async (nisn, nik) => {
     }
 };
 
-
 const getPesertaKkoByNisn = async (nisn, nik) => {
     try {
 
@@ -256,8 +255,6 @@ export const getKkoAll = async (req, res) => {
     }
 };
 
-
-
 const getPesertaDidikSmaSmkByNisnTanpaZRedis = async (nisn, nik) => {
     try {
 
@@ -304,8 +301,6 @@ const getPesertaDidikSmaSmkByNisnTanpaZRedis = async (nisn, nik) => {
         throw error;
     }
 };
-
-
 
 // Service function
 const getPesertaDidikByNisnTok = async (nisn) => {

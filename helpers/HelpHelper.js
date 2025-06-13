@@ -573,9 +573,10 @@ export const checkMaintenancePublicStatus = async (apiKey) => {
     }
 };
 
-export const checkWaktuCachePerangkingan = async (apiKey) => {
+export const checkWaktuCachePerangkingan = async () => {
     try {
 
+        const apiKey = 'waktu_cache_perangkingan14045';
         const redis_key = `waktu_cache_perangkingan`;
         let maintenanceData = await redisGet(redis_key);
 
@@ -607,3 +608,4 @@ export const checkWaktuCachePerangkingan = async (apiKey) => {
         throw error; // Let the caller handle the error
     }
 };
+

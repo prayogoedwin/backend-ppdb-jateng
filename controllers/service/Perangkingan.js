@@ -3,7 +3,7 @@ import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper,
     DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
     getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
-import DataPendaftarPrestasiKhusus from "../../models/service/DataPendaftarModel.js";
+import DataPendaftarPrestasiKhusus from "../../models/service/DataPesertaPrestasiKhusus.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
 import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
@@ -11744,7 +11744,7 @@ export const getPerangkingan = async (req, res) => {
         const redis_key_full = `FULL_perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
 
 
-        const WAKTU_CAHCE_JURNAL = await checkWaktuCachePerangkingan('waktu_cache_perangkingan14045')
+        const WAKTU_CAHCE_JURNAL = await checkWaktuCachePerangkingan();
 
         // 1. Selalu cek Redis terlebih dahulu untuk semua request
         const cached = await redisGet(redis_key);

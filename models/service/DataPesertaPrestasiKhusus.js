@@ -25,10 +25,6 @@ const DataPesertaPrestasiKhusus = db.define('ez_peserta_prestasi_khusus', {
     sekolah_pilihan_npsn: {
         type: DataTypes.STRING,
         allowNull: false,
-        references: {
-            model: EzSekolahs,
-            key: 'npsn'
-        }
     },
     program_keahlian: {
         type: DataTypes.STRING,

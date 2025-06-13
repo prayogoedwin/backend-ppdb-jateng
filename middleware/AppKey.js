@@ -57,8 +57,8 @@ export const appKeyMiddleware = async (req, res, next) => {
 
 export const appKeyMiddlewareBak = async (req, res, next) => {
     try {
-        const apiKey = req.headers['x-api-key']; // Mengambil secret key dari header 'x-api-key'
-        // const apiKey = 'e86087bd-d805-407e-8e1d-a56c96490545';
+        // const apiKey = req.headers['x-api-key']; // Mengambil secret key dari header 'x-api-key'
+        const apiKey = 'e86087bd-d805-407e-8e1d-a56c96490545';
 
         // Cari API Key yang sesuai di database
         const keyNya = await EzAppKey.findOne({
