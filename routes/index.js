@@ -531,11 +531,44 @@ router.get('/api/version', (req, res) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Version Info</title>
+            <style>
+                .ok-logo {
+                    font-family: monospace;
+                    white-space: pre;
+                    text-align: center;
+                    color: #2ecc71;
+                    margin: 20px 0;
+                    font-size: 12px;
+                    line-height: 12px;
+                    font-weight: bold;
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    text-align: center;
+                    background-color: #f9f9f9;
+                }
+                h1 {
+                    color: #333;
+                }
+            </style>
         </head>
         <body>
             <h1>Application Version</h1>
             <p><strong>App Name:</strong> ${APPNAME}</p>
             <p><strong>App Version:</strong> ${VERSION}</p>
+            
+            <div class="ok-logo">
+               ██████╗ ██╗  ██╗
+              ██╔═══██╗██║ ██╔╝
+              ██║   ██║█████╔╝ 
+              ██║   ██║██╔═██╗ 
+              ╚██████╔╝██║  ██╗
+               ╚═════╝ ╚═╝  ╚═╝
+            </div>
+            <p><em>Everything is OK</em></p>
         </body>
         </html>
     `);
