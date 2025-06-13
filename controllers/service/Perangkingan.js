@@ -18370,6 +18370,7 @@ export const cekPerangkingan = async (req, res) => {
                 if(dataAnakKemenag){
                     wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
                     kecPendaftar = wilayah.kode_kecamatan?.toString() || null;
+                    console.log('KECMATAN-PONDO:'+kecPendaftar);
                 }
 
                 const cariZonasis = await SekolahZonasis.findOne({
