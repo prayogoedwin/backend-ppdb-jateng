@@ -18396,7 +18396,7 @@ export const cekPerangkingan = async (req, res) => {
 
             const kecPendaftar = pendaftar.kecamatan_id.toString();
 
-             console.log('KECAMAT$$$N:'+kecPendaftar);
+            console.log('KECAMATAN:'+kecPendaftar);
 
             const cariZonasis = await SekolahZonasis.findOne({
                 where: {
