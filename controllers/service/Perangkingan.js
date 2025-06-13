@@ -18360,7 +18360,7 @@ export const cekPerangkingan = async (req, res) => {
 
                  const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
                     where: {
-                        nisn: pesertaDidik.nisn
+                        nisn: pendaftar.nisn
                     }
                 });
 
