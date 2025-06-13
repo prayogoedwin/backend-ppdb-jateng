@@ -504,7 +504,7 @@ router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, app
 router.get('/rekap-api/external/rekap_harian', pendaftarHarian);
 
 // Define the version as a constant
-const VERSION = '2.0.20'; 
+const VERSION = '2.0.21'; 
 const APPNAME = 'Backend PPDB';
 
 // // Create a GET route at '/' that sends the version as a JSON response
