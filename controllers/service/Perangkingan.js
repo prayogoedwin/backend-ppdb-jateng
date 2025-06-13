@@ -13727,7 +13727,8 @@ export const getPerangkingan = async (req, res) => {
                     'status': 0,
                     'message': 'Ada kesalahan, jalur pendaftaran tidak ditemukan',
                     'data': [], // Return null or an appropriate value when data is not found
-                    'timeline': resTimeline // Return the found data
+                    'timeline': resTimeline, // Return the found data
+                    'waktu_cache': WAKTU_CAHCE_JURNAL,
                 });
     
             }
