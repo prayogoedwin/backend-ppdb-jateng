@@ -778,7 +778,7 @@ export const listCheckedPesertaDidiks = async (req, res) => {
   }
 };
 
-export const countPendaftarFrontend = async (req, res) => {
+export const countPendaftarFrontendBAK = async (req, res) => {
   // const sekolah_id = req.params.sekolah_id;
   const redis_key = `RekapAdminsAllFrontend`;
 
@@ -1152,6 +1152,65 @@ export const countPendaftarFrontend = async (req, res) => {
           // jenjang_pendidikan: jenjangPpendidikan,
           // jalur_pendaftaran_sma: jaluePendaftaranSMA,
           // jalur_pendaftaran_smk: jaluePendaftaranSMK
+      };
+
+      // await redisSet(redis_key, JSON.stringify(result));
+      await redisSet(
+        redis_key,
+        JSON.stringify(result),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_REKAP
+      );
+
+      res.status(200).json({
+          success: true,
+          message: "Berhasil hitung data",
+          data: result
+      });
+
+  } catch (error) {
+      console.error("Error hitung data:", error);
+      res.status(500).json({
+          success: false,
+          message: "Error hitung data",
+          error: error.message
+      });
+  }
+};
+
+export const countPendaftarFrontend = async (req, res) => {
+  // const sekolah_id = req.params.sekolah_id;
+  const redis_key = `RekapAdminsAllFrontend`;
+
+  try {
+      // const cacheNya = false;
+      const cacheNya = await redisGet(redis_key); // ambil dari Redis
+      if (cacheNya) {
+         console.log(`[CACHE] →`, redis_key);
+          return res.status(200).json({
+              success: true,
+              message: 'Data diambil dari cache',
+              data: JSON.parse(cacheNya)
+          });
+      }
+
+      
+      console.log(`[DB] →`, redis_key);
+      let whereClause = {
+          [Op.or]: [{ is_delete: { [Op.is]: null } }, { is_delete: 0 }]
+      };
+
+      const pendaftarCount = await DataPendaftars.count({ where: whereClause });
+
+      let wherePerangkinganSmaCount = { ...whereClause, bentuk_pendidikan_id: 13 };
+      let wherePerangkinganSmkCount = { ...whereClause, bentuk_pendidikan_id: 15 };
+
+      const perangkinganSmaCount = await DataPerangkingans.count({ where: wherePerangkinganSmaCount });
+      const perangkinganSmkCount = await DataPerangkingans.count({ where: wherePerangkinganSmkCount });
+
+      const result = {
+          pendaftar: pendaftarCount,
+          daftar_sma: perangkinganSmaCount,
+          daftar_smk: perangkinganSmkCount,
       };
 
       // await redisSet(redis_key, JSON.stringify(result));
