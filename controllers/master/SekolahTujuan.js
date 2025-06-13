@@ -937,7 +937,7 @@ export const getSekolahTujuan = async (req, res) => {
             } else {  
                 return res.status(200).json({  
                     'status': 0,  
-                    'message': 'Data kosong',  
+                    'message': 'Sekolah tidak ditemukan, periksa status domisili dan sesuaikan pilihan kabkota dengan wilayah domisili',  
                     'data': ''  
                 });  
             }  
