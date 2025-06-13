@@ -4,6 +4,7 @@ import SekolahZonasis from "../../models/master/SekolahZonasiModel.js";
 import SekolahZonasisKhusus from "../../models/master/SekolahZonasiKhususModel.js";
 import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import EzAnakPondokKemenag from '../../models/service/ezAnakPondokKemenagModel.js';
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 import { Sequelize, Op } from "sequelize";
 
@@ -830,12 +831,34 @@ export const getSekolahTujuan = async (req, res) => {
             }); 
             
             
-            let resData ;
+             let resData ;
+             let kecamatan_nya = cekPendaftar.kecamatan_id;
+
+             if(cekPendaftar.status_domisili == 3){
+            
+                const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
+                    where: {
+                        nisn: cekPendaftar.nisn
+                    }
+                });
+
+                let wilayah = 0;
+                if(dataAnakKemenag){
+                    wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
+                    kecamatan_nya = wilayah.kode_kecamatan?.toString() || null;
+                    console.log('KECMATAN-PONDO:'+kecamatan_nya);
+                }else{
+                    
+                    kecamatan_nya = cekPendaftar.kecamatan_id;
+
+                }
+
+             }
             
             // Fetch npsn values from SekolahZonasis
             const resDataZ = await SekolahZonasis.findAll({  
                 where: {  
-                    kode_wilayah_kec: cekPendaftar.kecamatan_id  
+                    kode_wilayah_kec: kecamatan_nya  
                 },
                 attributes: ['npsn']  
             });
