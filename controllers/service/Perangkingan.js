@@ -11814,7 +11814,9 @@ export const getPerangkingan = async (req, res) => {
                     'status': 1,
                     'message': 'Data berhasil ditemukan (from cache)',
                     'data': resultData,
-                    'timeline': resTimeline
+                    'timeline': resTimeline,
+                    'waktu_cache': WAKTU_CAHCE_JURNAL,
+
                 });
 
             }
