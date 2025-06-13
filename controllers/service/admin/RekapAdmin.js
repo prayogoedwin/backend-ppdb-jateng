@@ -1193,7 +1193,8 @@ export const countPendaftarFrontend = async (req, res) => {
           return res.status(200).json({
               success: true,
               message: 'Data diambil dari cache',
-              data: JSON.parse(cacheNya)
+              data: JSON.parse(cacheNya),
+              waktu_cache: WAKTU_CAHCE_JURNAL
           });
       }
 
