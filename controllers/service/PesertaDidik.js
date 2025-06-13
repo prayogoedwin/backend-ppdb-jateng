@@ -211,18 +211,18 @@ const getPesertaKkoByNisn = async (nisn, nik) => {
 export const getPesertaDidikSmaSmkAll = async (req, res) => {
     try {
 
-        const redis_key = `DataAllAnakSMASMK`;
-        const cached = await redisGet(redis_key);
+        // const redis_key = `DataAllAnakSMASMK`;
+        // const cached = await redisGet(redis_key);
 
-        const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
-            attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']        
-        });
+        // const pesertaDidikAll = await DataPesertaDidikSmaSmks.findAll({
+        //     attributes: ['nisn', 'nik' ,'nama', 'nama_sekolah']        
+        // });
 
-        // Simpan semua data ke cache dengan expiry time
-        await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
-        console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
+        // // Simpan semua data ke cache dengan expiry time
+        // await redisSet(redis_key, JSON.stringify(pesertaDidikAll), 31536000);
+        // console.log(`[DB] Data disimpan ke DB: ${redis_key}`);
         return res.status(200).json({
-            status: 0,
+            status: 1,
             message: 'Berhasil generate cache siswa sma smk dengan key: DataAllAnakSMASMK'
         });
         

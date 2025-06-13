@@ -64,7 +64,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getPerangkinganDaftarUlang, getPerangkinganCadangan,
      getPerangkinganCadanganHitungSisaDaftarUlang,
      getPerangkinganCadanganHitungSisaDaftarUlangAdmin,
-     CariPengumumanByNoPendaftaran
+     CariPengumumanByNoPendaftaran,
+     generatePendaftarPrestasiKhususCache
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -195,6 +196,8 @@ router.delete('/rahasia-api/internal/cache/clear_cache_by_prefix', simpleAuthMid
 router.delete('/rahasia-api/internal/cache/clear_cache_by_prefix_open', clearCacheByPrefix);
 
 router.get('/rahasia-api/internal/cache/generate_cache_sma_smk', getPesertaDidikSmaSmkAll);
+
+router.get('/rahasia-api/internal/cache/generate_cache_peserta_prestasi_khusus', generatePendaftarPrestasiKhususCache);
 
 router.get('/rahasia-api/internal/cache/generate_siswa_kko', getKkoAll);
 

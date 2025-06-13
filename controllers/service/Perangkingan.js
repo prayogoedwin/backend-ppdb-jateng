@@ -3,6 +3,7 @@ import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper,
     DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
     getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import DataPendaftarPrestasiKhusus from "../../models/service/DataPendaftarModel.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
 import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
@@ -18121,6 +18122,69 @@ export const getPerangkinganHasil = async (req, res) => {
     }
 }
 
+export const generatePendaftarPrestasiKhususCache = async (req, res) => {
+    try {
+        const redis_key = `DataPendaftarPrestasiKhususByNisn`;
+        
+        // Ambil data langsung dari database (tanpa cek cache)
+        const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findAll({
+            attributes: ['nisn', 'sekolah_pilihan_npsn'],
+        });
+
+        // Simpan data baru ke cache dengan expiry time
+        await redisSet(redis_key, JSON.stringify(pendaftarPrestasi), 31536000);
+        console.log(`[DB] Data baru disimpan ke Redis: ${redis_key}`);
+        
+        return res.status(200).json({
+            status: 1,
+            message: 'Berhasil generate cache pendaftar prestasi khusus',
+            data: {
+                redis_key: redis_key,
+                record_count: pendaftarPrestasi.length,
+                expiry: 31536000
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error in generatePendaftarPrestasiKhususCache:', error);
+        return res.status(500).json({
+            status: 0,
+            message: 'Gagal generate cache pendaftar prestasi khusus',
+            error: error.message
+        });
+    }
+};
+
+export const getPendaftarPrestasiKhususByNisn = async () => {
+    try {
+        const redis_key = `DataPendaftarPrestasiKhususByNisn`;
+        const cached = await redisGet(redis_key);
+
+        // Jika data sudah ada di cache, langsung return
+        if (cached) {
+            console.log(`[Redis] Data diambil dari cache: ${redis_key}`);
+            return JSON.parse(cached);
+        }else{
+            return 0;
+        }
+
+        // Jika tidak ada di cache, ambil dari database
+        // const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findAll({
+        //     attributes: ['nisn', 'sekolah_pilihan_npsn'],
+        // });
+
+        // // Simpan data ke cache dengan expiry time
+        // await redisSet(redis_key, JSON.stringify(pendaftarPrestasi), 31536000);
+        // console.log(`[DB] Data disimpan ke Redis: ${redis_key}`);
+        
+        // return pendaftarPrestasi;
+        
+    } catch (error) {
+        console.error('Error in getPendaftarPrestasiKhususByNisn:', error);
+        throw error;
+    }
+};
+
 // Function to handle POST request
 export const cekPerangkingan = async (req, res) => {
     // // Handle validation results
@@ -18219,25 +18283,28 @@ export const cekPerangkingan = async (req, res) => {
         if(pendaftar.status_domisili != 2){
 
             if(pendaftar.is_anak_guru_jateng == 1){
-               
-                    const npsn_sekolah = await SekolahTujuan.findOne({
-                        where: {
-                            id: sekolah_tujuan_id,
-                        },
-                        attributes: ['npsn' 
-                            ] 
-                    });
+                
+                    // const npsn_sekolah = await SekolahTujuan.findOne({
+                    //     where: {
+                    //         id: sekolah_tujuan_id,
+                    //     },
+                    //     attributes: ['npsn' 
+                    //         ] 
+                    // });
 
                     if(jalur_pendaftaran_id == 4){
 
-                        if(pendaftar.npsn_anak_guru != npsn_sekolah.npsn){ {
-                            return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai anak guru jateng  dan saat ini daftar di jalur mutasi, silahkan mendaftar di sekolah yang sesuai dengan sekolah tempat orang tua anda mengajar (yang sudah terdata sebelumnya)' });
-                            }
-                        }
+                        return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa Anda adalah Anak Guru namun status domisili anda adalah tidak "Menggunakan Surat Mutasi Ortu/Wali", Anda tidak diperbolehkan daftar jalur mutasi (SMA)' });
+
+                        // if(pendaftar.npsn_anak_guru != npsn_sekolah.npsn){ {
+                        //     return res.status(200).json({ status: 0, message: 'Anda terdaftar sebagai anak guru jateng  dan saat ini daftar di jalur mutasi, silahkan mendaftar di sekolah yang sesuai dengan sekolah tempat orang tua anda mengajar (yang sudah terdata sebelumnya)' });
+                        //     }
+                        // }
                     }    
             }
 
-            if(jalur_pendaftaran_id == 4 && pendaftar.is_anak_guru_jateng != 1){
+            //if(jalur_pendaftaran_id == 4 && pendaftar.is_anak_guru_jateng != 1){
+            if(jalur_pendaftaran_id == 4){
              return res.status(200).json({ status: 0, message: 'Saat ini sistem membaca bahwa status domisili anda adalah `bukan` "Menggunakan Surat Mutasi Ortu/Wali", Anda tidak diperbolehkan daftar jalur mutasi (SMA)' });
             }
 
@@ -18258,9 +18325,22 @@ export const cekPerangkingan = async (req, res) => {
         // }
 
         if(jalur_pendaftaran_id == 8){
-            if(pendaftar.is_boleh_prestasi_khusus != 1){
-                return res.status(200).json({ status: 0, message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' });
+            const anak_prestasi_khusus = await getPendaftarPrestasiKhususByNisn();
+            
+            const isNisnTerdaftar = anak_prestasi_khusus.some(
+                (anak) => anak.nisn === nisn
+            );
+        
+            if (!isNisnTerdaftar) {
+                return res.status(200).json({ 
+                    status: 0, 
+                    message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' 
+                });
             }
+
+            // if(pendaftar.is_boleh_prestasi_khusus != 1){
+            //     return res.status(200).json({ status: 0, message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' });
+            // }
         }
 
         if(jalur_pendaftaran_id == 1){
