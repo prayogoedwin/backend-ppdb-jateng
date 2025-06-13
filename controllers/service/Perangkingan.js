@@ -1,12 +1,13 @@
 import { check, validationResult } from 'express-validator';
 import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, 
     DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
-    getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan } from '../../helpers/HelpHelper.js';
+    getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan, parseKodeWilayah } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPendaftarPrestasiKhusus from "../../models/service/DataPesertaPrestasiKhusus.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
 import Zonasis from "../../models/service/ZonasiModel.js";
 import SekolahZonasis from "../../models/service/SekolahZonasiModel.js";
+import EzAnakPondokKemenag from '../../models/service/ezAnakPondokKemenagModel.js';
 import FileTambahans from "../../models/master/FileTambahanModel.js";
 import SekolahTujuan from '../../models/master/SekolahTujuanModel.js';
 import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
@@ -18352,24 +18353,34 @@ export const cekPerangkingan = async (req, res) => {
             }
 
             const kecPendaftar = pendaftar.kecamatan_id.toString();
-             console.log('KECMATAN:'+kecPendaftar);
+            console.log('KECMATAN:'+kecPendaftar);
 
-            // console.log('anak pondok:'+pendaftar.is_anak_pondok);
-            // if(pendaftar.is_anak_pondok != 1){
-            //     const cariZonasis = await SekolahZonasis.findOne({
-            //         where: {
-            //         id_sekolah: sekolah_tujuan_id,
-            //         kode_wilayah_kec: kecPendaftar,
-            //         }
-            //     });
+            console.log('anak pondok:'+pendaftar.is_anak_pondok);
+            if(pendaftar.status_domisili == 3){
+
+                 const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
+                    where: {
+                        nisn: pesertaDidik.nisn
+                    }
+                });
+
+                const wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
+                kecamatan_pondok = wilayah.kode_kecamatan?.toString() || null;
+
+                const cariZonasis = await SekolahZonasis.findOne({
+                    where: {
+                    id_sekolah: sekolah_tujuan_id,
+                    kode_wilayah_kec: kecPendaftar,
+                    }
+                });
             
-            //     if (!cariZonasis) {
-            //         return res.status(200).json({
-            //         status: 0,
-            //         message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
-            //         });
-            //     }
-            // }
+                if (!cariZonasis) {
+                    return res.status(200).json({
+                    status: 0,
+                    message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
+                    });
+                }
+            }
 
             const cariZonasis = await SekolahZonasis.findOne({
                 where: {
