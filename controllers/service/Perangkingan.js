@@ -18346,13 +18346,15 @@ export const cekPerangkingan = async (req, res) => {
 
         if(jalur_pendaftaran_id == 1){
 
+            let kecPendaftar = 0;
+
             console.log('is_tidak_boleh_domisili:'+pendaftar.is_tidak_boleh_domisili);
 
             if(pendaftar.is_tidak_boleh_domisili == 1){
                 return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili karena alasan tanggal kedatangan dan status nik pada kk' });
             }
 
-            const kecPendaftar = pendaftar.kecamatan_id.toString();
+            kecPendaftar = pendaftar.kecamatan_id.toString();
             console.log('KECMATAN:'+kecPendaftar);
 
             console.log('anak pondok:'+pendaftar.is_anak_pondok);
@@ -18364,8 +18366,12 @@ export const cekPerangkingan = async (req, res) => {
                     }
                 });
 
-                const wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
-                kecamatan_pondok = wilayah.kode_kecamatan?.toString() || null;
+                let wilayah = 0;
+                if(dataAnakKemenag){
+                    wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
+                    kecPendaftar = wilayah.kode_kecamatan?.toString() || null;
+                }
+
 
                 const cariZonasis = await SekolahZonasis.findOne({
                     where: {
