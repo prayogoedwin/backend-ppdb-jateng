@@ -1181,6 +1181,8 @@ export const countPendaftarFrontend = async (req, res) => {
   // const sekolah_id = req.params.sekolah_id;
   const redis_key = `RekapAdminsAllFrontend`;
 
+  const WAKTU_CAHCE_JURNAL = await checkWaktuCachePerangkingan();
+
   try {
       // const cacheNya = false;
       const cacheNya = await redisGet(redis_key); // ambil dari Redis
@@ -1223,7 +1225,8 @@ export const countPendaftarFrontend = async (req, res) => {
       res.status(200).json({
           success: true,
           message: "Berhasil hitung data",
-          data: result
+          data: result,
+          waktu_cache: WAKTU_CAHCE_JURNAL
       });
 
   } catch (error) {
