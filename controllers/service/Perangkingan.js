@@ -18360,7 +18360,7 @@ export const cekPerangkingan = async (req, res) => {
             console.log('anak pondok:'+pendaftar.is_anak_pondok);
             if(pendaftar.status_domisili == 3){
 
-                 const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
+                const dataAnakKemenag = await EzAnakPondokKemenag.findOne({
                     where: {
                         nisn: pendaftar.nisn
                     }
@@ -18371,7 +18371,6 @@ export const cekPerangkingan = async (req, res) => {
                     wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
                     kecPendaftar = wilayah.kode_kecamatan?.toString() || null;
                 }
-
 
                 const cariZonasis = await SekolahZonasis.findOne({
                     where: {
