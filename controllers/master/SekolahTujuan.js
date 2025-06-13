@@ -1030,7 +1030,7 @@ export const getSekolahTujuan = async (req, res) => {
 
                 return res.status(200).json({  
                     'status': 0,  
-                    'message': 'Anda tidak terdaftar dengan status domisili mutasi',  
+                    'message': 'Anda tidak terdaftar dengan status domisili mutasi atau bukan anak guru',  
                     'data': ''  
                 });  
 
