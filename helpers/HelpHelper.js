@@ -572,3 +572,38 @@ export const checkMaintenancePublicStatus = async (apiKey) => {
         throw error; // Let the caller handle the error
     }
 };
+
+export const checkWaktuCachePerangkingan = async (apiKey) => {
+    try {
+
+        const redis_key = `waktu_cache_perangkingan`;
+        let maintenanceData = await redisGet(redis_key);
+
+        if (maintenanceData) {
+            maintenanceData = JSON.parse(maintenanceData);
+            console.log(`[CACHE] Found cached jurnal time key for ${redis_key}`);
+            return maintenanceData.nama;
+        }
+
+        maintenanceData = await EzAppKey.findOne({
+            where: { apikey: apiKey }
+        });
+
+        if (!maintenanceData) {
+            return null;
+        }
+
+        await redisSet(
+            redis_key,
+            JSON.stringify(maintenanceData),
+            process.env.REDIS_EXPIRE_TIME_HARIAN
+        );
+
+        console.log(`[DB] Cached(${redis_key}) →`, maintenanceData);
+        return maintenanceData.nama;
+
+    } catch (error) {
+        console.error('Error checking jurnal time Key:', error);
+        throw error; // Let the caller handle the error
+    }
+};
