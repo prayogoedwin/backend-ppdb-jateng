@@ -846,7 +846,7 @@ export const getSekolahTujuan = async (req, res) => {
                 if(dataAnakKemenag){
                     wilayah = parseKodeWilayah(dataAnakKemenag.kode_wilayah);
                     kecamatan_nya = wilayah.kode_kecamatan?.toString() || null;
-                    console.log('KECMATAN-PONDO:'+kecamatan_nya);
+                    console.log('KECMATAN-PONDOK:'+kecamatan_nya);
                 }else{
                     
                     kecamatan_nya = cekPendaftar.kecamatan_id;
