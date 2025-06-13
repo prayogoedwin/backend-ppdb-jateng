@@ -5,6 +5,8 @@ import DataPesertaDidiks from '../../../models/service/DataPesertaDidikModel.js'
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
 import SekolahTujuanModel from '../../../models/master/SekolahTujuanModel.js';
 
+import { checkWaktuCachePerangkingan } from '../../../helpers/HelpHelper.js';
+
 import { redisGet, redisSet } from '../../../redis.js';
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import db from '../../../config/Database.js'; // Sesuaikan path berdasarkan struktur folder
