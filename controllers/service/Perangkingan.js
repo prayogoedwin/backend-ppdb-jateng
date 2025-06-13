@@ -12152,7 +12152,8 @@ export const getPerangkingan = async (req, res) => {
                         'status': 1,
                         'message': 'Data berhasil ditemukan',
                         'data': modifiedData, // Return the found data
-                        'timeline': resTimeline
+                        'timeline': resTimeline,
+                        'waktu_cache': WAKTU_CAHCE_JURNAL,
                     });
     
                 }
@@ -12339,7 +12340,8 @@ export const getPerangkingan = async (req, res) => {
                             'status': 1,
                             'message': 'Data berhasil ditemukan',
                             'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
+                            'timeline': resTimeline,
+                            'waktu_cache': WAKTU_CAHCE_JURNAL,
                         });
     
                     }
@@ -12506,7 +12508,8 @@ export const getPerangkingan = async (req, res) => {
                             'status': 1,
                             'message': 'Data berhasil ditemukan',
                             'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
+                            'timeline': resTimeline,
+                            'waktu_cache': WAKTU_CAHCE_JURNAL,
                         });
     
                     }
@@ -12669,7 +12672,8 @@ export const getPerangkingan = async (req, res) => {
                             'status': 1,
                             'message': 'Data berhasil ditemukan',
                             'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
+                            'timeline': resTimeline,
+                            'waktu_cache': WAKTU_CAHCE_JURNAL,
                         });
     
                     }
@@ -12922,7 +12926,8 @@ export const getPerangkingan = async (req, res) => {
                             'status': 1,
                             'message': 'Data berhasil ditemukan',
                             'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
+                            'timeline': resTimeline,
+                            'waktu_cache': WAKTU_CAHCE_JURNAL,
                         });
     
                     }
@@ -13122,7 +13127,8 @@ export const getPerangkingan = async (req, res) => {
                             'status': 1,
                             'message': 'Data berhasil ditemukan',
                             'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
+                            'timeline': resTimeline,
+                            'waktu_cache': WAKTU_CAHCE_JURNAL,
                         });
     
                     }
@@ -13314,7 +13320,8 @@ export const getPerangkingan = async (req, res) => {
                                 'status': 1,
                                 'message': 'Data berhasil ditemukan',
                                 'data': modifiedData, // Return the found data
-                                'timeline': resTimeline
+                                'timeline': resTimeline,
+                                'waktu_cache': WAKTU_CAHCE_JURNAL,
                             });
     
                         }
@@ -13468,7 +13475,8 @@ export const getPerangkingan = async (req, res) => {
                             'status': 1,
                             'message': 'Data berhasil ditemukan',
                             'data': modifiedData, // Return the found data
-                            'timeline': resTimeline
+                            'timeline': resTimeline,
+                            'waktu_cache': WAKTU_CAHCE_JURNAL,
                         });
     
                     }
@@ -13707,7 +13715,8 @@ export const getPerangkingan = async (req, res) => {
                                 'status': 1,
                                 'message': 'Data berhasil ditemukan',
                                 'data': modifiedData, // Return the found data
-                                'timeline': resTimeline
+                                'timeline': resTimeline,
+                                'waktu_cache': WAKTU_CAHCE_JURNAL,
                             });
     
                         }
