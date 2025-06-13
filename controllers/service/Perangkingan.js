@@ -18357,6 +18357,8 @@ export const cekPerangkingan = async (req, res) => {
             kecPendaftar = pendaftar.kecamatan_id.toString();
             console.log('KECMATAN:'+kecPendaftar);
 
+            console.log('STS DOM:'+pendaftar.status_domisili);
+
             console.log('anak pondok:'+pendaftar.is_anak_pondok);
             if(pendaftar.status_domisili == 3){
 
