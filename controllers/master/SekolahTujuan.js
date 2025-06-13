@@ -5,6 +5,7 @@ import SekolahZonasisKhusus from "../../models/master/SekolahZonasiKhususModel.j
 import SekolahJurusan from "../../models/master/SekolahJurusanModel.js";
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import EzAnakPondokKemenag from '../../models/service/ezAnakPondokKemenagModel.js';
+import { parseKodeWilayah } from '../../helpers/HelpHelper.js';
 import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
 import { Sequelize, Op } from "sequelize";
 
