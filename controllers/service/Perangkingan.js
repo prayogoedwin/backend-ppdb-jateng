@@ -12793,7 +12793,7 @@ export const getPerangkingan = async (req, res) => {
                     // ]
                 },
                 order: [
-                    ['is_disabilitas', 'ASC'], //disabilitas 
+                    ['is_disabilitas', 'DESC'], //disabilitas 
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
