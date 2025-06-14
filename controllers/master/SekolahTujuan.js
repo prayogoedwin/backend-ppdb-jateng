@@ -1297,8 +1297,18 @@ export const getSekolahTujuan = async (req, res) => {
 
 export const getSekolahTujuanKabkota = async (req, res) => {  
     const nins = req.body.nisn;  
-    // const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
-    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id === '' ? 0 : req.body.bentuk_pendidikan_id;
+    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+    // const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id === '' ? 0 : req.body.bentuk_pendidikan_id;
+
+    if(bentuk_pendidikan_id != 13 || bentuk_pendidikan_id != 15){
+
+        return res.status(200).json({  
+                'status': 0,  
+                'message': 'Data Bentuk Pedidikan tidak boleh kosong',  
+                'data': ''  
+        });
+
+    }
 
     const kabkota = req.body.kabkota; 
     

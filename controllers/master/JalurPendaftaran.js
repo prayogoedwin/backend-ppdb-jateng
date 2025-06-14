@@ -16,6 +16,20 @@ import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functio
 export const getJalurPendaftaran = async (req, res) => {
     const redis_key = 'JalurPendaftaranBy_'+req.body.bentuk_pendidikan_id;
     const nisn = req.body.bentuk_pendidikan_id;
+
+    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+    // const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id === '' ? 0 : req.body.bentuk_pendidikan_id;
+
+    if(bentuk_pendidikan_id != 13 || bentuk_pendidikan_id != 15){
+
+        return res.status(200).json({  
+                'status': 0,  
+                'message': 'Data Bentuk Pedidikan tidak boleh kosong',  
+                'data': ''  
+        });
+
+    }
+
     try {
         const cacheNya = await redisGet(redis_key);
         if (cacheNya) {
