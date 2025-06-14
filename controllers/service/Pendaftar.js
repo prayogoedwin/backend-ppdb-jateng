@@ -287,6 +287,7 @@ export const createPendaftar = async (req, res) => {
                     is_disabilitas : 0,
                     kebutuhan_khusus_id,
                     kebutuhan_khusus,
+                    npsn_anak_guru: existingPendaftar.npsn_anak_guru
          
               };
 
