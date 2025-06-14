@@ -12978,6 +12978,7 @@ export const getPerangkingan = async (req, res) => {
                     const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
                     
     
+                    let npsnnya = resJurSek.npsn;
                     let daya_tampung = resJurSek.daya_tampung;
                     //let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
                     let kuota_anak_guru = Math.max(Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung) ?? 0, 0);
@@ -12992,7 +12993,9 @@ export const getPerangkingan = async (req, res) => {
                             jurusan_id,
                             is_delete: 0,
                             is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                            npsn_anak_guru: npsnnya,
                             is_anak_guru_jateng: '1',
+
                         }, order: [
                             ['is_anak_guru_jateng', 'DESC'],
                             [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
