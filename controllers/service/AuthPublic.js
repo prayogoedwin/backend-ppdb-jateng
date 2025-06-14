@@ -513,7 +513,8 @@ export const mainTenisPublikCek = async (req, res, next) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Mode Maintenance Public.'+keyNya.nama,
-                data: keyNya.nama
+                data: keyNya.nama,
+                text: keyNya.kode_random
             });
         } else {
             keyNya = await EzAppKey.findOne({
@@ -540,7 +541,8 @@ export const mainTenisPublikCek = async (req, res, next) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Mode Maintenance Public.'+keyNya.nama,
-                data: keyNya.nama
+                data: keyNya.nama,
+                text: keyNya.kode_random
             });
         }
 
