@@ -12998,6 +12998,7 @@ export const getPerangkingan = async (req, res) => {
 
                     const rowsAnakGuru = resDataAnakGuru.rows; // Data hasil query
                     const totalAnakGuru = resDataAnakGuru.rows.length || 0; // Total jumlah data setelah limit
+                    const excludedNisn = rowsAnakGuru.map(item => item.nisn); // Ambil semua NISN dari hasil anak guru
 
                     let kuota_akhir_jarak_terdekat = kuota_jarak_terdekat - totalAnakGuru;
     
@@ -13009,6 +13010,7 @@ export const getPerangkingan = async (req, res) => {
                         jurusan_id,
                         is_delete: 0,
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                        nisn: { [Op.notIn]: excludedNisn } // Exclude NISN yang sudah terpilih di anak guru
                     }, order: [
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                         ['umur', 'DESC'], //umur tertua
