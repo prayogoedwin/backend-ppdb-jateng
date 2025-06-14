@@ -11925,6 +11925,7 @@ export const getPerangkingan = async (req, res) => {
                         // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                     },
                     limit: resSek.kuota_pto
+                
                 })).length;
     
                 
@@ -12030,7 +12031,8 @@ export const getPerangkingan = async (req, res) => {
                         // ['umur', 'DESC'], 
                         ['created_at', 'ASC'] 
                     ],
-                    limit: kuota_zonasi_nilai
+                    // limit: kuota_zonasi_nilai
+                    limit: Math.max(kuota_zonasi_nilai ?? 0, 0)
                 });
 
                
@@ -12713,8 +12715,11 @@ export const getPerangkingan = async (req, res) => {
                 let kuota_persentase_ats = afirmasiSmaHelper('is_tidak_sekolah');
                 let kuota_persentase_panti = afirmasiSmaHelper('is_anak_panti');
     
-                let kuota_ats = Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0;
-                let kuota_panti = Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0;
+                // let kuota_ats = Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0;
+                // let kuota_panti = Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0;
+                
+                let kuota_ats = Math.max(Math.ceil((kuota_persentase_ats / 100) * daya_tampung) || 0, 0);
+                let kuota_panti = Math.max(Math.ceil((kuota_persentase_panti / 100) * daya_tampung) || 0, 0);
     
                 console.log('kuota ats:'+kuota_ats)
                 console.log('kuota panti:'+kuota_panti)
@@ -12786,7 +12791,8 @@ export const getPerangkingan = async (req, res) => {
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
-                limit: kuota_afirmasi_sisa
+                // limit: kuota_afirmasi_sisa
+                limit: Math.max(kuota_afirmasi_sisa ?? 0, 0)
                
                 });
                 if (resData) { 
@@ -12967,7 +12973,9 @@ export const getPerangkingan = async (req, res) => {
                     
     
                     let daya_tampung = resJurSek.daya_tampung;
-                    let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
+                    //let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
+                    let kuota_anak_guru = Math.max(Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung) ?? 0, 0);
+                    // limit: Math.max(kuota_afirmasi_sisa ?? 0, 0)
                     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
 
                     // anak guru
@@ -13006,7 +13014,8 @@ export const getPerangkingan = async (req, res) => {
                         ['umur', 'DESC'], //umur tertua
                         // ['created_at', 'ASC'] // daftar sekolah terawal
                     ],
-                    limit: kuota_akhir_jarak_terdekat
+                    //limit: kuota_akhir_jarak_terdekat
+                    limit: Math.max(kuota_akhir_jarak_terdekat ?? 0, 0)
                     });
 
                     const combinedData = [
@@ -13211,7 +13220,8 @@ export const getPerangkingan = async (req, res) => {
                             ['umur', 'DESC'], //umur tertua
                             ['created_at', 'ASC'] // daftar sekolah terawal
                         ],
-                        limit: kuota_prestasi_akhir
+                        // limit: kuota_prestasi_akhir
+                        limit: Math.max(kuota_prestasi_akhir ?? 0, 0)
                     });
 
 
@@ -13524,7 +13534,7 @@ export const getPerangkingan = async (req, res) => {
                             [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
                             ['created_at', 'ASC'] // daftar sekolah terawal
                         ],
-                        limit: kuota_panti
+                        limit: Math.max(kuota_panti ?? 0, 0)
                     });
     
                     const rowsAtsR = resDataAts.rows; // Data hasil query
@@ -13544,7 +13554,8 @@ export const getPerangkingan = async (req, res) => {
                             ['umur', 'DESC'], //umur tertua
                             ['created_at', 'ASC'] // daftar sekolah terawal
                         ],
-                        limit: kuota_ats
+                        // limit: kuota_ats
+                        limit: Math.max(kuota_ats ?? 0, 0)
                     });
     
                     const rowsPantiR = resDataPanti.rows; // Data hasil query
@@ -13582,7 +13593,9 @@ export const getPerangkingan = async (req, res) => {
                         ['umur', 'DESC'], //umur tertua
                         ['created_at', 'ASC'] // daftar sekolah terawal
                     ],
-                    limit: kuota_akhir_afirmasi
+                    // limit: kuota_akhir_afirmasi
+                    limit: Math.max(kuota_akhir_afirmasi ?? 0, 0)
+                    
                     });
     
                         // const modifiedData = [...rowsAtsR, ...rowsPantiR, ...resDataMiskin,].map(item => {

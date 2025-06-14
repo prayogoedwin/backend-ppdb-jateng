@@ -182,7 +182,7 @@ export const getSekolahTujuanAdmin = async (req, res) => {
             if (sekolah_id == null) {  
                 resData = await SekolahTujuans.findAll({  
                     where: {  
-                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id || 0,
                         nama_jurusan: {
                             [Op.not]: null,
                           }  
