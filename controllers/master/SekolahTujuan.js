@@ -1297,7 +1297,9 @@ export const getSekolahTujuan = async (req, res) => {
 
 export const getSekolahTujuanKabkota = async (req, res) => {  
     const nins = req.body.nisn;  
-    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+    // const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id === '' ? 0 : req.body.bentuk_pendidikan_id;
+
     const kabkota = req.body.kabkota; 
     
     // Create Redis key based on parameters
@@ -1455,7 +1457,8 @@ export const dayaTampungDetail = async (req, res) => {
 
     
 
-    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;  
+    // const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;  
+    const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id === '' ? 0 : req.body.bentuk_pendidikan_id;
     const status_sekolahnya = req.body.status_sekolah;  
     const kabkota = req.body.kabkota;
 

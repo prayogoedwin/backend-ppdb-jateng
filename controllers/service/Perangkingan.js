@@ -11872,6 +11872,8 @@ export const getPerangkingan = async (req, res) => {
           
                 console.log('---------');
                 let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
+
+                zonasi_jarak = Math.max(0, zonasi_jarak);
     
                 console.log('kuota zonasi jarak:'+zonasi_jarak);
                 console.log('---------');
