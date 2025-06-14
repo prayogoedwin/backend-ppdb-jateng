@@ -525,6 +525,11 @@ export const countPendaftar = async (req, res) => {
         sekolahFilter2 += ` AND ${dateFilter}`;
       }
 
+      // Tambahkan kondisi is_delete ke filter
+      const deleteCondition = `(is_delete IS NULL OR is_delete = 0)`;
+      sekolahFilter += sekolahFilter ? ` AND ${deleteCondition}` : ` WHERE ${deleteCondition}`;
+      sekolahFilter2 += ` AND ${deleteCondition}`;
+
       const queryJenjangPpendidikan = `
           SELECT 
               SUM(CASE WHEN jalur_pendaftaran_id IN (1, 2, 3, 4, 5) THEN 1 ELSE 0 END) AS jumlah_sma,
