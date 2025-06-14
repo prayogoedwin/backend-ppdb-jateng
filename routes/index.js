@@ -55,7 +55,7 @@ import { getTimelinePublic } from "../controllers/service/TimelinePublic.js";
 
 //Service
 import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisnNamaNamaNamaIbuHandler, getPesertaDidikByNisnTokHendler, getPesertaDidikByNisnHandlerTes, getPesertaDidikByNikTokHendler, getPesertaDidikSmaSmkAll, getKkoAll, getPesertaDidikByNisnHandlerUntukRevisi } from '../controllers/service/PesertaDidik.js';
-import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
+import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, createPendaftarTanpaFileWkatuKhusus, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, 
     uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, 
     getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan,
@@ -251,10 +251,7 @@ router.post('/api/servis/cek_data_calon_peserta_didik', ipWhitelistMiddleware, a
 //service
 router.post('/api/servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
 router.post('/api/servis/calon_peserta_didik_tes', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandlerTes);
-
 router.post('/api/servis/calon_peserta_didik_cek_revisi', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandlerUntukRevisi);
-
-router.post('/api/servis/calon_peserta_didik_waktu_khusus', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
 
 
 
@@ -268,6 +265,7 @@ router.post('/admin-api/oriental-servis/cek_zonasi_khusus_by_kec', csrfProtectio
 router.post('/api/servis/daftar_akun', ipWhitelistMiddleware, appKeyMiddleware, logAccess, createPendaftar);
 
 router.post("/api/servis/daftar_akun_spmb", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, validatePendaftar, createPendaftarTanpaFile);
+router.post("/api/servis/daftar_akun_spmb_waktu_khusus", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, validatePendaftar, createPendaftarTanpaFileWkatuKhusus);
 router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, uploadPendaftarFiles);
 
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);

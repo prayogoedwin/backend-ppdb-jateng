@@ -672,6 +672,295 @@ export const createPendaftarTanpaFile = async (req, res) => {
   }
 };
 
+
+//fungi untuk daftar akun tanpa upload file
+export const createPendaftarTanpaFileWkatuKhusus = async (req, res) => {
+  try {
+      // const resTm = await getTimelineSatuan(1);
+
+      // if (resTm.status != 1) {
+      //     return res.status(400).json({ status: 0, message: "Pendaftaran belum dibuka." });
+      // }
+
+      // Validasi input
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({ status: 0, errors: errors.array() });
+      }
+
+      // Cek apakah NISN sudah terdaftar
+      const {
+          nisn,
+          sekolah_asal_id,
+          jenis_lulusan_id,
+          tahun_lulus,
+          nama_sekolah_asal,
+          nik,
+          nama_lengkap,
+          jenis_kelamin,
+          tanggal_lahir,
+          tempat_lahir,
+          status_domisili,
+          alamat,
+          provinsi_id,
+          kabkota_id,
+          kecamatan_id,
+          kelurahan_id,
+          rt,
+          rw,
+          lat,
+          lng,
+          no_wa,
+          tanggal_cetak_kk,
+          kejuaraan_id,
+          nama_kejuaraan,
+          tanggal_sertifikat,
+          umur_sertifikat,
+          nomor_sertifikat,
+          nilai_raport,
+          nilai_raport_rata,
+          nilai_prestasi,
+          is_tidak_sekolah,
+          is_anak_panti,
+          is_anak_keluarga_tidak_mampu,
+          is_anak_guru_jateng,
+          is_anak_pondok,
+          is_pip,
+          created_by,
+          saved_by,
+          is_saved,
+          no_urut,
+          is_diterima,
+          email,
+          is_big_unregistered,
+          tanggal_kedatangan,
+          organisasi_id,
+          nilai_organisasi,
+          kebutuhan_khusus_id,
+          kebutuhan_khusus,
+          npsn_anak_guru,
+          npsn
+
+      } = req.body;
+
+      const existingPendaftar = await DataPendaftars.findOne({
+          where: { nisn, is_delete: 0 },
+      });
+
+      if (existingPendaftar) {
+          return res.status(400).json({ status: 0, message: "NISN sudah terdaftar." });
+      }
+
+     
+
+      // Generate kode verifikasi dan hash password
+      const kode_verifikasi = await generateVerificationCode(nisn);
+      const hashedPassword = await bcrypt.hash("CPD123#=", 10);
+
+      // Siapkan data untuk insert ke database
+      // const insertData = {
+      //     ...req.body,
+      //     kode_verifikasi,
+      //     password_: hashedPassword,
+      //     tanggal_lahir: new Date(req.body.tanggal_lahir),
+      //     tanggal_cetak_kk: new Date(req.body.tanggal_cetak_kk),
+      //     tanggal_sertifikat: req.body.tanggal_sertifikat ? new Date(req.body.tanggal_sertifikat) : null,
+      //     umur_sertifikat: req.body.umur_sertifikat ? req.body.umur_sertifikat : 0,
+      //     created_by: req.ip,
+      // };
+      const insertData = {
+            nisn,
+            sekolah_asal_id,
+            jenis_lulusan_id,
+            tahun_lulus,
+            nama_sekolah_asal,
+            nik,
+            nama_lengkap,
+            jenis_kelamin,
+            tanggal_lahir: new Date(tanggal_lahir),
+            tempat_lahir,
+            status_domisili,
+            alamat,
+            provinsi_id,
+            kabkota_id,
+            kecamatan_id,
+            kelurahan_id,
+            rt,
+            rw,
+            lat,
+            lng,
+            no_wa,
+            tanggal_cetak_kk: new Date(tanggal_cetak_kk),
+            kejuaraan_id: kejuaraan_id ? kejuaraan_id : 0,
+            nama_kejuaraan,
+            tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
+            umur_sertifikat: umur_sertifikat ? umur_sertifikat : 0,
+            nomor_sertifikat,
+            nilai_prestasi,
+            nilai_raport,
+            nilai_raport_rata,
+            is_tidak_sekolah,
+            is_anak_panti,
+            is_anak_keluarga_tidak_mampu,
+            is_anak_guru_jateng,
+            npsn_anak_guru, 
+            kode_verifikasi,
+            created_by: req.ip,
+            password_:hashedPassword,
+            email,
+            is_big_unregistered,
+            organisasi_id,
+            nilai_organisasi,
+            is_disabilitas: kebutuhan_khusus_id && kebutuhan_khusus_id != 0 ? 1 : 0,
+            kebutuhan_khusus_id,
+            kebutuhan_khusus,
+            created_at: new Date(), // Set the current date and time
+      };
+
+      const dataCapil = await PemadananDukcapil.findOne({
+        where: { nik },
+      });
+
+      //ini tanggaal kedatangan lama
+      // if (tanggal_kedatangan !== "null" && tanggal_kedatangan !== null) {
+      //     insertData.tanggal_kedatangan = tanggal_kedatangan;
+      // }
+
+      if (dataCapil) {
+
+          // if (dataCapil.status_kepindahan_anak !== 0) {
+          //     insertData.status_kepindahan = dataCapil.status_kepindahan_anak;
+      
+          //     // Convert tgl_kepindahan_anak to Date format YMD
+          //     // const date = new Date(dataCapil.tgl_kepindahan_anak); // Assuming tgl_kepindahan_anak is a valid date string
+          //     // const formattedDate = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+          //     // const [day, month, year] = dataCapil.tgl_kepindahan_anak.split('/');
+          //     // const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+          //     let formattedDate = null; // atau nilai default lain
+          //     if (dataCapil.tgl_kepindahan_anak) {
+          //       const [day, month, year] = dataCapil.tgl_kepindahan_anak.split('/');
+          //       formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //     }
+      
+          //     insertData.tanggal_kedatangan = formattedDate;
+          // }
+
+          if (dataCapil.status_kepindahan_anak !== 0) {
+            insertData.status_kepindahan = dataCapil.status_kepindahan_anak;
+            
+            if (dataCapil.tgl_kepindahan_anak) {
+                const dateParts = String(dataCapil.tgl_kepindahan_anak).split('/');
+                if (dateParts.length === 3 && dateParts[0] && dateParts[1] && dateParts[2]) {
+                    insertData.tanggal_kedatangan = 
+                        `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+                }
+            }
+          }
+
+
+          // if (dataCapil.status_kepindahan_ibu !== 0) {
+          //    insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
+    
+          //   // Convert tgl_kepindahan_anak to Date format YMD
+          //   // const date = new Date(dataCapil.tgl_kepindahan_ibu); // Assuming tgl_kepindahan_anak is a valid date string
+          //   // const formattedDateIbu = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+          //   // const [day, month, year] = dataCapil.tgl_kepindahan_ibu.split('/');
+          //   // const formattedDateIbu = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+          //   let formattedDateIbu = null; // atau nilai default lain
+          //     if (dataCapil.tgl_kepindahan_ibu) {
+          //       const [day, month, year] = dataCapil.tgl_kepindahan_ibu.split('/');
+          //       formattedDateIbu = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //     }
+    
+          //   insertData.tanggal_kedatangan_ibu = formattedDateIbu;
+          // }
+
+          if (dataCapil.status_kepindahan_ibu !== 0) {
+              insertData.status_kepindahan_ibu = dataCapil.status_kepindahan_ibu;
+            
+            // Coba format tanggal
+            if (dataCapil.tanggal_kedatangan_ibu) {
+                const dateParts = String(dataCapil.tanggal_kedatangan_ibu).split('/');
+                if (dateParts.length === 3 && dateParts[0] && dateParts[1] && dateParts[2]) {
+                    insertData.tanggal_kedatangan_ibu = 
+                        `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+                }
+            }
+          }
+
+          // if (dataCapil.status_kepindahan_ayah !== 0) {
+          //    insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
+    
+          //   // Convert tgl_kepindahan_anak to Date format YMD
+          //   // const date = new Date(dataCapil.tgl_kepindahan_ayah); // Assuming tgl_kepindahan_anak is a valid date string
+          //   // const formattedDateAyah = date.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+          //   // const [day, month, year] = dataCapil.tgl_kepindahan_ayah.split('/');
+          //   // const formattedDateAyah = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+          //     let formattedDateAyah = null; // atau nilai default lain
+          //     if (dataCapil.tgl_kepindahan_ayah) {
+          //       const [day, month, year] = dataCapil.tgl_kepindahan_ayah.split('/');
+          //       formattedDateAyah = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+          //     }
+    
+          //   insertData.tanggal_kedatangan_ayah = formattedDateAyah;
+          // }
+
+          if (dataCapil.status_kepindahan_ayah !== 0) {
+            insertData.status_kepindahan_ayah = dataCapil.status_kepindahan_ayah;
+            
+            // Coba format tanggal
+            if (dataCapil.tanggal_kedatangan_ayah) {
+                const dateParts = String(dataCapil.tanggal_kedatangan_ayah).split('/');
+                if (dateParts.length === 3 && dateParts[0] && dateParts[1] && dateParts[2]) {
+                    insertData.tanggal_kedatangan_ayah = 
+                        `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+                }
+            }
+          }
+
+
+      }
+
+
+       //ini code kocak yak, tp ini untuk handla krn local sm server beda null wkwkwk
+      //  if (tanggal_kedatangan == 'null' || tanggal_kedatangan == null) {
+      //  }else{
+      //      insertData.tanggal_kedatangan = tanggal_kedatangan;
+      //  }
+
+      // Simpan data pendaftar
+      const newPendaftar = await DataPendaftars.create(insertData);
+
+      const responseData = {
+        id: newPendaftar.id,
+        nisn: newPendaftar.nisn,
+        nama_lengkap: newPendaftar.nama_lengkap,
+        kode_verifikasi: newPendaftar.kode_verifikasi,
+      };
+
+      // Kembalikan ID dan NISN
+      res.status(201).json({
+          status: 1,
+          message: "Pengajuan akun berhasil.",
+          data: responseData
+          // data: {
+          //     id: newPendaftar.id,
+          //     nisn: newPendaftar.nisn,
+          //     nama_lengkap: newPendaftar.nama_lengkap,
+          //     kode_verifikasi: newPendaftar.kode_verifikasi,
+          // },
+      });
+  } catch (error) {
+      console.error("Error pendaftaran:", error);
+      res.status(500).json({ status: 0, message: "Terjadi kesalahan saat pendaftaran." });
+  }
+};
+
+
+
 export const uploadPendaftarFiles = async (req, res) => {
   // Jalankan middleware uploadFiles terlebih dahulu
   uploadFiles(req, res, async (err) => {
