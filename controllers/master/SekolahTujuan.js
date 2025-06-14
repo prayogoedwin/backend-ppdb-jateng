@@ -100,6 +100,17 @@ export const getSekolahTujuanPublik = async (req, res) => {
            
         }else{
 
+            const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
+             if(bentuk_pendidikan_id != 13 || bentuk_pendidikan_id != 15){
+
+                return res.status(200).json({  
+                        'status': 0,  
+                        'message': 'Data Bentuk Pedidikan tidak boleh kosong',  
+                        'data': ''  
+                });
+
+            }
+
             const resData = await SekolahTujuans.findAll({
                 where: {
                     bentuk_pendidikan_id: req.body.bentuk_pendidikan_id,
