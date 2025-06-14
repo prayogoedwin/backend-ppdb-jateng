@@ -42,17 +42,17 @@ const EzAppKey = db.define('ez_app_key', {
 }
 ,{
     freezeTableName: true,
-    defaultScope: {
-        attributes: {
-            exclude: ['kode_random'] // Sembunyikan secara default
-        }
-    },
-    scopes: {
-        withKodeRandom: {
-            attributes: { include: ['kode_random'] } // Opsional: scope untuk include jika diperlukan
-        }
-    }
-    // tableName: 'ez_app_key', // Definisikan nama tabel di sini
+    // defaultScope: {
+    //     attributes: {
+    //         exclude: ['kode_random'] // Sembunyikan secara default
+    //     }
+    // },
+    // scopes: {
+    //     withKodeRandom: {
+    //         attributes: { include: ['kode_random'] } // Opsional: scope untuk include jika diperlukan
+    //     }
+    // }
+    tableName: 'ez_app_key', // Definisikan nama tabel di sini
 });
 
 // cara manggilnya dengan kode_random
