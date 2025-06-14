@@ -9029,6 +9029,8 @@ export const getPerangkinganBackupNdadak = async (req, res) => {
                     let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
                     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
 
+                    console.log('NPSN ANAK GURU:'.npsnnya);
+
                     // anak guru
                     const resDataAnakGuru = await DataPerangkingans.findAndCountAll({
                         where: {
