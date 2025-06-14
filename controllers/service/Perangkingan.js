@@ -9037,8 +9037,9 @@ export const getPerangkinganBackupNdadak = async (req, res) => {
                             jurusan_id,
                             is_delete: 0,
                             is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
-                            is_anak_guru_jateng: '1',
-                            npsn_anak_guru: npsnnya
+                            npsn_anak_guru: npsnnya,
+                            is_anak_guru_jateng: '1'
+                      
                         }, order: [
                             ['is_anak_guru_jateng', 'DESC'],
                             [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
