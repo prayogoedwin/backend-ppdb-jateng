@@ -819,7 +819,7 @@ export const getPendaftarforCetak = async (req, res) => {
     }
 }
 
-export const getPendaftarDetail = async (req, res) => {
+export const getPendaftarDetailBak = async (req, res) => {
     try {
       // Ambil data pendaftar berdasarkan NISN
       const profil = await DataPendaftars.findOne({
@@ -937,6 +937,148 @@ export const getPendaftarDetail = async (req, res) => {
   
         // Masukkan timeline_pendaftar ke dalam profil
         profil.setDataValue('timeline_pendaftar', timeline_pendaftar);
+  
+        res.status(200).json({
+          status: 1,
+          message: 'Data berhasil ditemukan',
+          data: profil // Data yang ditemukan, termasuk timeline_pendaftar
+        });
+  
+      } else {
+        res.status(200).json({
+          status: 0,
+          message: 'Data kosong',
+          data: null
+        });
+      }
+  
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      res.status(500).json({
+        status: 0,
+        message: 'Error'
+      });
+    }
+}
+
+export const getPendaftarDetail = async (req, res) => {
+    try {
+      // Ambil data pendaftar berdasarkan NISN
+      const profil = await DataPendaftars.findOne({
+        where: {
+          nisn: req.body.nisn,
+          is_delete: 0
+        },
+        include: [
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah_kec',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah_kot',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {
+              model: WilayahVerDapodik,
+              as: 'data_wilayah_prov',
+              attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+          },
+          {  
+              model: WilayahVerDapodik,  
+              as: 'data_wilayah_mutasi',  
+              attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+          },  
+          {
+            model: SekolahAsalWilayah,
+            as: 'wilayah_sekolah_asal',
+            attributes: ['id','nama']
+          },
+          {
+            model: StatusDomisili,
+            as: 'status_domisili_name',
+            attributes: ['id','nama']
+          },{
+            model: JenisKejuaraans,
+            as: 'jenis_kejuaraan',
+            attributes: ['nama']
+          }
+      ],
+
+      });
+  
+      if (profil) {
+        // Ambil detail pendaftaran sekolah
+        // const pendaftaranSekolahDetails = await DataPerangkingans.findAll({
+        //   where: {
+        //     nisn: req.body.nisn,
+        //     is_delete: 0,
+        //   },
+        //   attributes: ['sekolah_tujuan_id'] // Ambil atribut yang diperlukan
+        // });
+  
+        // // Ambil detail daftar ulang
+        // const daftarUlangDetails = await DataPerangkingans.findAll({
+        //   where: {
+        //     nisn: req.body.nisn,
+        //     is_delete: 0,
+        //     is_daftar_ulang: 1 // Hanya yang is_daftar_ulang = 1
+        //   },
+        //   attributes: ['sekolah_tujuan_id', 'is_daftar_ulang'] // Ambil atribut yang diperlukan
+        // });
+  
+        // let pendaftaranSekolah = [];
+        // let daftarUlang = [];
+  
+        // // Loop melalui pendaftaranSekolahDetails untuk mendapatkan detail sekolah
+        // for (const detail of pendaftaranSekolahDetails) {
+        //   const sekolahDetail = await SekolahTujuan.findOne({
+        //     where: {
+        //       id: detail.sekolah_tujuan_id
+        //     },
+        //     attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
+        //   });
+  
+        //   if (sekolahDetail) {
+        //     pendaftaranSekolah.push(sekolahDetail);
+        //   }
+        // }
+  
+        // // Loop melalui daftarUlangDetails untuk mendapatkan detail sekolah daftar ulang
+        // for (const detail of daftarUlangDetails) {
+        //   const sekolahDetail = await SekolahTujuan.findOne({
+        //     where: {
+        //       id: detail.sekolah_tujuan_id
+        //     },
+        //     attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
+        //   });
+  
+        //   if (sekolahDetail) {
+        //     daftarUlang.push({
+        //       nama_sekolah: sekolahDetail.nama,
+        //       status_daftar_ulang: detail.is_daftar_ulang,
+        //     //   sekolah_detail: sekolahDetail
+        //     });
+        //   }
+        // }
+  
+        // // Buat timeline_pendaftar
+        // const timeline_pendaftar = {
+        //   pendaftaran: 1,
+        //   verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
+        //   aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
+        //   pendaftaran_sekolah: pendaftaranSekolah,
+        //   daftar_ulang: daftarUlang
+        // };
+  
+        // // Masukkan timeline_pendaftar ke dalam profil
+        // profil.setDataValue('timeline_pendaftar', timeline_pendaftar);
   
         res.status(200).json({
           status: 1,
