@@ -570,7 +570,7 @@ export const registerCustomCek = async (req, res, next) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Mode Register_Custom.'+keyNya.nama,
-                data: keyNya.nama
+                data: keyNya
             });
         } else {
             keyNya = await EzAppKey.findOne({
@@ -597,7 +597,7 @@ export const registerCustomCek = async (req, res, next) => {
             return res.status(200).json({
                 status: 1,
                 message: 'Mode Register_Custom:.'+keyNya.nama,
-                data: keyNya.nama
+                data: keyNya
             });
         }
 
