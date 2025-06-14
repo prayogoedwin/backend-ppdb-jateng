@@ -9024,7 +9024,7 @@ export const getPerangkinganBackupNdadak = async (req, res) => {
     
                     const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
                     
-    
+                    let npsnnya = resJurSek.npsn;
                     let daya_tampung = resJurSek.daya_tampung;
                     let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
                     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
@@ -9038,6 +9038,7 @@ export const getPerangkinganBackupNdadak = async (req, res) => {
                             is_delete: 0,
                             is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                             is_anak_guru_jateng: '1',
+                            npsn_anak_guru: npsnnya
                         }, order: [
                             ['is_anak_guru_jateng', 'DESC'],
                             [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  

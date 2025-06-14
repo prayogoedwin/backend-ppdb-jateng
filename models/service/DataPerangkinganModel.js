@@ -264,7 +264,11 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: true
-    }
+    },
+    npsn_anak_guru: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
 
 }, {
     freezeTableName: true,
