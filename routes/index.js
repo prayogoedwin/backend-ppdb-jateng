@@ -254,6 +254,8 @@ router.post('/api/servis/calon_peserta_didik_tes', csrfProtection, ipWhitelistMi
 
 router.post('/api/servis/calon_peserta_didik_cek_revisi', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandlerUntukRevisi);
 
+router.post('/api/servis/calon_peserta_didik_waktu_khusus', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccessPub, validatePendaftar, validateResult, getPesertaDidikByNisnHandler);
+
 
 
 router.post('/admin-api/oriental-servis/calon_peserta_didik', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPesertaDidikByNisnTokHendler);
