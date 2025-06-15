@@ -183,6 +183,79 @@ export const getPerangkinganSaya = async (req, res) => {
     }
 };
 
+export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
+    try {
+        const { id_pendaftar, penanda_update_jarak } = req.body;
+
+        // Decode the ID
+        const decodedIdPendaftar = decodeId(id_pendaftar);
+
+        // cek the data
+        if(penanda_update_jarak == 1){
+
+            return  res.status(500).json({
+                status: 0,
+                message: 'Sudah diupdate jarak nya, tidak perlu cetak',
+            });
+
+        }
+            const resData = await DataPerangkingans.findAll({
+                where: {
+                    id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
+                    is_delete: 0
+                },
+                // include: [
+                //     {
+                //         model: SekolahTujuan,
+                //         as: 'sekolah_tujuan',
+                //         attributes: ['npsn', 'nama']
+                //     },
+                //     {
+                //         model: SekolahJurusan,
+                //         as: 'sekolah_jurusan',
+                //         attributes: ['id', 'nama_jurusan']
+                //     },
+                //     {
+                //         model: JalurPendaftarans,
+                //         as: 'jalur_pendaftaran',
+                //         attributes: ['bentuk_pendidikan_id', 'nama']
+                //     }
+                // ],
+                // order: [['id', 'ASC']]
+            });
+
+        const resDatas = resData.map(item => {
+            const jsonItem = item.toJSON(); //keluarkan penanda 4 afirmasi
+            jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
+            jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
+            delete jsonItem.id; // Hapus kolom id dari output JSON
+            delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
+        
+            // return jsonItem;
+        });
+
+        if (resData && resData.length > 0) {
+           return res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: resDatas,
+            });
+        } else {
+            return res.status(200).json({
+                status: 0,
+                message: 'Data kosong',
+                data: [],
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err);
+       return  res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
 export const getPerangkinganDetail = async (req, res) => {
     try {
         const { id_perangkingan } = req.body;
@@ -12978,7 +13051,7 @@ export const getPerangkingan = async (req, res) => {
                     let persentase_seleksi_terdekat_anak_guru = DomiSmkHelper('anak_guru');
     
                     const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
-                    
+
                     
     
                     let npsnnya = resJurSek.npsn;
