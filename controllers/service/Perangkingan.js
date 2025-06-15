@@ -12878,7 +12878,7 @@ export const getPerangkingan = async (req, res) => {
                 const resAtsIds = (rowsAtsR.rows || []).map((item) => item.id);
                 const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
     
-                const resData = await DataPerangkingans.findAll({
+                const resDataMiskin = await DataPerangkingans.findAll({
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
@@ -12909,7 +12909,7 @@ export const getPerangkingan = async (req, res) => {
                 limit: Math.max(kuota_afirmasi_sisa ?? 0, 0)
                
                 });
-                if (resData) { 
+                if (resDataMiskin) { 
                     
                     // Check if resData is not null
                     // res.status(200).json({
