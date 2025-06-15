@@ -13106,7 +13106,7 @@ export const getPerangkingan = async (req, res) => {
                     let npsnnya = resJurSek.npsn;
                     let daya_tampung = resJurSek.daya_tampung;
                     //let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
-                    let kuota_anak_guru = Math.max(Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung) ?? 0, 0);
+                    let kuota_anak_guru = Math.max((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung) || 0;
                     // limit: Math.max(kuota_afirmasi_sisa ?? 0, 0)
                     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
 
