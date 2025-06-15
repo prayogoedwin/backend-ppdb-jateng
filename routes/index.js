@@ -66,7 +66,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getPerangkinganCadanganHitungSisaDaftarUlangAdmin,
      CariPengumumanByNoPendaftaran,
      generatePendaftarPrestasiKhususCache,
-     getPerangkinganSayaUpdateKebutuhanKhusus
+     getPerangkinganSayaUpdateKebutuhanKhusus,
+     getPerangkinganDetailByNisn
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -291,6 +292,10 @@ router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, a
 
 router.post('/api/auth/login_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginTanpaOtp);
 router.post('/api/auth/pengecekan_jarak', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, getPerangkinganSayaUpdateKebutuhanKhusus);
+
+
+router.get('/air/cek/monitoring/internal/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getPerangkinganDetailByNisn);
+
 
 
 
