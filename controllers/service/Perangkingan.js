@@ -13107,7 +13107,7 @@ export const getPerangkingan = async (req, res) => {
                     let daya_tampung = resJurSek.daya_tampung;
                     //let kuota_anak_guru = Math.ceil((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung);
                     let kuota_anak_guru = Math.max((persentase_seleksi_terdekat_anak_guru / 100) * daya_tampung) || 0;
-                    console.log('ANAKGURU:KUOTA'kuota_anak_guru);
+                    console.log('ANAKGURU:KUOTA'+kuota_anak_guru);
                     // limit: Math.max(kuota_afirmasi_sisa ?? 0, 0)
                     let kuota_jarak_terdekat = resJurSek.kuota_jarak_terdekat;
 
@@ -13120,7 +13120,7 @@ export const getPerangkingan = async (req, res) => {
                             is_delete: 0,
                             is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                             npsn_anak_guru: npsnnya,
-                            is_anak_guru_jateng: '1',
+                            is_anak_guru_jateng: '1'
 
                         }, order: [
                             ['is_anak_guru_jateng', 'DESC'],
