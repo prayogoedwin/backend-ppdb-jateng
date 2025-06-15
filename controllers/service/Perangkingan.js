@@ -12979,6 +12979,7 @@ export const getPerangkingan = async (req, res) => {
     
                     const resJurSek = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
                     
+                    
     
                     let npsnnya = resJurSek.npsn;
                     let daya_tampung = resJurSek.daya_tampung;

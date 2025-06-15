@@ -384,7 +384,8 @@ export const loginTanpaOtp = [
                     disabilitas: user.is_disabilitas,
                     accessToken,
                     refreshToken,
-                    timline_dafatar_sekolah: resTimeline
+                    timline_dafatar_sekolah: resTimeline,
+                    penanda_update_jarak: user.is_pip
                 }
             });
         } catch (error) {

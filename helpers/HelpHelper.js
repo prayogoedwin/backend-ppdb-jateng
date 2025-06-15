@@ -213,6 +213,10 @@ export const getSekolahJurusanById = async (sekolah_tujuan_id, jurusan_id) => {
       return data;
     }
 
+    if (jurusan_id == '' || jurusan_id == 'undefined') {
+        return null;
+    }
+
     // 2) Ambil dari DB
     const resJurSek = await SekolahJurusan.findOne({
       where: {
