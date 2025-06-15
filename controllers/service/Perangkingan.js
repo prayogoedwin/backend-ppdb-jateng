@@ -209,7 +209,7 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
             
             const pendaftar = await DataPendaftars.findOne({ where: { id: decodedIdPendaftar  } });
 
-            const sklh = await SekolahTujuans.findOne({
+            const sklh = await SekolahTujuan.findOne({
                 where: {
                     id: resData.sekolah_tujuan_id
                 }
