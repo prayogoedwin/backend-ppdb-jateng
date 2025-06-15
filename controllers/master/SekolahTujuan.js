@@ -101,7 +101,7 @@ export const getSekolahTujuanPublik = async (req, res) => {
         }else{
 
             const bentuk_pendidikan_id = req.body.bentuk_pendidikan_id;
-             if(bentuk_pendidikan_id != 13 || bentuk_pendidikan_id != 15){
+             if(bentuk_pendidikan_id == '' || bentuk_pendidikan_id == null || bentuk_pendidikan_id == 'undefined'){
 
                 return res.status(200).json({  
                         'status': 0,  
