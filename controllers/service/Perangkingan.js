@@ -243,7 +243,8 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                     return distanceInMeters;
                 }
 
-                const jarak = haversineDistance(latP, lonP, lati, longi);
+                // const jarak = haversineDistance(latP, lonP, lati, longi);
+                const jarak = haversineDistance(latP, lonP, lati, longi).toFixed(2);
 
                 resData.update({
                     jarak: jarak
