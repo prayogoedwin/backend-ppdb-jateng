@@ -199,18 +199,60 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
             });
 
         }
-            const resData = await DataPerangkingans.findOne({
-                where: {
-                    id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
-                    is_delete: 0
-                }
-            });
+        const resData = await DataPerangkingans.findOne({
+            where: {
+                id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
+                is_delete: 0
+            }
+        });
         if(resData){
-
+            
             const pendaftar = await DataPendaftars.findOne({ where: { id: decodedIdPendaftar  } });
-            await pendaftar.update({
-              is_pip: 1,
-            });
+
+            const sklh = await SekolahTujuans.findOne({
+                where: {
+                    id: resData.sekolah_tujuan_id
+                }
+            })
+
+            let lati;
+            let longi;
+
+            let latP;
+            let lonP;
+
+            if(sklh){
+
+                lati = sklh.lat;
+                longi = sklh.lng;
+
+                latP = pendaftar.lat;
+                lonP = pendaftar.lng
+
+                // Fungsi menghitung jarak Haversine
+                function haversineDistance(lat1, lon1, lat2, lon2) {
+                    const R = 6371; // Radius bumi dalam kilometer
+                    const dLat = (lat2 - lat1) * Math.PI / 180;
+                    const dLon = (lon2 - lon1) * Math.PI / 180;
+                    const a = 
+                        Math.sin(dLat/2) * Math.sin(dLat/2) +
+                        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    const distance = R * c;
+                    return distance;
+                }
+
+                const jarak = haversineDistance(latP, lonP, lati, longi);
+
+                resData.update({
+                    jarak: jarak
+                });
+
+                pendaftar.update({
+                    is_pip: 1,
+                });
+            }
             
            const id_perangkingan = encodeId(resData.id);
            return res.status(200).json({
