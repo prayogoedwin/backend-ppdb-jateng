@@ -179,6 +179,7 @@ router.get('/download_new/:nisn/:filename', viewFileBase64);
 // router.get('/geojson_redis', viewGeoJsonRedis);
 
 router.get('/api/cek_status_maintenis', mainTenisCek);
+router.get('/api/cek_status_cocok_cocok', mainTenisCek);
 router.get('/api/cek_status_maintenis_publik', mainTenisPublikCek);
 router.get('/api/cek_status_register_custom', registerCustomCek);
 
