@@ -12394,7 +12394,7 @@ export const getPerangkingan = async (req, res) => {
                             ['nilai_akhir', 'DESC'],
                             ['created_at', 'ASC']
                         ],
-                        limit: zonKh.kuota_zonasi_khusus
+                        limit: 3
                     });
                 
                     // resData = resDataQ.concat(resDataQ);
