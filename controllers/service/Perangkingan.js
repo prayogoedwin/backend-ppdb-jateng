@@ -484,7 +484,7 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
             ],
         });
        
-        res.status(200).json({
+        return res.status(200).json({
             status: 1,
             message: 'Data berhasil ditemukan',
             profil: profil,
@@ -495,7 +495,7 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
        
     } catch (err) {
         console.error('Error fetching data:', err);
-        res.status(500).json({
+        return res.status(500).json({
             status: 0,
             message: 'Error'
         });
