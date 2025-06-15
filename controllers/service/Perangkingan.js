@@ -12307,7 +12307,8 @@ export const getPerangkingan = async (req, res) => {
                         limit: zonKh.kuota_zonasi_khusus
                     });
                 
-                    resData = resDataQ.concat(resDataQ);
+                    // resData = resDataQ.concat(resDataQ);
+                    resData = resData.concat(resDataQ);
                 }
     
                 
@@ -12803,7 +12804,7 @@ export const getPerangkingan = async (req, res) => {
                 }
     
             }else if(jalur_pendaftaran_id == 5){
-            //Jalur Afirmasi SMA
+                //Jalur Afirmasi SMA
     
                 // const resSek = await SekolahTujuan.findOne({
                 //     where: {
