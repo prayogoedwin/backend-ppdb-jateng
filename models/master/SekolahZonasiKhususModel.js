@@ -25,6 +25,11 @@ const EzSekolahZonasisKhusus = db.define('ez_sekolah_zonasi_khusus', {
         allowNull: false,
     },
 
+    kuota_zonasi_khusus: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+
     kode_wilayah_kec: {
         type: DataTypes.STRING,
         allowNull: false,
