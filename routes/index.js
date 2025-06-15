@@ -295,7 +295,7 @@ router.post('/api/auth/login_new', csrfProtection, ipWhitelistMiddleware, appKey
 router.post('/api/auth/pengecekan_jarak', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, getPerangkinganSayaUpdateKebutuhanKhusus);
 
 
-router.post('/air/cek/monitoring/internal', ipWhitelistMiddleware, getPerangkinganDetailByNisn);
+router.post('/air/cek/monitoring/internal', ipWhitelistMiddleware, appKeyMiddleware, csrfProtection, getPerangkinganDetailByNisn);
 
 
 

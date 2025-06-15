@@ -421,7 +421,8 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
         const { nisn } = req.body;
 
         // Fetch the data
-        const perangkingan = await DataPerangkingans.findOne({
+        let perangkingan = [];
+        perangkingan = await DataPerangkingans.findOne({
             where: {
                 nisn: nisn, // Pastikan id_pendaftar adalah string
                 is_delete: 0
@@ -440,8 +441,8 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
             ]
         });
 
-
-        const profil = await DataPendaftars.findOne({
+        let profil = [];
+        profil = await DataPendaftars.findOne({
             where: {
                 nisn: nisn,
                 is_delete: 0
