@@ -12827,7 +12827,7 @@ export const getPerangkingan = async (req, res) => {
                 console.log('kuota ats:'+kuota_ats)
                 console.log('kuota panti:'+kuota_panti)
     
-                const resDataPanti = await DataPerangkingans.findAll({
+                const resDataPanti = await DataPerangkingans.findAndCountAll({
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12844,8 +12844,11 @@ export const getPerangkingan = async (req, res) => {
                     ],
                     limit: kuota_panti
                 });
+
+                const rowsPantiR = resDataPanti.rows; // Data hasil query
+                const totalPatntiL = resDataPanti.rows.length || 0; // Total jumlah data setelah limit
     
-                const resDataAts = await DataPerangkingans.findAll({
+                const resDataAts = await DataPerangkingans.findAndCountAll({
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12862,12 +12865,18 @@ export const getPerangkingan = async (req, res) => {
                     ],
                     limit: kuota_ats
                 });
+
+                const rowsAtsR = resDataAts.rows; // Data hasil query
+                const totalAtsL = resDataAts.rows.length || 0; // Total jumlah data setelah limit
     
                 // let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length+resDataPanti.length);
-                let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
+                //let kuota_afirmasi_sisa = kuota_afirmasi - (resDataAts.length + resDataPanti.length);
+                let kuota_afirmasi_sisa = kuota_afirmasi - (totalPatntiL + totalAtsL)
     
                 console.log('kuota kuota_afirmasi_sisa:'+kuota_afirmasi_sisa)
-    
+
+                const resAtsIds = (rowsAtsR.rows || []).map((item) => item.id);
+                const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
     
                 const resData = await DataPerangkingans.findAll({
                 where: {
@@ -12882,6 +12891,7 @@ export const getPerangkingan = async (req, res) => {
                     ],
                     is_anak_panti: '0', // bukan anak panti
                     is_tidak_sekolah: '0', // bukan anak panti
+                    id: { [Op.notIn]: [...resAtsIds, ...resPantiIds] } // Gabungkan ID ATS & Panti
                     // // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
                     // [Op.or]: [
                     //     { is_anak_keluarga_tidak_mampu: '1' },
@@ -12892,6 +12902,7 @@ export const getPerangkingan = async (req, res) => {
                 order: [
                     ['is_disabilitas', 'DESC'], //disabilitas 
                     [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                    ['umur', 'DESC'], //umur tertua
                     ['created_at', 'ASC'] //daftar sekolah terawal
                 ],
                 // limit: kuota_afirmasi_sisa
@@ -12953,8 +12964,9 @@ export const getPerangkingan = async (req, res) => {
                             }
                         },
                         order: [
-                            ['is_disabilitas', 'ASC'], //disabilitas 
+                            // ['is_disabilitas', 'ASC'], //disabilitas 
                             [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
+                            ['umur', 'DESC'], //umur tertua
                             ['created_at', 'ASC'] //daftar sekolah terawal
                         ],
                         // limit: kuota_zonasi
@@ -13692,12 +13704,17 @@ export const getPerangkingan = async (req, res) => {
                         jurusan_id,
                         is_delete: 0,
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
-                        is_anak_keluarga_tidak_mampu: '1',  
+                        //is_anak_keluarga_tidak_mampu: '1',  
+                        [Op.or]: [
+                            { is_anak_keluarga_tidak_mampu: '1' },
+                            { is_disabilitas: '1' }
+                        ],
                         is_anak_panti: '0', // bukan anak panti
                         is_tidak_sekolah: '0', // bukan anak ats
                         id: { [Op.notIn]: [...resAtsIds, ...resPantiIds] } // Gabungkan ID ATS & Panti
                                     
                     }, order: [
+                        ['is_disabilitas', 'DESC'], //disabilitas 
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Urutkan berdasarkan jarak (terdekat lebih dulu)
                         ['umur', 'DESC'], //umur tertua
                         ['created_at', 'ASC'] // daftar sekolah terawal

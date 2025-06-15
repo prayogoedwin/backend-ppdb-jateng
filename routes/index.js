@@ -290,7 +290,7 @@ router.post('/api/auth/login', csrfProtection, ipWhitelistMiddleware, appKeyMidd
 router.post('/api/auth/verifikasi_otp', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, verifikasiOtpUser);
 
 router.post('/api/auth/login_new', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, loginTanpaOtp);
-router.post('/api/auth/pengecekan_jarak', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, getPerangkinganSayaUpdateKebutuhanKhusus);
+router.post('/api/auth/pengecekan_jarak', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, getPerangkinganSayaUpdateKebutuhanKhusus);
 
 
 
