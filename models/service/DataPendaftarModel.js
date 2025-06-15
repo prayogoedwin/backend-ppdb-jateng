@@ -479,10 +479,6 @@ const DataPesertaDidiks = db.define('ez_pendaftar', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    kode_kecamatan: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
     is_with_surat_sehat: {
         type: DataTypes.INTEGER,
         allowNull: true,
