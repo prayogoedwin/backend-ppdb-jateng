@@ -262,6 +262,10 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                 data: id_perangkingan,
             });
         } else {
+             const pendaftar = await DataPendaftars.findOne({ where: { id: decodedIdPendaftar  } });
+              pendaftar.update({
+                    is_pip: 1,
+                });
             return res.status(200).json({
                 status: 0,
                 message: 'Data kosong',
@@ -340,6 +344,124 @@ export const getPerangkinganDetail = async (req, res) => {
                     'nilai_raport_rata',
 
                 ],
+                include: [
+                    {
+                        model: StatusDomisilis,
+                        as: 'status_domisili_name',
+                        attributes: ['id','nama']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },{
+                        model: JenisKejuaraans,
+                        as: 'jenis_kejuaraan',
+                        attributes: ['nama']
+                    },
+                    {  
+                        model: WilayahVerDapodik,  
+                        as: 'data_wilayah_mutasi',  
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                    },  
+                ],
+            });
+
+             // Convert to JSON and remove the id from profil
+             const jsonProfil = profil ? profil.toJSON() : null;
+            //  if (jsonProfil) {
+            //      delete jsonProfil.id;
+            //  }
+
+            const jsonItem = resData.toJSON();
+            // jsonItem.id_perangkingan_ = encodeId(jsonItem.id); // Add the encoded ID to the response
+            jsonItem.data_pendaftar = jsonProfil;
+            // jsonItem.id_pendaftar = encodeId(jsonItem.id_pendaftar);
+            delete jsonItem.id_pendaftar; // Remove the original ID from the output
+
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: jsonItem
+            });
+
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: 'Data kosong',
+                data: []
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
+export const getPerangkinganDetailByNisn = async (req, res) => {
+    try {
+        const { nisn } = req.query.nisn;
+
+        // Fetch the data
+        const resData = await DataPerangkingans.findOne({
+            where: {
+                nisn: nisn, // Pastikan id_pendaftar adalah string
+                is_delete: 0
+            },
+            attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['npsn', 'nama']
+                },{
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['bentuk_pendidikan_id', 'nama']
+                },
+                // {
+                //     model: DataPendaftars,
+                //     as: 'data_pendaftar',
+                //     attributes: [
+                //         'nama_kejuaraan', 
+                //         'nilai_prestasi', 
+                //         'tanggal_sertifikat', 
+                //         'umur_sertifikat', 
+                //         'nomor_sertifikat', 
+                //         'organisasi_id', 
+                //         'nilai_organisasi'
+                //     ]
+                // }
+            ]
+        });
+
+
+        // Check if data is found
+        if (resData) {
+
+            const profil = await DataPendaftars.findOne({
+                where: {
+                  id: resData.id_pendaftar,
+                  is_delete: 0
+                },
                 include: [
                     {
                         model: StatusDomisilis,
