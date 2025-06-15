@@ -199,11 +199,11 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
             });
 
         }
-            const resData = await DataPerangkingans.findAll({
+            const resData = await DataPerangkingans.findOne({
                 where: {
                     id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
                     is_delete: 0
-                },
+                }
                 // include: [
                 //     {
                 //         model: SekolahTujuan,
@@ -223,22 +223,13 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                 // ],
                 // order: [['id', 'ASC']]
             });
-
-        const resDatas = resData.map(item => {
-            const jsonItem = item.toJSON(); //keluarkan penanda 4 afirmasi
-            jsonItem.id_perangkingan_ = encodeId(item.id); // Add the encoded ID to the response
-            jsonItem.id_pendaftar_ = encodeId(item.id_pendaftar); // Add the encoded ID to the response
-            delete jsonItem.id; // Hapus kolom id dari output JSON
-            delete jsonItem.id_pendaftar; // Hapus kolom id dari output JSON
-        
-            // return jsonItem;
-        });
-
-        if (resData && resData.length > 0) {
+        if(resData && resData.length > 0){
+            
+            const id_perangkingan = encodeId(resData.id);
            return res.status(200).json({
                 status: 1,
-                message: 'Data berhasil ditemukan',
-                data: resDatas,
+                message: 'berhasil update jarak, cetak bukti daftar',
+                data: id_perangkingan,
             });
         } else {
             return res.status(200).json({
