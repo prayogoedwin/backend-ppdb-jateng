@@ -34,7 +34,7 @@ export const getJalurPendaftaran = async (req, res) => {
            
         }else{
 
-             if(bentuk_pendidikan_id != 13 || bentuk_pendidikan_id != 15){
+             if(bentuk_pendidikan_id == '' || bentuk_pendidikan_id == null || bentuk_pendidikan_id == 'undefined'){
 
                 return res.status(200).json({  
                         'status': 0,  
