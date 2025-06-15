@@ -418,7 +418,7 @@ export const getPerangkinganDetail = async (req, res) => {
 
 export const getPerangkinganDetailByNisn = async (req, res) => {
     try {
-        const { nisn } = req.query.nisn;
+        const { nisn } = req.param;
 
         // Fetch the data
         const perangkingan = await DataPerangkingans.findOne({
