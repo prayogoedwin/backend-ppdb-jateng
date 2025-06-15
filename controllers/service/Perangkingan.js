@@ -204,6 +204,7 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                     id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
                     is_delete: 0
                 }
+                
                 // include: [
                 //     {
                 //         model: SekolahTujuan,
@@ -223,9 +224,9 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                 // ],
                 // order: [['id', 'ASC']]
             });
-        if(resData && resData.length > 0){
+        if(resData){
             
-            const id_perangkingan = encodeId(resData.id);
+           const id_perangkingan = encodeId(resData.id);
            return res.status(200).json({
                 status: 1,
                 message: 'berhasil update jarak, cetak bukti daftar',
