@@ -229,7 +229,6 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                 latP = pendaftar.lat;
                 lonP = pendaftar.lng
 
-                // Fungsi menghitung jarak Haversine
                 function haversineDistance(lat1, lon1, lat2, lon2) {
                     const R = 6371; // Radius bumi dalam kilometer
                     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -239,8 +238,9 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                         Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
                         Math.sin(dLon/2) * Math.sin(dLon/2);
                     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                    const distance = R * c;
-                    return distance;
+                    const distanceInKm = R * c;
+                    const distanceInMeters = distanceInKm * 1000; // Konversi ke meter
+                    return distanceInMeters;
                 }
 
                 const jarak = haversineDistance(latP, lonP, lati, longi);
