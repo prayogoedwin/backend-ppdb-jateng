@@ -204,32 +204,18 @@ export const getPerangkinganSayaUpdateKebutuhanKhusus = async (req, res) => {
                     id_pendaftar: decodedIdPendaftar, // Pastikan id_pendaftar adalah string
                     is_delete: 0
                 }
-                
-                // include: [
-                //     {
-                //         model: SekolahTujuan,
-                //         as: 'sekolah_tujuan',
-                //         attributes: ['npsn', 'nama']
-                //     },
-                //     {
-                //         model: SekolahJurusan,
-                //         as: 'sekolah_jurusan',
-                //         attributes: ['id', 'nama_jurusan']
-                //     },
-                //     {
-                //         model: JalurPendaftarans,
-                //         as: 'jalur_pendaftaran',
-                //         attributes: ['bentuk_pendidikan_id', 'nama']
-                //     }
-                // ],
-                // order: [['id', 'ASC']]
             });
         if(resData){
+
+            const pendaftar = await DataPendaftars.findOne({ where: { id: decodedIdPendaftar  } });
+            await pendaftar.update({
+              is_pip: 1,
+            });
             
            const id_perangkingan = encodeId(resData.id);
            return res.status(200).json({
                 status: 1,
-                message: 'berhasil update jarak, cetak bukti daftar',
+                message: 'Berhasil update jarak, cetak bukti daftar terbaru sekarang',
                 data: id_perangkingan,
             });
         } else {
