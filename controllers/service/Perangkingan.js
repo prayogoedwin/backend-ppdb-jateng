@@ -21460,7 +21460,14 @@ export const getPotensiPerangkingan = async (req, res) => {
                     'timeline': resTimeline,
                     'waktu_cache': WAKTU_CAHCE_JURNAL,
                 });
-            }
+        }else{
+
+                res.status(401).json({
+                    'status': 0,
+                    'message': 'Data Kosong'
+                });
+
+        }
 
 
     } catch (err) {
