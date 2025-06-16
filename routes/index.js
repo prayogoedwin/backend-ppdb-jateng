@@ -323,7 +323,7 @@ router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendafta
 
 router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan, getPotensiPerangkingan);
 
-router.post('/api/servis/perangkingan_spk', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPotensiPerangkingan);
+router.post('/api/servis/perangkingan_spk', getPotensiPerangkingan);
 
 router.post('/api/servis/cari_rangking_by_no_pendaftaran', ipWhitelistMiddleware, appKeyMiddleware, CariPengumumanByNoPendaftaran);
 
