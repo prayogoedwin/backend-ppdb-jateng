@@ -21437,7 +21437,7 @@ export const getPotensiPerangkingan = async (req, res) => {
             // Hitung statistik dari data
                 const totalData = resultData.length;
 
-                const sisaKuota = kuota_angka - totalData;
+                const sisaKuota = Math.max(kuota_angka - totalData, 0);
 
               
                 
@@ -21464,7 +21464,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                     total_pendaftar: totalData,
                     nama_jalur: nama_jalur,
                     kuota_jalur: kuota_angka,
-                    // sisa_kuota: sisaKuota,
+                    sisa_kuota: sisaKuota,
                     // nilai_raport: {
                     //     tertinggi: nilaiRaportTertinggi,
                     //     terendah: nilaiRaportTerendah,
