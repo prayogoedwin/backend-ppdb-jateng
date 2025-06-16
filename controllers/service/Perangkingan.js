@@ -21438,7 +21438,6 @@ export const getPotensiPerangkingan = async (req, res) => {
                     'waktu_cache': WAKTU_CAHCE_JURNAL,
                 });
             }
-        }
 
 
     } catch (err) {
