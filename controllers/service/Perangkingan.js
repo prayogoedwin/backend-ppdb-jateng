@@ -12388,7 +12388,8 @@ export const getPerangkingan = async (req, res) => {
                             sekolah_tujuan_id,
                             kode_kecamatan: zonKh.kode_wilayah_kec,  
                             is_delete: 0,
-                            is_daftar_ulang: { [Op.ne]: 2 }
+                            is_daftar_ulang: { [Op.ne]: 2 },
+                            is_tidak_boleh_domisili: { [Op.ne]: '1' },
                         },
                         order: [
                             ['umur', 'DESC'],
@@ -13238,6 +13239,7 @@ export const getPerangkingan = async (req, res) => {
                         is_delete: 0,
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                         is_anak_guru_jateng: { [Op.ne]: '1' },
+                        is_tidak_boleh_domisili: { [Op.ne]: '1' },
                         nisn: { [Op.notIn]: excludedNisn } // Exclude NISN yang sudah terpilih di anak guru
                     }, order: [
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
@@ -18665,33 +18667,15 @@ export const cekPerangkingan = async (req, res) => {
 
         }
 
-        // if(jalur_pendaftaran_id == 1){
+        if(jalur_pendaftaran_id == 6){
 
-        //     console.log('is_tidak_boleh_domisili:'+pendaftar.is_tidak_boleh_domisili);
+            console.log('is_tidak_boleh_domisili:'+pendaftar.is_tidak_boleh_domisili);
 
-        //     if(pendaftar.is_tidak_boleh_domisili == 1){
-        //         return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili karena alasan tanggal kedatangan dan status nik pada kk' });
-        //     }
+            if(pendaftar.is_tidak_boleh_domisili == 1){
+                return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar seleksi domisili terdekat karena alasan shdk, umur domisili, dan nama orang tua' });
+            }
 
-        //     const kecPendaftar = pendaftar.kecamatan_id.toString();
-
-        //     console.log('KECAMATAN:'+kecPendaftar);
-
-        //     const cariZonasis = await SekolahZonasis.findOne({
-        //         where: {
-        //         id_sekolah: sekolah_tujuan_id,
-        //         kode_wilayah_kec: kecPendaftar,
-        //         }
-        //     });
-        
-        //     if (!cariZonasis) {
-        //         return res.status(200).json({
-        //         status: 0,
-        //         message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
-        //         });
-        //     }
-
-        // }
+        }
 
         
 

@@ -273,6 +273,10 @@ const PerangkinganModels = db.define('ez_perangkingan', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+      is_tidak_boleh_domisili: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 
 }, {
     freezeTableName: true,
