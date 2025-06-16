@@ -21435,6 +21435,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                 const datasNya = {
                     daya_tampung: kuotaAll,
                     total_pendaftar: totalData,
+                    kuota_jalur: kuota_jalur,
                     nilai_raport: {
                         tertinggi: nilaiRaportTertinggi,
                         terendah: nilaiRaportTerendah,
