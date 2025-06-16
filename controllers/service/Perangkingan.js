@@ -21394,11 +21394,25 @@ export const getPotensiPerangkingan = async (req, res) => {
             resultData = JSON.parse(cached);
             fromCache = true;
             console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
+
+              const kuotaAll = kuota.daya_tampung
+              let kuota_jalur;
+              if(jalur_pendaftaran_id == 1){
+                kuota_jalur = 'Domisili Reguler SMA:'+ kuota.kuota_zonasi
+              }else  if(jalur_pendaftaran_id == 2){
+                kuota_jalur = 'Domisili Khusus SMA:'+ kuota.kuota_zonasi_khusus
+              }else  if(jalur_pendaftaran_id == 3){
+                kuota_jalur = 'Prestasi SMA:'+ kuota.kuota_prestasi
+              }else  if(jalur_pendaftaran_id == 4){
+                kuota_jalur = 'Mutasi SMA:'+ kuota.kuota_mutasi
+              }else  if(jalur_pendaftaran_id == 5){
+                kuota_jalur = 'Afirmasi SMA:'+ kuota.kuota_afirmasi
+              }
             
             // Hitung statistik dari data
                 const totalData = resultData.length;
 
-                const kuotaAll = kuota.daya_tampung
+              
                 
                 // Nilai Raport
                 const nilaiRaport = resultData.map(item => item.nilai_raport);
