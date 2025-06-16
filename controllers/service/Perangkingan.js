@@ -21386,6 +21386,11 @@ export const getPotensiPerangkingan = async (req, res) => {
         const resTimeline = await getTimelineSatuan(6);
 
         if (cached) {
+
+            let kuota
+            if(bentuk_pendidikan_id == 13){
+                 kuota = await getSekolahTujuanById(sekolah_tujuan_id);
+            }
             resultData = JSON.parse(cached);
             fromCache = true;
             console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
@@ -21412,7 +21417,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                 const nilaiAkhirRataRata = nilaiAkhir.reduce((a, b) => a + b, 0) / totalData;
 
                 const datasNya = {
-                    total_data: totalData,
+                    total_pendaftar: totalData,
                     nilai_raport: {
                         tertinggi: nilaiRaportTertinggi,
                         terendah: nilaiRaportTerendah,
@@ -21433,6 +21438,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                 return res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan (from cache)',
+                    'kuota' : kuota,
                     'data': datasNya,
                     'timeline': resTimeline,
                     'waktu_cache': WAKTU_CAHCE_JURNAL,
