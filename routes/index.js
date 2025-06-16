@@ -67,7 +67,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      CariPengumumanByNoPendaftaran,
      generatePendaftarPrestasiKhususCache,
      getPerangkinganSayaUpdateKebutuhanKhusus,
-     getPerangkinganDetailByNisn
+     getPerangkinganDetailByNisn,
+     getPotensiPerangkingan
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -321,7 +322,7 @@ router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddl
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, uploadFileTambahan);
 
 
-router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan, getPotensiPerangkingan);
+router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
 
 router.post('/api/servis/perangkingan_spk', getPotensiPerangkingan);
 
