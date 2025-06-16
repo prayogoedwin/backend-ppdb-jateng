@@ -21358,6 +21358,100 @@ const generatePDFResponse = (res, data, jalurId) => {
 };
 
 
+//selain tambah redis, ada perbaikan di jarak terdekat SMK, penambahan 2% untuk anak guru
+export const getPotensiPerangkingan = async (req, res) => {
+    try {
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id, 
+            jurusan_id,
+            nisn,
+            is_pdf
+        } = req.body;
+
+        // Buat Redis key dengan format yang jelas
+        // const redis_key = `perangkingan:${jalur_pendaftaran_id}--${sekolah_tujuan_id}--${jurusan_id || 0}`;
+        const redis_key = `perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+        const redis_key_full = `FULL_perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+
+
+        const WAKTU_CAHCE_JURNAL = await checkWaktuCachePerangkingan();
+
+        // 1. Selalu cek Redis terlebih dahulu untuk semua request
+        const cached = await redisGet(redis_key);
+        let resultData;
+        let fromCache = false;
+
+        const resTimeline = await getTimelineSatuan(6);
+
+        if (cached) {
+            resultData = JSON.parse(cached);
+            fromCache = true;
+            console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
+            
+            // Hitung statistik dari data
+                const totalData = resultData.length;
+                
+                // Nilai Raport
+                const nilaiRaport = resultData.map(item => item.nilai_raport);
+                const nilaiRaportTertinggi = Math.max(...nilaiRaport);
+                const nilaiRaportTerendah = Math.min(...nilaiRaport);
+                const nilaiRaportRataRata = nilaiRaport.reduce((a, b) => a + b, 0) / totalData;
+                
+                // Nilai Prestasi
+                const nilaiPrestasi = resultData.map(item => item.nilai_prestasi);
+                const nilaiPrestasiTertinggi = Math.max(...nilaiPrestasi);
+                const nilaiPrestasiTerendah = Math.min(...nilaiPrestasi);
+                const nilaiPrestasiRataRata = nilaiPrestasi.reduce((a, b) => a + b, 0) / totalData;
+                
+                // Nilai Akhir
+                const nilaiAkhir = resultData.map(item => item.nilai_akhir);
+                const nilaiAkhirTertinggi = Math.max(...nilaiAkhir);
+                const nilaiAkhirTerendah = Math.min(...nilaiAkhir);
+                const nilaiAkhirRataRata = nilaiAkhir.reduce((a, b) => a + b, 0) / totalData;
+
+                const datasNya = {
+                    total_data: totalData,
+                    nilai_raport: {
+                        tertinggi: nilaiRaportTertinggi,
+                        terendah: nilaiRaportTerendah,
+                        rata_rata: nilaiRaportRataRata.toFixed(2)
+                    },
+                    nilai_prestasi: {
+                        tertinggi: nilaiPrestasiTertinggi,
+                        terendah: nilaiPrestasiTerendah,
+                        rata_rata: nilaiPrestasiRataRata.toFixed(2)
+                    },
+                    nilai_akhir: {
+                        tertinggi: nilaiAkhirTertinggi,
+                        terendah: nilaiAkhirTerendah,
+                        rata_rata: nilaiAkhirRataRata.toFixed(2)
+                    }
+                };
+                
+                return res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan (from cache)',
+                    'data': datasNya,
+                    'timeline': resTimeline,
+                    'waktu_cache': WAKTU_CAHCE_JURNAL,
+                });
+            }
+        }
+
+
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({
+            'status': 0,
+            'message': 'Error'
+        });
+    }
+}
+
+
+
 
 
 
