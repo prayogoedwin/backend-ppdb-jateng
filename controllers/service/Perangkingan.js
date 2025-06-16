@@ -21463,7 +21463,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                     daya_tampung: kuotaAll,
                     total_pendaftar: totalData,
                     kuota_jalur: kuota_jalur,
-                    sisa_kuota: sisaKuota,
+                    // sisa_kuota: sisaKuota,
                     nilai_raport: {
                         tertinggi: nilaiRaportTertinggi,
                         terendah: nilaiRaportTerendah,
