@@ -21383,8 +21383,6 @@ export const getPotensiPerangkingan = async (req, res) => {
         let resultData;
         let fromCache = false;
 
-        const resTimeline = await getTimelineSatuan(6);
-
         if (cached) {
 
             let kuota
@@ -21486,7 +21484,6 @@ export const getPotensiPerangkingan = async (req, res) => {
                     'status': 1,
                     'message': 'Data berhasil ditemukan (from cache)',
                     'data': datasNya,
-                    'timeline': resTimeline,
                     'waktu_cache': WAKTU_CAHCE_JURNAL,
                 });
         }else{
