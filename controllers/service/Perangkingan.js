@@ -21397,6 +21397,8 @@ export const getPotensiPerangkingan = async (req, res) => {
             
             // Hitung statistik dari data
                 const totalData = resultData.length;
+
+                const kuotaAll = kuota.daya_tampung
                 
                 // Nilai Raport
                 const nilaiRaport = resultData.map(item => item.nilai_raport);
@@ -21417,6 +21419,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                 const nilaiAkhirRataRata = nilaiAkhir.reduce((a, b) => a + b, 0) / totalData;
 
                 const datasNya = {
+                    daya_tampung: kuotaAll,
                     total_pendaftar: totalData,
                     nilai_raport: {
                         tertinggi: nilaiRaportTertinggi,
@@ -21438,7 +21441,6 @@ export const getPotensiPerangkingan = async (req, res) => {
                 return res.status(200).json({
                     'status': 1,
                     'message': 'Data berhasil ditemukan (from cache)',
-                    'kuota' : kuota,
                     'data': datasNya,
                     'timeline': resTimeline,
                     'waktu_cache': WAKTU_CAHCE_JURNAL,
