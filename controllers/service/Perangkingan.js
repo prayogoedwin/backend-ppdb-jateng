@@ -21391,6 +21391,9 @@ export const getPotensiPerangkingan = async (req, res) => {
             if(bentuk_pendidikan_id == 13){
                  kuota = await getSekolahTujuanById(sekolah_tujuan_id);
             }
+            if(bentuk_pendidikan_id == 15){
+                kuota = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+            }
             resultData = JSON.parse(cached);
             fromCache = true;
             console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
@@ -21398,16 +21401,27 @@ export const getPotensiPerangkingan = async (req, res) => {
               const kuotaAll = kuota.daya_tampung
               let kuota_jalur;
               if(jalur_pendaftaran_id == 1){
-                kuota_jalur = 'Domisili Reguler SMA:'+ kuota.kuota_zonasi
+                kuota_jalur = 'Domisili Reguler SMA: '+ kuota.kuota_zonasi
               }else  if(jalur_pendaftaran_id == 2){
-                kuota_jalur = 'Domisili Khusus SMA:'+ kuota.kuota_zonasi_khusus
+                kuota_jalur = 'Domisili Khusus SMA: '+ kuota.kuota_zonasi_khusus
               }else  if(jalur_pendaftaran_id == 3){
-                kuota_jalur = 'Prestasi SMA:'+ kuota.kuota_prestasi
+                kuota_jalur = 'Prestasi SMA: '+ kuota.kuota_prestasi
               }else  if(jalur_pendaftaran_id == 4){
-                kuota_jalur = 'Mutasi SMA:'+ kuota.kuota_mutasi
+                kuota_jalur = 'Mutasi SMA: '+ kuota.kuota_mutasi
               }else  if(jalur_pendaftaran_id == 5){
-                kuota_jalur = 'Afirmasi SMA:'+ kuota.kuota_afirmasi
+                kuota_jalur = 'Afirmasi SMA: '+ kuota.kuota_afirmasi
+              }else  if(jalur_pendaftaran_id == 6){
+                kuota_jalur = 'Seleksi Terdekan SMK: '+ kuota.kuota_domisili_terdekat
+              }else  if(jalur_pendaftaran_id == 7){
+                kuota_jalur = 'Seleksi Prestasi SMK: '+ kuota.kuota_prestasi
+              }else  if(jalur_pendaftaran_id == 8){
+                kuota_jalur = 'Seleksi Prestasi Khusus SMK: '+ kuota.kuota_prestasi_khusus
+              }else  if(jalur_pendaftaran_id == 9){
+                kuota_jalur = 'Seleksi Afirmasi SMK: '+ kuota.kuota_afirmasi
+              }else{
+                 kuota_jalur = 0;
               }
+              
             
             // Hitung statistik dari data
                 const totalData = resultData.length;
