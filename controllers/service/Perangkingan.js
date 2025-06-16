@@ -21399,37 +21399,37 @@ export const getPotensiPerangkingan = async (req, res) => {
             console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
 
               const kuotaAll = kuota.daya_tampung
-              let kuota_jalur;
+              let nama_jalur;
               let kuota_angka;
               if(jalur_pendaftaran_id == 1){
-                kuota_jalur = 'Domisili Reguler SMA: '+ kuota.kuota_zonasi
+                nama_jalur = 'Domisili Reguler SMA';
                 kuota_angka = kuota.kuota_zonasi
               }else  if(jalur_pendaftaran_id == 2){
-                kuota_jalur = 'Domisili Khusus SMA: '+ kuota.kuota_zonasi_khusus
+                nama_jalur = 'Domisili Khusus SMA';
                 kuota_angka = kuota.kuota_zonasi_khusus
               }else  if(jalur_pendaftaran_id == 3){
-                kuota_jalur = 'Prestasi SMA: '+ kuota.kuota_prestasi
+                nama_jalur = 'Prestasi SMA';
                  kuota_angka = kuota.kuota_prestasi
               }else  if(jalur_pendaftaran_id == 4){
-                kuota_jalur = 'Mutasi SMA: '+ kuota.kuota_mutasi
+                nama_jalur = 'Mutasi SMA';
                  kuota_angka = kuota.kuota_mutasi
               }else  if(jalur_pendaftaran_id == 5){
-                kuota_jalur = 'Afirmasi SMA: '+ kuota.kuota_afirmasi
+                nama_jalur = 'Afirmasi SMA';
                  kuota_angka = kuota.kuota_afirmasi
               }else  if(jalur_pendaftaran_id == 6){
-                kuota_jalur = 'Seleksi Terdekan SMK: '+ kuota.kuota_domisili_terdekat
+                nama_jalur = 'Seleksi Terdekan SMK';
                  kuota_angka = kuota.kuota_domisili_terdekat
               }else  if(jalur_pendaftaran_id == 7){
-                kuota_jalur = 'Seleksi Prestasi SMK: '+ kuota.kuota_prestasi
+                nama_jalur = 'Seleksi Prestasi SMK';
                  kuota_angka = kuota.kuota_prestasi
               }else  if(jalur_pendaftaran_id == 8){
-                kuota_jalur = 'Seleksi Prestasi Khusus SMK: '+ kuota.kuota_prestasi_khusus
+                nama_jalur = 'Seleksi Prestasi Khusus SMK';
                  kuota_angka = kuota.kuota_prestasi_khusus
               }else  if(jalur_pendaftaran_id == 9){
-                kuota_jalur = 'Seleksi Afirmasi SMK: '+ kuota.kuota_afirmasi
+                nama_jalur = 'Seleksi Afirmasi SMK';
                  kuota_angka = kuota.kuota_afirmasi
               }else{
-                 kuota_jalur = 0;
+                 nama_jalur = '-';
                   kuota_angka =0;
               }
               
@@ -21462,7 +21462,8 @@ export const getPotensiPerangkingan = async (req, res) => {
                 const datasNya = {
                     daya_tampung: kuotaAll,
                     total_pendaftar: totalData,
-                    kuota_jalur: kuota_jalur,
+                    nama_jalur: nama_jalur,
+                    kuota_jalur: kuota_angka,
                     // sisa_kuota: sisaKuota,
                     nilai_raport: {
                         tertinggi: nilaiRaportTertinggi,
