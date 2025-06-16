@@ -21457,6 +21457,18 @@ export const getPotensiPerangkingan = async (req, res) => {
                 const nilaiAkhirTerendah = Math.min(...nilaiAkhir);
                 const nilaiAkhirRataRata = nilaiAkhir.reduce((a, b) => a + b, 0) / totalData;
 
+                // Umur
+                const umur = resultData.map(item => item.umur);
+                const umurTertua = Math.max(...umur);
+                const umurTermuda = Math.min(...umur);
+                const umurRataRata = umur.reduce((a, b) => a + b, 0) / totalData;
+                
+                // Jarak (konversi ke number karena dalam string)
+                const jarak = resultData.map(item => parseFloat(item.jarak));
+                const jarakTerjauh = Math.max(...jarak);
+                const jarakTerdekat = Math.min(...jarak);
+                const jarakRataRata = jarak.reduce((a, b) => a + b, 0) / totalData;
+
                 const datasNya = {
                     daya_tampung: kuotaAll,
                     total_pendaftar: totalData,
@@ -21477,6 +21489,16 @@ export const getPotensiPerangkingan = async (req, res) => {
                         tertinggi: nilaiAkhirTertinggi,
                         terendah: nilaiAkhirTerendah,
                         rata_rata: nilaiAkhirRataRata.toFixed(2)
+                    },
+                    umur: {
+                        tertua: umurTertua,
+                        termuda: umurTermuda,
+                        rata_rata: parseFloat(umurRataRata.toFixed(2))
+                    },
+                    jarak: {
+                        terjauh: parseFloat(jarakTerjauh.toFixed(2)),
+                        terdekat: parseFloat(jarakTerdekat.toFixed(2)),
+                        rata_rata: parseFloat(jarakRataRata.toFixed(2))
                     }
                 };
                 
