@@ -21465,16 +21465,16 @@ export const getPotensiPerangkingan = async (req, res) => {
                     nama_jalur: nama_jalur,
                     kuota_jalur: kuota_angka,
                     // sisa_kuota: sisaKuota,
-                    nilai_raport: {
-                        tertinggi: nilaiRaportTertinggi,
-                        terendah: nilaiRaportTerendah,
-                        rata_rata: nilaiRaportRataRata.toFixed(2)
-                    },
-                    nilai_prestasi: {
-                        tertinggi: nilaiPrestasiTertinggi,
-                        terendah: nilaiPrestasiTerendah,
-                        rata_rata: nilaiPrestasiRataRata.toFixed(2)
-                    },
+                    // nilai_raport: {
+                    //     tertinggi: nilaiRaportTertinggi,
+                    //     terendah: nilaiRaportTerendah,
+                    //     rata_rata: nilaiRaportRataRata.toFixed(2)
+                    // },
+                    // nilai_prestasi: {
+                    //     tertinggi: nilaiPrestasiTertinggi,
+                    //     terendah: nilaiPrestasiTerendah,
+                    //     rata_rata: nilaiPrestasiRataRata.toFixed(2)
+                    // },
                     nilai_akhir: {
                         tertinggi: nilaiAkhirTertinggi,
                         terendah: nilaiAkhirTerendah,
