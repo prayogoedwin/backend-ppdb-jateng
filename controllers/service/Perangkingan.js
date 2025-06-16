@@ -12145,7 +12145,7 @@ export const getPerangkingan = async (req, res) => {
                                 // Tambahkan kondisi spesifik zonKh jika diperlukan
                                 // contoh: zonasi_khusus_id: zonKh.id
                             },
-                            limit: resSek.kuota_zonasi_khusus
+                            limit: zonKh.kuota_zonasi_khusus
                         })).length;
                 
                         // Simpan data per zonasi khusus
@@ -13237,6 +13237,7 @@ export const getPerangkingan = async (req, res) => {
                         jurusan_id,
                         is_delete: 0,
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
+                        is_anak_guru_jateng: { [Op.ne]: '1' },
                         nisn: { [Op.notIn]: excludedNisn } // Exclude NISN yang sudah terpilih di anak guru
                     }, order: [
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
@@ -18598,7 +18599,7 @@ export const cekPerangkingan = async (req, res) => {
             console.log('is_tidak_boleh_domisili:'+pendaftar.is_tidak_boleh_domisili);
 
             if(pendaftar.is_tidak_boleh_domisili == 1){
-                return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili karena alasan tanggal kedatangan dan status nik pada kk' });
+                return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili karena alasan shdk, umur domisili, dan nama orang tua' });
             }
 
             kecPendaftar = pendaftar.kecamatan_id.toString();
@@ -18649,6 +18650,17 @@ export const cekPerangkingan = async (req, res) => {
                 status: 0,
                 message: "Domisili Anda tidak termasuk dalam wlayah domisili Sekolah Yang Anda Daftar. ",
                 });
+            }
+
+        }
+
+        if(jalur_pendaftaran_id == 2){
+
+
+            console.log('is_tidak_boleh_domisili:'+pendaftar.is_tidak_boleh_domisili);
+
+            if(pendaftar.is_tidak_boleh_domisili == 1){
+                return res.status(200).json({ status: 0, message: 'Anda tidak diperbolehkan mendaftar jalur domisili khusus karena alasan shdk, umur domisili, dan nama orang tua' });
             }
 
         }
@@ -18861,6 +18873,7 @@ export const createPerangkinganBAK = async (req, res) => {
             is_pip: pendaftar.is_pip,
             is_disabilitas: anak_disabilitas,
             is_buta_warna,
+            npsn_anak_guru: pendaftar.npsn_anak_guru,
             created_at: new Date(), // Set the current date and time
             created_by: id_pendaftar_decode,
             created_by_ip: req.ip,
@@ -19023,6 +19036,7 @@ export const createPerangkingan = async (req, res) => {
             is_anak_keluarga_tidak_mampu: anak_tidak_mampu,
             is_disabilitas: anak_disabilitas,
             is_anak_guru_jateng: pendaftar.is_anak_guru_jateng,
+            npsn_anak_guru: pendaftar.npsn_anak_guru,
             // is_pip: pendaftar.is_pip,
             is_buta_warna,
             created_at: new Date(), // Set the current date and time
