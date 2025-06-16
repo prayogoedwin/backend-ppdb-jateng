@@ -21437,6 +21437,11 @@ export const getPotensiPerangkingan = async (req, res) => {
 
                 const sisaKuota = Math.max(kuota_angka - totalData, 0);
 
+                // Hitung CPD berprestasi (nilai >= 300)
+                const jumlah_cmb_berprestasi_prioritas_diterima = resultData.filter(item => 
+                    item.nilai_akhir >= 300
+                ).length;
+
               
                 
                 // Nilai Raport
@@ -21475,6 +21480,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                     nama_jalur: nama_jalur,
                     kuota_jalur: kuota_angka,
                     sisa_kuota: sisaKuota,
+                    jumlah_cmb_berprestasi_prioritas_diterima: jumlah_cmb_berprestasi_prioritas_diterima,
                     // nilai_raport: {
                     //     tertinggi: nilaiRaportTertinggi,
                     //     terendah: nilaiRaportTerendah,
