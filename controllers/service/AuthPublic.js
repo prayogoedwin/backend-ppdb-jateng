@@ -736,45 +736,17 @@ export const cekKodeNarasiCek = async (req, res, next) => {
 
 export const narasiPerubahan = async (req, res, next) => {
     try {
-        const redis_key = `narasi_narasi`; 
-        let keyNya = await redisGet(redis_key);
 
-        if (keyNya) {
-            keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
-            console.log(`[CACHE] Found cached register_custom key for ${redis_key}`);
-            return res.status(200).json({
-                status: 1,
-                message: 'Narasi:'+keyNya.nama,
-                data: keyNya
-            });
-        } else {
-            keyNya = await EzAppKey.findOne({
+        keyNya = await EzAppKey.findOne({
                 where: {
                     id: 6
                 }
-            });
-
-            if (!keyNya) {
-                return res.status(403).json({
-                    status: 0,
-                    message: 'Forbidden - Your narasi key is not found',
-                });
-            }
-
-            await redisSet(
-                redis_key,
-                JSON.stringify(keyNya),
-                process.env.REDIS_EXPIRE_TIME_HARIAN
-            );
-
-            console.log(`[DB] Register_Custom:(${redis_key}) →`, keyNya);
-
-            return res.status(200).json({
+        });
+        return res.status(200).json({
                 status: 1,
                 message: 'Narasi'
                 data: keyNya
-            });
-        }
+         });
 
     } catch (error) {
         console.error('Error checking Maintenance Key:', error);
