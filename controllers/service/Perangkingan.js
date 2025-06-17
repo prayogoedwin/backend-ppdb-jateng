@@ -1,7 +1,9 @@
 import { check, validationResult } from 'express-validator';
 import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, 
     DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
-    getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan, parseKodeWilayah } from '../../helpers/HelpHelper.js';
+    getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan, parseKodeWilayah
+getSekolahTujuanById1,getSekolahJurusanById1
+} from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPendaftarPrestasiKhusus from "../../models/service/DataPesertaPrestasiKhusus.js";
 import DataPerangkingans from "../../models/service/DataPerangkinganModel.js";
@@ -21410,7 +21412,7 @@ export const getPotensiPerangkingan = async (req, res) => {
 
             let kuotanya;
             if(bentuk_pendidikan_id == 13){
-                 kuotanya = getSekolahTujuanById(sekolah_tujuan_id);
+                 kuotanya = getSekolahTujuanById1(sekolah_tujuan_id);
             }
             if(bentuk_pendidikan_id == 15){
                  kuotanya = getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);

@@ -247,6 +247,69 @@ export const getSekolahJurusanById = async (sekolah_tujuan_id, jurusan_id) => {
   }
 };
 
+export const getSekolahTujuanById1 = async (id) => {
+
+
+  try {
+    const resSek = await SekolahTujuan.findOne({
+      where: { id }
+    });
+
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resSek) {
+      const data = resSek.toJSON();
+      await redisSet(
+        redis_key,
+        JSON.stringify(data),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
+      );
+      return data;
+    }
+    return null;
+
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getSekolahJurusanById1 = async (sekolah_tujuan_id, jurusan_id) => {
+
+
+  try {
+    // 1) Cek Redis
+
+
+    if (jurusan_id == '' || jurusan_id == 'undefined') {
+        return null;
+    }
+
+    // 2) Ambil dari DB
+    const resJurSek = await SekolahJurusan.findOne({
+      where: {
+        id_sekolah_tujuan: sekolah_tujuan_id,
+        id: jurusan_id,
+      }
+    });
+
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resJurSek) {
+      const data = resJurSek.toJSON();
+      await redisSet(
+        redis_key,
+        JSON.stringify(data),
+        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
+      );
+
+      return data;
+    }
+
+    return null;
+
+  } catch (err) {
+    return null;
+  }
+};
+
 export const SekolahZonasiKhususByNpsn = async (npsn) => {
 
   const redis_key = `zonasi_khusus:by_npsn:${npsn}`;
