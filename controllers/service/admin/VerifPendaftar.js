@@ -3628,7 +3628,6 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
                 umur_sertifikat: umur_sertifikat || 0,
                 nomor_sertifikat,
                 nilai_prestasi,
-                nilai_raport: nilai_raport || nilai_raport_def,
                 nilai_raport_rata,
                 nilai_organisasi,
                 updated_at: new Date(),
