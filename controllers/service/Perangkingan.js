@@ -21379,7 +21379,7 @@ const generatePDFResponse = (res, data, jalurId) => {
 };
 
 
-//selain tambah redis, ada perbaikan di jarak terdekat SMK, penambahan 2% untuk anak guru
+//potensi 
 export const getPotensiPerangkingan = async (req, res) => {
     try {
         const {
@@ -21553,9 +21553,3 @@ export const getPotensiPerangkingan = async (req, res) => {
         });
     }
 }
-
-
-
-
-
-

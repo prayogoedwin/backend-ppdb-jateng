@@ -3647,7 +3647,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
         );
 
           // 4. Fetch data perangkingan terkait
-        const resData = await DataPerangkingans.findOne({
+        const resData1 = await DataPerangkingans.findOne({
             where: {
             nisn: nisn,
             is_delete: 0
@@ -3677,7 +3677,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
             },
             {
             where: {
-                id: resData.id
+                id: resData1.id
             }
             }
         );
@@ -3783,7 +3783,7 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
         );
 
           // 4. Fetch data perangkingan terkait
-        const resData = await DataPerangkingans.findOne({
+        const resData1 = await DataPerangkingans.findOne({
             where: {
             nisn: nisn,
             is_delete: 0
@@ -3810,7 +3810,7 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
             },
             {
             where: {
-                id: resData.id
+                id: resData1.id
             }
             }
         );
