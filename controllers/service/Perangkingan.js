@@ -13240,7 +13240,13 @@ export const getPerangkingan = async (req, res) => {
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                         // is_anak_guru_jateng: { [Op.ne]: '1' },
                         // is_tidak_boleh_domisili: { [Op.ne]: '1' },
-                        is_tidak_boleh_domisili: { [Op.not]: '1' }
+                        // is_tidak_boleh_domisili: { [Op.not]: '1' }
+                        // Alternatif (lebih panjang, tidak disarankan)
+                        is_tidak_boleh_domisili: { 
+                        [Op.not]: { 
+                            [Op.eq]: '1' 
+                        } 
+                        }
                         nisn: { [Op.notIn]: excludedNisn } // Exclude NISN yang sudah terpilih di anak guru
                     }, order: [
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
