@@ -1,8 +1,8 @@
 import { check, validationResult } from 'express-validator';
 import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, 
     DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
-    getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan, parseKodeWilayah
-getSekolahTujuanById1,getSekolahJurusanById1
+    getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan, parseKodeWilayah,
+getSekolahTujuanById1, getSekolahJurusanById1
 } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPendaftarPrestasiKhusus from "../../models/service/DataPesertaPrestasiKhusus.js";
