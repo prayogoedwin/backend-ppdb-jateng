@@ -257,12 +257,7 @@ export const getSekolahTujuanById1 = async (id) => {
 
     // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
     if (resSek) {
-      const data = resSek.toJSON();
-      await redisSet(
-        redis_key,
-        JSON.stringify(data),
-        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
-      );
+      const data = resSek;
       return data;
     }
     return null;
@@ -293,13 +288,7 @@ export const getSekolahJurusanById1 = async (sekolah_tujuan_id, jurusan_id) => {
 
     // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
     if (resJurSek) {
-      const data = resJurSek.toJSON();
-      await redisSet(
-        redis_key,
-        JSON.stringify(data),
-        process.env.REDIS_EXPIRE_TIME_SOURCE_DATA
-      );
-
+      const data = resJurSek;
       return data;
     }
 
