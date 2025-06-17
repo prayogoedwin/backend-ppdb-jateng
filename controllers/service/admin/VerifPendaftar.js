@@ -3648,8 +3648,6 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
         const responseData = {
             id: id,
             nisn: nisn,
-            nama_lengkap: nama_lengkap,
-            kode_verifikasi: resData.kode_verifikasi,
         };
 
         res.status(200).json({
