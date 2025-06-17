@@ -4,6 +4,7 @@ import SekolahTujuan from '../master/SekolahTujuanModel.js';
 import SekolahJurusan from '../master/SekolahJurusanModel.js';
 import JalurPendaftarans from '../master/JalurPendaftaranModel.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
+import EzWilayahVerDapodiks from '../master/WilayahVerDapodikModel.js';
 import DataUsers from '../../models/service/DataUsersModel.js';
 
 const PerangkinganModels = db.define('ez_perangkingan', {
