@@ -3700,3 +3700,136 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
         });
     }
 }
+
+export const updatePendaftarHapusPerangkingan = async (req, res) => {
+    const { 
+        
+        id,
+        nisn,
+        
+        kejuaraan_id_sblm,
+        nama_kejuaraan_sblm,
+        tanggal_sertifikat_sblm,
+        umur_sertifikat_sblm,
+        nomor_sertifikat_sblm,
+        nilai_prestasi_sblm,
+        nilai_raport_rata_sblm,
+        nilai_organisasi_sblm,
+
+        kejuaraan_id,
+        nama_kejuaraan,
+        tanggal_sertifikat,
+        umur_sertifikat,
+        nomor_sertifikat,
+        nilai_prestasi,
+        nilai_raport_rata,
+        nilai_organisasi,
+
+    } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ status: 0, message: 'Wajib kirim id' });
+    }
+
+    let decodedId;
+    try {
+        // decodedId = decodeId(id);
+         decodedId = id;
+        if (!decodedId) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+    } catch (err) {
+        console.error('Error decoding ID:', err);
+        return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+    }
+
+    // console.log('Decoded ID:', decodedId); // For debugging
+
+    try {        
+        const resData = await DataPendaftars.findOne({
+            where: {
+                id: decodedId,
+                is_delete: 0
+            }
+        });
+
+        if (!resData) {
+            return res.status(400).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        const updatedPendaftar = await DataPendaftars.update(
+            {
+                kejuaraan_id: kejuaraan_id || 0,
+                nama_kejuaraan,
+                tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
+                umur_sertifikat: umur_sertifikat || 0,
+                nomor_sertifikat,
+                nilai_prestasi,
+                nilai_raport_rata,
+                nilai_organisasi,
+                updated_at: new Date(),
+                updated_by: decodedId,
+
+            },
+            {
+                where: {
+                    id: decodedId,
+                    [Op.or]: [
+                        { is_delete: 0 }, // Entri yang belum dihapus
+                        { is_delete: null } // Entri yang belum diatur
+                    ]
+                }
+            }
+        );
+
+          // 4. Fetch data perangkingan terkait
+        const resData = await DataPerangkingans.findOne({
+            where: {
+            nisn: nisn,
+            is_delete: 0
+            },
+            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
+            include: [
+            {
+                model: SekolahTujuan,
+                as: 'sekolah_tujuan',
+                attributes: ['npsn', 'nama']
+            },
+            {
+                model: JalurPendaftarans,
+                as: 'jalur_pendaftaran',
+                attributes: ['bentuk_pendidikan_id', 'nama']
+            }
+            ]
+        });
+
+        // 5. Update DataPerangkingans dengan nilai baru
+        await DataPerangkingans.update(
+            {
+            is_delete: 1
+            },
+            {
+            where: {
+                id: resData.id
+            }
+            }
+        );
+
+        const responseData = {
+            id: id,
+            nisn: nisn,
+        };
+
+        res.status(200).json({
+            status: 1,
+            message: 'Berhasil perbaharui data',
+            data: responseData
+        });
+    } catch (error) {
+        console.error('Error updating data:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message,
+        });
+    }
+}
