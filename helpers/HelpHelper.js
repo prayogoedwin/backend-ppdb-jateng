@@ -260,7 +260,6 @@ export const getSekolahTujuanById1 = async (id) => {
       const data = resSek;
       return data;
     }
-    return null;
 
   } catch (err) {
     return null;
@@ -291,8 +290,6 @@ export const getSekolahJurusanById1 = async (sekolah_tujuan_id, jurusan_id) => {
       const data = resJurSek;
       return data;
     }
-
-    return null;
 
   } catch (err) {
     return null;

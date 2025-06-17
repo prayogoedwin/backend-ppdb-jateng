@@ -21536,7 +21536,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                 
                 return res.status(200).json({
                     'status': 1,
-                    'message': 'Data berhasil ditemukan (from cache)',
+                    'message': 'Data',
                     'data': datasNya,
                     'waktu_cache': WAKTU_CAHCE_JURNAL,
                 });
