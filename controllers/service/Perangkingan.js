@@ -18528,7 +18528,7 @@ export const cekPerangkingan = async (req, res) => {
          if(jalur_pendaftaran_id == 8){
             // const anak_prestasi_khusus = await getPendaftarPrestasiKhususByNisn();
 
-            const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findAll({
+            const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findOne({
                 where: {
                     nisn: nisn,
                     jurusan_id: jurusan_id,
