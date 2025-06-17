@@ -12389,7 +12389,10 @@ export const getPerangkingan = async (req, res) => {
                             kode_kecamatan: zonKh.kode_wilayah_kec,  
                             is_delete: 0,
                             is_daftar_ulang: { [Op.ne]: 2 },
-                            is_tidak_boleh_domisili: { [Op.ne]: '1' },
+                            [Op.or]: [
+                                { is_tidak_boleh_domisili: { [Op.is]: null } },
+                                { is_tidak_boleh_domisili: 0 }
+                            ],
                         },
                         order: [
                             ['umur', 'DESC'],
