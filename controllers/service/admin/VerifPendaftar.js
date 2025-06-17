@@ -3741,9 +3741,9 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
 
         const updatedPendaftar = await DataPendaftars.update(
             {
-                kejuaraan_id: 0
+                kejuaraan_id: 0,
                 nama_kejuaraan: 0,
-                umur_sertifikat: 0
+                umur_sertifikat: 0,
                 nomor_sertifikat: 0,
                 nilai_prestasi: 0,
                 updated_at: new Date(),
