@@ -684,42 +684,20 @@ export const cekKodeRandomRegisterCek = async (req, res, next) => {
 
 export const cekKodeNarasiCek = async (req, res, next) => {
     try {
-        
         const apiKey = 'register_custom'
-        const kode_random = req.body.random_code;
         const redis_key = `Register_Custom`; 
-        let cached = await redisGet(redis_key);
+        let keyNya = await redisGet(redis_key);
 
-
-        if (cached) {
-
-            console.log(`[REDIS] Cek dari cache: ${redis_key}`);
-
-            const allCacheKey = JSON.parse(cached);
-            const keyRegister = allCacheKey.find(pd => pd.kode_random === kode_random && pd.nama === 1);
-
-            if (!keyRegister) {
-                
-                return res.status(403).json({
-                    status: 0,
-                    message: 'Salah!, Silahkan hubungi operaotor / admin SPMB sekolah!'
-                });
-
-            }else{
-
-                return res.status(200).json({
-                    status: 1,
-                    message: 'Berhasil, silahkan lanjutkan pendaftaran anda.',
-                });
-
-            }
-
-            return pesertaDidik;
-
-
-        }else{
-
-            const keyNya = await EzAppKey.findOne({
+        if (keyNya) {
+            keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
+            console.log(`[CACHE] Found cached register_custom key for ${apiKey}`);
+            return res.status(200).json({
+                status: 1,
+                message: 'Mode Register_Custom.'+keyNya.nama,
+                data: keyNya
+            });
+        } else {
+            keyNya = await EzAppKey.findOne({
                 where: {
                     apikey: apiKey
                 }
@@ -740,8 +718,12 @@ export const cekKodeNarasiCek = async (req, res, next) => {
 
             console.log(`[DB] Register_Custom:(${apiKey}) →`, keyNya);
 
+            return res.status(200).json({
+                status: 1,
+                message: 'Mode Register_Custom:.'+keyNya.nama,
+                data: keyNya
+            });
         }
-        
 
     } catch (error) {
         console.error('Error checking Maintenance Key:', error);
