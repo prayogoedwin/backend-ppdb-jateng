@@ -741,7 +741,7 @@ export const narasiPerubahan = async (req, res, next) => {
 
         if (keyNya) {
             keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
-            console.log(`[CACHE] Found cached register_custom key for ${apiKey}`);
+            console.log(`[CACHE] Found cached register_custom key for ${redis_key}`);
             return res.status(200).json({
                 status: 1,
                 message: 'Narasi:'+keyNya.nama,
@@ -767,11 +767,11 @@ export const narasiPerubahan = async (req, res, next) => {
                 process.env.REDIS_EXPIRE_TIME_HARIAN
             );
 
-            console.log(`[DB] Register_Custom:(${apiKey}) →`, keyNya);
+            console.log(`[DB] Register_Custom:(${redis_key}) →`, keyNya);
 
             return res.status(200).json({
                 status: 1,
-                message: 'Mode Register_Custom:.'+keyNya.nama,
+                message: 'Narasi'
                 data: keyNya
             });
         }
