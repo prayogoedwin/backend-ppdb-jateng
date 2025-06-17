@@ -2,7 +2,7 @@ import { check, validationResult } from 'express-validator';
 import { DomiSmkHelper, DomiNilaiHelper, afirmasiSmkHelper, afirmasiSmaHelper, 
     DomiRegHelper, getTimelineSatuan, getTimelineAll, getFileTambahanByJalurPendaftaran, 
     getSekolahTujuanById, getSekolahJurusanById, SekolahZonasiKhususByNpsn, checkWaktuCachePerangkingan, parseKodeWilayah,
-getSekolahTujuanById1, getSekolahJurusanById1
+getSekolahTujuanById1, getSekolahJurusanById1, getSekolahTujuanAllWay
 } from '../../helpers/HelpHelper.js';
 import DataPendaftars from "../../models/service/DataPendaftarModel.js";
 import DataPendaftarPrestasiKhusus from "../../models/service/DataPesertaPrestasiKhusus.js";
@@ -21557,4 +21557,150 @@ export const getPotensiPerangkingan = async (req, res) => {
             'message': 'Error'
         });
     }
+}
+
+export const getMonitoringSMA = async (req, res) => {
+ 
+    try {
+    // Ambil semua sekolah SMA (bentuk_pendidikan_id = 13)
+    const sekolahList = await getSekolahTujuanAllWay();
+    const sekolahSMA = sekolahList.filter(sekolah => sekolah.bentuk_pendidikan_id === 13);
+    
+    if (!sekolahSMA.length) {
+      return res.status(404).json({
+        status: 0,
+        message: 'Tidak ada sekolah SMA ditemukan'
+      });
+    }
+
+    const result = [];
+    const jalurIds = [1, 2, 3, 4, 5, 6, 7, 8, 9]; // Semua jalur pendaftaran
+
+    // Proses data setiap sekolah
+    for (const sekolah of sekolahSMA) {
+      const sekolahData = {
+        sekolah_id: sekolah.id,
+        nama_sekolah: sekolah.nama,
+        jalur: []
+      };
+
+      // Proses setiap jalur
+      for (const jalurId of jalurIds) {
+        // Format key Redis sesuai dengan yang digunakan di sistem
+        const redisKey = `perangkingan:jalur:${jalurId}--sekolah:${sekolah.id}--jurusan:0`;
+        
+        // Ambil data dari Redis
+        const cachedData = await redisGet(redisKey);
+        
+        if (cachedData) {
+          const parsedData = JSON.parse(cachedData);
+          
+          // Ambil kuota sekolah
+          const kuotaData = await getSekolahTujuanById1(sekolah.id);
+          
+          // Hitung statistik
+          const totalPendaftar = parsedData.length;
+          const kuotaJalur = getKuotaByJalur(jalurId, kuotaData);
+          const sisaKuota = Math.max(kuotaJalur - totalPendaftar, 0);
+          
+          const nilaiAkhir = parsedData.map(item => item.nilai_akhir);
+          const nilaiAkhirTertinggi = Math.max(...nilaiAkhir);
+          const nilaiAkhirTerendah = Math.min(...nilaiAkhir);
+          const nilaiAkhirRataRata = (nilaiAkhir.reduce((a, b) => a + b, 0) / totalPendaftar).toFixed(2);
+          
+          const jarak = parsedData.map(item => parseFloat(item.jarak));
+          const jarakTerjauh = Math.max(...jarak);
+          const jarakTerdekat = Math.min(...jarak);
+          const jarakRataRata = (jarak.reduce((a, b) => a + b, 0) / totalPendaftar).toFixed(2);
+          
+          const umur = parsedData.map(item => item.umur);
+          const umurTertua = Math.max(...umur);
+          const umurTermuda = Math.min(...umur);
+          const umurRataRata = (umur.reduce((a, b) => a + b, 0) / totalPendaftar).toFixed(2);
+          
+          const berprestasi = parsedData.filter(item => item.nilai_akhir >= 300).length;
+          
+          // Format nama jalur
+          const namaJalur = getNamaJalur(jalurId);
+          
+          sekolahData.jalur.push({
+            jalur_id: jalurId,
+            nama_jalur: namaJalur,
+            daya_tampung: kuotaData.daya_tampung,
+            kuota_jalur: kuotaJalur,
+            sisa_kuota: sisaKuota,
+            total_pendaftar: totalPendaftar,
+            jumlah_berprestasi: berprestasi,
+            nilai_akhir: {
+              tertinggi: nilaiAkhirTertinggi,
+              terendah: nilaiAkhirTerendah,
+              rata_rata: nilaiAkhirRataRata
+            },
+            jarak: {
+              terjauh: jarakTerjauh,
+              terdekat: jarakTerdekat,
+              rata_rata: jarakRataRata
+            },
+            umur: {
+              tertua: umurTertua,
+              termuda: umurTermuda,
+              rata_rata: umurRataRata
+            }
+          });
+        }
+      }
+
+      if (sekolahData.jalur.length > 0) {
+        result.push(sekolahData);
+      }
+    }
+
+    res.status(200).json({
+      status: 1,
+      message: 'Data potensi perangkingan SMA',
+      data: result,
+      total_sekolah: result.length
+    });
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({
+      status: 0,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+};
+
+// Helper function untuk mendapatkan kuota berdasarkan jalur
+function getKuotaByJalur(jalurId, kuotaData) {
+  switch(jalurId) {
+    case 1: return kuotaData.kuota_zonasi;
+    case 2: return kuotaData.kuota_zonasi_khusus;
+    case 3: return kuotaData.kuota_prestasi;
+    case 4: return kuotaData.kuota_mutasi;
+    case 5: return kuotaData.kuota_afirmasi;
+    case 6: return kuotaData.kuota_domisili_terdekat;
+    case 7: return kuotaData.kuota_prestasi;
+    case 8: return kuotaData.kuota_prestasi_khusus;
+    case 9: return kuotaData.kuota_afirmasi;
+    default: return 0;
+  }
+}
+
+// Helper function untuk mendapatkan nama jalur
+function getNamaJalur(jalurId) {
+  const jalurMap = {
+    1: 'Domisili Reguler SMA',
+    2: 'Domisili Khusus SMA',
+    3: 'Prestasi SMA',
+    4: 'Mutasi SMA',
+    5: 'Afirmasi SMA',
+    6: 'Seleksi Terdekat SMK',
+    7: 'Seleksi Prestasi SMK',
+    8: 'Seleksi Prestasi Khusus SMK',
+    9: 'Seleksi Afirmasi SMK'
+  };
+  return jalurMap[jalurId] || `Jalur ${jalurId}`;
+}
+
 }

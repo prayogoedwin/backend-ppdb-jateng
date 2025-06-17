@@ -266,6 +266,22 @@ export const getSekolahTujuanById1 = async (id) => {
   }
 };
 
+export const getSekolahTujuanAllWay = async () => {
+
+
+  try {
+    const resSek = await SekolahTujuan.findAll();
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resSek) {
+      const data = resSek;
+      return data;
+    }
+
+  } catch (err) {
+    return null;
+  }
+};
+
 export const getSekolahJurusanById1 = async (sekolah_tujuan_id, jurusan_id) => {
 
 
@@ -295,6 +311,31 @@ export const getSekolahJurusanById1 = async (sekolah_tujuan_id, jurusan_id) => {
     return null;
   }
 };
+
+
+export const getSekolahJurusanAllWay= async (sekolah_tujuan_id) => {
+
+
+  try {
+
+    // 2) Ambil dari DB
+    const resJurSek = await SekolahJurusan.findOne({
+      where: {
+        id_sekolah_tujuan: sekolah_tujuan_id
+      }
+    });
+
+    // 3) Kalau ada, ubah ke POJO, simpan ke Redis, dan return
+    if (resJurSek) {
+      const data = resJurSek;
+      return data;
+    }
+
+  } catch (err) {
+    return null;
+  }
+};
+
 
 export const SekolahZonasiKhususByNpsn = async (npsn) => {
 
