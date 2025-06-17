@@ -3775,9 +3775,10 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
             is_delete: 1
             },
             {
-            where: {
-                id: resData1.id
-            }
+                where: {
+                    nisn: nisn,
+                    is_delete: 0
+                }
             }
         );
 
