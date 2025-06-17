@@ -13238,7 +13238,7 @@ export const getPerangkingan = async (req, res) => {
                         jurusan_id,
                         is_delete: 0,
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
-                        // is_anak_guru_jateng: { [Op.ne]: '1' },
+                        is_anak_guru_jateng: { [Op.ne]: '1' },
                         // is_tidak_boleh_domisili: { [Op.ne]: '1' },
                         // is_tidak_boleh_domisili: { [Op.not]: '1' }
                         // Alternatif (lebih panjang, tidak disarankan)
