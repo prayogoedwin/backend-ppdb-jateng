@@ -1,5 +1,6 @@
 import { encodeId, decodeId } from '../../../middleware/EncodeDecode.js';
 import DataPendaftars from "../../../models/service/DataPendaftarModel.js";
+import DataPerangkingans from "../../../models/service/DataPerangkinganModel.js";
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 import { clearCacheByKeyFunction } from '../../config/CacheControl.js';
 import WilayahVerDapodik from '../../../models/master/WilayahVerDapodikModel.js';
@@ -3642,6 +3643,42 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
                         { is_delete: null } // Entri yang belum diatur
                     ]
                 }
+            }
+        );
+
+          // 4. Fetch data perangkingan terkait
+        const resData = await DataPerangkingans.findOne({
+            where: {
+            nisn: nisn,
+            is_delete: 0
+            },
+            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
+            include: [
+            {
+                model: SekolahTujuan,
+                as: 'sekolah_tujuan',
+                attributes: ['npsn', 'nama']
+            },
+            {
+                model: JalurPendaftarans,
+                as: 'jalur_pendaftaran',
+                attributes: ['bentuk_pendidikan_id', 'nama']
+            }
+            ]
+        });
+
+        // 5. Update DataPerangkingans dengan nilai baru
+        await DataPerangkingans.update(
+            {
+            nilai_raport: updatedDataPendaftar.nilai_raport_rata,
+            nilai_prestasi: updatedDataPendaftar.nilai_prestasi,
+            nilai_organisasi: updatedDataPendaftar.nilai_organisasi,
+            nilai_akhir: nilai_akhir // Pastikan variabel ini sudah terdefinisi
+            },
+            {
+            where: {
+                id: resData.id
+            }
             }
         );
 
