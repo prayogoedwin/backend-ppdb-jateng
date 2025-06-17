@@ -68,7 +68,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      generatePendaftarPrestasiKhususCache,
      getPerangkinganSayaUpdateKebutuhanKhusus,
      getPerangkinganDetailByNisn,
-     getPotensiPerangkingan
+     getPotensiPerangkingan,
+     getMonitoringSMA
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -528,6 +529,11 @@ router.post('/client-api/external/insert_sertifikat', ipWhitelistMiddleware, app
 
 
 router.get('/rekap-api/external/rekap_harian', pendaftarHarian);
+
+router.get('/rekap-api/monitoring/sma', getMonitoringSMA);
+
+
+
 
 // Define the version as a constant
 const VERSION = '2.1.10'; 
