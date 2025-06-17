@@ -12383,6 +12383,13 @@ export const getPerangkingan = async (req, res) => {
 
                 for (const zonKh of resZonKh) {
                     const resDataQ = await DataPerangkingans.findAll({
+                        include: [
+                            {
+                                model: WilayahVerDapodik,
+                                as: 'data_wilayah_kec',
+                                attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                            }
+                        ],
                         where: {
                             jalur_pendaftaran_id,
                             sekolah_tujuan_id,
