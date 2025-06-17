@@ -21408,7 +21408,7 @@ export const getPotensiPerangkingan = async (req, res) => {
 
         if (cached) {
 
-            let kuotanya
+            let kuotanya;
             if(bentuk_pendidikan_id == 13){
                  kuotanya = getSekolahTujuanById(sekolah_tujuan_id);
             }
@@ -21419,7 +21419,7 @@ export const getPotensiPerangkingan = async (req, res) => {
             fromCache = true;
             console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
 
-              const kuotaAll = kuota.daya_tampung;
+              const kuotaAll = kuotanya.daya_tampung;
               let nama_jalur;
               let kuota_angka;
               if(jalur_pendaftaran_id == 1){
