@@ -13242,12 +13242,9 @@ export const getPerangkingan = async (req, res) => {
                         // is_tidak_boleh_domisili: { [Op.ne]: '1' },
                         // is_tidak_boleh_domisili: { [Op.not]: '1' }
                         // Alternatif (lebih panjang, tidak disarankan)
-                        [Op.or]: [
-                            // Kondisi = 0
-                            { is_tidak_boleh_domisili: { [Op.eq]: 0 } },
-                            
-                            // Kondisi = null
-                            { is_tidak_boleh_domisili: { [Op.is]: null } }
+                         [Op.or]: [
+                            { is_tidak_boleh_domisili: { [Op.is]: null } },
+                            { is_tidak_boleh_domisili: 0 }
                         ]
                         }
                         nisn: { [Op.notIn]: excludedNisn } // Exclude NISN yang sudah terpilih di anak guru
