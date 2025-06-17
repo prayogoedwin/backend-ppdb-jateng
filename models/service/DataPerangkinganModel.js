@@ -290,6 +290,7 @@ PerangkinganModels.belongsTo(JalurPendaftarans, { as: 'jalur_pendaftaran', forei
 PerangkinganModels.belongsTo(DataPendaftars, { as: 'data_pendaftar', foreignKey: 'id_pendaftar' });
 PerangkinganModels.belongsTo(SekolahJurusan, { as: 'sekolah_jurusan', foreignKey: 'jurusan_id' });
 PerangkinganModels.belongsTo(DataUsers, { as: 'daftarulang_oleh', foreignKey: 'daftar_ulang_by', targetKey: 'id' });
+PerangkinganModels.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kec', foreignKey: 'kode_kecamatan', targetKey: 'kode_wilayah' });
 
 
 
