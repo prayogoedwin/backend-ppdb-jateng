@@ -185,7 +185,7 @@ router.get('/api/cek_status_maintenis_publik', mainTenisPublikCek);
 router.get('/api/cek_status_register_custom', registerCustomCek);
 
 router.post('/api/open_form_pendaftaran', cekKodeRandomRegisterCek);
-router.post('/api/open_form_narasi', cekKodeNarasiCek);
+router.get('/api/open_form_narasi', cekKodeNarasiCek);
 router.get('/api/narasi_perubahan', narasiPerubahan);
 
 
