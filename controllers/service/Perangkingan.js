@@ -21458,7 +21458,8 @@ export const getPotensiPerangkingan = async (req, res) => {
             // Hitung statistik dari data
                 const totalData = resultData.length;
 
-                const sisaKuota = Math.max(kuota_angka - totalData, 0);
+                // const sisaKuota = Math.max(kuota_angka - totalData, 0);
+                 const sisaKuota = 0;
 
                 // Hitung CPD berprestasi (nilai >= 300)
                 // const jumlah_cmb_berprestasi_prioritas_diterima = resultData.filter(item => 
