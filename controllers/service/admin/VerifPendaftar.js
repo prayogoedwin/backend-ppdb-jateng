@@ -3706,24 +3706,6 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
         
         id,
         nisn,
-        
-        kejuaraan_id_sblm,
-        nama_kejuaraan_sblm,
-        tanggal_sertifikat_sblm,
-        umur_sertifikat_sblm,
-        nomor_sertifikat_sblm,
-        nilai_prestasi_sblm,
-        nilai_raport_rata_sblm,
-        nilai_organisasi_sblm,
-
-        kejuaraan_id,
-        nama_kejuaraan,
-        tanggal_sertifikat,
-        umur_sertifikat,
-        nomor_sertifikat,
-        nilai_prestasi,
-        nilai_raport_rata,
-        nilai_organisasi,
 
     } = req.body;
 
@@ -3759,17 +3741,13 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
 
         const updatedPendaftar = await DataPendaftars.update(
             {
-                kejuaraan_id: kejuaraan_id || 0,
-                nama_kejuaraan,
-                tanggal_sertifikat: tanggal_sertifikat ? new Date(tanggal_sertifikat) : null,
-                umur_sertifikat: umur_sertifikat || 0,
-                nomor_sertifikat,
-                nilai_prestasi,
-                nilai_raport_rata,
-                nilai_organisasi,
+                kejuaraan_id: 0
+                nama_kejuaraan: 0,
+                umur_sertifikat: 0
+                nomor_sertifikat: 0,
+                nilai_prestasi: 0,
                 updated_at: new Date(),
                 updated_by: decodedId,
-
             },
             {
                 where: {
@@ -3787,20 +3765,7 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
             where: {
             nisn: nisn,
             is_delete: 0
-            },
-            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
-            include: [
-            {
-                model: SekolahTujuan,
-                as: 'sekolah_tujuan',
-                attributes: ['npsn', 'nama']
-            },
-            {
-                model: JalurPendaftarans,
-                as: 'jalur_pendaftaran',
-                attributes: ['bentuk_pendidikan_id', 'nama']
             }
-            ]
         });
 
         // 5. Update DataPerangkingans dengan nilai baru
@@ -3822,7 +3787,7 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
 
         res.status(200).json({
             status: 1,
-            message: 'Berhasil perbaharui data',
+            message: 'Berhasil perbaharui update',
             data: responseData
         });
     } catch (error) {
