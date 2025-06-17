@@ -484,12 +484,17 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
                 },  
             ],
         });
+
+        const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+        const baseUrlDefault = `${process.env.BASE_URL}dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
        
         return res.status(200).json({
             status: 1,
             message: 'Data berhasil ditemukan',
             profil: profil,
             perangkingan: perangkingan,
+            base_url: baseUrl,
+            base_url_default: baseUrlDefault,
 
         });
 
