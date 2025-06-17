@@ -21386,12 +21386,12 @@ export const getPotensiPerangkingan = async (req, res) => {
 
         if (cached) {
 
-            let kuota
+            let kuotanya
             if(bentuk_pendidikan_id == 13){
-                 kuota = await getSekolahTujuanById(sekolah_tujuan_id);
+                 kuotanya = await getSekolahTujuanById(sekolah_tujuan_id);
             }
             if(bentuk_pendidikan_id == 15){
-                 kuota = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                 kuotanya = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
             }
             resultData = JSON.parse(cached);
             fromCache = true;
@@ -21402,31 +21402,31 @@ export const getPotensiPerangkingan = async (req, res) => {
               let kuota_angka;
               if(jalur_pendaftaran_id == 1){
                 nama_jalur = 'Domisili Reguler SMA';
-                kuota_angka = kuota.kuota_zonasi
+                kuota_angka = kuotanya.kuota_zonasi
               }else  if(jalur_pendaftaran_id == 2){
                 nama_jalur = 'Domisili Khusus SMA';
-                kuota_angka = kuota.kuota_zonasi_khusus
+                kuota_angka = kuotanya.kuota_zonasi_khusus
               }else  if(jalur_pendaftaran_id == 3){
                 nama_jalur = 'Prestasi SMA';
-                 kuota_angka = kuota.kuota_prestasi
+                 kuota_angka = kuotanya.kuota_prestasi
               }else  if(jalur_pendaftaran_id == 4){
                 nama_jalur = 'Mutasi SMA';
-                 kuota_angka = kuota.kuota_mutasi
+                 kuota_angka = kuotanya.kuota_mutasi
               }else  if(jalur_pendaftaran_id == 5){
                 nama_jalur = 'Afirmasi SMA';
-                 kuota_angka = kuota.kuota_afirmasi
+                 kuota_angka = kukuotanyaota.kuota_afirmasi
               }else  if(jalur_pendaftaran_id == 6){
                 nama_jalur = 'Seleksi Terdekan SMK';
-                 kuota_angka = kuota.kuota_domisili_terdekat
+                 kuota_angka = kuotanya.kuota_domisili_terdekat
               }else  if(jalur_pendaftaran_id == 7){
                 nama_jalur = 'Seleksi Prestasi SMK';
-                 kuota_angka = kuota.kuota_prestasi
+                 kuota_angka = kuotanya.kuota_prestasi
               }else  if(jalur_pendaftaran_id == 8){
                 nama_jalur = 'Seleksi Prestasi Khusus SMK';
-                 kuota_angka = kuota.kuota_prestasi_khusus
+                 kuota_angka = kuotanya.kuota_prestasi_khusus
               }else  if(jalur_pendaftaran_id == 9){
                 nama_jalur = 'Seleksi Afirmasi SMK';
-                 kuota_angka = kuota.kuota_afirmasi
+                 kuota_angka = kuotanya.kuota_afirmasi
               }else{
                  nama_jalur = '-';
                   kuota_angka =0;
