@@ -485,7 +485,7 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
             ],
         });
 
-        const baseUrl = `${process.env.BASE_URL}download/${resData.nisn}/`; // Ganti dengan URL dasar yang diinginkan  
+        const baseUrl = `${process.env.BASE_URL}download/${nisn}/`; // Ganti dengan URL dasar yang diinginkan  
         const baseUrlDefault = `${process.env.BASE_URL}dokumen/not-found/`; // Ganti dengan URL dasar yang diinginkan
        
         return res.status(200).json({
