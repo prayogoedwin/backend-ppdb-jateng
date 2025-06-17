@@ -13240,7 +13240,7 @@ export const getPerangkingan = async (req, res) => {
                         is_daftar_ulang: { [Op.ne]: 2 }, // Adding the new condition
                         // is_anak_guru_jateng: { [Op.ne]: '1' },
                         // is_tidak_boleh_domisili: { [Op.ne]: '1' },
-                        is_tidak_boleh_domisili: { [Op.not]: 1 }
+                        // is_tidak_boleh_domisili: { [Op.not]: 1 }
                         nisn: { [Op.notIn]: excludedNisn } // Exclude NISN yang sudah terpilih di anak guru
                     }, order: [
                         [literal('CAST(jarak AS FLOAT)'), 'ASC'], // Use literal for raw SQL  
@@ -21361,177 +21361,177 @@ const generatePDFResponse = (res, data, jalurId) => {
 
 //selain tambah redis, ada perbaikan di jarak terdekat SMK, penambahan 2% untuk anak guru
 export const getPotensiPerangkingan = async (req, res) => {
-    // try {
-    //     const {
-    //         bentuk_pendidikan_id,
-    //         jalur_pendaftaran_id,
-    //         sekolah_tujuan_id, 
-    //         jurusan_id,
-    //         nisn,
-    //         is_pdf
-    //     } = req.body;
+    try {
+        const {
+            bentuk_pendidikan_id,
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id, 
+            jurusan_id,
+            nisn,
+            is_pdf
+        } = req.body;
 
-    //     // Buat Redis key dengan format yang jelas
-    //     // const redis_key = `perangkingan:${jalur_pendaftaran_id}--${sekolah_tujuan_id}--${jurusan_id || 0}`;
-    //     const redis_key = `perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
-    //     const redis_key_full = `FULL_perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+        // Buat Redis key dengan format yang jelas
+        // const redis_key = `perangkingan:${jalur_pendaftaran_id}--${sekolah_tujuan_id}--${jurusan_id || 0}`;
+        const redis_key = `perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+        const redis_key_full = `FULL_perangkingan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
 
 
-    //     const WAKTU_CAHCE_JURNAL = await checkWaktuCachePerangkingan();
+        const WAKTU_CAHCE_JURNAL = await checkWaktuCachePerangkingan();
 
-    //     // 1. Selalu cek Redis terlebih dahulu untuk semua request
-    //     const cached = await redisGet(redis_key);
-    //     let resultData;
-    //     let fromCache = false;
+        // 1. Selalu cek Redis terlebih dahulu untuk semua request
+        const cached = await redisGet(redis_key);
+        let resultData;
+        let fromCache = false;
 
-    //     if (cached) {
+        if (cached) {
 
-    //         let kuotanya
-    //         if(bentuk_pendidikan_id == 13){
-    //              kuotanya = getSekolahTujuanById(sekolah_tujuan_id);
-    //         }
-    //         if(bentuk_pendidikan_id == 15){
-    //              kuotanya = getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
-    //         }
-    //         resultData = JSON.parse(cached);
-    //         fromCache = true;
-    //         console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
+            let kuotanya
+            if(bentuk_pendidikan_id == 13){
+                 kuotanya = getSekolahTujuanById(sekolah_tujuan_id);
+            }
+            if(bentuk_pendidikan_id == 15){
+                 kuotanya = getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+            }
+            resultData = JSON.parse(cached);
+            fromCache = true;
+            console.log(`[REDIS] Cache ditemukan untuk key: ${redis_key}`);
 
-    //           const kuotaAll = kuota.daya_tampung
-    //           let nama_jalur;
-    //           let kuota_angka;
-    //           if(jalur_pendaftaran_id == 1){
-    //             nama_jalur = 'Domisili Reguler SMA';
-    //             kuota_angka = kuotanya.kuota_zonasi
-    //           }else  if(jalur_pendaftaran_id == 2){
-    //             nama_jalur = 'Domisili Khusus SMA';
-    //             kuota_angka = kuotanya.kuota_zonasi_khusus
-    //           }else  if(jalur_pendaftaran_id == 3){
-    //             nama_jalur = 'Prestasi SMA';
-    //              kuota_angka = kuotanya.kuota_prestasi
-    //           }else  if(jalur_pendaftaran_id == 4){
-    //             nama_jalur = 'Mutasi SMA';
-    //              kuota_angka = kuotanya.kuota_mutasi
-    //           }else  if(jalur_pendaftaran_id == 5){
-    //             nama_jalur = 'Afirmasi SMA';
-    //              kuota_angka = kukuotanyaota.kuota_afirmasi
-    //           }else  if(jalur_pendaftaran_id == 6){
-    //             nama_jalur = 'Seleksi Terdekan SMK';
-    //              kuota_angka = kuotanya.kuota_domisili_terdekat
-    //           }else  if(jalur_pendaftaran_id == 7){
-    //             nama_jalur = 'Seleksi Prestasi SMK';
-    //              kuota_angka = kuotanya.kuota_prestasi
-    //           }else  if(jalur_pendaftaran_id == 8){
-    //             nama_jalur = 'Seleksi Prestasi Khusus SMK';
-    //              kuota_angka = kuotanya.kuota_prestasi_khusus
-    //           }else  if(jalur_pendaftaran_id == 9){
-    //             nama_jalur = 'Seleksi Afirmasi SMK';
-    //              kuota_angka = kuotanya.kuota_afirmasi
-    //           }else{
-    //              nama_jalur = '-';
-    //               kuota_angka =0;
-    //           }
+              const kuotaAll = kuota.daya_tampung
+              let nama_jalur;
+              let kuota_angka;
+              if(jalur_pendaftaran_id == 1){
+                nama_jalur = 'Domisili Reguler SMA';
+                kuota_angka = kuotanya.kuota_zonasi
+              }else  if(jalur_pendaftaran_id == 2){
+                nama_jalur = 'Domisili Khusus SMA';
+                kuota_angka = kuotanya.kuota_zonasi_khusus
+              }else  if(jalur_pendaftaran_id == 3){
+                nama_jalur = 'Prestasi SMA';
+                 kuota_angka = kuotanya.kuota_prestasi
+              }else  if(jalur_pendaftaran_id == 4){
+                nama_jalur = 'Mutasi SMA';
+                 kuota_angka = kuotanya.kuota_mutasi
+              }else  if(jalur_pendaftaran_id == 5){
+                nama_jalur = 'Afirmasi SMA';
+                 kuota_angka = kukuotanyaota.kuota_afirmasi
+              }else  if(jalur_pendaftaran_id == 6){
+                nama_jalur = 'Seleksi Terdekan SMK';
+                 kuota_angka = kuotanya.kuota_domisili_terdekat
+              }else  if(jalur_pendaftaran_id == 7){
+                nama_jalur = 'Seleksi Prestasi SMK';
+                 kuota_angka = kuotanya.kuota_prestasi
+              }else  if(jalur_pendaftaran_id == 8){
+                nama_jalur = 'Seleksi Prestasi Khusus SMK';
+                 kuota_angka = kuotanya.kuota_prestasi_khusus
+              }else  if(jalur_pendaftaran_id == 9){
+                nama_jalur = 'Seleksi Afirmasi SMK';
+                 kuota_angka = kuotanya.kuota_afirmasi
+              }else{
+                 nama_jalur = '-';
+                  kuota_angka =0;
+              }
               
             
-    //         // Hitung statistik dari data
-    //             const totalData = resultData.length;
+            // Hitung statistik dari data
+                const totalData = resultData.length;
 
-    //             const sisaKuota = Math.max(kuota_angka - totalData, 0);
+                const sisaKuota = Math.max(kuota_angka - totalData, 0);
 
-    //             // Hitung CPD berprestasi (nilai >= 300)
-    //             const jumlah_cmb_berprestasi_prioritas_diterima = resultData.filter(item => 
-    //                 item.nilai_akhir >= 300
-    //             ).length;
+                // Hitung CPD berprestasi (nilai >= 300)
+                const jumlah_cmb_berprestasi_prioritas_diterima = resultData.filter(item => 
+                    item.nilai_akhir >= 300
+                ).length;
 
               
                 
-    //             // Nilai Raport
-    //             const nilaiRaport = resultData.map(item => item.nilai_raport);
-    //             const nilaiRaportTertinggi = Math.max(...nilaiRaport);
-    //             const nilaiRaportTerendah = Math.min(...nilaiRaport);
-    //             const nilaiRaportRataRata = nilaiRaport.reduce((a, b) => a + b, 0) / totalData;
+                // Nilai Raport
+                const nilaiRaport = resultData.map(item => item.nilai_raport);
+                const nilaiRaportTertinggi = Math.max(...nilaiRaport);
+                const nilaiRaportTerendah = Math.min(...nilaiRaport);
+                const nilaiRaportRataRata = nilaiRaport.reduce((a, b) => a + b, 0) / totalData;
                 
-    //             // Nilai Prestasi
-    //             const nilaiPrestasi = resultData.map(item => item.nilai_prestasi);
-    //             const nilaiPrestasiTertinggi = Math.max(...nilaiPrestasi);
-    //             const nilaiPrestasiTerendah = Math.min(...nilaiPrestasi);
-    //             const nilaiPrestasiRataRata = nilaiPrestasi.reduce((a, b) => a + b, 0) / totalData;
+                // Nilai Prestasi
+                const nilaiPrestasi = resultData.map(item => item.nilai_prestasi);
+                const nilaiPrestasiTertinggi = Math.max(...nilaiPrestasi);
+                const nilaiPrestasiTerendah = Math.min(...nilaiPrestasi);
+                const nilaiPrestasiRataRata = nilaiPrestasi.reduce((a, b) => a + b, 0) / totalData;
                 
-    //             // Nilai Akhir
-    //             const nilaiAkhir = resultData.map(item => item.nilai_akhir);
-    //             const nilaiAkhirTertinggi = Math.max(...nilaiAkhir);
-    //             const nilaiAkhirTerendah = Math.min(...nilaiAkhir);
-    //             const nilaiAkhirRataRata = nilaiAkhir.reduce((a, b) => a + b, 0) / totalData;
+                // Nilai Akhir
+                const nilaiAkhir = resultData.map(item => item.nilai_akhir);
+                const nilaiAkhirTertinggi = Math.max(...nilaiAkhir);
+                const nilaiAkhirTerendah = Math.min(...nilaiAkhir);
+                const nilaiAkhirRataRata = nilaiAkhir.reduce((a, b) => a + b, 0) / totalData;
 
-    //             // Umur
-    //             const umur = resultData.map(item => item.umur);
-    //             const umurTertua = Math.max(...umur);
-    //             const umurTermuda = Math.min(...umur);
-    //             const umurRataRata = umur.reduce((a, b) => a + b, 0) / totalData;
+                // Umur
+                const umur = resultData.map(item => item.umur);
+                const umurTertua = Math.max(...umur);
+                const umurTermuda = Math.min(...umur);
+                const umurRataRata = umur.reduce((a, b) => a + b, 0) / totalData;
                 
-    //             // Jarak (konversi ke number karena dalam string)
-    //             const jarak = resultData.map(item => parseFloat(item.jarak));
-    //             const jarakTerjauh = Math.max(...jarak);
-    //             const jarakTerdekat = Math.min(...jarak);
-    //             const jarakRataRata = jarak.reduce((a, b) => a + b, 0) / totalData;
+                // Jarak (konversi ke number karena dalam string)
+                const jarak = resultData.map(item => parseFloat(item.jarak));
+                const jarakTerjauh = Math.max(...jarak);
+                const jarakTerdekat = Math.min(...jarak);
+                const jarakRataRata = jarak.reduce((a, b) => a + b, 0) / totalData;
 
-    //             const datasNya = {
-    //                 daya_tampung: kuotaAll,
-    //                 total_pendaftar: totalData,
-    //                 nama_jalur: nama_jalur,
-    //                 kuota_jalur: kuota_angka,
-    //                 sisa_kuota: sisaKuota,
-    //                 jumlah_cmb_berprestasi_prioritas_diterima: jumlah_cmb_berprestasi_prioritas_diterima,
-    //                 // nilai_raport: {
-    //                 //     tertinggi: nilaiRaportTertinggi,
-    //                 //     terendah: nilaiRaportTerendah,
-    //                 //     rata_rata: nilaiRaportRataRata.toFixed(2)
-    //                 // },
-    //                 // nilai_prestasi: {
-    //                 //     tertinggi: nilaiPrestasiTertinggi,
-    //                 //     terendah: nilaiPrestasiTerendah,
-    //                 //     rata_rata: nilaiPrestasiRataRata.toFixed(2)
-    //                 // },
-    //                 nilai_akhir: {
-    //                     tertinggi: nilaiAkhirTertinggi,
-    //                     terendah: nilaiAkhirTerendah,
-    //                     rata_rata: nilaiAkhirRataRata.toFixed(2)
-    //                 },
-    //                 umur: {
-    //                     tertua: umurTertua,
-    //                     termuda: umurTermuda,
-    //                     rata_rata: parseFloat(umurRataRata.toFixed(2))
-    //                 },
-    //                 jarak: {
-    //                     terjauh: parseFloat(jarakTerjauh.toFixed(2)),
-    //                     terdekat: parseFloat(jarakTerdekat.toFixed(2)),
-    //                     rata_rata: parseFloat(jarakRataRata.toFixed(2))
-    //                 }
-    //             };
+                const datasNya = {
+                    daya_tampung: kuotaAll,
+                    total_pendaftar: totalData,
+                    nama_jalur: nama_jalur,
+                    kuota_jalur: kuota_angka,
+                    sisa_kuota: sisaKuota,
+                    jumlah_cmb_berprestasi_prioritas_diterima: jumlah_cmb_berprestasi_prioritas_diterima,
+                    // nilai_raport: {
+                    //     tertinggi: nilaiRaportTertinggi,
+                    //     terendah: nilaiRaportTerendah,
+                    //     rata_rata: nilaiRaportRataRata.toFixed(2)
+                    // },
+                    // nilai_prestasi: {
+                    //     tertinggi: nilaiPrestasiTertinggi,
+                    //     terendah: nilaiPrestasiTerendah,
+                    //     rata_rata: nilaiPrestasiRataRata.toFixed(2)
+                    // },
+                    nilai_akhir: {
+                        tertinggi: nilaiAkhirTertinggi,
+                        terendah: nilaiAkhirTerendah,
+                        rata_rata: nilaiAkhirRataRata.toFixed(2)
+                    },
+                    umur: {
+                        tertua: umurTertua,
+                        termuda: umurTermuda,
+                        rata_rata: parseFloat(umurRataRata.toFixed(2))
+                    },
+                    jarak: {
+                        terjauh: parseFloat(jarakTerjauh.toFixed(2)),
+                        terdekat: parseFloat(jarakTerdekat.toFixed(2)),
+                        rata_rata: parseFloat(jarakRataRata.toFixed(2))
+                    }
+                };
                 
-    //             return res.status(200).json({
-    //                 'status': 1,
-    //                 'message': 'Data berhasil ditemukan (from cache)',
-    //                 'data': datasNya,
-    //                 'waktu_cache': WAKTU_CAHCE_JURNAL,
-    //             });
-    //     }else{
+                return res.status(200).json({
+                    'status': 1,
+                    'message': 'Data berhasil ditemukan (from cache)',
+                    'data': datasNya,
+                    'waktu_cache': WAKTU_CAHCE_JURNAL,
+                });
+        }else{
 
-    //             res.status(401).json({
-    //                 'status': 0,
-    //                 'message': 'Data Kosong'
-    //             });
+                res.status(401).json({
+                    'status': 0,
+                    'message': 'Data Kosong'
+                });
 
-    //     }
+        }
 
 
-    // } catch (err) {
-    //     console.error('Error:', err);
-    //     res.status(500).json({
-    //         'status': 0,
-    //         'message': 'Error'
-    //     });
-    // }
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({
+            'status': 0,
+            'message': 'Error'
+        });
+    }
 }
 
 
