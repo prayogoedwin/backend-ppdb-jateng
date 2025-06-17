@@ -21388,10 +21388,10 @@ export const getPotensiPerangkingan = async (req, res) => {
 
             let kuotanya
             if(bentuk_pendidikan_id == 13){
-                 kuotanya = await getSekolahTujuanById(sekolah_tujuan_id);
+                 kuotanya = getSekolahTujuanById(sekolah_tujuan_id);
             }
             if(bentuk_pendidikan_id == 15){
-                 kuotanya = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                 kuotanya = getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
             }
             resultData = JSON.parse(cached);
             fromCache = true;
