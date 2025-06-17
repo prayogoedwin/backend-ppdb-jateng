@@ -21451,7 +21451,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                  kuota_angka = kuotanya.kuota_afirmasi
               }else{
                  nama_jalur = '-';
-                  kuota_angka =0;
+                 kuota_angka = 0;
               }
               
             
