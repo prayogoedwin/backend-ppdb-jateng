@@ -18525,6 +18525,25 @@ export const cekPerangkingan = async (req, res) => {
             return res.status(200).json({ status: 0, message: 'Status anda sedang diminta untuk revisi, tidak dapat mendaftar sekolah sekarang!' });
         }
 
+         if(jalur_pendaftaran_id == 8){
+            // const anak_prestasi_khusus = await getPendaftarPrestasiKhususByNisn();
+
+            const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findAll({
+                where: {
+                    nisn: nisn,
+                    jurusan_id: jurusan_id,
+                }
+            });
+
+            if(!pendaftarPrestasi){
+                return res.status(200).json({ 
+                    status: 0, 
+                    message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' 
+                });
+
+            }
+        }
+
         //jika status domisili "Menggunakan Surat Perpindahan Tugas Ortu/Wali" maka
         if(pendaftar.status_domisili == 2){
             //tidak boleh daftar jalur selain jalur mutasi dan prestasi, prestasi smk
@@ -18596,24 +18615,7 @@ export const cekPerangkingan = async (req, res) => {
         //     }
         // }
 
-        if(jalur_pendaftaran_id == 8){
-            // const anak_prestasi_khusus = await getPendaftarPrestasiKhususByNisn();
-
-            const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findAll({
-                where: {
-                    nisn: nisn,
-                    jurusan_id: jurusan_id,
-                }
-            });
-
-            if(!pendaftarPrestasi){
-                return res.status(200).json({ 
-                    status: 0, 
-                    message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' 
-                });
-
-            }
-        }
+       
 
         if(jalur_pendaftaran_id == 1){
 
