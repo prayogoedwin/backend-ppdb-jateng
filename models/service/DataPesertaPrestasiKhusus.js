@@ -37,6 +37,14 @@ const DataPesertaPrestasiKhusus = db.define('ez_peserta_prestasi_khusus', {
     nama_lengkap: {
        type: DataTypes.STRING,
         allowNull: false
+    },
+    id_jurusan: {
+       type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    jurusan_id: {
+       type: DataTypes.INTEGER,
+        allowNull: true
     }
 }, {
     freezeTableName: true,

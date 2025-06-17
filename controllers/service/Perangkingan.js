@@ -18597,22 +18597,22 @@ export const cekPerangkingan = async (req, res) => {
         // }
 
         if(jalur_pendaftaran_id == 8){
-            const anak_prestasi_khusus = await getPendaftarPrestasiKhususByNisn();
-            
-            const isNisnTerdaftar = anak_prestasi_khusus.some(
-                (anak) => anak.nisn === nisn
-            );
-        
-            if (!isNisnTerdaftar) {
+            // const anak_prestasi_khusus = await getPendaftarPrestasiKhususByNisn();
+
+            const pendaftarPrestasi = await DataPendaftarPrestasiKhusus.findAll({
+                where: {
+                    nisn: nisn,
+                    jurusan_id: jurusan_id,
+                }
+            });
+
+            if(!pendaftarPrestasi){
                 return res.status(200).json({ 
                     status: 0, 
                     message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' 
                 });
-            }
 
-            // if(pendaftar.is_boleh_prestasi_khusus != 1){
-            //     return res.status(200).json({ status: 0, message: 'Anda tidak memiliki rekomendasi untuk daftar seleksi prestasi khusus' });
-            // }
+            }
         }
 
         if(jalur_pendaftaran_id == 1){
