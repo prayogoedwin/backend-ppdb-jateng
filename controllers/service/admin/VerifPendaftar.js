@@ -3744,6 +3744,7 @@ export const updatePendaftarHapusPerangkingan = async (req, res) => {
                 kejuaraan_id: 0,
                 nama_kejuaraan: 0,
                 umur_sertifikat: 0,
+                tanggal_sertifikat: null,
                 nomor_sertifikat: 0,
                 nilai_prestasi: 0,
                 updated_at: new Date(),
