@@ -21549,7 +21549,7 @@ export const getPotensiPerangkingan = async (req, res) => {
 
 
     } catch (err) {
-        console.error('Error:', err);
+        console.error('Error:AZZZU', err);
         res.status(500).json({
             'status': 0,
             'message': 'Error'
