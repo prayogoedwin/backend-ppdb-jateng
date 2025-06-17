@@ -21391,7 +21391,7 @@ export const getPotensiPerangkingan = async (req, res) => {
                  kuota = await getSekolahTujuanById(sekolah_tujuan_id);
             }
             if(bentuk_pendidikan_id == 15){
-                kuota = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
+                 kuota = await getSekolahJurusanById(sekolah_tujuan_id, jurusan_id);
             }
             resultData = JSON.parse(cached);
             fromCache = true;
