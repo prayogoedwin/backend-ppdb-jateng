@@ -21669,9 +21669,9 @@ export const getMonitoringSMA = async (req, res) => {
       message: 'Terjadi kesalahan server'
     });
   }
-};
 
-// Helper function untuk mendapatkan kuota berdasarkan jalur
+
+  // Helper function untuk mendapatkan kuota berdasarkan jalur
 function getKuotaByJalur(jalurId, kuotaData) {
   switch(jalurId) {
     case 1: return kuotaData.kuota_zonasi;
@@ -21703,4 +21703,4 @@ function getNamaJalur(jalurId) {
   return jalurMap[jalurId] || `Jalur ${jalurId}`;
 }
 
-}
+};
