@@ -72,7 +72,7 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
-import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser, loginTanpaOtp, mainTenisCek, mainTenisPublikCek, registerCustomCek, cekKodeRandomRegisterCek } from '../controllers/service/AuthPublic.js';
+import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser, loginTanpaOtp, mainTenisCek, mainTenisPublikCek, registerCustomCek, cekKodeRandomRegisterCek, cekKodeNarasiCek, narasiPerubahan } from '../controllers/service/AuthPublic.js';
 
 //akun client api
 import { loginClient, logoutClient } from '../controllers/service/integration/Auth.js';
@@ -185,6 +185,8 @@ router.get('/api/cek_status_maintenis_publik', mainTenisPublikCek);
 router.get('/api/cek_status_register_custom', registerCustomCek);
 
 router.post('/api/open_form_pendaftaran', cekKodeRandomRegisterCek);
+router.post('/api/open_form_narasi', cekKodeNarasiCek);
+router.get('/api/narasi_perubahan', narasiPerubahan);
 
 
 
