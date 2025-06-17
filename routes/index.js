@@ -107,7 +107,8 @@ import { getDataPendaftarForVerif,
     getDataPendaftarByNisn,
     getDataPendaftarCount,
     getDataPendaftarByWhereHanyaUntukAdmin,
-    getDataPendaftarByWhereHanyaUntukCekLagi
+    getDataPendaftarByWhereHanyaUntukCekLagi,
+    updatePendaftarKhususPrestasi
 } from "../controllers/service/admin/VerifPendaftar.js";
 
 //timenline
@@ -277,6 +278,10 @@ router.post("/api/servis/upload_data_dukung", csrfProtection, ipWhitelistMiddlew
 router.post('/api/servis/dokumen_update', ipWhitelistMiddleware, appKeyMiddleware, logAccess, updateDokumen);
 
 router.post('/api/servis/revisi_data', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, logAccess, updatePendaftarByUser);
+
+router.post('/api/servis/update_kejuaraan_by_forum', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccess, updatePendaftarKhususPrestasi);
+
+
 // router.post('/api/servis/revisi_dokumen', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, logAccess, updateDokumen);
 
 
