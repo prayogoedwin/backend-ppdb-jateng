@@ -21461,11 +21461,11 @@ export const getPotensiPerangkingan = async (req, res) => {
                 const sisaKuota = Math.max(kuota_angka - totalData, 0);
 
                 // Hitung CPD berprestasi (nilai >= 300)
-                const jumlah_cmb_berprestasi_prioritas_diterima = resultData.filter(item => 
-                    item.nilai_akhir >= 300
-                ).length;
+                // const jumlah_cmb_berprestasi_prioritas_diterima = resultData.filter(item => 
+                //     item.nilai_akhir >= 300
+                // ).length;
 
-              
+                const jumlah_cmb_berprestasi_prioritas_diterima = 0;
                 
                 // Nilai Raport
                 const nilaiRaport = resultData.map(item => item.nilai_raport);
