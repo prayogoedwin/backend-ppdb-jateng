@@ -3646,21 +3646,31 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
             }
         );
 
+         const resData2 = await DataPendaftars.findOne({
+            where: {
+                id: decodedId,
+                is_delete: 0
+            }
+        });
+
           // 4. Fetch data perangkingan terkait
         const resData1 = await DataPerangkingans.findOne({
             where: {
-            nisn: nisn,
-            is_delete: 0
+                nisn: nisn,
+                is_delete: 0
             }
         });
+
+          // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
+        const n_akhir = (resData2.nilai_raport_rata || 0) + (resData2.nilai_prestasi || 0)  + (resData2.nilai_organisasi || 0);
 
         // 5. Update DataPerangkingans dengan nilai baru
         await DataPerangkingans.update(
             {
-            nilai_raport: updatedDataPendaftar.nilai_raport_rata,
-            nilai_prestasi: updatedDataPendaftar.nilai_prestasi,
-            nilai_organisasi: updatedDataPendaftar.nilai_organisasi,
-            nilai_akhir: nilai_akhir // Pastikan variabel ini sudah terdefinisi
+            nilai_raport: resData2.nilai_raport_rata,
+            nilai_prestasi: resData2.nilai_prestasi,
+            nilai_organisasi: resData2.nilai_organisasi,
+            nilai_akhir: n_akhir // Pastikan variabel ini sudah terdefinisi
             },
             {
             where: {
