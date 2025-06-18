@@ -12763,7 +12763,7 @@ export const getPerangkingan = async (req, res) => {
                 let kuota_pto = resSek.kuota_pto;
     
                 const resData = await DataPerangkingans.findAll({
-                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
+                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_anak_guru_jateng'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
