@@ -12940,7 +12940,7 @@ export const getPerangkingan = async (req, res) => {
                 console.log('kuota panti:'+kuota_panti)
     
                 const resDataPanti = await DataPerangkingans.findAndCountAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12962,7 +12962,7 @@ export const getPerangkingan = async (req, res) => {
                 const totalPatntiL = resDataPanti.rows.length || 0; // Total jumlah data setelah limit
     
                 const resDataAts = await DataPerangkingans.findAndCountAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12993,7 +12993,7 @@ export const getPerangkingan = async (req, res) => {
                 const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
     
                 const resDataMiskin = await DataPerangkingans.findAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah'], // Pilih kolom yang diambil
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
