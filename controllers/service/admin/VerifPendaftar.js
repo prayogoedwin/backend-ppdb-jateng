@@ -3651,20 +3651,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
             where: {
             nisn: nisn,
             is_delete: 0
-            },
-            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
-            include: [
-            {
-                model: SekolahTujuan,
-                as: 'sekolah_tujuan',
-                attributes: ['npsn', 'nama']
-            },
-            {
-                model: JalurPendaftarans,
-                as: 'jalur_pendaftaran',
-                attributes: ['bentuk_pendidikan_id', 'nama']
             }
-            ]
         });
 
         // 5. Update DataPerangkingans dengan nilai baru
