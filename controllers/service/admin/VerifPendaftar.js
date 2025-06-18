@@ -3661,34 +3661,45 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
             }
         });
 
-          // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
-        const n_akhir = (resData2.nilai_raport_rata || 0) + (resData2.nilai_prestasi || 0)  + (resData2.nilai_organisasi || 0);
+        if(resData1)
 
-        // 5. Update DataPerangkingans dengan nilai baru
-        await DataPerangkingans.update(
-            {
-            nilai_raport: resData2.nilai_raport_rata,
-            nilai_prestasi: resData2.nilai_prestasi,
-            nilai_organisasi: resData2.nilai_organisasi,
-            nilai_akhir: n_akhir // Pastikan variabel ini sudah terdefinisi
-            },
-            {
-            where: {
-                id: resData1.id
-            }
-            }
-        );
+            // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
+            const n_akhir = (resData2.nilai_raport_rata || 0) + (resData2.nilai_prestasi || 0)  + (resData2.nilai_organisasi || 0);
 
-        const responseData = {
-            id: id,
-            nisn: nisn,
-        };
+            // 5. Update DataPerangkingans dengan nilai baru
+            await DataPerangkingans.update(
+                {
+                nilai_raport: resData2.nilai_raport_rata,
+                nilai_prestasi: resData2.nilai_prestasi,
+                nilai_organisasi: resData2.nilai_organisasi,
+                nilai_akhir: n_akhir // Pastikan variabel ini sudah terdefinisi
+                },
+                {
+                where: {
+                    id: resData1.id
+                }
+                }
+            );
 
-        res.status(200).json({
-            status: 1,
-            message: 'Berhasil perbaharui data',
-            data: responseData
-        });
+            const responseData = {
+                id: id,
+                nisn: nisn,
+            };
+
+            return res.status(200).json({
+                status: 1,
+                message: 'Berhasil perbaharui data 1',
+                data: responseData
+            });
+        }else{
+
+            return res.status(200).json({
+                status: 1,
+                message: 'Berhasil perbaharui data 2',
+                data: responseData
+            });
+
+        }
     } catch (error) {
         console.error('Error updating data:', error);
         res.status(500).json({
