@@ -3690,7 +3690,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
 
             return res.status(200).json({
                 status: 1,
-                message: 'Berhasil perbaharui data 1',
+                message: 'Berhasil perbaharui data',
                 data: responseData
             });
 
@@ -3698,7 +3698,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
 
             return res.status(200).json({
                 status: 1,
-                message: 'Berhasil perbaharui data 2',
+                message: '*Berhasil perbaharui data*',
                 data: ''
             });
 
