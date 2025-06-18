@@ -3658,7 +3658,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
 
         if(resData1){
 
-             const resData2 = await DataPendaftars.findOne({
+            const resData2 = await DataPendaftars.findOne({
                 where: {
                     id: decodedId,
                     is_delete: 0
