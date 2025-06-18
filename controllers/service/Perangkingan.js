@@ -12596,7 +12596,7 @@ export const getPerangkingan = async (req, res) => {
                 let kuota_prestasi = resSek.kuota_prestasi;
     
                  const resData = await DataPerangkingans.findAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur' ,'nilai_raport'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12763,7 +12763,7 @@ export const getPerangkingan = async (req, res) => {
                 let kuota_pto = resSek.kuota_pto;
     
                 const resData = await DataPerangkingans.findAll({
-                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur' 'is_anak_guru_jateng'], // Pilih kolom yang diambil
+                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12940,7 +12940,7 @@ export const getPerangkingan = async (req, res) => {
                 console.log('kuota panti:'+kuota_panti)
     
                 const resDataPanti = await DataPerangkingans.findAndCountAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12962,7 +12962,7 @@ export const getPerangkingan = async (req, res) => {
                 const totalPatntiL = resDataPanti.rows.length || 0; // Total jumlah data setelah limit
     
                 const resDataAts = await DataPerangkingans.findAndCountAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar','is_disabilitas', 'is_tidak_sekolah'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -12993,7 +12993,7 @@ export const getPerangkingan = async (req, res) => {
                 const resPantiIds = (rowsPantiR.rows || []).map((item) => item.id);
     
                 const resDataMiskin = await DataPerangkingans.findAll({
-                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar','is_disabilitas', 'is_tidak_sekolah'], // Pilih kolom yang diambil
+                     attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                 where: {
                     jalur_pendaftaran_id,
                     sekolah_tujuan_id,
@@ -13229,7 +13229,7 @@ export const getPerangkingan = async (req, res) => {
 
                     // anak guru
                     const resDataAnakGuru = await DataPerangkingans.findAndCountAll({
-                         attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_anak_guru_jateng', 'npsn_anak_guru'], // Pilih kolom yang diambil
+                         attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
                         where: {
                             jalur_pendaftaran_id,
                             sekolah_tujuan_id,
@@ -13472,7 +13472,7 @@ export const getPerangkingan = async (req, res) => {
                     }
     
                     const resData = await DataPerangkingans.findAll({
-                         attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'nilai_raport'], // Pilih kolom yang diambil
+                         attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur'], // Pilih kolom yang diambil
                     where: {
                             jalur_pendaftaran_id,
                             sekolah_tujuan_id,
@@ -13490,7 +13490,7 @@ export const getPerangkingan = async (req, res) => {
 
 
                     const resData99 = await DataPerangkingans.findAll({
-                         attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'nilai_raport'], // Pilih kolom yang diambil
+                         attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                         where: {
                             jalur_pendaftaran_id,
                             sekolah_tujuan_id,
@@ -13633,7 +13633,7 @@ export const getPerangkingan = async (req, res) => {
                     let kuota_prestasi_khusus = resJurSek.kuota_prestasi_khusus;
     
                     const resData = await DataPerangkingans.findAll({
-                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'nilai_akhir'], // Pilih kolom yang diambil
+                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
@@ -13843,7 +13843,7 @@ export const getPerangkingan = async (req, res) => {
     
                     //afirmasi murni miskin
                     const resDataMiskin = await DataPerangkingans.findAll({
-                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_anak_keluarga_tidak_mampu', 'nilai_raport', 'is_disabilitas'], // Pilih kolom yang diambil
+                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
