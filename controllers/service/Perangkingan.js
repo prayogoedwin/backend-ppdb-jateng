@@ -13783,6 +13783,7 @@ export const getPerangkingan = async (req, res) => {
     
                     //ATS
                     const resDataAts = await DataPerangkingans.findAndCountAll({
+                          attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah', 'is_anak_keluarga_tidak_mampu'], // Pilih kolom yang diambil
                         where: {
                             jalur_pendaftaran_id,
                             sekolah_tujuan_id,
@@ -13808,6 +13809,7 @@ export const getPerangkingan = async (req, res) => {
     
                     //panti
                     const resDataPanti = await DataPerangkingans.findAndCountAll({
+                        attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah', 'is_anak_keluarga_tidak_mampu'], // Pilih kolom yang diambil
                         where: {
                             jalur_pendaftaran_id,
                             sekolah_tujuan_id,
@@ -13843,7 +13845,9 @@ export const getPerangkingan = async (req, res) => {
     
                     //afirmasi murni miskin
                     const resDataMiskin = await DataPerangkingans.findAll({
-                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
+                    attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar', 'umur', 'is_disabilitas', 'is_tidak_sekolah', 'is_anak_keluarga_tidak_mampu'], // Pilih kolom yang diambil
+                       
+                    // attributes: ['id', 'no_pendaftaran', 'nisn' ,'nama_lengkap', 'jarak', 'nilai_akhir', 'is_daftar_ulang', 'id_pendaftar'], // Pilih kolom yang diambil
                     where: {
                         jalur_pendaftaran_id,
                         sekolah_tujuan_id,
