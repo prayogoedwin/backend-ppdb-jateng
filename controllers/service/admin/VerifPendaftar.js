@@ -3646,12 +3646,7 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
             }
         );
 
-         const resData2 = await DataPendaftars.findOne({
-            where: {
-                id: decodedId,
-                is_delete: 0
-            }
-        });
+        
 
           // 4. Fetch data perangkingan terkait
         const resData1 = await DataPerangkingans.findOne({
@@ -3661,7 +3656,14 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
             }
         });
 
-        if(resData1)
+        if(resData1){
+
+             const resData2 = await DataPendaftars.findOne({
+                where: {
+                    id: decodedId,
+                    is_delete: 0
+                }
+            });
 
             // Hitung nilai_akhir sebagai penjumlahan dari nilai_raport_rata dan nilai_prestasi
             const n_akhir = (resData2.nilai_raport_rata || 0) + (resData2.nilai_prestasi || 0)  + (resData2.nilai_organisasi || 0);
@@ -3691,18 +3693,20 @@ export const updatePendaftarKhususPrestasi = async (req, res) => {
                 message: 'Berhasil perbaharui data 1',
                 data: responseData
             });
+
         }else{
 
             return res.status(200).json({
                 status: 1,
                 message: 'Berhasil perbaharui data 2',
-                data: responseData
+                data: ''
             });
 
         }
     } catch (error) {
+        
         console.error('Error updating data:', error);
-        res.status(500).json({
+        return res.status(500).json({
             status: 0,
             message: error.message,
         });
