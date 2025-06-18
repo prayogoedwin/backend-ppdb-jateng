@@ -69,7 +69,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getPerangkinganSayaUpdateKebutuhanKhusus,
      getPerangkinganDetailByNisn,
      getPotensiPerangkingan,
-     getMonitoringSMA
+     getMonitoringSMA,
+     getPerangkinganTanpaRedisMintaNDadakNdadak
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -333,6 +334,8 @@ router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendafta
 
 
 router.post('/api/servis/perangkingan', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkingan);
+
+router.post('/api/servis/perangkingan_with_created_at', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganTanpaRedisMintaNDadakNdadak);
 
 router.post('/api/servis/perangkingan_spk', getPotensiPerangkingan);
 
