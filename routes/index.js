@@ -328,7 +328,6 @@ router.post('/api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddl
 
 
 
-
 // router.post('/api/servis/upload_file_tambahan/:id', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, uploadFileTambahan);
 router.post('/api/servis/upload_file_tambahan/:id_jalur_pendaftaran/:id_pendaftar/:nisn', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, uploadFileTambahan);
 
