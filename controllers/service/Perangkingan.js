@@ -24076,5 +24076,152 @@ function getNamaJalur(jalurId) {
   };
   return jalurMap[jalurId] || `Jalur ${jalurId}`;
 }
+};
 
+export const getPerangkinganByLogNisn = async (req, res) => {
+    try {
+        const { nisn } = req.body;
+
+        if (!nisn) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NISN is required'
+            });
+        }
+
+        // Fetch the data
+        const resData = await DataPerangkingans.findAll({
+            where: {
+                nisn: nisn
+            },
+            attributes: [
+                'nisn',
+                'nama_lengkap',
+                'no_pendaftaran',
+                'is_delete',
+                'created_at'
+            ],
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['nama']
+                },
+                {
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['nama']
+                }
+            ],
+            order: [['created_at', 'DESC']]
+        });
+
+        // Format the response
+        const formattedData = resData.map(item => {
+            const jsonItem = item.toJSON();
+            return {
+                nisn: jsonItem.nisn,
+                nama_lengkap: jsonItem.nama_lengkap,
+                no_pendaftaran: jsonItem.no_pendaftaran,
+                nama_sekolah: jsonItem.sekolah_tujuan?.nama,
+                jalur: jsonItem.jalur_pendaftaran?.nama,
+                status_daftar: jsonItem.is_delete === 1 ? 'batal-daftar' : 'mendaftar',
+                created_at: jsonItem.created_at
+            };
+        });
+
+        if (formattedData.length > 0) {
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: formattedData
+            });
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan',
+                data: []
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
+export const getPerangkinganByLogPendaftaran = async (req, res) => {
+    try {
+        const { no_pendaftaran } = req.body;
+
+        if (!no_pendaftaran) {
+            return res.status(400).json({
+                status: 0,
+                message: 'NISN is required'
+            });
+        }
+
+        // Fetch the data
+        const resData = await DataPerangkingans.findAll({
+            where: {
+                no_pendaftaran: no_pendaftaran
+            },
+            attributes: [
+                'nisn',
+                'nama_lengkap',
+                'no_pendaftaran',
+                'is_delete',
+                'created_at'
+            ],
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['nama']
+                },
+                {
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['nama']
+                }
+            ],
+            order: [['created_at', 'DESC']]
+        });
+
+        // Format the response
+        const formattedData = resData.map(item => {
+            const jsonItem = item.toJSON();
+            return {
+                nisn: jsonItem.nisn,
+                nama_lengkap: jsonItem.nama_lengkap,
+                no_pendaftaran: jsonItem.no_pendaftaran,
+                nama_sekolah: jsonItem.sekolah_tujuan?.nama,
+                jalur: jsonItem.jalur_pendaftaran?.nama,
+                status_daftar: jsonItem.is_delete === 1 ? 'batal-daftar' : 'mendaftar',
+                created_at: jsonItem.created_at
+            };
+        });
+
+        if (formattedData.length > 0) {
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil ditemukan',
+                data: formattedData
+            });
+        } else {
+            res.status(200).json({
+                status: 0,
+                message: 'Data tidak ditemukan',
+                data: []
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
 };

@@ -70,7 +70,11 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getPerangkinganDetailByNisn,
      getPotensiPerangkingan,
      getMonitoringSMA,
-     getPerangkinganTanpaRedisMintaNDadakNdadak
+     getPerangkinganTanpaRedisMintaNDadakNdadak,
+     getPerangkinganByLogNisn,
+     getPerangkinganByLogPendaftaran
+
+
     } from '../controllers/service/Perangkingan.js';
 
 //akun siswa
@@ -343,6 +347,13 @@ router.post('/api/servis/cari_rangking_by_no_pendaftaran', ipWhitelistMiddleware
 router.post('/api/servis/pengumuman', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganPengumuman);
 
 router.post('/api/servis/perangkingan_info_param', ipWhitelistMiddleware, appKeyMiddleware, getInfoParam);
+
+router.post('/api/servis/cek_perangkingan_by_nisn', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganByLogNisn)
+
+router.post('/api/servis/cek_perangkingan_by_no_pendaftaran', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganByLogPendaftaran)
+
+
+
 
 
 
