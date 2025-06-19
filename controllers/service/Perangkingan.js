@@ -21845,7 +21845,7 @@ export const automasiPerangkingan = async (req, res) => {
 
             // 3. Ambil semua sekolah tujuan yang aktif
             const allSekolah = await SekolahTujuan.findAll({
-                attributes: ['id'],
+                attributes: ['id', 'npsn'],
                 // where: { 
                 //     id: 2233,
                 // },
@@ -21871,7 +21871,7 @@ export const automasiPerangkingan = async (req, res) => {
                             where: { 
                                 id_sekolah_tujuan: sekolah_tujuan_id,
                             },
-                            attributes: ['id'],
+                            attributes: ['id', 'npsn'],
                             order: [['id', 'ASC']],
                             transaction
                         });
