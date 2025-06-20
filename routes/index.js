@@ -326,7 +326,7 @@ router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, ap
 
 router.post('/api/servis/cek_daftar_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess,  cekPerangkingan);
 router.post('/api/servis/daftar_sekolah', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, createPerangkingan);
-router.post('/api/servis/cetak_bukti_daftar', csrfProtection ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
+router.post('/api/servis/cetak_bukti_daftar', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, cetakBuktiPerangkingan);
 
 
 
@@ -394,7 +394,7 @@ router.post('/admin-api/auth/signin_new', csrfProtection, ipWhitelistMiddleware,
 
 router.post('/admin-api/auth/signout', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, logoutAdmin);
 
-router.post('/admin-api/servis/cetak_bukti_daftar', ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkinganAdmin);
+router.post('/admin-api/servis/cetak_bukti_daftar', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, logAccessAdmin, cetakBuktiPerangkinganAdmin);
 
 
 
