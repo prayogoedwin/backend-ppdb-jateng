@@ -532,7 +532,7 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
                     include: [ // Tambahkan include untuk mengambil data wilayah
                         {
                             model: WilayahVerDapodik,
-                            as: 'data_wilayah',
+                            as: 'data_wilayah_kota',
                             attributes: ['nama'] // Ambil nama kabupaten/kota
                         }
                     ]
