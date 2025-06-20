@@ -523,7 +523,14 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
                 nisn: nisn, // Pastikan id_pendaftar adalah string
                 is_delete: 0
             },
-            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
+            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur', ],
+            // attributes: {
+            //     exclude: ['created_at', 'updated_at', 'nik'],
+            //     // include: [
+            //     // [sequelize.literal('`no_pendaftaran`'), 'no_pendaftaran'],
+            //     // [sequelize.literal('`nisn`'), 'nisn'],
+            //     //]
+            // },
             include: [
                 {
                     model: SekolahTujuan,
@@ -553,25 +560,28 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
         if(!perangkingan){
 
             return res.status(200).json({
-                status: 2,
+                status: 99,
                 message: 'Anda tidak terdaftar!',
                 perangkingan: perangkingan,
 
             });
 
         }else{
-
+            let sts = 0;
             if (perangkingan.is_diterima == 1) {
+                sts = 1;
                // = 'Selamat! Anda telah diterima di ' + perangkingan.sekolah_tujuan.nama + '. Silakan cek informasi selanjutnya untuk proses daftar ulang.';
-                msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
+                msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah_kota.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
             } else if (perangkingan.is_diterima == 2) {
+                     sts = 2;
                 msg = 'Anda masuk dalam daftar cadangan penerimaan. Kami akan menginformasikan lebih lanjut jika ada kuota tersedia.';
             } else {
+                     sts = 0;
                 msg = 'Maaf, Anda belum berhasil lolos seleksi kali ini. Masih banyak kesempatan lain di jalur atau sekolah lainnya.';
             }
 
              return res.status(200).json({
-                status: 1,
+                status: sts,
                 message: msg,
                 perangkingan: perangkingan,
 

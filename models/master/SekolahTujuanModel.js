@@ -126,6 +126,6 @@ const EzSekolahTujuans = db.define('ez_sekolah_tujuan', {
 
 export default EzSekolahTujuans;
 EzSekolahTujuans.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah', foreignKey: 'kode_wilayah', targetKey: 'kode_wilayah' }); // Asosiasi dengan Wilayah
-EzSekolahTujuans.belongsTo(EzWilayahVerDapodiks, { foreignKey: 'kode_wilayah_kot', as: 'data_wilayah_kota'});
+EzSekolahTujuans.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kota', foreignKey: 'kode_wilayah_kot', targetKey: 'kode_wilayah' });
 
 

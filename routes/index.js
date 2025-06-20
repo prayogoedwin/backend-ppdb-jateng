@@ -362,7 +362,8 @@ router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddle
 
 router.post('/api/servis/perangkingan_detail', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
 
-router.post('/api/servis/perangkingan_pengumuman', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetailByNisnPengumuman);
+//router.post('/api/servis/perangkingan_pengumuman', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetailByNisnPengumuman);
+router.post('/api/servis/perangkingan_pengumuman', getPerangkinganDetailByNisnPengumuman);
 
 router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
 
