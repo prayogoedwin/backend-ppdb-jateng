@@ -22456,45 +22456,55 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
         limit: resSek.kuota_pto
     })).length;
 
-    let countZonasiKhusus = 0;
-    let zonKhData = []; // Untuk menyimpan data per zonasi khusus
-    //let zonKhData = []; // Untuk menyimpan data per zonasi khusus
-    let totalZonasiKhusus = 0; // Untuk menyimpan total keseluruhan
-    if(resSek.kuota_zonasi_khusus > 0){
+    const countZonasiKhusus = (await DataPerangkingans.findAll({  
+        where: {  
+            jalur_pendaftaran_id: 2,
+            sekolah_tujuan_id,  
+            is_delete: 0,
+            is_daftar_ulang: { [Op.ne]: 2 }
+        },
+        limit: resSek.kuota_zonasi_khusus
+    })).length;
+
+    // let countZonasiKhusus = 0;
+    // let zonKhData = []; // Untuk menyimpan data per zonasi khusus
+    // //let zonKhData = []; // Untuk menyimpan data per zonasi khusus
+    // let totalZonasiKhusus = 0; // Untuk menyimpan total keseluruhan
+    // if(resSek.kuota_zonasi_khusus > 0){
         
-        const npsn = resSek.npsn;
-        const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
+    //     const npsn = resSek.npsn;
+    //     const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
 
-        for (const zonKh of resZonKh) {
-            const currentCount = (await DataPerangkingans.findAll({  
-                attributes: ['nisn'],
-                where: {  
-                    jalur_pendaftaran_id: 2,
-                    sekolah_tujuan_id,  
-                    kode_kecamatan: zonKh.kode_wilayah_kec,  
-                    is_delete: 0,
-                    is_daftar_ulang: { [Op.ne]: 2 },
-                    // Tambahkan kondisi spesifik zonKh jika diperlukan
-                    // contoh: zonasi_khusus_id: zonKh.id
-                },
-                limit: zonKh.kuota_zonasi_khusus
-            })).length;
+    //     for (const zonKh of resZonKh) {
+    //         const currentCount = (await DataPerangkingans.findAll({  
+    //             attributes: ['nisn'],
+    //             where: {  
+    //                 jalur_pendaftaran_id: 2,
+    //                 sekolah_tujuan_id,  
+    //                 kode_kecamatan: zonKh.kode_wilayah_kec,  
+    //                 is_delete: 0,
+    //                 is_daftar_ulang: { [Op.ne]: 2 },
+    //                 // Tambahkan kondisi spesifik zonKh jika diperlukan
+    //                 // contoh: zonasi_khusus_id: zonKh.id
+    //             },
+    //             limit: zonKh.kuota_zonasi_khusus
+    //         })).length;
 
-            // Simpan data per zonasi khusus
-            zonKhData.push({
-                zonasi_khusus_id: zonKh.id,
-                nama_zonasi_khusus: zonKh.nama, // atau field lain yang relevan
-                jumlah_pendaftar: currentCount
-            });
+    //         // Simpan data per zonasi khusus
+    //         zonKhData.push({
+    //             zonasi_khusus_id: zonKh.id,
+    //             nama_zonasi_khusus: zonKh.nama, // atau field lain yang relevan
+    //             jumlah_pendaftar: currentCount
+    //         });
 
-            // Tambahkan ke total
-            totalZonasiKhusus += currentCount;
+    //         // Tambahkan ke total
+    //         totalZonasiKhusus += currentCount;
 
-        }
+    //     }
 
-         // Set countZonasiKhusus dengan total keseluruhan
-         countZonasiKhusus = totalZonasiKhusus;
-    }
+    //      // Set countZonasiKhusus dengan total keseluruhan
+    //      countZonasiKhusus = totalZonasiKhusus;
+    // }
 
     let kuota_terpakai = totalZonasiReg + countZonasiKhusus + countPrestasi + countAfirmasi + countPto;
     let kuota_zonasi_nilai = Math.max(0, kuota_zonasi_max - kuota_terpakai);
