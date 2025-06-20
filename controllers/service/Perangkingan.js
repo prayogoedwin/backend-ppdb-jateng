@@ -22707,7 +22707,7 @@ async function prosesJalurZonasiReguler2(sekolah_tujuan_id, transaction) {
 }
 
 // Update all jalur processing functions to include cadangan quota
-async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
+async function prosesJalurZonasiKhususBAK(sekolah_tujuan_id, transaction) {
     const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
     let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
     let kuota_dengan_cadangan = kuota_zonasi_khusus + KUOTA_CADANGAN;
@@ -22742,21 +22742,59 @@ async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
         resData = resDataQ.concat(resDataQ);
     }
 
-    // const resData = await DataPerangkingans.findAll({
-    //     where: {
-    //         jalur_pendaftaran_id: 2,
-    //         sekolah_tujuan_id,
-    //         is_delete: 0,
-    //         is_daftar_ulang: { [Op.ne]: 2 }
-    //     },
-    //     order: [
-    //         ['umur', 'DESC'],
-    //         ['nilai_akhir', 'DESC'],
-    //         ['created_at', 'ASC'] 
-    //     ],
-    //     limit: kuota_dengan_cadangan,
-    //     transaction
-    // });
+    return resData.map((item, index) => ({
+        ...item.toJSON(),
+        id: encodeId(item.id),
+        id_pendaftar: encodeId(item.id_pendaftar),
+        status_daftar_sekolah: 1,
+        is_diterima: index < kuota_zonasi_khusus ? 1 : 2 // 1 for main quota, 2 for cadangan
+    }));
+}
+
+async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
+    const resSek = await getSekolahTujuanById(sekolah_tujuan_id, transaction);
+    let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
+    let kuota_dengan_cadangan = kuota_zonasi_khusus + KUOTA_CADANGAN;
+
+    const npsn = resSek.npsn;
+    const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
+
+    let resData = [];
+
+    for (const zonKh of resZonKh) {
+        const resDataQ = await DataPerangkingans.findAll({
+            where: {
+                jalur_pendaftaran_id: 2,
+                sekolah_tujuan_id,
+                kode_kecamatan: zonKh.kode_wilayah_kec,  
+                is_delete: 0,
+                is_daftar_ulang: { [Op.ne]: 2 },
+                [Op.or]: [
+                    { is_tidak_boleh_domisili: { [Op.is]: null } },
+                    { is_tidak_boleh_domisili: 0 }
+                ],
+            },
+            order: [
+                ['umur', 'DESC'],
+                ['nilai_akhir', 'DESC'],
+                ['created_at', 'ASC']
+            ],
+            limit: zonKh.kuota_zonasi_khusus,
+            transaction
+        });
+    
+        resData = resData.concat(resDataQ); // Perbaikan di sini: gunakan concat untuk menambahkan data baru
+    }
+
+    // Urutkan kembali semua data yang telah dikumpulkan dari berbagai kecamatan
+    resData.sort((a, b) => {
+        if (b.umur !== a.umur) return b.umur - a.umur;
+        if (b.nilai_akhir !== a.nilai_akhir) return b.nilai_akhir - a.nilai_akhir;
+        return new Date(a.created_at) - new Date(b.created_at);
+    });
+
+    // Batasi sesuai kuota total (termasuk cadangan)
+    resData = resData.slice(0, kuota_dengan_cadangan);
 
     return resData.map((item, index) => ({
         ...item.toJSON(),
