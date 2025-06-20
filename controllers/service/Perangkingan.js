@@ -23519,7 +23519,8 @@ export const getPerangkinganCadangan = async (req, res) => {
         // let limit_cadangan = limitasi_cadangan - count; // Hasil: NaN
         // limit_cadangan = isNaN(limit_cadangan) ? 0 : limit_cadangan;
 
-        let limit_cadangan = 5;
+        // let limit_cadangan = 5;
+        const limit_cadangan = parseInt(process.env.KUOTA_CADANGAN) || 0; // Default to 20 if not set
 
         console.log('Limit Cadangan'+limit_cadangan); // Output: 0
 
