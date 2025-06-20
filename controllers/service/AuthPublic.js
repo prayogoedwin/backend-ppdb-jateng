@@ -559,6 +559,62 @@ export const mainTenisPublikCek = async (req, res, next) => {
     }
 };
 
+
+export const popUpPublikCek = async (req, res, next) => {
+    try {
+        const apiKey = 'pop_up'
+        const redis_key = `POPUP`; 
+        let keyNya = await redisGet(redis_key);
+
+        if (keyNya) {
+            keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
+            console.log(`[CACHE] Found cached pop-up key for ${apiKey}`);
+            return res.status(200).json({
+                status: 1,
+                message: 'Mode Maintenance Public.'+keyNya.nama,
+                data: keyNya
+                // text: keyNya.kode_random
+            });
+        } else {
+            keyNya = await EzAppKey.findOne({
+                where: {
+                    apikey: apiKey
+                }
+            });
+
+            // const result = await EzAppKey.scope('withKodeRandom').findAll();
+            if (!keyNya) {
+                return res.status(403).json({
+                    status: 0,
+                    message: 'Forbidden - Your pop-up key is not found',
+                });
+            }
+
+            await redisSet(
+                redis_key,
+                JSON.stringify(keyNya),
+                process.env.REDIS_EXPIRE_TIME_HARIAN
+            );
+
+            console.log(`[DB] Popup(${apiKey}) →`, keyNya);
+
+            return res.status(200).json({
+                status: 1,
+                message: 'Mode Popup.'+keyNya.nama,
+                data: keyNya
+                // text: keyNya.kode_random
+            });
+        }
+
+    } catch (error) {
+        console.error('Error checking Popup Key:', error);
+        res.status(500).json({
+            status: 0,
+            message: 'Internal Server Error',
+        });
+    }
+};
+
 export const registerCustomCek = async (req, res, next) => {
     try {
         const apiKey = 'register_custom'
