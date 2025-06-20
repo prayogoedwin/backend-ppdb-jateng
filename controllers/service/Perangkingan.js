@@ -21823,7 +21823,7 @@ export const automasiPerangkingan = async (req, res) => {
         // 1. Ambil semua jalur pendaftaran yang aktif
         const allJalur = await JalurPendaftarans.findAll({
             // where: { 
-            //     id: 1,
+            //     id: 2,
             // },
             attributes: ['id'],
             order: [['id', 'ASC']],
@@ -22712,7 +22712,7 @@ async function prosesJalurZonasiKhusus(sekolah_tujuan_id, transaction) {
     let kuota_zonasi_khusus = resSek.kuota_zonasi_khusus;
     let kuota_dengan_cadangan = kuota_zonasi_khusus + KUOTA_CADANGAN;
 
-    npsn = resSek.npsn;
+    const npsn = resSek.npsn;
     const resZonKh = await SekolahZonasiKhususByNpsn(npsn);
 
     let resData = [];
