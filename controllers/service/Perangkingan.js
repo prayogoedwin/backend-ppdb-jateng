@@ -510,6 +510,89 @@ export const getPerangkinganDetailByNisn = async (req, res) => {
     }
 };
 
+
+export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
+    try {
+        const { nisn } = req.body;
+
+        // Fetch the data
+        let msg = '';
+        let perangkingan = [];
+        perangkingan = await DataPerangkingans.findOne({
+            where: {
+                nisn: nisn, // Pastikan id_pendaftar adalah string
+                is_delete: 0
+            },
+            // attributes: ['no_pendaftaran', 'nisn', 'nama_lengkap', 'nilai_akhir', 'jarak', 'id_pendaftar', 'umur'],
+            include: [
+                {
+                    model: SekolahTujuan,
+                    as: 'sekolah_tujuan',
+                    attributes: ['npsn', 'nama'],
+                    include: [ // Tambahkan include untuk mengambil data wilayah
+                        {
+                            model: EzWilayahVerDapodiks,
+                            as: 'data_wilayah',
+                            attributes: ['nama'] // Ambil nama kabupaten/kota
+                        }
+                    ]
+                },
+                {
+                    model: SekolahJurusan,
+                    as: 'sekolah_jurusan',
+                    attributes: ['id', 'nama_jurusan']
+                },
+                {
+                    model: JalurPendaftarans,
+                    as: 'jalur_pendaftaran',
+                    attributes: ['bentuk_pendidikan_id', 'nama']
+                },
+            ]
+        });
+
+        if(!perangkingan){
+
+            return res.status(200).json({
+                status: 2,
+                message: 'Anda tidak terdaftar!',
+                perangkingan: perangkingan,
+
+            });
+
+        }else{
+
+            if (perangkingan.is_diterima == 1) {
+               // = 'Selamat! Anda telah diterima di ' + perangkingan.sekolah_tujuan.nama + '. Silakan cek informasi selanjutnya untuk proses daftar ulang.';
+                msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
+            } else if (perangkingan.is_diterima == 2) {
+                msg = 'Anda masuk dalam daftar cadangan penerimaan. Kami akan menginformasikan lebih lanjut jika ada kuota tersedia.';
+            } else {
+                msg = 'Maaf, Anda belum berhasil lolos seleksi kali ini. Masih banyak kesempatan lain di jalur atau sekolah lainnya.';
+            }
+
+             return res.status(200).json({
+                status: 1,
+                message: msg,
+                perangkingan: perangkingan,
+
+            });
+
+        }
+
+       
+       
+
+       
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        return res.status(500).json({
+            status: 0,
+            message: 'Error'
+        });
+    }
+};
+
+
 export const getPerangkinganSelamat = async (req, res) => {
 
     try {

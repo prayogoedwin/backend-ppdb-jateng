@@ -72,7 +72,8 @@ import { cekPerangkingan, createPerangkingan, getPerangkingan,
      getMonitoringSMA,
      getPerangkinganTanpaRedisMintaNDadakNdadak,
      getPerangkinganByLogNisn,
-     getPerangkinganByLogPendaftaran
+     getPerangkinganByLogPendaftaran,
+     getPerangkinganDetailByNisnPengumuman
 
 
     } from '../controllers/service/Perangkingan.js';
@@ -317,9 +318,6 @@ router.post('/air/cek/monitoring/internal', ipWhitelistMiddleware, appKeyMiddlew
 
 
 
-
-
-
 router.post('/api/auth/logout', ipWhitelistMiddleware, appKeyMiddleware, logAccess, logoutUser);
 router.post('/api/auth/ubah_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, resetPassword);
 router.post('/api/auth/lupa_password', csrfProtection, ipWhitelistMiddleware, appKeyMiddleware, verifyCloudflareCaptcha, forgotPassword);
@@ -363,6 +361,8 @@ router.post('/api/servis/cek_perangkingan_by_no_pendaftaran', csrfProtection, ip
 router.post('/api/servis/perangkingan_saya', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganSaya);
 
 router.post('/api/servis/perangkingan_detail', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetail);
+
+router.post('/api/servis/perangkingan_pengumuman', ipWhitelistMiddleware, appKeyMiddleware, getPerangkinganDetailByNisnPengumuman);
 
 router.post('/api/servis/perangkingan_hapus', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, softDeletePerangkingan);
 
