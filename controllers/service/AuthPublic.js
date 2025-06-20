@@ -571,7 +571,7 @@ export const popUpPublikCek = async (req, res, next) => {
             console.log(`[CACHE] Found cached pop-up key for ${apiKey}`);
             return res.status(200).json({
                 status: 1,
-                message: 'Mode Maintenance Public.'+keyNya.nama,
+                message: 'Mode Pop Up.'+keyNya.nama,
                 data: keyNya
                 // text: keyNya.kode_random
             });
