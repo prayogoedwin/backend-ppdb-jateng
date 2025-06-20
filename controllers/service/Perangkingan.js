@@ -531,7 +531,7 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
                     attributes: ['npsn', 'nama'],
                     include: [ // Tambahkan include untuk mengambil data wilayah
                         {
-                            model: EzWilayahVerDapodiks,
+                            model: WilayahVerDapodik,
                             as: 'data_wilayah',
                             attributes: ['nama'] // Ambil nama kabupaten/kota
                         }
