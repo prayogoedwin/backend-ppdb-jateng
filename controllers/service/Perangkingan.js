@@ -23614,7 +23614,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         });
 
         // Simpan ke cache
-        await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+        await redisSet(redis_key, JSON.stringify(resultData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
         if (is_pdf == 1) {
             // return generatePDFResponse(res, resDatas, jalur_pendaftaran_id);
