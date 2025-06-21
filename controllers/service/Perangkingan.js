@@ -23360,7 +23360,7 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             jurusan_id,
             is_delete: 0,
             is_daftar_ulang: { [Op.ne]: 2 },
-            is_tidak_sekolah: '1'
+            is_tidak_sekolah: '1', 
         },
         order: [
             ['umur', 'DESC'],
@@ -23380,7 +23380,7 @@ async function prosesJalurSMKAfirmasi(sekolah_tujuan_id, jurusan_id, transaction
             jurusan_id,
             is_delete: 0,
             is_daftar_ulang: { [Op.ne]: 2 },
-            is_anak_panti: '1'
+            is_anak_panti: '1',       
         },
         order: [
             [literal('CAST(jarak AS FLOAT)'), 'ASC'],
@@ -23617,7 +23617,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
         if (is_pdf == 1) {
-            return generatePDFResponse(res, resDatas, jalur_pendaftaran_id);
+            // return generatePDFResponse(res, resDatas, jalur_pendaftaran_id);
         } else {
             const resTimeline = await getTimelineSatuan(6);
             return res.status(200).json({
@@ -23656,7 +23656,7 @@ export const getPerangkinganCadangan = async (req, res) => {
             const resultData = JSON.parse(cached);
             
             if (is_pdf == 1) {
-                return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+                // return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
             } else {
                 const resTimeline = await getTimelineSatuan(6);
                 return res.status(200).json({
@@ -23667,7 +23667,7 @@ export const getPerangkinganCadangan = async (req, res) => {
                 });
             }
         }
-// 
+        // 
         // 2. Jika tidak ada di cache, ambil dari database
         const whereClause = {
             jalur_pendaftaran_id,
