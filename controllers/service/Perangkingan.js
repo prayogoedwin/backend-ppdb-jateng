@@ -21916,7 +21916,7 @@ export const automasiPerangkingan = async (req, res) => {
         // 1. Ambil semua jalur pendaftaran yang aktif
         const allJalur = await JalurPendaftarans.findAll({
             // where: { 
-            //     id: 2,
+            //     id: 7,
             // },
             attributes: ['id'],
             order: [['id', 'ASC']],
@@ -21940,7 +21940,7 @@ export const automasiPerangkingan = async (req, res) => {
             const allSekolah = await SekolahTujuan.findAll({
                 attributes: ['id', 'npsn'],
                 // where: { 
-                //     id: 2233,
+                //     id: 614,
                 // },
                 order: [['id', 'ASC']],
                 transaction
@@ -23274,7 +23274,7 @@ async function prosesJalurSMKPrestasi(sekolah_tujuan_id, jurusan_id, transaction
     })).length;
 
     let kuota_prestasi = kuota_prestasi_max - (countTerdekat + countAfirmasi + countPrestasiKhusus);
-    // let kuota_prestasi_akhir = kuota_prestasi >= kuota_prestasi_min ? kuota_prestasi : kuota_prestasi_min;
+    let kuota_prestasi_akhir = 0;
     if(kuota_prestasi >= kuota_prestasi_min){
         kuota_prestasi_akhir = kuota_prestasi;
     }else{
