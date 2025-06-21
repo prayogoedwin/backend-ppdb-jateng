@@ -23202,44 +23202,84 @@ async function prosesJalurSMKPrestasi(sekolah_tujuan_id, jurusan_id, transaction
     let kuota_prestasi_min = resJurSek.kuota_prestasi;
 
     // Hitung kuota yang sudah terpakai
-    const countTerdekat = (await DataPerangkingans.count({
+    // const countTerdekat = (await DataPerangkingans.count({
+    //     where: {  
+    //         jalur_pendaftaran_id: 6,
+    //         sekolah_tujuan_id,  
+    //         jurusan_id,
+    //         is_delete: 0,
+    //         is_daftar_ulang: { [Op.ne]: 2 }
+    //     },
+    //     limit: resJurSek.kuota_jarak_terdekat,
+    //     transaction
+    // }));
+
+    const countTerdekat = (await DataPerangkingans.findAll({  
         where: {  
             jalur_pendaftaran_id: 6,
             sekolah_tujuan_id,  
             jurusan_id,
             is_delete: 0,
-            is_daftar_ulang: { [Op.ne]: 2 }
+            is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
         },
-        limit: resJurSek.kuota_jarak_terdekat,
-        transaction
-    }));
+        limit: resJurSek.kuota_jarak_terdekat
+    })).length;
 
-    const countAfirmasi = (await DataPerangkingans.count({
+    // const countAfirmasi = (await DataPerangkingans.count({
+    //     where: {  
+    //         jalur_pendaftaran_id: 9,
+    //         sekolah_tujuan_id,  
+    //         jurusan_id,
+    //         is_delete: 0,
+    //         is_daftar_ulang: { [Op.ne]: 2 }
+    //     },
+    //     limit: resJurSek.kuota_afirmasi,
+    //     transaction
+    // }));
+
+    const countAfirmasi = (await DataPerangkingans.findAll({  
         where: {  
             jalur_pendaftaran_id: 9,
             sekolah_tujuan_id,  
             jurusan_id,
             is_delete: 0,
-            is_daftar_ulang: { [Op.ne]: 2 }
+            is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition   
+            // is_daftar_ulang: { [Op.notIn]: [2, 3] } // Updated condition to exclude 2 and 3
         },
-        limit: resJurSek.kuota_afirmasi,
-        transaction
-    }));
+        limit: resJurSek.kuota_afirmasi
+    })).length;
 
-    const countPrestasiKhusus = (await DataPerangkingans.count({
+    // const countPrestasiKhusus = (await DataPerangkingans.count({
+    //     where: {  
+    //         jalur_pendaftaran_id: 8,
+    //         sekolah_tujuan_id,  
+    //         jurusan_id,
+    //         is_delete: 0,
+    //         is_daftar_ulang: { [Op.ne]: 2 }
+    //     },
+    //     limit: resJurSek.kuota_prestasi_khusus,
+    //     transaction
+    // }));
+
+    //hitung total pendaftar prestasi khusus
+    const countPrestasiKhusus = (await DataPerangkingans.findAll({  
         where: {  
             jalur_pendaftaran_id: 8,
             sekolah_tujuan_id,  
             jurusan_id,
             is_delete: 0,
-            is_daftar_ulang: { [Op.ne]: 2 }
+            is_daftar_ulang: { [Op.ne]: 2 } // Adding the new condition
         },
-        limit: resJurSek.kuota_prestasi_khusus,
-        transaction
-    }));
+        limit: resJurSek.kuota_prestasi_khusus
+    })).length;
 
     let kuota_prestasi = kuota_prestasi_max - (countTerdekat + countAfirmasi + countPrestasiKhusus);
-    let kuota_prestasi_akhir = kuota_prestasi >= kuota_prestasi_min ? kuota_prestasi : kuota_prestasi_min;
+    // let kuota_prestasi_akhir = kuota_prestasi >= kuota_prestasi_min ? kuota_prestasi : kuota_prestasi_min;
+    if(kuota_prestasi >= kuota_prestasi_min){
+        kuota_prestasi_akhir = kuota_prestasi;
+    }else{
+        kuota_prestasi_akhir = kuota_prestasi_min;
+    }
     let kuota_dengan_cadangan = kuota_prestasi_akhir + KUOTA_CADANGAN;
 
     const resData = await DataPerangkingans.findAll({
@@ -23521,25 +23561,25 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             is_pdf
         } = req.body;
 
-        // const redis_key = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+        const redis_key = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
 
-        // 1. Cek cache Redis terlebih dahulu
-        // const cached = await redisGet(redis_key);
-        // if (cached) {
-        //     const resultData = JSON.parse(cached);
+        //1. Cek cache Redis terlebih dahulu
+        const cached = await redisGet(redis_key);
+        if (cached) {
+            const resultData = JSON.parse(cached);
             
-        //     if (is_pdf == 1) {
-        //         return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
-        //     } else {
-        //         const resTimeline = await getTimelineSatuan(6);
-        //         return res.status(200).json({
-        //             status: 1,
-        //             message: 'Data berhasil ditemukan (from cache)',
-        //             data: resultData,
-        //             timeline: resTimeline
-        //         });
-        //     }
-        // }
+            if (is_pdf == 1) {
+                return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+            } else {
+                const resTimeline = await getTimelineSatuan(6);
+                return res.status(200).json({
+                    status: 1,
+                    message: 'Data berhasil ditemukan (from cache)',
+                    data: resultData,
+                    timeline: resTimeline
+                });
+            }
+        }
 
         // 2. Jika tidak ada di cache, ambil dari database
         const whereClause = {
@@ -23574,7 +23614,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         });
 
         // Simpan ke cache
-        // await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+        await redisSet(redis_key, JSON.stringify(resDatas), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
         if (is_pdf == 1) {
             return generatePDFResponse(res, resDatas, jalur_pendaftaran_id);
