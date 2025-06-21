@@ -12320,7 +12320,7 @@ export const getPerangkingan = async (req, res) => {
                     },
                     order: [
                         ['nilai_akhir', 'DESC'],
-                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        // [literal('CAST(jarak AS FLOAT)'), 'ASC'],
                         // ['umur', 'DESC'], 
                         ['created_at', 'ASC'] 
                     ],
@@ -22607,7 +22607,8 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
         },
         order: [
             ['nilai_akhir', 'DESC'],
-            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            // [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            // ['umur', 'DESC'], 
             ['created_at', 'ASC'] 
         ],
         limit: kuota_zonasi_nilai_dengan_cadangan,
