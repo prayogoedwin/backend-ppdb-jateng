@@ -338,12 +338,21 @@ export const getSekolahTujuanAdminForUser = async (req, res) => {
                     });  
                 } else {  
                     // If bentuk_pendidikan_id is 13, set jurusan to null  
-                    const formattedResData = resData.map(school => {  
-                        return {  
-                            ...school.dataValues,  
-                            jurusan: null // Set jurusan to null for bentuk_pendidikan_id 13  
-                        };  
-                    });  
+                    // const formattedResData = resData.map(school => {  
+                    //     return {  
+                    //         ...school.dataValues,  
+                    //         jurusan: null // Set jurusan to null for bentuk_pendidikan_id 13  
+                    //     };  
+                    // });  
+
+                    const formattedResData = resData.map(school => {
+                        const namaNpsn = `${school.nama} ${school.npsn}`; 
+                        return {
+                            ...school.dataValues,
+                            nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                        };
+                    });
+  
   
                     // Cache the new data  
                     await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER);  
