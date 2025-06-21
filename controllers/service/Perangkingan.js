@@ -21915,9 +21915,9 @@ export const automasiPerangkingan = async (req, res) => {
         
         // 1. Ambil semua jalur pendaftaran yang aktif
         const allJalur = await JalurPendaftarans.findAll({
-            where: { 
-                id: 5,
-            },
+            // where: { 
+            //     id: 5,
+            // },
             attributes: ['id'],
             order: [['id', 'ASC']],
             transaction
@@ -21939,9 +21939,9 @@ export const automasiPerangkingan = async (req, res) => {
             // 3. Ambil semua sekolah tujuan yang aktif
             const allSekolah = await SekolahTujuan.findAll({
                 attributes: ['id', 'npsn'],
-                where: { 
-                    id: 243,
-                },
+                // where: { 
+                //     id: 243,
+                // },
                 order: [['id', 'ASC']],
                 transaction
             });
@@ -23098,7 +23098,7 @@ async function prosesJalurAfirmasi(sekolah_tujuan_id, transaction) {
         ...(resDataMiskin || []).map((item, index) => ({
             ...item.toJSON(),
             order_berdasar: 5,
-            is_cadangan: index >= kuota_afirmasi
+            is_cadangan: index >= kuota_afirmasi_sisa
         }))
     ];
 
