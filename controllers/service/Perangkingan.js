@@ -23569,7 +23569,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
             const resultData = JSON.parse(cached);
             
             if (is_pdf == 1) {
-                return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+                // return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
             } else {
                 const resTimeline = await getTimelineSatuan(6);
                 return res.status(200).json({
