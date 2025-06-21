@@ -23173,6 +23173,8 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
         transaction
     });
 
+    let batas_diterima_domisili = kuota_jarak_terdekat - totalAnakGuru;
+
     // Gabungkan data dengan flag cadangan
     const combinedData = [
         ...(resDataAnakGuru || []).map((item, index) => ({
@@ -23183,7 +23185,7 @@ async function prosesJalurSMKDomisili(sekolah_tujuan_id, jurusan_id, transaction
         ...(resData || []).map((item, index) => ({
             ...item.toJSON(),
             order_berdasar: "7",
-            is_cadangan: index >= kuota_jarak_terdekat
+            is_cadangan: index >= batas_diterima_domisili
         }))
     ];
 
