@@ -12320,8 +12320,8 @@ export const getPerangkingan = async (req, res) => {
                     },
                     order: [
                         ['nilai_akhir', 'DESC'],
-                        // [literal('CAST(jarak AS FLOAT)'), 'ASC'],
-                        // ['umur', 'DESC'], 
+                        [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+                        ['umur', 'DESC'], 
                         ['created_at', 'ASC'] 
                     ],
                     // limit: kuota_zonasi_nilai
@@ -22493,8 +22493,10 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
     let kuota_zonasi_max = resSek.daya_tampung;
     let kuota_zonasi_min = resSek.kuota_zonasi;
     let persentase_domisili_nilai = DomiNilaiHelper('nilai');
-    let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_min);
+    let kuota_zonasi_nilai_min = Math.ceil((persentase_domisili_nilai / 100) * kuota_zonasi_max);
     let zonasi_jarak = kuota_zonasi_min - kuota_zonasi_nilai_min;
+
+    zonasi_jarak = Math.max(0, zonasi_jarak);
 
     // Data berdasarkan jarak terdekat
     const resDataZonasi = await DataPerangkingans.findAndCountAll({
@@ -22607,8 +22609,8 @@ async function prosesJalurZonasiReguler(sekolah_tujuan_id, transaction) {
         },
         order: [
             ['nilai_akhir', 'DESC'],
-            // [literal('CAST(jarak AS FLOAT)'), 'ASC'],
-            // ['umur', 'DESC'], 
+            [literal('CAST(jarak AS FLOAT)'), 'ASC'],
+            ['umur', 'DESC'], 
             ['created_at', 'ASC'] 
         ],
         limit: kuota_zonasi_nilai_dengan_cadangan,
