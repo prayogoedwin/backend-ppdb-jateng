@@ -23599,10 +23599,34 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
 
         const resultData = await DataPerangkingans.findAll({
             where: whereClause,
+            include: [
+                    // {
+                    //     model: SekolahTujuan,
+                    //     as: 'sekolah_tujuan',
+                    //     attributes: ['npsn', 'nama']
+                    // },
+                    // {
+                    //     model: SekolahJurusan,
+                    //     as: 'sekolah_jurusan',
+                    //     attributes: ['id', 'nama_jurusan']
+                    // },
+                    // {
+                    //     model: JalurPendaftarans,
+                    //     as: 'jalur_pendaftaran',
+                    //     attributes: ['bentuk_pendidikan_id', 'nama']
+                    // },
+                    {
+                        model: DataPendaftars,
+                        as: 'data_pendaftar',
+                        // Tambahkan attributes yang ingin Anda ambil dari DataPendaftars
+                        attributes: ['id', 'jenis_kelamin', 'nama_sekolah_asal'] // sesuaikan dengan kebutuhan
+                    }
+                ],
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
             ]
         });
+        
 
         // Langsung modifikasi resultData (Sequelize model instances)
         resultData.forEach(item => {
