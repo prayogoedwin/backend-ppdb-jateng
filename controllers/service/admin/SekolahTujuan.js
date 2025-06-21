@@ -263,6 +263,115 @@ export const getSekolahTujuanAdmin = async (req, res) => {
     }  
 }  
 
+export const getSekolahTujuanAdminForUser = async (req, res) => {  
+    const redis_key = 'SekolahTujuanAdminUser' + req.body.bentuk_pendidikan_id;  
+    const sekolah_id = req.body.sekolah_id;  
+  
+    try {  
+        // const cacheNya = await redisGet(redis_key);  
+        const cacheNya = false; // Set to false for testing; replace with actual cache logic  
+  
+        if (cacheNya) {  
+            res.status(200).json({  
+                'status': 1,  
+                'message': 'Data diambil dari cache',  
+                'data': JSON.parse(cacheNya)  
+            });  
+        } else {  
+            let resData;  
+  
+            if (sekolah_id == null) {  
+                resData = await SekolahTujuans.findAll({  
+                    where: {  
+                        bentuk_pendidikan_id: req.body.bentuk_pendidikan_id || 0,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                          }  
+                    },  
+                    //attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
+                });  
+            } else {  
+                resData = await SekolahTujuans.findAll({  
+                    where: {  
+                        id: sekolah_id,
+                        nama_jurusan: {
+                            [Op.not]: null,
+                          }  
+                    },  
+                    //attributes: ['id', 'nama', 'lat', 'lng', 'daya_tampung', 'npsn', 'alamat_jalan']  
+                });  
+            }  
+  
+            if (resData.length > 0) {  
+                // If bentuk_pendidikan_id is 15, fetch jurusan data  
+                if (req.body.bentuk_pendidikan_id == 15) {  
+                    const jurusanData = await SekolahJurusan.findAll({  
+                        where: {  
+                            id_sekolah_tujuan: resData.map(school => school.id)  
+                        },  
+                        //attributes: ['id', 'nama_jurusan', 'id_sekolah_tujuan', 'daya_tampung']  
+                    });  
+  
+                    // Format the response to include jurusan  
+                    // const formattedResData = resData.map(school => {  
+                    //     return {  
+                    //         ...school.dataValues,  
+                    //         jurusan: jurusanData.filter(jurusan => jurusan.id_sekolah_tujuan === school.id)  
+                    //     };  
+                    // });  
+
+                     const formattedResData = resData.map(school => {
+                        const namaNpsn = `${school.nama} ${school.npsn}`; 
+                        return {
+                            ...school.dataValues,
+                            nama_npsn: school.status_sekolah == 2 ? `*${namaNpsn}` : namaNpsn
+                        };
+                    });
+  
+                    // Cache the new data  
+                    await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER);  
+  
+                    res.status(200).json({  
+                        'status': 1,  
+                        'message': 'Data berhasil ditemukan',  
+                        'data': formattedResData  
+                    });  
+                } else {  
+                    // If bentuk_pendidikan_id is 13, set jurusan to null  
+                    const formattedResData = resData.map(school => {  
+                        return {  
+                            ...school.dataValues,  
+                            jurusan: null // Set jurusan to null for bentuk_pendidikan_id 13  
+                        };  
+                    });  
+  
+                    // Cache the new data  
+                    await redisSet(redis_key, JSON.stringify(formattedResData), process.env.REDIS_EXPIRE_TIME_MASTER);  
+  
+                    res.status(200).json({  
+                        'status': 1,  
+                        'message': 'Data berhasil ditemukan',  
+                        'data': formattedResData  
+                    });  
+                }  
+            } else {  
+                res.status(200).json({  
+                    'status': 0,  
+                    'message': 'Data kosong',  
+                    'data': resData  
+                });  
+            }  
+        }  
+    } catch (err) {  
+        console.error('Error fetching data:', err); // Log the error for debugging  
+        res.status(500).json({  
+            'status': 0,  
+            'message': 'Terjadi kesalahan pada server',  
+            'data': ''  
+        });  
+    }  
+}  
+
 
 export const getSekolahTujuanAdminById = async (req, res) => {
     const { id } = req.params; // Ambil id dari params URL
