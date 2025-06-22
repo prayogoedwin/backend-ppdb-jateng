@@ -23618,7 +23618,43 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                         model: DataPendaftars,
                         as: 'data_pendaftar',
                         // Tambahkan attributes yang ingin Anda ambil dari DataPendaftars
-                        attributes: ['id', 'jenis_kelamin', 'nama_sekolah_asal'] // sesuaikan dengan kebutuhan
+                        attributes: ['id', 'jenis_kelamin','tempat_lahir','tanggal_lahir', 'nama_sekolah_asal'], // sesuaikan dengan kebutuhan
+                        include: [
+                    {
+                        model: StatusDomisilis,
+                        as: 'status_domisili_name',
+                        attributes: ['id','nama']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },{
+                        model: JenisKejuaraans,
+                        as: 'jenis_kejuaraan',
+                        attributes: ['nama']
+                    },
+                    {  
+                        model: WilayahVerDapodik,  
+                        as: 'data_wilayah_mutasi',  
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                    },  
+                ],
                     }
                 ],
             where: whereClause,
