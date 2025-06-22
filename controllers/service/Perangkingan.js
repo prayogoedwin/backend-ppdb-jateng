@@ -23624,7 +23624,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                 ],
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
-            ].
+            ],
             logging: console.log // Ini akan menampilkan query SQL di console
         });
         
