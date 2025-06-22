@@ -26,7 +26,7 @@ import path from "path";
 import fs from "fs";
 import { encodeId, decodeId } from '../../middleware/EncodeDecode.js';
 import { Sequelize, Op, literal } from 'sequelize';
-import { redisGet, redisSet } from '../../redis.js'; // Import the Redis functions
+import { redisGet, redisSet, redisClearKey } from '../../redis.js'; // Import the Redis functions
 import db from '../../config/Database.js'; // sesuaikan path jika beda
 
 import pdfMake from "pdfmake/build/pdfmake.js";
@@ -21657,6 +21657,13 @@ export const daftarUlangPerangkingan = async (req, res) => {
              },
             { where: { id: id_perangkingan_decode } }
         );
+
+        const sekolah_tujuan_detail = perangkingan.sekolah_tujuan_id;
+        const jalur_pendaftaran_id = perangkingan.jalur_pendaftaran_id;
+        const jurusan_id = perangkingan.jurusan_id;
+         
+        const redis_key = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        await redisClearKey(key_satuan);
 
         // if (perangkingan3) {
         //     const perangkingan4 = await DataPerangkingans.findAll({
