@@ -289,7 +289,7 @@ export default PerangkinganModels;
 PerangkinganModels.belongsTo(SekolahTujuan, { as: 'sekolah_tujuan', foreignKey: 'sekolah_tujuan_id' });
 PerangkinganModels.belongsTo(JalurPendaftarans, { as: 'jalur_pendaftaran', foreignKey: 'jalur_pendaftaran_id' });
 PerangkinganModels.belongsTo(DataPendaftars, { as: 'data_pendaftar', foreignKey: 'id_pendaftar' });
-erangkinganModels.belongsTo(DataPendaftars, { as: 'data_pendaftar_sekolah', foreignKey: 'nisn', , targetKey: 'nisn' });
+erangkinganModels.belongsTo(DataPendaftars, { as: 'data_pendaftar_sekolah', foreignKey: 'nisn', targetKey: 'nisn' });
 PerangkinganModels.belongsTo(SekolahJurusan, { as: 'sekolah_jurusan', foreignKey: 'jurusan_id' });
 PerangkinganModels.belongsTo(DataUsers, { as: 'daftarulang_oleh', foreignKey: 'daftar_ulang_by', targetKey: 'id' });
 PerangkinganModels.belongsTo(EzWilayahVerDapodiks, { as: 'data_wilayah_kec', foreignKey: 'kode_kecamatan', targetKey: 'kode_wilayah' });
