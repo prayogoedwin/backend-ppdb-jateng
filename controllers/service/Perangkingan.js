@@ -21507,6 +21507,11 @@ export const cetakBuktiPerangkinganAdmin = async (req, res) => {
                     as: 'sekolah_tujuan',
                     attributes: ['nama']
                 },
+                 {
+                        model: SekolahJurusan,
+                        as: 'sekolah_jurusan',
+                        attributes: ['id', 'nama_jurusan']
+                    },
                 {
                     model: JalurPendaftarans,
                     as: 'jalur_pendaftaran',
