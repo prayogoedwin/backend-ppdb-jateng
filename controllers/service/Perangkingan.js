@@ -23624,21 +23624,21 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                 ],
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
-            ],
-            logging: console.log // Ini akan menampilkan query SQL di console
+            ]
+           // logging: console.log // Ini akan menampilkan query SQL di console
         });
         
 
         // Langsung modifikasi resultData (Sequelize model instances)
-        resultData.forEach(item => {
-            // Update di dataValues (untuk data utama)
-            item.dataValues.id = encodeId(item.dataValues.id);
-            item.dataValues.id_pendaftar = encodeId(item.dataValues.id_pendaftar);
+        // resultData.forEach(item => {
+        //     // Update di dataValues (untuk data utama)
+        //     item.dataValues.id = encodeId(item.dataValues.id);
+        //     item.dataValues.id_pendaftar = encodeId(item.dataValues.id_pendaftar);
             
-            // Update juga di root object instance
-            item.id = item.dataValues.id;
-            item.id_pendaftar = item.dataValues.id_pendaftar;
-        });
+        //     // Update juga di root object instance
+        //     item.id = item.dataValues.id;
+        //     item.id_pendaftar = item.dataValues.id_pendaftar;
+        // });
 
         // Simpan ke cache
         await redisSet(redis_key, JSON.stringify(resultData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
@@ -23651,7 +23651,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                 status: 1,
                 message: 'Data berhasil ditemukan',
                 data: resultData,
-                timeline: resTimeline
+                timeline: resTimeline,
             });
         }
 
