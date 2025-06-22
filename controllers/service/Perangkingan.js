@@ -21658,7 +21658,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
             { where: { id: id_perangkingan_decode } }
         );
 
-        const sekolah_tujuan_detail = perangkingan.sekolah_tujuan_id;
+        const sekolah_tujuan_id = perangkingan.sekolah_tujuan_id;
         const jalur_pendaftaran_id = perangkingan.jalur_pendaftaran_id;
         const jurusan_id = perangkingan.jurusan_id;
          
