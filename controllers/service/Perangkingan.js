@@ -23618,7 +23618,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                         model: DataPendaftars,
                         as: 'data_pendaftar',
                         // Tambahkan attributes yang ingin Anda ambil dari DataPendaftars
-                        attributes: ['id', 'jenis_kelamin','tempat_lahir','tanggal_lahir', 'nama_sekolah_asal'], // sesuaikan dengan kebutuhan
+                        attributes: ['id', 'jenis_kelamin','tempat_lahir','tanggal_lahir', 'nama_sekolah_asal', 'no_wa', 'nama_kejuaraan', 'nomor_sertifikat'], // sesuaikan dengan kebutuhan
                         include: [
                     {
                         model: StatusDomisilis,
