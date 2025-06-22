@@ -21662,7 +21662,7 @@ export const daftarUlangPerangkingan = async (req, res) => {
         const jalur_pendaftaran_id = perangkingan.jalur_pendaftaran_id;
         const jurusan_id = perangkingan.jurusan_id;
          
-        const redis_key = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        const key_satuan = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
         await redisClearKey(key_satuan);
 
         // if (perangkingan3) {
