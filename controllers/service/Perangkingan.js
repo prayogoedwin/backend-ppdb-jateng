@@ -23598,7 +23598,6 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
         }
 
         const resultData = await DataPerangkingans.findAll({
-            where: whereClause,
             include: [
                     // {
                     //     model: SekolahTujuan,
@@ -23622,6 +23621,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                         attributes: ['id', 'jenis_kelamin', 'nama_sekolah_asal'] // sesuaikan dengan kebutuhan
                     }
                 ],
+            where: whereClause,
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
             ]
