@@ -545,7 +545,8 @@ export const countPendaftar = async (req, res) => {
               jp.id AS jalur_pendaftaran_id,
               jp.nama,
               COALESCE(COUNT(p.id), 0) AS jumlah_pendaftar,
-              COALESCE(SUM(CASE WHEN p.is_diterima = 1 THEN 1 ELSE 0 END), 0) AS jumlah_pendaftar_diterima
+              COALESCE(SUM(CASE WHEN p.is_diterima = 1 THEN 1 ELSE 0 END), 0) AS jumlah_pendaftar_diterima,
+              COALESCE(SUM(CASE WHEN p.is_diterima = 1 AND p.is_daftar_ulang = 1 THEN 1 ELSE 0 END), 0) AS jumlah_pendaftar_diterima_daftar_ulang
           FROM ez_jalur_pendaftaran jp
           LEFT JOIN ez_perangkingan p ON jp.id = p.jalur_pendaftaran_id ${sekolahFilter2}
           WHERE jp.id IN (1, 2, 3, 4, 5)
@@ -560,7 +561,7 @@ export const countPendaftar = async (req, res) => {
               jp.id AS jalur_pendaftaran_id,
               jp.nama,
               COALESCE(COUNT(p.id), 0) AS jumlah_pendaftar,
-              COALESCE(SUM(CASE WHEN p.is_diterima = 1 THEN 1 ELSE 0 END), 0) AS jumlah_pendaftar_diterima
+              COALESCE(SUM(CASE WHEN p.is_diterima = 1 THEN 1 ELSE 0 END), 0) AS jumlah_pendaftar_diterima,COALESCE(SUM(CASE WHEN p.is_diterima = 1 AND p.is_daftar_ulang = 1 THEN 1 ELSE 0 END), 0) AS jumlah_pendaftar_diterima_daftar_ulang
           FROM ez_jalur_pendaftaran jp
           LEFT JOIN ez_perangkingan p ON jp.id = p.jalur_pendaftaran_id ${sekolahFilter2}
           WHERE jp.id IN (6, 7, 8, 9)
