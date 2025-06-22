@@ -23617,7 +23617,7 @@ export const getPerangkinganDaftarUlang = async (req, res) => {
                     // },
                     {
                         model: DataPendaftars,
-                        as: 'data_pendaftar',
+                        as: 'data_pendaftar_sekolah',
                         // Tambahkan attributes yang ingin Anda ambil dari DataPendaftars
                         attributes: ['id', 'jenis_kelamin', 'nama_sekolah_asal'] // sesuaikan dengan kebutuhan
                     }
