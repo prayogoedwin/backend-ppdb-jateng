@@ -1221,8 +1221,8 @@ export const getPendaftarDetailBak = async (req, res) => {
           pendaftaran: 1,
           verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
           aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
-          pendaftaran_sekolah: pendaftaranSekolahDetails.is_daftar_ulang,
-          // daftar_ulang: daftarUlang
+          pendaftaran_sekolah: 1,
+          daftar_ulang: pendaftaranSekolahDetails.is_daftar_ulang,
         };
   
         // Masukkan timeline_pendaftar ke dalam profil
