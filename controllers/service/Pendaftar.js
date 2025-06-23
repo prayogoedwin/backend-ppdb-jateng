@@ -1222,7 +1222,7 @@ export const getPendaftarDetailBak = async (req, res) => {
           verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
           aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
           pendaftaran_sekolah: 1,
-          daftar_ulang: 2,
+          daftar_ulang: pendaftaranSekolahDetails.is_daftar_ulang,
         };
   
         // Masukkan timeline_pendaftar ke dalam profil
@@ -1304,6 +1304,14 @@ export const getPendaftarDetail = async (req, res) => {
       });
   
       if (profil) {
+
+        const pendaftaranSekolahDetails = await DataPerangkingans.findOne({
+          where: {
+            nisn: req.body.nisn,
+            is_delete: 0,
+          },
+          attributes: ['sekolah_tujuan_id', 'is_daftar_ulang'] // Ambil atribut yang diperlukan
+        });
         // Ambil detail pendaftaran sekolah
         // const pendaftaranSekolahDetails = await DataPerangkingans.findAll({
         //   where: {
@@ -1365,8 +1373,8 @@ export const getPendaftarDetail = async (req, res) => {
           aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
           // pendaftaran_sekolah: pendaftaranSekolah,
           // daftar_ulang: daftarUlang
-          pendaftaran_sekolah: 0,
-          daftar_ulang: 0
+          pendaftaran_sekolah: 1,
+          daftar_ulang: pendaftaranSekolahDetails.is_daftar_ulang,
           
         };
   
