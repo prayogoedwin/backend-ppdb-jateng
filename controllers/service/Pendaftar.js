@@ -1163,66 +1163,66 @@ export const getPendaftarDetailBak = async (req, res) => {
   
       if (profil) {
         // Ambil detail pendaftaran sekolah
-        const pendaftaranSekolahDetails = await DataPerangkingans.findAll({
+        const pendaftaranSekolahDetails = await DataPerangkingans.findOne({
           where: {
             nisn: req.body.nisn,
             is_delete: 0,
-          },
-          attributes: ['sekolah_tujuan_id'] // Ambil atribut yang diperlukan
-        });
-  
-        // Ambil detail daftar ulang
-        const daftarUlangDetails = await DataPerangkingans.findAll({
-          where: {
-            nisn: req.body.nisn,
-            is_delete: 0,
-            is_daftar_ulang: 1 // Hanya yang is_daftar_ulang = 1
           },
           attributes: ['sekolah_tujuan_id', 'is_daftar_ulang'] // Ambil atribut yang diperlukan
         });
   
-        let pendaftaranSekolah = [];
-        let daftarUlang = [];
+        // Ambil detail daftar ulang
+        // const daftarUlangDetails = await DataPerangkingans.findOne({
+        //   where: {
+        //     nisn: req.body.nisn,
+        //     is_delete: 0,
+        //     is_daftar_ulang: 1 // Hanya yang is_daftar_ulang = 1
+        //   },
+        //   attributes: ['sekolah_tujuan_id', 'is_daftar_ulang'] // Ambil atribut yang diperlukan
+        // });
+  
+        // let pendaftaranSekolah = [];
+        // let daftarUlang = [];
   
         // Loop melalui pendaftaranSekolahDetails untuk mendapatkan detail sekolah
-        for (const detail of pendaftaranSekolahDetails) {
-          const sekolahDetail = await SekolahTujuan.findOne({
-            where: {
-              id: detail.sekolah_tujuan_id
-            },
-            attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
-          });
+        // for (const detail of pendaftaranSekolahDetails) {
+        //   const sekolahDetail = await SekolahTujuan.findOne({
+        //     where: {
+        //       id: detail.sekolah_tujuan_id
+        //     },
+        //     attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
+        //   });
   
-          if (sekolahDetail) {
-            pendaftaranSekolah.push(sekolahDetail);
-          }
-        }
+        //   if (sekolahDetail) {
+        //     pendaftaranSekolah.push(sekolahDetail);
+        //   }
+        // }
   
-        // Loop melalui daftarUlangDetails untuk mendapatkan detail sekolah daftar ulang
-        for (const detail of daftarUlangDetails) {
-          const sekolahDetail = await SekolahTujuan.findOne({
-            where: {
-              id: detail.sekolah_tujuan_id
-            },
-            attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
-          });
+        // // Loop melalui daftarUlangDetails untuk mendapatkan detail sekolah daftar ulang
+        // for (const detail of daftarUlangDetails) {
+        //   const sekolahDetail = await SekolahTujuan.findOne({
+        //     where: {
+        //       id: detail.sekolah_tujuan_id
+        //     },
+        //     attributes: ['nama'] // Ambil atribut yang diperlukan dari SekolahTujuan
+        //   });
   
-          if (sekolahDetail) {
-            daftarUlang.push({
-              nama_sekolah: sekolahDetail.nama,
-              status_daftar_ulang: detail.is_daftar_ulang,
-            //   sekolah_detail: sekolahDetail
-            });
-          }
-        }
+        //   if (sekolahDetail) {
+        //     daftarUlang.push({
+        //       nama_sekolah: sekolahDetail.nama,
+        //       status_daftar_ulang: detail.is_daftar_ulang,
+        //     //   sekolah_detail: sekolahDetail
+        //     });
+        //   }
+        // }
   
         // Buat timeline_pendaftar
         const timeline_pendaftar = {
           pendaftaran: 1,
           verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
           aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
-          pendaftaran_sekolah: pendaftaranSekolah,
-          daftar_ulang: daftarUlang
+          pendaftaran_sekolah: pendaftaranSekolahDetails,
+          // daftar_ulang: daftarUlang
         };
   
         // Masukkan timeline_pendaftar ke dalam profil
