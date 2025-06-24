@@ -557,7 +557,7 @@ router.get('/rekap-api/monitoring/sma', getMonitoringSMA);
 
 
 // Define the version as a constant
-const VERSION = '2.1.23'; 
+const VERSION = '2.1.24'; 
 const APPNAME = 'Backend PPDB';
 
 // // Create a GET route at '/' that sends the version as a JSON response
