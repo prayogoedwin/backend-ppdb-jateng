@@ -80,6 +80,72 @@ const calculateAge = async (birthdate) => {
     return diffDays;
 };
 
+const hitung_pendaftar_diterima_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id) => {
+    // Hitung total pendaftar prestasi untuk SMK
+    const dataPerangkingan = await DataPerangkingans.findAll({  
+        attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id
+        }
+    });
+    const countDiterima = dataPerangkingan.filter(item => item.is_diterima === 1).length;
+    const countDaftarUlang = dataPerangkingan.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
+    const countTidakDaftarUlang = countDiterima - countDaftarUlang;
+
+    return {
+        diterima: countDiterima,
+        daftar_ulang: countDaftarUlang,
+        tidak_daftar_ulang: countTidakDaftarUlang
+    };
+}
+
+const hitung_cadangan_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id, no_pendaftaran) => {
+    // Pertama, ambil data jumlah pendaftar yang diterima dan tidak daftar ulang
+    const { tidak_daftar_ulang } = await hitung_pendaftar_diterima_sma(jalur_pendaftaran_id, sekolah_tujuan_id);
+    
+    // Ambil data cadangan dengan urutan no_urut ASC dan limit sesuai tidak_daftar_ulang
+    const dataCadangan = await DataPerangkingans.findAll({  
+        attributes: ['no_pendaftaran'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id, 
+            is_diterima: 2
+        },
+        order: [['no_urut', 'ASC']],
+        limit: tidak_daftar_ulang
+    });
+    
+    // Cek apakah no_pendaftaran ada dalam daftar cadangan yang memenuhi syarat
+    const isCadanganMemenuhi = dataCadangan.some(item => item.no_pendaftaran === no_pendaftaran);
+    
+    return isCadanganMemenuhi ? 2 : 3;
+}
+
+
+const hitung_pendaftar_diterima_smk(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
+    // Hitung total pendaftar prestasi untuk SMK
+    const dataPrestasi = await DataPerangkingans.findAll({  
+        attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
+        where: {  
+            jalur_pendaftaran_id
+            sekolah_tujuan_id, 
+            jurusan_id,  
+        }
+    });
+
+    const countDiterima = dataPrestasi.filter(item => item.is_diterima === 1).length;
+    const countDaftarUlang = dataPrestasi.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
+    const countTidakDaftarUlang = countDiterima - countDaftarUlang;
+
+    return {
+        diterima: countDiterima,
+        daftar_ulang: countDaftarUlang,
+        tidak_daftar_ulang: countTidakDaftarUlang
+    };
+}
+
+
 export const getPerangkinganSaya = async (req, res) => {
     try {
         const { id_pendaftar } = req.body;
@@ -573,7 +639,8 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
                // = 'Selamat! Anda telah diterima di ' + perangkingan.sekolah_tujuan.nama + '. Silakan cek informasi selanjutnya untuk proses daftar ulang.';
                 msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah_kota.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
             } else if (perangkingan.is_diterima == 2) {
-                     sts = 2;
+
+                sts = 2;
                 msg = 'Anda masuk dalam daftar cadangan penerimaan. Kami akan menginformasikan lebih lanjut jika ada kuota tersedia.';
             } else {
                      sts = 0;
@@ -24035,6 +24102,65 @@ export const getPerangkinganCadanganHitungSisaDaftarUlang = async (req, res) => 
         }
 
         const resultData = await DataPerangkingans.findAll({
+            include: [
+                    // {
+                    //     model: SekolahTujuan,
+                    //     as: 'sekolah_tujuan',
+                    //     attributes: ['npsn', 'nama']
+                    // },
+                    // {
+                    //     model: SekolahJurusan,
+                    //     as: 'sekolah_jurusan',
+                    //     attributes: ['id', 'nama_jurusan']
+                    // },
+                    // {
+                    //     model: JalurPendaftarans,
+                    //     as: 'jalur_pendaftaran',
+                    //     attributes: ['bentuk_pendidikan_id', 'nama']
+                    // },
+                    {
+                        model: DataPendaftars,
+                        as: 'data_pendaftar',
+                        // Tambahkan attributes yang ingin Anda ambil dari DataPendaftars
+                        attributes: ['id', 'jenis_kelamin','tempat_lahir','tanggal_lahir', 'nama_sekolah_asal', 'no_wa', 'nama_kejuaraan', 'nomor_sertifikat', 'alamat'], // sesuaikan dengan kebutuhan
+                        include: [
+                    {
+                        model: StatusDomisilis,
+                        as: 'status_domisili_name',
+                        attributes: ['id','nama']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kec',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_kot',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },
+                    {
+                        model: WilayahVerDapodik,
+                        as: 'data_wilayah_prov',
+                        attributes: ['kode_wilayah','nama', 'mst_kode_wilayah','kode_dagri']
+                    },{
+                        model: JenisKejuaraans,
+                        as: 'jenis_kejuaraan',
+                        attributes: ['nama']
+                    },
+                    {  
+                        model: WilayahVerDapodik,  
+                        as: 'data_wilayah_mutasi',  
+                        attributes: ['kode_wilayah', 'nama', 'mst_kode_wilayah']  
+                    },  
+                ],
+                    }
+                ],
             where: whereClause2,
             order: [
                 ['no_urut', 'ASC'] // Urut berdasarkan no urut perangkingan
