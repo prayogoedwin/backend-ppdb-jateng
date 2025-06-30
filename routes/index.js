@@ -540,9 +540,6 @@ router.post('/client-api/auth/signin', ipWhitelistMiddleware, appKeynyaIntegrato
 router.post('/client-api/auth/signout', ipWhitelistMiddleware, appKeynyaIntegrator, logAccessClient, logoutClient);
 
 
-
-
-
 //sertfikat
 router.get('/client-api/external/jenis_kejuaraan', logAccessClient, getJenisKejuaraan);
 router.get('/client-api/external/sertifikat', ipWhitelistMiddleware, appKeynyaIntegrator, authenticateTokenClient, getSertifikats);
