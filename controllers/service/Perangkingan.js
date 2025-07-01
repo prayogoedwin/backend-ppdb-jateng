@@ -22077,7 +22077,7 @@ export const daftarUlangPerangkinganCadangan = async (req, res) => {
         //     );
         // }
 
-        if(perangkingan3){
+        if(perangkingan3){ 
 
             res.status(200).json({
                 status: 1,
