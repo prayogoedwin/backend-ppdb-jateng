@@ -22051,7 +22051,10 @@ export const daftarUlangPerangkinganCadangan = async (req, res) => {
  
 
         const key_satuan = `perangkingan_daftar_ulang_cadangan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        const key_satuan2 = `perangkingan_cadangan_diterima_:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        
         await redisClearKey(key_satuan);
+        await redisClearKey(key_satuan2);
 
         // if (perangkingan3) {
         //     const perangkingan4 = await DataPerangkingans.findAll({
