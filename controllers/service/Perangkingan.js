@@ -24570,7 +24570,7 @@ export const getPerangkinganCadanganHitungSisaDaftarUlangAdmin = async (req, res
         
         // Tambahkan filter jurusan jika ada
         if (jurusan_id) {
-            whereClause.jurusan_id = jurusan_id;
+            whereClauseDiterima.jurusan_id = jurusan_id;
         }
         
         // Hitung total yang diterima
