@@ -80,7 +80,8 @@ const calculateAge = async (birthdate) => {
     return diffDays;
 };
 
-const hitung_pendaftar_diterima_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id) => {
+const hitung_pendaftar_diterima_sma_tanpa_redis = async (jalur_pendaftaran_id, sekolah_tujuan_id) => {
+
     // Hitung total pendaftar prestasi untuk SMK
     const dataPerangkingan = await DataPerangkingans.findAll({  
         attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
@@ -98,6 +99,40 @@ const hitung_pendaftar_diterima_sma = async (jalur_pendaftaran_id, sekolah_tujua
         daftar_ulang: countDaftarUlang,
         tidak_daftar_ulang: countTidakDaftarUlang
     };
+}
+
+const hitung_pendaftar_diterima_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id) => {
+
+    const redis_key = `perangkingan_pengumman_count:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}`;
+
+    // Cek cache terlebih dahulu
+    const cached = await redisGet(redis_key);
+    if (cached) {
+        return JSON.parse(cached); // Langsung return data dari cache
+    }
+
+    // Hitung total pendaftar prestasi untuk SMK
+    const dataPerangkingan = await DataPerangkingans.findAll({  
+        attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id
+        }
+    });
+    const countDiterima = dataPerangkingan.filter(item => item.is_diterima === 1).length;
+    const countDaftarUlang = dataPerangkingan.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
+    const countTidakDaftarUlang = countDiterima - countDaftarUlang;
+
+    const result = {
+        diterima: countDiterima,
+        daftar_ulang: countDaftarUlang,
+        tidak_daftar_ulang: countTidakDaftarUlang
+    };
+
+    // Simpan ke cache
+    await redisSet(redis_key, JSON.stringify(result), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+
+    return result;
 }
 
 const hitung_cadangan_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id, no_pendaftaran) => {
@@ -122,7 +157,7 @@ const hitung_cadangan_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id, no_p
     return isCadanganMemenuhi ? 2 : 3;
 }
 
-const hitung_pendaftar_diterima_smk = async (jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) => {
+const hitung_pendaftar_diterima_smk_tanpa_redis = async (jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) => {
     // Hitung total pendaftar prestasi untuk SMK
     const dataPerangkingan = await DataPerangkingans.findAll({  
         attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
@@ -141,6 +176,41 @@ const hitung_pendaftar_diterima_smk = async (jalur_pendaftaran_id, sekolah_tujua
         daftar_ulang: countDaftarUlang,
         tidak_daftar_ulang: countTidakDaftarUlang
     };
+}
+
+const hitung_pendaftar_diterima_smk = async (jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) => {
+
+    const redis_key = `perangkingan_pengumman_count:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+
+    // Cek cache terlebih dahulu
+    const cached = await redisGet(redis_key);
+    if (cached) {
+        return JSON.parse(cached); // Langsung return data dari cache
+    }
+    
+    // Hitung total pendaftar prestasi untuk SMK
+    const dataPerangkingan = await DataPerangkingans.findAll({  
+        attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+        }
+    });
+    const countDiterima = dataPerangkingan.filter(item => item.is_diterima === 1).length;
+    const countDaftarUlang = dataPerangkingan.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
+    const countTidakDaftarUlang = countDiterima - countDaftarUlang;
+
+    const result = {
+        diterima: countDiterima,
+        daftar_ulang: countDaftarUlang,
+        tidak_daftar_ulang: countTidakDaftarUlang
+    };
+
+    // Simpan ke cache
+    await redisSet(redis_key, JSON.stringify(result), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+
+    return result;
 }
 
 const hitung_cadangan_smk = async (jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, no_pendaftaran) => {
@@ -657,7 +727,7 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
             if (perangkingan.is_diterima == 1) {
                 sts = 1;
                // = 'Selamat! Anda telah diterima di ' + perangkingan.sekolah_tujuan.nama + '. Silakan cek informasi selanjutnya untuk proses daftar ulang.';
-                msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah_kota.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
+                    msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah_kota.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
             } else if (perangkingan.is_diterima == 2) {
 
                 let cekSts = 0;
