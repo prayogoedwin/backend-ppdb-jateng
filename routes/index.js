@@ -58,7 +58,7 @@ import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisn
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, createPendaftarTanpaFileWkatuKhusus, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, 
     uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, 
-    getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, daftarUlangPerangkinganBatal, daftarUlangPerangkinganCadangan, daftarUlangPerangkinganCadanganBatal
+    getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, daftarUlangPerangkinganBatal, daftarUlangPerangkinganCadangan, daftarUlangPerangkinganCadanganBatal,
      getPerangkinganDetail, getInfoParam,  automasiPerangkingan,
      getPerangkinganPengumuman,
      getPerangkinganDaftarUlang, getPerangkinganCadangan,
