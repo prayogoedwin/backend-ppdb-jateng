@@ -662,9 +662,9 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
 
                 let cekSts = 0;
                 if(perangkingan.jurusan_id == 0){
-                      cekSts = await hitung_pendaftar_diterima_sma(perangkingan.jalur_pendaftaran_id, perangkingan.sekolah_tujuan_id);
+                      cekSts = await hitung_cadangan_sma(perangkingan.jalur_pendaftaran_id, perangkingan.sekolah_tujuan_id, perangkingan.no_pendaftaran);
                 }else{
-                      cekSts = await hitung_pendaftar_diterima_smk(perangkingan.jalur_pendaftaran_id, perangkingan.sekolah_tujuan_id, perangkingan.jurusan_id);
+                      cekSts = await hitung_cadangan_smk(perangkingan.jalur_pendaftaran_id, perangkingan.sekolah_tujuan_id, perangkingan.jurusan_id, perangkingan.no_pendaftaran );
                 }
 
               
