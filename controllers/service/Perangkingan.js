@@ -80,71 +80,91 @@ const calculateAge = async (birthdate) => {
     return diffDays;
 };
 
-// const hitung_pendaftar_diterima_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id) => {
-//     // Hitung total pendaftar prestasi untuk SMK
-//     const dataPerangkingan = await DataPerangkingans.findAll({  
-//         attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
-//         where: {  
-//             jalur_pendaftaran_id,
-//             sekolah_tujuan_id
-//         }
-//     });
-//     const countDiterima = dataPerangkingan.filter(item => item.is_diterima === 1).length;
-//     const countDaftarUlang = dataPerangkingan.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
-//     const countTidakDaftarUlang = countDiterima - countDaftarUlang;
+const hitung_pendaftar_diterima_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id) => {
+    // Hitung total pendaftar prestasi untuk SMK
+    const dataPerangkingan = await DataPerangkingans.findAll({  
+        attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id
+        }
+    });
+    const countDiterima = dataPerangkingan.filter(item => item.is_diterima === 1).length;
+    const countDaftarUlang = dataPerangkingan.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
+    const countTidakDaftarUlang = countDiterima - countDaftarUlang;
 
-//     return {
-//         diterima: countDiterima,
-//         daftar_ulang: countDaftarUlang,
-//         tidak_daftar_ulang: countTidakDaftarUlang
-//     };
-// }
+    return {
+        diterima: countDiterima,
+        daftar_ulang: countDaftarUlang,
+        tidak_daftar_ulang: countTidakDaftarUlang
+    };
+}
 
-// const hitung_cadangan_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id, no_pendaftaran) => {
-//     // Pertama, ambil data jumlah pendaftar yang diterima dan tidak daftar ulang
-//     const { tidak_daftar_ulang } = await hitung_pendaftar_diterima_sma(jalur_pendaftaran_id, sekolah_tujuan_id);
+const hitung_cadangan_sma = async (jalur_pendaftaran_id, sekolah_tujuan_id, no_pendaftaran) => {
+    // Pertama, ambil data jumlah pendaftar yang diterima dan tidak daftar ulang
+    const { tidak_daftar_ulang } = await hitung_pendaftar_diterima_sma(jalur_pendaftaran_id, sekolah_tujuan_id);
     
-//     // Ambil data cadangan dengan urutan no_urut ASC dan limit sesuai tidak_daftar_ulang
-//     const dataCadangan = await DataPerangkingans.findAll({  
-//         attributes: ['no_pendaftaran'],
-//         where: {  
-//             jalur_pendaftaran_id,
-//             sekolah_tujuan_id, 
-//             is_diterima: 2
-//         },
-//         order: [['no_urut', 'ASC']],
-//         limit: tidak_daftar_ulang
-//     });
+    // Ambil data cadangan dengan urutan no_urut ASC dan limit sesuai tidak_daftar_ulang
+    const dataCadangan = await DataPerangkingans.findAll({  
+        attributes: ['no_pendaftaran'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id, 
+            is_diterima: 2
+        },
+        order: [['no_urut', 'ASC']],
+        limit: tidak_daftar_ulang
+    });
     
-//     // Cek apakah no_pendaftaran ada dalam daftar cadangan yang memenuhi syarat
-//     const isCadanganMemenuhi = dataCadangan.some(item => item.no_pendaftaran === no_pendaftaran);
+    // Cek apakah no_pendaftaran ada dalam daftar cadangan yang memenuhi syarat
+    const isCadanganMemenuhi = dataCadangan.some(item => item.no_pendaftaran === no_pendaftaran);
     
-//     return isCadanganMemenuhi ? 2 : 3;
-// }
+    return isCadanganMemenuhi ? 2 : 3;
+}
 
+const hitung_pendaftar_diterima_smk = async (jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) => {
+    // Hitung total pendaftar prestasi untuk SMK
+    const dataPerangkingan = await DataPerangkingans.findAll({  
+        attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id,
+            jurusan_id,
+        }
+    });
+    const countDiterima = dataPerangkingan.filter(item => item.is_diterima === 1).length;
+    const countDaftarUlang = dataPerangkingan.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
+    const countTidakDaftarUlang = countDiterima - countDaftarUlang;
 
-// const hitung_pendaftar_diterima_smk(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id) {
-//     // Hitung total pendaftar prestasi untuk SMK
-//     const dataPrestasi = await DataPerangkingans.findAll({  
-//         attributes: ['nisn', 'is_diterima', 'is_daftar_ulang'],
-//         where: {  
-//             jalur_pendaftaran_id
-//             sekolah_tujuan_id, 
-//             jurusan_id,  
-//         }
-//     });
+    return {
+        diterima: countDiterima,
+        daftar_ulang: countDaftarUlang,
+        tidak_daftar_ulang: countTidakDaftarUlang
+    };
+}
 
-//     const countDiterima = dataPrestasi.filter(item => item.is_diterima === 1).length;
-//     const countDaftarUlang = dataPrestasi.filter(item => item.is_diterima === 1 && item.is_daftar_ulang === 1).length;
-//     const countTidakDaftarUlang = countDiterima - countDaftarUlang;
-
-//     return {
-//         diterima: countDiterima,
-//         daftar_ulang: countDaftarUlang,
-//         tidak_daftar_ulang: countTidakDaftarUlang
-//     };
-// }
-
+const hitung_cadangan_smk = async (jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id, no_pendaftaran) => {
+    // Pertama, ambil data jumlah pendaftar yang diterima dan tidak daftar ulang
+    const { tidak_daftar_ulang } = await hitung_pendaftar_diterima_smk(jalur_pendaftaran_id, sekolah_tujuan_id, jurusan_id);
+    
+    // Ambil data cadangan dengan urutan no_urut ASC dan limit sesuai tidak_daftar_ulang
+    const dataCadangan = await DataPerangkingans.findAll({  
+        attributes: ['no_pendaftaran'],
+        where: {  
+            jalur_pendaftaran_id,
+            sekolah_tujuan_id, 
+            jurusan_id, 
+            is_diterima: 2
+        },
+        order: [['no_urut', 'ASC']],
+        limit: tidak_daftar_ulang
+    });
+    
+    // Cek apakah no_pendaftaran ada dalam daftar cadangan yang memenuhi syarat
+    const isCadanganMemenuhi = dataCadangan.some(item => item.no_pendaftaran === no_pendaftaran);
+    
+    return isCadanganMemenuhi ? 2 : 3;
+}
 
 export const getPerangkinganSaya = async (req, res) => {
     try {
@@ -640,10 +660,30 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
                 msg = `Selamat! Anda telah diterima di ${perangkingan.sekolah_tujuan.nama}  (${perangkingan.sekolah_tujuan.data_wilayah_kota.nama}). Silakan cek informasi selanjutnya untuk proses daftar ulang.`;
             } else if (perangkingan.is_diterima == 2) {
 
-                sts = 2;
-                msg = 'Anda masuk dalam daftar cadangan penerimaan. Kami akan menginformasikan lebih lanjut jika ada kuota tersedia.';
+                let cekSts = 0;
+                if(perangkingan.jurusan_id == 0){
+                      cekSts = await hitung_pendaftar_diterima_sma(perangkingan.jalur_pendaftaran_id, perangkingan.sekolah_tujuan_id);
+                }else{
+                      cekSts = await hitung_pendaftar_diterima_smk(perangkingan.jalur_pendaftaran_id, perangkingan.sekolah_tujuan_id, perangkingan.jurusan_id);
+                }
+
+              
+                if(cekSts == 2){
+
+                     sts = 2;
+                     msg = 'Anda masuk dalam daftar cadangan penerimaan dan lolos seleksi. Silahkan daftar ulang.';
+                
+                }else{
+
+                    sts = 3;
+                    msg = 'Anda tidak lolos seleksi';
+
+                }
+
+               
             } else {
-                     sts = 0;
+
+                sts = 0;
                 msg = 'Maaf, Anda belum berhasil lolos seleksi kali ini. Masih banyak kesempatan lain di jalur atau sekolah lainnya.';
             }
 
@@ -24036,8 +24076,8 @@ export const getPerangkinganCadanganHitungSisaDaftarUlang = async (req, res) => 
         };
         
         // Tambahkan filter jurusan jika ada
-        if (jurusan_id) {
-            whereClause.jurusan_id = jurusan_id;
+       if (jurusan_id) {
+            whereClauseDiterima.jurusan_id = jurusan_id;  // Changed from whereClause to whereClauseDiterima
         }
         
         // Hitung total yang diterima
