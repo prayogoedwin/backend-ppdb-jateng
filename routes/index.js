@@ -58,7 +58,7 @@ import { getPesertaDidikByNisnHandler, getDataDukungByNIK, getPesertaDidikByNisn
 import { createPendaftar, getPendaftarforCetak, aktivasiAkunPendaftar, getPendaftarDetail, getBatasWlayah, createPendaftarTanpaFile, createPendaftarTanpaFileWkatuKhusus, uploadPendaftarFiles } from '../controllers/service/Pendaftar.js';
 import { cekPerangkingan, createPerangkingan, getPerangkingan, 
     uploadFileTambahan, cetakBuktiPerangkingan, cetakBuktiPerangkinganAdmin, 
-    getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, daftarUlangPerangkinganBatal,
+    getPerangkinganSaya, softDeletePerangkingan, daftarUlangPerangkingan, daftarUlangPerangkinganBatal, daftarUlangPerangkinganCadangan, daftarUlangPerangkinganCadanganBatal
      getPerangkinganDetail, getInfoParam,  automasiPerangkingan,
      getPerangkinganPengumuman,
      getPerangkinganDaftarUlang, getPerangkinganCadangan,
@@ -523,6 +523,10 @@ router.get('/admin-api/master/roles', ipWhitelistMiddleware, appKeyMiddleware, a
 //daftar ulang & perangkingan
 router.post('/admin-api/servis/daftar_ulang', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkingan);
 router.post('/admin-api/servis/batal_daftar_ulang_by_admin', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkinganBatal);
+
+//daftar ulang & perangkingan cadangan
+router.post('/admin-api/servis/daftar_ulang_cadangan', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkinganCadangan);
+router.post('/admin-api/servis/batal_daftar_ulang_cadangan_by_admin', ipWhitelistMiddleware, appKeyMiddleware,  authenticateToken, logAccessAdmin, daftarUlangPerangkinganCadanganBatal);
 
 // router.post('/api/servis/automasi_perangkingan', ipWhitelistMiddleware, appKeyMiddleware, authenticateTokenPublic, logAccess, automasiPerangkingan);
 router.post('/admin-api/servis/automasi_perangkingan', ipWhitelistMiddleware, automasiPerangkingan); 

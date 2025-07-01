@@ -21991,6 +21991,214 @@ export const daftarUlangPerangkinganBatal = async (req, res) => {
     }
 }
 
+// Function to handle  request
+export const daftarUlangPerangkinganCadangan = async (req, res) => {
+    try {
+        const { id_perangkingan } = req.body;
+
+        // Decode the ID
+        const id_perangkingan_decode = decodeId(id_perangkingan);
+
+        // const resTm = await Timelines.findOne({  
+        //     where: { id: 6 }, // Find the timeline by ID  
+        //     attributes: ['id', 'nama', 'status']  
+        // });  
+        const resTm = await getTimelineSatuan(8);
+
+        if (resTm?.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Daftar Ulang Cadangan Belum Dibuka :)' });
+        }
+
+        // Find the record to be updated
+        const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: id_perangkingan_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        //untuk cek apakah sudah ada yang dia daftar dan sudah daftar ulang
+        // const perangkingan2 = await DataPerangkingans.findOne({
+        //     where: {
+        //         nisn: perangkingan.nisn,
+        //         is_daftar_ulang: 1,
+        //         is_delete: 0
+        //     }
+        // });
+
+        // if (perangkingan2) {
+        //     return res.status(200).json({ status: 0, message: 'Anda sudah pernah melakukan daftar ulang, daftar ulang hanya bisa di lakukan 1 kali' });
+        // }
+
+
+        // Update the record to set is_delete to 1
+        const perangkingan3 = await DataPerangkingans.update(
+            { 
+                is_daftar_ulang: 1,
+                daftar_ulang_by: req.user.userId,
+                daftar_ulang_at: new Date(),
+             },
+            { where: { id: id_perangkingan_decode } }
+        );
+
+        const sekolah_tujuan_id = perangkingan.sekolah_tujuan_id;
+        const jalur_pendaftaran_id = perangkingan.jalur_pendaftaran_id;
+        const jurusan_id = perangkingan.jurusan_id;
+ 
+
+        const key_satuan = `perangkingan_daftar_ulang_cadangan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        await redisClearKey(key_satuan);
+
+        // if (perangkingan3) {
+        //     const perangkingan4 = await DataPerangkingans.findAll({
+        //         where: {
+        //             nisn: perangkingan.nisn, // Condition for specific NISN
+        //             id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+        //             is_delete: 0 // Condition for is_delete being 0
+        //         }
+        //     });
+
+        //     await DataPerangkingans.update(
+        //         { 
+        //             is_daftar_ulang: 2,
+        //             daftar_ulang_at: new Date(),
+        //          },
+        //         { 
+        //             where: {
+        //                 nisn: perangkingan.nisn, // Condition for specific NISN
+        //                 id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+        //                 is_delete: 0 // Condition for is_delete being 0
+        //             }
+        //          }
+        //     );
+        // }
+
+        if(perangkingan3){
+
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil diupdate'
+            });
+
+        }
+
+        
+    } catch (error) {
+        console.error('Error hapus:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat update data'
+        });
+    }
+}
+
+export const daftarUlangPerangkinganCadanganBatal = async (req, res) => {
+    try {
+        const { id_perangkingan } = req.body;
+
+        // Decode the ID
+        const id_perangkingan_decode = decodeId(id_perangkingan);
+
+        // const resTm = await Timelines.findOne({  
+        //     where: { id: 6 }, // Find the timeline by ID  
+        //     attributes: ['id', 'nama', 'status']  
+        // });  
+        const resTm = await getTimelineSatuan(8);
+
+        if (resTm?.status != 1) {  
+            return res.status(200).json({ status: 0, message: 'Daftar Ulang Cadangan Belum Dibuka :)' });
+        }
+
+        // Find the record to be updated
+        const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: id_perangkingan_decode,
+                is_delete: 0
+            }
+        });
+
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
+
+        //untuk cek apakah sudah ada yang dia daftar dan sudah daftar ulang
+        // const perangkingan2 = await DataPerangkingans.findOne({
+        //     where: {
+        //         nisn: perangkingan.nisn,
+        //         is_daftar_ulang: 1,
+        //         is_delete: 0
+        //     }
+        // });
+
+        // if (perangkingan2) {
+        //     return res.status(200).json({ status: 0, message: 'Anda sudah pernah melakukan daftar ulang, daftar ulang hanya bisa di lakukan 1 kali' });
+        // }
+
+
+        // Update the record to set is_delete to 1
+        const perangkingan3 = await DataPerangkingans.update(
+            { 
+                is_daftar_ulang: 0,
+                daftar_ulang_by: req.user.userId,
+                daftar_ulang_at: new Date(),
+             },
+            { where: { id: id_perangkingan_decode } }
+        );
+
+        const sekolah_tujuan_id = perangkingan.sekolah_tujuan_id;
+        const jalur_pendaftaran_id = perangkingan.jalur_pendaftaran_id;
+        const jurusan_id = perangkingan.jurusan_id;
+         
+        const key_satuan = `perangkingan_daftar_ulang_cadangan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        await redisClearKey(key_satuan);
+
+        // if (perangkingan3) {
+        //     const perangkingan4 = await DataPerangkingans.findAll({
+        //         where: {
+        //             nisn: perangkingan.nisn, // Condition for specific NISN
+        //             id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+        //             is_delete: 0 // Condition for is_delete being 0
+        //         }
+        //     });
+
+        //     await DataPerangkingans.update(
+        //         { 
+        //             is_daftar_ulang: 2,
+        //             daftar_ulang_at: new Date(),
+        //          },
+        //         { 
+        //             where: {
+        //                 nisn: perangkingan.nisn, // Condition for specific NISN
+        //                 id: { [Op.ne]: id_perangkingan_decode }, // Condition for id not equal to id_perangkingan_decode
+        //                 is_delete: 0 // Condition for is_delete being 0
+        //             }
+        //          }
+        //     );
+        // }
+
+        if(perangkingan3){
+
+            res.status(200).json({
+                status: 1,
+                message: 'Data berhasil diupdate'
+            });
+
+        }
+
+        
+    } catch (error) {
+        console.error('Error hapus:', error);
+        res.status(500).json({
+            status: 0,
+            message: error.message || 'Terjadi kesalahan saat update data'
+        });
+    }
+}
+
 // Function to handle DELETE request
 export const softDeletePerangkingan_ = async (req, res) => {
     try {
