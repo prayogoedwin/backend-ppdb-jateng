@@ -21842,6 +21842,9 @@ export const daftarUlangPerangkingan = async (req, res) => {
         const key_satuan = `perangkingan_daftar_ulang:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
         await redisClearKey(key_satuan);
 
+        const key_satuan2 = `perangkingan_daftar_ulang_cadangan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id}`;
+        await redisClearKey(key_satuan2);
+
         // if (perangkingan3) {
         //     const perangkingan4 = await DataPerangkingans.findAll({
         //         where: {
@@ -24323,6 +24326,26 @@ export const getPerangkinganCadanganHitungSisaDaftarUlangAdmin = async (req, res
             is_pdf
         } = req.body;
 
+        const redis_key = `perangkingan_daftar_ulang_cadangan:jalur:${jalur_pendaftaran_id}--sekolah:${sekolah_tujuan_id}--jurusan:${jurusan_id || 0}`;
+
+         //1. Cek cache Redis terlebih dahulu
+        const cached = await redisGet(redis_key);
+        if (cached) {
+            const resultData = JSON.parse(cached);
+            
+            if (is_pdf == 1) {
+                // return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
+            } else {
+                const resTimeline = await getTimelineSatuan(8);
+                return res.status(200).json({
+                    status: 1,
+                    message: 'Data berhasil ditemukan (from cache)',
+                    data: resultData,
+                    timeline: resTimeline
+                });
+            }
+        }
+
         const whereClauseDiterima = {
             jalur_pendaftaran_id,
             sekolah_tujuan_id,
@@ -24417,6 +24440,7 @@ export const getPerangkinganCadanganHitungSisaDaftarUlangAdmin = async (req, res
 
         // Simpan ke cache
         // await redisSet(redis_key, JSON.stringify(resultData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
+        await redisSet(redis_key, JSON.stringify(resultData), process.env.REDIS_EXPIRE_TIME_SOURCE_PERANGKINGAN);
 
         if (is_pdf == 1) {
             return generatePDFResponse(res, resultData, jalur_pendaftaran_id);
