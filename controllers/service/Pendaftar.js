@@ -1367,7 +1367,10 @@ export const getPendaftarDetail = async (req, res) => {
         // }
   
         // Buat timeline_pendaftar
-        const timeline_pendaftar = {
+
+        if(pendaftaranSekolahDetails){
+
+          const timeline_pendaftar = {
           pendaftaran: 1,
           verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
           aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
@@ -1377,6 +1380,20 @@ export const getPendaftarDetail = async (req, res) => {
           daftar_ulang: pendaftaranSekolahDetails.is_daftar_ulang,
           
         };
+
+        }else{
+          const timeline_pendaftar = {
+          pendaftaran: 1,
+          verifikasi: profil.is_verified, // Asumsi bahwa profil memiliki atribut is_verified
+          aktivasi: profil.is_active, // Asumsi bahwa profil memiliki atribut is_active
+          // pendaftaran_sekolah: pendaftaranSekolah,
+          // daftar_ulang: daftarUlang
+          pendaftaran_sekolah: 1,
+          daftar_ulang: 0,
+          
+        };
+        }
+        
   
         // // Masukkan timeline_pendaftar ke dalam profil
         profil.setDataValue('timeline_pendaftar', timeline_pendaftar);
