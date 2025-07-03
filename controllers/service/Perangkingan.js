@@ -22253,36 +22253,36 @@ export const softDeletePerangkingan_ = async (req, res) => {
 export const softDeletePerangkingan = async (req, res) => {
     try {
         // const { id_perangkingan } = req.body;
-        return res.status(200).json({ status: 0, message: 'Perangkingan ditutup' });
+        //return res.status(200).json({ status: 0, message: 'Perangkingan ditutup' });
         // Decode the ID
-        // const id_perangkingan_decode = decodeId(id_perangkingan);
+        const id_perangkingan_decode = decodeId(id_perangkingan);
 
-        // // Find the record to be updated
-        // const perangkingan = await DataPerangkingans.findOne({
-        //     where: {
-        //         id: id_perangkingan_decode,
-        //         is_delete: 0
-        //     }
-        // });
+        // Find the record to be updated
+        const perangkingan = await DataPerangkingans.findOne({
+            where: {
+                id: id_perangkingan_decode,
+                is_delete: 0
+            }
+        });
 
-        // if (!perangkingan) {
-        //     return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
-        // }
+        if (!perangkingan) {
+            return res.status(200).json({ status: 0, message: 'Data tidak ditemukan' });
+        }
 
-        // // Update the record to set is_delete to 1
-        // await DataPerangkingans.update(
-        //     { 
-        //         is_delete: 1,
-        //         deleted_at: new Date(),
-        //         deleted_by: perangkingan.id_pendaftar
-        //      },
-        //     { where: { id: id_perangkingan_decode } }
-        // );
+        // Update the record to set is_delete to 1
+        await DataPerangkingans.update(
+            { 
+                is_delete: 1,
+                deleted_at: new Date(),
+                deleted_by: perangkingan.id_pendaftar
+             },
+            { where: { id: id_perangkingan_decode } }
+        );
 
-        // res.status(200).json({
-        //     status: 1,
-        //     message: 'Data berhasil dihapus'
-        // });
+        res.status(200).json({
+            status: 1,
+            message: 'Data berhasil dihapus'
+        });
 
     } catch (error) {
         console.error('Error hapus:', error);
