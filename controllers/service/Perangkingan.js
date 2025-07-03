@@ -22252,7 +22252,7 @@ export const softDeletePerangkingan_ = async (req, res) => {
 
 export const softDeletePerangkingan = async (req, res) => {
     try {
-        // const { id_perangkingan } = req.body;
+        const { id_perangkingan } = req.body;
         //return res.status(200).json({ status: 0, message: 'Perangkingan ditutup' });
         // Decode the ID
         const id_perangkingan_decode = decodeId(id_perangkingan);
