@@ -91,7 +91,7 @@ export const getDataPendaftarTokByWhere = async (req, res) => {
             // const offset = (page - 1) * limit;
 
             const { count, rows } = await DataPendaftars.findAndCountAll({
-                attributes: { exclude: ['password_', 'nik'] },
+                attributes: { exclude: ['password_', 'nik', 'nilai_raport'] },
                 include: [
                     {
                         model: WilayahVerDapodik,
