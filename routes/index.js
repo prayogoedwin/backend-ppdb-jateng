@@ -119,6 +119,9 @@ import { getDataPendaftarForVerif,
     updatePendaftarHapusPerangkingan
 } from "../controllers/service/admin/VerifPendaftar.js";
 
+//lihat list pendaftar
+import { getDataPendaftarTokByWhere } from "../controllers/service/admin/PendaftarData.js";
+
 //timenline
 import { getTimeline, getTimelineById, updateTimeline } from "../controllers/service/admin/Timeline.js";
 
@@ -428,6 +431,8 @@ router.get('/admin-api/data/pencarian_by_nisn/:nisn', ipWhitelistMiddleware, app
 router.get('/admin-api/data/sudah_verifikasi', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereHanyaUntukAdmin);
 router.get('/admin-api/data/sudah_verifikasi_cek_ulang', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarByWhereHanyaUntukCekLagi);
 
+router.get('/admin-api/data/lihat_daftar_pendaftar', ipWhitelistMiddleware, appKeyMiddleware, csrfProtection, authenticateToken, getDataPendaftarTokByWhere);
+// router.get('/admin-api/data/lihat_daftar_pendaftar', getDataPendaftarTokByWhere);
 
 // router.get('/admin-api/data/pendaftaran_data', getDataPendaftarByWhere);
 router.get('/admin-api/data/pendaftaran_count', ipWhitelistMiddleware, appKeyMiddleware, authenticateToken, getDataPendaftarCount);
