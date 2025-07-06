@@ -7077,14 +7077,11 @@ export const getPerangkinganKhususAfirmasi = async (req, res) => {
                
                 });
                 if (resDataMiskin) { 
-    
-                    const modifiedData = resDataMiskin.map(item => {
-                        const { id_pendaftar, id, ...rest } = item;
-                        return { 
-                            ...rest, 
-                            id: encodeId(id), 
-                            id_pendaftar: encodeId(id_pendaftar) 
-                        };
+
+                     const modifiedData = resDataMiskin.map(item => {
+                        const { id_pendaftar, id, ...rest } = item.toJSON();
+                        return { ...rest, id: encodeId(id), id_pendaftar: encodeId(id_pendaftar) };
+                        // return { ...rest, id: encodeId(id) };
                     });
 
                      await redisSet(redis_key, JSON.stringify(modifiedData), WAKTU_CAHCE_JURNAL);
