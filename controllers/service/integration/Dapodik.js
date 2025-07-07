@@ -70,10 +70,12 @@ export const callAuthenticateV2 = async (req, res) => {
                 });
 
                 } else {
-                return res.status(200).json({
-                    status: 0,
-                    message: result?.message || 'Unauthorized'
-                });
+
+                    return res.status(200).json({
+                        status: 0,
+                        message: result?.message || 'Unauthorized'
+                    });
+
                 }
         }
 } catch (error) {
