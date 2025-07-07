@@ -564,7 +564,12 @@ router.get('/rekap-api/external/rekap_harian', pendaftarHarian);
 
 router.get('/rekap-api/monitoring/sma', getMonitoringSMA);
 
-router.get('/admin-api/auth-dapodik', callAuthenticateV2);
+// router.get('/admin-api/auth-dapodik', callAuthenticateV2);
+
+router.get('/admin-api/auth-dapodik', async (req, res) => {
+  const result = await callAuthenticateV2();
+  res.status(result.status).json(result);
+});
 
 
 
