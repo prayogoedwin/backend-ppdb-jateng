@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken'; // sudah kamu sebutkan terpakai
-import EzAppKey from '../../models/config/AppKeyModel.js';
+import EzAppKey from '../../../models/config/AppKeyModel.js';
 
 const API_URL = 'http://118.98.237.214'; // ganti dengan URL asli
 const USERNAME = 'masthenol@gmail.com';      // ganti dengan username asli
