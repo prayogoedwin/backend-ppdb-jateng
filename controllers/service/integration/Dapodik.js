@@ -7,7 +7,7 @@ const USERNAME = 'masthenol@gmail.com';      // ganti dengan username asli
 const PASSWORD = 'Set@n2000$';      // ganti dengan password asli
 const TOKEN = '0CFA4030-9EBD-448B-A860-54EE711EA3A3';
 
-export const callAuthenticateV2 = async (req, res, next) => {
+export const callAuthenticateV2 = async (req, res) => {
     
   const url = `${API_URL}/v1/api-gateway/authenticate/authenticateV2/`;
 
@@ -36,18 +36,18 @@ export const callAuthenticateV2 = async (req, res, next) => {
           kode_random: `Bearer ${token}`,
         });
       } else {
-        await EzAppKey.create({
-          nama: 'dapodik',
-          apiKey: token,
-          kode_random: `Bearer ${token}`,
-        });
-      }
-            return res.status(200).json({
-                status: 1,
-                message: 'Token saved successfully'
-                token: token
-                // text: keyNya.kode_random
+            await EzAppKey.create({
+            nama: 'dapodik',
+            apiKey: token,
+            kode_random: `Bearer ${token}`,
             });
+        }
+        return res.status(200).json({
+            status: 1,
+            message: 'Token saved successfully'
+            token: token
+            // text: keyNya.kode_random
+        });
 
     } else {
     
