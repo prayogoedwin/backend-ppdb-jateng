@@ -42,26 +42,28 @@ export const callAuthenticateV2 = async (req, res, next) => {
           kode_random: `Bearer ${token}`,
         });
       }
+            return res.status(200).json({
+                status: 1,
+                message: 'Token saved successfully'
+                token: token
+                // text: keyNya.kode_random
+            });
 
-      return {
-        success: true,
-        status: 200,
-        message: 'Token saved successfully',
-        token: token,
-      };
     } else {
-      return {
-        success: false,
-        status: 403,
-        message: result?.message || 'Unauthorized',
-      };
+    
+            return res.status(200).json({
+                status:0,
+                 message: result?.message || 'Unauthorized'
+            });
+
     }
   } catch (error) {
     const errMsg = error.response?.data?.message || error.message;
-    return {
-      success: false,
-      status: error.response?.status || 500,
-      message: errMsg,
-    };
+    
+    return res.status(200).json({
+                status:0,
+                 message: errMsg
+    });
+
   }
 };
