@@ -279,7 +279,6 @@ export const KirimSatuanResponsJson = async (req, res) => {
         statusCode: statusCode,
         data: {
           no_pendaftaran,
-          response: response.data
         }
       });
     }
