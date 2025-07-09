@@ -27,40 +27,21 @@ export const callAuthenticateV2 = async (req, res) => {
 
     if (result?.statusCode === 200 && result?.data?.token) {
       const token = result.data.token;
-      const checkQuery = "SELECT * FROM ez_app_key WHERE nama = $1";
-      const [existingKey] = await db3.query(checkQuery, ['dapodik']);
-
-      if (existingKey.length > 0) {
-        // Update the existing key
-        const updateQuery = `
-          UPDATE ez_app_key 
-          SET aapikey = $1, 
-              kode_random = $2, 
-              updated_at = NOW()
-          WHERE nama = $3
-        `;
-        
-        await db3.query(updateQuery, [token, `Bearer ${token}`, 'dapodik']);
-      } else {
-        // Insert new key if it doesn't exist
-        const insertQuery = `
-          INSERT INTO ez_app_key (nama, aapikey, kode_random, created_at, updated_at)
-          VALUES ($1, $2, $3, NOW(), NOW())
-        `;
-        await db3.query(insertQuery, ['dapodik', token, `Bearer ${token}`]);
-      }
-
+      
+      // Simpan ke Redis terlebih dahulu
       await redisSet(
         redis_key,
-        JSON.stringify(result),
+        JSON.stringify(token),
         process.env.REDIS_EXPIRE_TIME_HARIAN
       );
-      
+
+      // Kemudian return response
       return res.status(200).json({
         status: 1,
         message: 'Token saved successfully',
         token: token
       });
+
     } else {
       return res.status(200).json({
         status: 0,
@@ -78,73 +59,6 @@ export const callAuthenticateV2 = async (req, res) => {
   }
 };
 
-export const authenticateV2Internal = async () => {
-  const url = `${API_URL}/v1/api-gateway/authenticate/authenticateV2/`;
-  const redis_key = `dapodik`;
-
-  try {
-    const response = await axios.get(url, {
-      auth: {
-        username: USERNAME,
-        password: PASSWORD,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const result = response.data;
-
-    if (result?.statusCode === 200 && result?.data?.token) {
-    const token = result.data.token;
-    const token_lengkap = `Bearer ${token}`;
-     // Check if record exists
-    const checkQuery = 'SELECT * FROM ez_app_key WHERE nama = ?';
-    const [existingKey] = await db3.query(checkQuery, ['dapodik']);
-
-    if (existingKey.length > 0) {
-            
-            const updateQuery = `
-            UPDATE ez_app_key 
-            SET aapikey = ?, kode_random = ?, updated_at = NOW()
-            WHERE nama = ?
-            `;
-            await db3.query(updateQuery, [token, `Bearer ${token}`, 'dapodik']);
-
-    }
-
-    const checkQuery2 = 'SELECT * FROM ez_app_key WHERE nama = ?';
-    const [existingKey2] = await db3.query(checkQuery, ['dapodik']);
-    
-
-      await redisSet(
-        redis_key,
-        JSON.stringify(existingKey2),
-        process.env.REDIS_EXPIRE_TIME_HARIAN
-      );
-
-      return {
-        success: true,
-        message: 'Token saved successfully',
-        token: token
-      };
-
-    } else {
-      return {
-        success: false,
-        message: result?.message || 'Unauthorized'
-      };
-    }
-
-  } catch (error) {
-    const errMsg = error.response?.data?.message || error.message;
-    return {
-      success: false,
-      message: errMsg
-    };
-  }
-};
-
 export const KirimSatuanResponsJson = async (req, res) => {
   const { no_pendaftaran } = req.body; // Ambil no_pendaftaran dari request body
   // atau bisa juga dari query params: const { no_pendaftaran } = req.query;
@@ -156,11 +70,17 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 
-  const checkQuery2 = "SELECT * FROM ez_app_key WHERE nama = 'dapodik'";
-  const [existingKey2] = await db3.query(checkQuery2);
+   // 1. Ambil token dari Redis terlebih dahulu
+    const tokenData = await redisGet(redis_key);
+    const token_bearer = tokenData ? JSON.parse(tokenData) : null;
 
-  const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB/`;
-  const bearer_token = existingKey2.kode_random;
+    if (!token_bearer) {
+      return res.status(401).json({
+        status: 0,
+        message: 'Token tidak tersedia, silakan autentikasi terlebih dahulu'
+      });
+    }
+
   
   try {
     // Eksekusi query langsung menggunakan Sequelize dengan parameter
@@ -236,7 +156,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
     try {
       const response = await axios.post(url, payload, {
         headers: {
-          'Authorization': `Bearer ${bearer_token}`,
+          'Authorization': `Bearer ${token_bearer}`,
           'Content-Type': 'application/json'
         }
       });
