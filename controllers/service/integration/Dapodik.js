@@ -110,7 +110,7 @@ const api = axios.create({
   }
 });
 
-export const KirimSatuanResponsJson = async (req, res) => {
+export const KirimSatuanResponsJsonAA = async (req, res) => {
   const { no_pendaftaran } = req.body;
 
   if (!no_pendaftaran) {
@@ -284,3 +284,187 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 };
+
+
+// Fungsi utama dengan retry mechanism
+async function postWithRetryAndTracking(payload, no_pendaftaran, token_bearer, maxRetries = 3) {
+  let attempt = 0;
+  let lastError;
+  
+  // Catat waktu mulai
+  const requestId = `req-${no_pendaftaran}-${Date.now()}`;
+  const startTime = new Date();
+  
+  // Simpan ke tracking table
+  await db3.query(
+    `INSERT INTO api_request_tracking 
+     (request_id, no_pendaftaran, payload, status, attempt, created_at)
+     VALUES (:request_id, :no_pendaftaran, :payload, 'pending', 0, NOW())`,
+    {
+      replacements: {
+        request_id: requestId,
+        no_pendaftaran: no_pendaftaran,
+        payload: JSON.stringify(payload)
+      }
+    }
+  );
+
+  while (attempt < maxRetries) {
+    attempt++;
+    try {
+      // Update status attempt
+      await db3.query(
+        `UPDATE api_request_tracking 
+         SET attempt = :attempt, last_attempt_at = NOW() 
+         WHERE request_id = :request_id`,
+        { replacements: { attempt, request_id: requestId } }
+      );
+
+      const response = await api.post('/v1/api-gateway/pd/tambahDataHasilPPDB', payload, {
+        headers: {
+          'Authorization': `Bearer ${token_bearer}`,
+          'Content-Type': 'application/json',
+          'X-Request-ID': requestId
+        }
+      });
+
+      // Jika berhasil, update status
+      await db3.query(
+        `UPDATE api_request_tracking 
+         SET status = 'success', 
+             response_data = :response_data,
+             completed_at = NOW()
+         WHERE request_id = :request_id`,
+        { 
+          replacements: { 
+            response_data: JSON.stringify(response.data),
+            request_id: requestId 
+          } 
+        }
+      );
+
+      return response.data;
+
+    } catch (error) {
+      lastError = error;
+      
+      // Update status error
+      await db3.query(
+        `UPDATE api_request_tracking 
+         SET status = 'retrying', 
+             last_error = :error_message,
+             last_error_at = NOW()
+         WHERE request_id = :request_id`,
+        { 
+          replacements: { 
+            error_message: error.message,
+            request_id: requestId 
+          } 
+        }
+      );
+
+      if (attempt < maxRetries) {
+        const delay = Math.min(2000 * attempt, 10000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  // Update status final error
+  await db3.query(
+    `UPDATE api_request_tracking 
+     SET status = 'failed', 
+         completed_at = NOW()
+     WHERE request_id = :request_id`,
+    { replacements: { request_id: requestId } }
+  );
+
+  throw lastError;
+}
+
+export const KirimSatuanResponsJson = async (req, res) => {
+  const { no_pendaftaran } = req.body;
+
+  // ... validasi dan query data seperti sebelumnya ...
+
+  try {
+    const row = results[0];
+    const payload = {
+      // ... konstruksi payload seperti sebelumnya ...
+    };
+
+    console.log('Mengirim payload:', JSON.stringify(payload, null, 2));
+
+    // Gunakan fungsi dengan retry
+    const responseData = await postWithRetryAndTracking(payload, no_pendaftaran, token_bearer);
+
+    // Update database dengan ID kembalian
+    if (responseData.uploadIntegrasiId) {
+      await db3.query(
+        `UPDATE ez_perangkingan 
+         SET integrasi_id = :integrasi_id, 
+             integrated_at = NOW() 
+         WHERE no_pendaftaran = :no_pendaftaran`,
+        {
+          replacements: {
+            integrasi_id: responseData.uploadIntegrasiId,
+            no_pendaftaran: no_pendaftaran
+          }
+        }
+      );
+    }
+
+    return res.status(200).json({
+      status: 1,
+      message: responseData.message || 'Data berhasil dikirim',
+      data: {
+        status: responseData.statusCode || 200,
+        no_pendaftaran,
+        response: responseData.uploadIntegrasiId || null
+      }
+    });
+
+  } catch (error) {
+    console.error('Error details:', error);
+    
+    // Cek apakah mungkin data sudah terkirim
+    const possibleSuccess = await checkPossibleSuccess(no_pendaftaran);
+    if (possibleSuccess) {
+      return res.status(200).json({
+        status: 1,
+        message: 'Data mungkin sudah terkirim sebelumnya',
+        data: {
+          no_pendaftaran,
+          response: possibleSuccess.integrasi_id
+        }
+      });
+    }
+
+    return res.status(500).json({
+      status: 0,
+      message: 'Gagal mengirim data setelah beberapa percobaan',
+      error: error.message,
+      data: {
+        no_pendaftaran
+      }
+    });
+  }
+};
+
+// Fungsi untuk cek kemungkinan data sudah terkirim
+async function checkPossibleSuccess(no_pendaftaran) {
+  try {
+    const result = await db3.query(
+      `SELECT integrasi_id FROM ez_perangkingan 
+       WHERE no_pendaftaran = :no_pendaftaran 
+       AND integrasi_id IS NOT NULL
+       LIMIT 1`,
+      { replacements: { no_pendaftaran }, type: db3.QueryTypes.SELECT }
+    );
+    
+    return result[0] || null;
+  } catch (e) {
+    console.error('Error checking possible success:', e);
+    return null;
+  }
+}
