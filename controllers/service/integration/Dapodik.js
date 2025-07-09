@@ -356,6 +356,9 @@ export const KirimSatuanResponsJson = async (req, res) => {
       nama_sekolah_tujuan: row.nama_sekolah_tujuan
     };
 
+    console.log('Mengirim payload:', JSON.stringify(payload, null, 2));
+    console.log('Menggunakan token:', token_bearer);
+
     const response = await axios.post(url, payload, {
         headers: {
           'Authorization': `Bearer ${token_bearer}`,
@@ -399,8 +402,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
       message: 'Terjadi kesalahan server',
       error: error.message,
       data: {
-          no_pendaftaran,
-          payload
+          no_pendaftaran
         }
     });
   }
