@@ -27,8 +27,8 @@ export const callAuthenticateV2 = async (req, res) => {
 
     if (result?.statusCode === 200 && result?.data?.token) {
       const token = result.data.token;
-      const checkQuery = "SELECT * FROM ez_app_key WHERE nama = 'dapodik'";
-      const [existingKey] = await db3.query(checkQuery);
+      const checkQuery = "SELECT * FROM ez_app_key WHERE nama = $1";
+      const [existingKey] = await db3.query(checkQuery, ['dapodik']);
 
       if (existingKey.length > 0) {
         // Update the existing key
@@ -72,7 +72,8 @@ export const callAuthenticateV2 = async (req, res) => {
     console.error('Authentication error:', error);
     return res.status(500).json({
       status: 0,
-      message: errMsg
+      message: errMsg,
+      errorDetails: error.stack // Added for debugging
     });
   }
 };
