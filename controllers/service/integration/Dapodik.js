@@ -201,7 +201,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
         );
       }
 
-      console.log(data.statusCode);
+    //   console.log(data.statusCode);
 
       return res.status(200).json({
         status: 1,
