@@ -286,119 +286,141 @@ export const KirimSatuanResponsJsonAA = async (req, res) => {
 };
 
 
-// Fungsi utama dengan retry mechanism
-async function postWithRetryAndTracking(payload, no_pendaftaran, token_bearer, maxRetries = 3) {
-  let attempt = 0;
-  let lastError;
-  
-  // Catat waktu mulai
-  const requestId = `req-${no_pendaftaran}-${Date.now()}`;
-  const startTime = new Date();
-  
-  // Simpan ke tracking table
-  await db3.query(
-    `INSERT INTO api_request_tracking 
-     (request_id, no_pendaftaran, payload, status, attempt, created_at)
-     VALUES (:request_id, :no_pendaftaran, :payload, 'pending', 0, NOW())`,
-    {
-      replacements: {
-        request_id: requestId,
-        no_pendaftaran: no_pendaftaran,
-        payload: JSON.stringify(payload)
-      }
-    }
-  );
-
-  while (attempt < maxRetries) {
-    attempt++;
-    try {
-      // Update status attempt
-      await db3.query(
-        `UPDATE api_request_tracking 
-         SET attempt = :attempt, last_attempt_at = NOW() 
-         WHERE request_id = :request_id`,
-        { replacements: { attempt, request_id: requestId } }
-      );
-
-      const response = await api.post('/v1/api-gateway/pd/tambahDataHasilPPDB', payload, {
-        headers: {
-          'Authorization': `Bearer ${token_bearer}`,
-          'Content-Type': 'application/json',
-          'X-Request-ID': requestId
-        }
-      });
-
-      // Jika berhasil, update status
-      await db3.query(
-        `UPDATE api_request_tracking 
-         SET status = 'success', 
-             response_data = :response_data,
-             completed_at = NOW()
-         WHERE request_id = :request_id`,
-        { 
-          replacements: { 
-            response_data: JSON.stringify(response.data),
-            request_id: requestId 
-          } 
-        }
-      );
-
-      return response.data;
-
-    } catch (error) {
-      lastError = error;
-      
-      // Update status error
-      await db3.query(
-        `UPDATE api_request_tracking 
-         SET status = 'retrying', 
-             last_error = :error_message,
-             last_error_at = NOW()
-         WHERE request_id = :request_id`,
-        { 
-          replacements: { 
-            error_message: error.message,
-            request_id: requestId 
-          } 
-        }
-      );
-
-      if (attempt < maxRetries) {
-        const delay = Math.min(2000 * attempt, 10000);
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-  }
-
-  // Update status final error
-  await db3.query(
-    `UPDATE api_request_tracking 
-     SET status = 'failed', 
-         completed_at = NOW()
-     WHERE request_id = :request_id`,
-    { replacements: { request_id: requestId } }
-  );
-
-  throw lastError;
-}
-
 export const KirimSatuanResponsJson = async (req, res) => {
-  const { no_pendaftaran } = req.body;
-
-  // ... validasi dan query data seperti sebelumnya ...
-
   try {
-    const row = results[0];
+    const { no_pendaftaran } = req.body;
+
+    if (!no_pendaftaran) {
+      return res.status(400).json({
+        status: 0,
+        message: 'Parameter no_pendaftaran diperlukan'
+      });
+    }
+
+    const redis_key = 'dapodik';
+    const token_bearer = await redisGet(redis_key);
+    
+    if (!token_bearer) {
+      return res.status(401).json({
+        status: 0,
+        message: 'Token tidak tersedia, silakan autentikasi terlebih dahulu'
+      });
+    }
+
+    // 1. Ambil data dari database
+    const queryResult = await db3.query(`
+      SELECT 
+          b.id as peserta_didik_id, 
+          b.sekolah_id as sekolah_id_asal,
+          b.npsn as npsn_sekolah_asal,
+          c.nama_sekolah_asal,
+          a.nik, a.nisn, a.nama_lengkap as nama, 
+          b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
+          b.nik_ibu, b.nama_ibu_kandung, b.nik_ayah, b.nama_ayah, 
+          b.nik_wali, b.nama_wali,
+          c.alamat as alamat_jalan, c.rt, c.rw, 
+          c.kelurahan_id as kode_wilayah_siswa,
+          c.lat as lintang, c.lng as bujur, 
+          b.kebutuhan_khusus_id,
+          b.no_kk, a.sekolah_tujuan_id, 
+          d.sekolah_id as sekolah_id_tujuan, 
+          d.npsn as npsn_sekolah_tujuan, 
+          d.nama as nama_sekolah_tujuan
+      FROM ez_perangkingan a 
+      INNER JOIN ez_peserta_didik b ON a.nik = b.nik
+      INNER JOIN ez_pendaftar c ON b.nik = c.nik
+      INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
+      WHERE a.is_delete = 0
+      AND a.is_daftar_ulang = 1
+      AND a.no_pendaftaran = :no_pendaftaran
+      LIMIT 1
+    `, {
+      replacements: { no_pendaftaran },
+      type: db3.QueryTypes.SELECT
+    });
+
+    if (!queryResult || queryResult.length === 0) {
+      return res.status(404).json({
+        status: 0,
+        message: 'Data tidak ditemukan untuk no_pendaftaran tersebut'
+      });
+    }
+
+    const row = queryResult[0];
+    
+    // 2. Siapkan payload
     const payload = {
-      // ... konstruksi payload seperti sebelumnya ...
+      token: TOKEN_STATIS,
+      peserta_didik_id: row.peserta_didik_id,
+      sekolah_id_asal: row.sekolah_id_asal,
+      npsn_sekolah_asal: row.npsn_sekolah_asal,
+      nama_sekolah_asal: row.nama_sekolah_asal,
+      nik: row.nik,
+      nisn: row.nisn,
+      nama: row.nama,
+      tempat_lahir: row.tempat_lahir,
+      tanggal_lahir: row.tanggal_lahir,
+      jenis_kelamin: row.jenis_kelamin,
+      nik_ibu: row.nik_ibu ? row.nik_ibu.substring(0, 16) : "",
+      nama_ibu_kandung: row.nama_ibu_kandung,
+      nama_ayah: row.nama_ayah,
+      nik_ayah: row.nik_ayah ? row.nik_ayah.substring(0, 16) : "",
+      nama_wali: row.nama_wali || "",
+      nik_wali: row.nik_wali || "",
+      alamat_jalan: row.alamat_jalan,
+      rt: row.rt,
+      rw: row.rw,
+      nama_dusun: "",
+      desa_kelurahan: "",
+      kode_wilayah_siswa: row.kode_wilayah_siswa,
+      lintang: row.lintang ? row.lintang.toString() : "",
+      bujur: row.bujur ? row.bujur.toString() : "",
+      kebutuhan_khusus_id: "0", 
+      agama_id: "",
+      no_kk: row.no_kk || "",
+      sekolah_id_tujuan: row.sekolah_id_tujuan,
+      npsn_sekolah_tujuan: row.npsn_sekolah_tujuan,
+      nama_sekolah_tujuan: row.nama_sekolah_tujuan
     };
 
-    console.log('Mengirim payload:', JSON.stringify(payload, null, 2));
+    console.log('Payload yang dikirim:', JSON.stringify(payload, null, 2));
 
-    // Gunakan fungsi dengan retry
-    const responseData = await postWithRetryAndTracking(payload, no_pendaftaran, token_bearer);
+    // 3. Kirim data dengan retry mechanism
+    let retryCount = 0;
+    const maxRetries = 3;
+    let lastError = null;
+    let responseData = null;
 
-    // Update database dengan ID kembalian
+    while (retryCount < maxRetries) {
+      try {
+        const response = await api.post('/v1/api-gateway/pd/tambahDataHasilPPDB', payload, {
+          headers: {
+            'Authorization': `Bearer ${token_bearer}`,
+            'Content-Type': 'application/json',
+            'X-Retry-Count': retryCount
+          }
+        });
+
+        responseData = response.data;
+        break; // Keluar dari loop jika berhasil
+      } catch (error) {
+        lastError = error;
+        retryCount++;
+        
+        if (retryCount < maxRetries) {
+          const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+          console.warn(`Gagal mencoba ke-${retryCount}, menunggu ${delay}ms sebelum mencoba lagi...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    // 4. Handle hasil setelah retry
+    if (!responseData) {
+      throw lastError || new Error('Gagal mengirim data setelah beberapa percobaan');
+    }
+
+    // 5. Simpan ID integrasi jika berhasil
     if (responseData.uploadIntegrasiId) {
       await db3.query(
         `UPDATE ez_perangkingan 
@@ -414,57 +436,27 @@ export const KirimSatuanResponsJson = async (req, res) => {
       );
     }
 
+    // 6. Return response
     return res.status(200).json({
       status: 1,
       message: responseData.message || 'Data berhasil dikirim',
       data: {
         status: responseData.statusCode || 200,
         no_pendaftaran,
-        response: responseData.uploadIntegrasiId || null
+        response: responseData.uploadIntegrasiId || null,
+        retry_attempts: retryCount
       }
     });
 
   } catch (error) {
-    console.error('Error details:', error);
+    console.error('Error:', error);
     
-    // Cek apakah mungkin data sudah terkirim
-    const possibleSuccess = await checkPossibleSuccess(no_pendaftaran);
-    if (possibleSuccess) {
-      return res.status(200).json({
-        status: 1,
-        message: 'Data mungkin sudah terkirim sebelumnya',
-        data: {
-          no_pendaftaran,
-          response: possibleSuccess.integrasi_id
-        }
-      });
-    }
-
     return res.status(500).json({
       status: 0,
-      message: 'Gagal mengirim data setelah beberapa percobaan',
+      message: 'Terjadi kesalahan saat memproses permintaan',
       error: error.message,
-      data: {
-        no_pendaftaran
-      }
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
 
-// Fungsi untuk cek kemungkinan data sudah terkirim
-async function checkPossibleSuccess(no_pendaftaran) {
-  try {
-    const result = await db3.query(
-      `SELECT integrasi_id FROM ez_perangkingan 
-       WHERE no_pendaftaran = :no_pendaftaran 
-       AND integrasi_id IS NOT NULL
-       LIMIT 1`,
-      { replacements: { no_pendaftaran }, type: db3.QueryTypes.SELECT }
-    );
-    
-    return result[0] || null;
-  } catch (e) {
-    console.error('Error checking possible success:', e);
-    return null;
-  }
-}
