@@ -271,4 +271,4 @@ export const KirimSatuanResponsJson = async (req, res) => {
       }
     });
   }
-};
+}

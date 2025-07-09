@@ -1,11 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from 'dotenv';
-import stringify from 'csv-stringify';
 
 
 import db from '../config/Database.js';
-import db3 from '../config/Database3.js';
 
 dotenv.config();
 const router = express.Router();
@@ -668,79 +666,6 @@ router.get('/dokumen/not-found', (req, res) => {
         </html>
     `);
 });
-
-router.get('/api/download_csv', async (req, res) => {
-  try {
-    // Execute the SQL query
-    const results = await db3.query(`
-      SELECT 
-        b.id as peserta_didik_id, 
-        b.npsn as npsn_sekolah_asal,
-        c.nama_sekolah_asal,
-        a.nik, a.nisn, a.nama_lengkap as nama, b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
-        b.nama_ibu_kandung, '1' as agama_id, b.kebutuhan_khusus_id, NULL as no_kk, c.kelurahan_id as kode_desa_peserta_didik,
-        d.sekolah_id as sekolah_id_tujuan, d.npsn as npsn_sekolah_tujuan, d.nama as nama_sekolah_tujuan
-      FROM ez_perangkingan a 
-      INNER JOIN ez_peserta_didik b ON a.nik = b.nik
-      INNER JOIN ez_pendaftar c ON b.nik = c.nik
-      INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
-      WHERE a.is_delete = 0
-      AND a.is_daftar_ulang = 1
-    `, {
-      type: db3.QueryTypes.SELECT
-    });
-
-    // Define CSV columns
-    const columns = [
-      { key: 'peserta_didik_id', header: 'peserta_didik_id' },
-      { key: 'npsn_sekolah_asal', header: 'npsn_sekolah_asal' },
-      { key: 'nama_sekolah_asal', header: 'nama_sekolah_asal' },
-      { key: 'nik', header: 'nik' },
-      { key: 'nisn', header: 'nisn' },
-      { key: 'nama', header: 'nama' },
-      { key: 'tempat_lahir', header: 'tempat_lahir' },
-      { key: 'tanggal_lahir', header: 'tanggal_lahir' },
-      { key: 'jenis_kelamin', header: 'jenis_kelamin' },
-      { key: 'nama_ibu_kandung', header: 'nama_ibu_kandung' },
-      { key: 'agama_id', header: 'agama_id' },
-      { key: 'kebutuhan_khusus_id', header: 'kebutuhan_khusus_id' },
-      { key: 'no_kk', header: 'no_kk' },
-      { key: 'kode_desa_peserta_didik', header: 'kode_desa_peserta_didik' },
-      { key: 'sekolah_id_tujuan', header: 'sekolah_id_tujuan' },
-      { key: 'npsn_sekolah_tujuan', header: 'npsn_sekolah_tujuan' },
-      { key: 'nama_sekolah_tujuan', header: 'nama_sekolah_tujuan' }
-    ];
-
-    // Set response headers for CSV download
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', 'attachment; filename="peserta_didik_export.csv"');
-
-    // Configure the stringifier
-    const stringifier = stringify({
-      delimiter: '|',
-      quoted: true,
-      quotedEmpty: true,
-      header: true,
-      columns: columns
-    });
-
-    // Pipe the stringifier directly to the response
-    stringifier.pipe(res);
-
-    // Write all the data
-    results.forEach(row => {
-      stringifier.write(row);
-    });
-
-    // Finalize the CSV writing
-    stringifier.end();
-
-  } catch (error) {
-    console.error('Error exporting peserta didik data:', error);
-    res.status(500).send('Error generating CSV file');
-  }
-});
-
 
 
 
