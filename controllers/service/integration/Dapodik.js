@@ -215,7 +215,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
     const datas = response.data;
 
-    if (datas.statusCode === 200 && datas.data.uploadIntegrasiId) {
+    if (datas.statusCode === 200) {
       await db3.query(
         `UPDATE ez_perangkingan 
          SET integrasi_id = :integrasi_id, 
