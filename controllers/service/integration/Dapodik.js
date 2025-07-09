@@ -34,28 +34,20 @@ export const callAuthenticateV2 = async (req, res) => {
         // Update the existing key
         const updateQuery = `
           UPDATE ez_app_key 
-          SET aapikey = ?, 
-              kode_random = ?, 
+          SET aapikey = $1, 
+              kode_random = $2, 
               updated_at = NOW()
-          WHERE nama = ?
+          WHERE nama = $3
         `;
         
-        await db3.query(updateQuery, [
-          token, 
-          `Bearer ${token}`, 
-          'dapodik'
-        ]);
+        await db3.query(updateQuery, [token, `Bearer ${token}`, 'dapodik']);
       } else {
         // Insert new key if it doesn't exist
         const insertQuery = `
           INSERT INTO ez_app_key (nama, aapikey, kode_random, created_at, updated_at)
-          VALUES (?, ?, ?, NOW(), NOW())
+          VALUES ($1, $2, $3, NOW(), NOW())
         `;
-        await db3.query(insertQuery, [
-          'dapodik',
-          token,
-          `Bearer ${token}`
-        ]);
+        await db3.query(insertQuery, ['dapodik', token, `Bearer ${token}`]);
       }
 
       await redisSet(
@@ -78,7 +70,7 @@ export const callAuthenticateV2 = async (req, res) => {
   } catch (error) {
     const errMsg = error.response?.data?.message || error.message;
     console.error('Authentication error:', error);
-    return res.status(200).json({
+    return res.status(500).json({
       status: 0,
       message: errMsg
     });
