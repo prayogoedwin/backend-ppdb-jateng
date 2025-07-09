@@ -201,6 +201,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
         statusCode: statusCode,
         data: {
           no_pendaftaran,
+          payload
         }
       });
     }
@@ -211,7 +212,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
       message: 'Terjadi kesalahan server',
       error: error.message,
       data: {
-          no_pendaftaran
+          no_pendaftaran,
+          payload
         }
     });
   }
