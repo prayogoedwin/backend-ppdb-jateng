@@ -89,7 +89,7 @@ import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser
 import { loginClient, logoutClient } from '../controllers/service/integration/Auth.js';
 
 //getPerangkinganKhususAfirmasi2
-import { getPerangkinganKhususAfirmasi2, automasiPerangkingan2 } from '../controllers/service/Perangkingan.js';
+import { getPerangkinganKhususAfirmasi2, automasiPerangkingan2 } from '../controllers/service/PerangkinganAfirmasi.js';
 
 
 //Admin
