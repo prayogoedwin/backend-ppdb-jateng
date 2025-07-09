@@ -300,41 +300,35 @@ export const downloadCsvDonk = async (req, res) => {
         `;
 
         const result = await db3.query(query);
+        console.log('Query result:', result); // DEBUG LINE
+
         const rows = result.rows;
 
-        if (!rows || rows.length === 0) {
+        if (!Array.isArray(rows) || rows.length === 0) {
             return res.status(404).send('No data found');
         }
 
-        // Convert to CSV
-        let csvContent = '';
-
-        // Header
-        const headers = Object.keys(rows[0]).join('|');
-        csvContent += headers + '\n';
-
-        // Data rows
-        for (const row of rows) {
-            const line = Object.values(row).map(value => {
-                if (value === null || value === undefined) return '';
-                const strValue = String(value).replace(/"/g, '""');
-                return strValue.includes('|') || strValue.includes('\n')
-                    ? `"${strValue}"`
-                    : strValue;
+        // Convert rows to CSV
+        let csvContent = Object.keys(rows[0]).join('|') + '\n'; // headers
+        rows.forEach(row => {
+            const line = Object.values(row).map(val => {
+                if (val === null || val === undefined) return '';
+                const str = String(val).replace(/"/g, '""');
+                return str.includes('|') || str.includes('\n') ? `"${str}"` : str;
             }).join('|');
             csvContent += line + '\n';
-        }
+        });
 
         // Set headers and send
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="data_peserta_didik.csv"');
-        res.status(200).send(csvContent);
+        return res.status(200).send(csvContent);
 
     } catch (error) {
         console.error('Export Error:', error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
-            message: 'Gagal mengunduh CSV',
+            message: 'Gagal generate CSV',
             error: error.message
         });
     }
