@@ -28,18 +28,25 @@ export const callAuthenticateV2 = async (req, res) => {
         if (result?.statusCode === 200 && result?.data?.token) {
         const token = result.data.token;
 
-       // Check if record exists
-        const checkQuery = 'SELECT * FROM ez_app_key WHERE nama = ?';
-        const [existingKey] = await db3.query(checkQuery, ['dapodik']);
+         const checkQuery = "SELECT * FROM ez_app_key WHERE nama = 'dapodik'";
+         const [existingKey] = await db3.query(checkQuery);
 
         if (existingKey.length > 0) {
             
-             const updateQuery = `
+            // 2. Update the existing key
+            const updateQuery = `
                 UPDATE ez_app_key 
-                SET aapikey = ?, kode_random = ?, updated_at = NOW()
-                WHERE nama = ?
-                `;
-                await db3.query(updateQuery, [token, `Bearer ${token}`, 'dapodik']);
+                SET aapikey = $1, 
+                    kode_random = $2, 
+                    updated_at = NOW()
+                WHERE nama = $3
+            `;
+            
+            await db3.query(updateQuery, [
+                token, 
+                `Bearer ${token}`, 
+                'dapodik'
+            ]);
 
         }
 
