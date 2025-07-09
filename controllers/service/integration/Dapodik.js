@@ -156,12 +156,12 @@ export const KirimSatuanResponsJson = async (req, res) => {
       tempat_lahir: row.tempat_lahir,
       tanggal_lahir: row.tanggal_lahir,
       jenis_kelamin: row.jenis_kelamin,
-      nik_ibu: trimDonk(row.nik_ibu),
+      nik_ibu: row.nik_ibu.substring(0, 16);,
       nama_ibu_kandung: row.nama_ibu_kandung,
-      nama_ayah: trimDonk(row.nama_ayah),
-      nik_ayah: row.nik_ayah,
-      nama_wali: row.nama_wali,
-      nik_wali: row.nik_wali,
+      nama_ayah: row.nama_ayah,
+      nik_ayah: row.nik_ayah.substring(0, 16);,
+      nama_wali: null
+      nik_wali: null
       alamat_jalan: row.alamat_jalan,
       rt: row.rt,
       rw: row.rw,
@@ -170,18 +170,17 @@ export const KirimSatuanResponsJson = async (req, res) => {
       kode_wilayah_siswa: row.kode_wilayah_siswa,
       lintang: row.lintang,
       bujur: row.bujur,
-      kebutuhan_khusus_id: row.kebutuhan_khusus_id,
-      agama_id: row.agama_id,
-      no_kk: row.no_kk,
+      kebutuhan_khusus_id: null
+      agama_id: null
+      no_kk: null,
       sekolah_id_tujuan: row.sekolah_id_tujuan,
       npsn_sekolah_tujuan: row.npsn_sekolah_tujuan,
       nama_sekolah_tujuan: row.nama_sekolah_tujuan
     };
 
-    const cleanedPayload = cleanPayload(payload);
 
     try {
-      const response = await axios.post(url, cleanedPayload, {
+      const response = await axios.post(url, payload, {
         headers: {
           'Authorization': `Bearer ${token_bearer}`,
           'Content-Type': 'application/json'
