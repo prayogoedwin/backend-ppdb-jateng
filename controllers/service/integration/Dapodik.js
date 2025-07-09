@@ -391,7 +391,6 @@ export const KirimSatuanResponsJson = async (req, res) => {
         data: {
           no_pendaftaran,
           response: response.data,
-          payload:payload
         }
       });
 
