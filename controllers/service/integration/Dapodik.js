@@ -74,7 +74,9 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
    // 1. Ambil token dari Redis terlebih dahulu
     const tokenData = await redisGet(redis_key);
-    const token_bearer = tokenData ? JSON.parse(tokenData) : null;
+    // const token_bearer = tokenData ? JSON.parse(tokenData) : 'null';
+
+    const token_bearer = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hc3RoZW5vbEBnbWFpbC5jb20iLCJpbnN0YW5zaVBlbmdndW5hSWQiOiJBODVFNDZBQS03MDE5LTQ3RjYtQUJFOS1CNjIwRjkyMDk0M0QiLCJpcEFkZHJlc3MiOiIxMDMuMTA3LjI0NS4yNDQiLCJpYXQiOjE3NTIwNTM5ODksImV4cCI6MTc1MjE0MDM4OSwiaXNzIjoia2VtZGlrYnVkLmdvLmlkIiwic3ViIjoicHVzZGF0aW5Aa2VtZGlrYnVkLmdvLmlkIn0.NGYjNw2nhC7gGA8hh6KHvrsZEu1x4RKO4LBLVfhNQGcGemKdtp4cROy5iJR96gCtfH6Rk1srXxZdFWgX0PXgWg';
 
     if (!token_bearer) {
       return res.status(401).json({
