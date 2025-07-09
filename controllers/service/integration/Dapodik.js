@@ -274,6 +274,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
 }
 
 
+
 export const downloadCsvDonk = async (req, res) => {
     try {
         const query = `
@@ -298,25 +299,43 @@ export const downloadCsvDonk = async (req, res) => {
             AND a.is_daftar_ulang = 1
         `;
 
-        // For PostgreSQL using node-postgres (pg)
+        // Execute query and examine the response structure
         const result = await db3.query(query);
-        
-        if (!result.rows || !Array.isArray(result.rows)) {
-            throw new Error('Invalid query results structure');
+        console.log('Query result structure:', result); // Debugging line
+
+        // Handle different possible response structures
+        let rows = [];
+        if (Array.isArray(result)) {
+            // If result is directly an array (some PostgreSQL clients)
+            rows = result;
+        } else if (result.rows && Array.isArray(result.rows)) {
+            // Standard node-postgres response
+            rows = result.rows;
+        } else if (result[0] && Array.isArray(result[0])) {
+            // Some clients return [rows, fields]
+            rows = result[0];
+        } else {
+            throw new Error('Unrecognized query result structure');
         }
 
+        // Convert to CSV
         let csvContent = '';
         
-        // Add headers if we have data
-        if (result.rows.length > 0) {
-            const headers = Object.keys(result.rows[0]).join('|');
+        if (rows.length > 0) {
+            // Add headers
+            const headers = Object.keys(rows[0]).join('|');
             csvContent += headers + '\n';
             
             // Add rows
-            result.rows.forEach(row => {
+            rows.forEach(row => {
                 const values = Object.values(row).map(value => {
+                    // Handle null/undefined
                     if (value === null || value === undefined) return '';
+                    
+                    // Convert to string and escape quotes
                     const strValue = String(value).replace(/"/g, '""');
+                    
+                    // Quote fields containing delimiter or newlines
                     if (strValue.includes('|') || strValue.includes('\n')) {
                         return `"${strValue}"`;
                     }
@@ -329,12 +348,19 @@ export const downloadCsvDonk = async (req, res) => {
             csvContent = 'No data found\n';
         }
 
+        // Set response headers
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=data_export.csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=export.csv');
+        
+        // Send CSV
         res.send(csvContent);
 
     } catch (error) {
         console.error('Export Error:', error);
-        res.status(500).send('Error generating CSV export');
+        res.status(500).json({
+            success: false,
+            message: 'Failed to generate CSV export',
+            error: error.message
+        });
     }
 };
