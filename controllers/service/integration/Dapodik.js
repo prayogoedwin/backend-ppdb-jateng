@@ -275,8 +275,6 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
 
 
-import db3 from '../../config/database3.js'; // pastikan path dan driver-nya benar
-
 export const downloadCsvDonk = async (req, res) => {
     try {
         const query = `
@@ -301,21 +299,21 @@ export const downloadCsvDonk = async (req, res) => {
               AND a.is_daftar_ulang = 1
         `;
 
-        const { rows } = await db3.query(query);
-        // jika pakai pg (node-postgres), gunakan: const { rows } = await db3.query(query);
+        const result = await db3.query(query);
+        const rows = result.rows;
 
         if (!rows || rows.length === 0) {
             return res.status(404).send('No data found');
         }
 
-        // Buat CSV
+        // Convert to CSV
         let csvContent = '';
 
         // Header
         const headers = Object.keys(rows[0]).join('|');
         csvContent += headers + '\n';
 
-        // Data baris
+        // Data rows
         for (const row of rows) {
             const line = Object.values(row).map(value => {
                 if (value === null || value === undefined) return '';
@@ -327,7 +325,7 @@ export const downloadCsvDonk = async (req, res) => {
             csvContent += line + '\n';
         }
 
-        // Kirim sebagai download
+        // Set headers and send
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="data_peserta_didik.csv"');
         res.status(200).send(csvContent);
@@ -341,3 +339,4 @@ export const downloadCsvDonk = async (req, res) => {
         });
     }
 };
+
