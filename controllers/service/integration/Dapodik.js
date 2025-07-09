@@ -218,19 +218,21 @@ export const KirimSatuanResponsJson = async (req, res) => {
     console.log(datas);  // Pretty-printed JSON
 
     if (datas.statusCode === 200) {
-      await db3.query(
+        const updateResult = await db3.query(
         `UPDATE ez_perangkingan 
-         SET integrasi_id = :integrasi_id, 
-             integrated_at = NOW() 
-         WHERE no_pendaftaran = :no_pendaftaran`,
+        SET integrasi_id = :integrasi_id, 
+            integrated_at = NOW() 
+        WHERE no_pendaftaran = :no_pendaftaran`,
         {
-          replacements: {
+            replacements: {
             integrasi_id: datas.data.uploadIntegrasiId,
             no_pendaftaran: no_pendaftaran
-          }
+            },
+            logging: console.log // Ini akan menampilkan query SQL yang dijalankan
         }
-      );
+        );
 
+        console.log('Hasil update:', updateResult);
        return res.status(200).json({
         status: 1,
         message: datas.message,
