@@ -87,7 +87,7 @@ const api = axios.create({
   httpsAgent,
   headers: {
     'Connection': 'keep-alive',
-    'Keep-Alive': 'timeout=60, max=1000'
+    'Keep-Alive': 'timeout=120, max=1000'
   },
   transitional: {
     silentJSONParsing: false,
