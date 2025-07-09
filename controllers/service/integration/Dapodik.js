@@ -152,9 +152,11 @@ export const KirimSatuanResponsJson = async (req, res) => {
       nama_dusun: "-",
       desa_kelurahan: "-",
       kode_wilayah_siswa: row.kode_wilayah_siswa,
-      lintang: row.lintang.toString(),
-      bujur: row.bujur.toString(),
-      kebutuhan_khusus_id: row.kebutuhan_khusus_id.toString(),
+    //   lintang: row.lintang.toString(),
+      lintang: "-6.976066"
+    //   bujur: row.bujur.toString(),
+       bujur: "-6.111.4081"
+      kebutuhan_khusus_id: null,
       agama_id: "1",
       no_kk: "",
       sekolah_id_tujuan: row.sekolah_id_tujuan,
