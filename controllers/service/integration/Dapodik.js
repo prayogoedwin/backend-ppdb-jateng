@@ -275,7 +275,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
     // const token_bearer = tokenData ? JSON.parse(tokenData) : 'null';
 
     const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB`;
-    const token_bearer = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hc3RoZW5vbEBnbWFpbC5jb20iLCJpbnN0YW5zaVBlbmdndW5hSWQiOiJBODVFNDZBQS03MDE5LTQ3RjYtQUJFOS1CNjIwRjkyMDk0M0QiLCJpcEFkZHJlc3MiOiIxMDMuMTA3LjI0NS4yNDQiLCJpYXQiOjE3NTIwNTM5ODksImV4cCI6MTc1MjE0MDM4OSwiaXNzIjoia2VtZGlrYnVkLmdvLmlkIiwic3ViIjoicHVzZGF0aW5Aa2VtZGlrYnVkLmdvLmlkIn0.NGYjNw2nhC7gGA8hh6KHvrsZEu1x4RKO4LBLVfhNQGcGemKdtp4cROy5iJR96gCtfH6Rk1srXxZdFWgX0PXgWg';
+    const token_bearer = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hc3RoZW5vbEBnbWFpbC5jb20iLCJpbnN0YW5zaVBlbmdndW5hSWQiOiJBODVFNDZBQS03MDE5LTQ3RjYtQUJFOS1CNjIwRjkyMDk0M0QiLCJpcEFkZHJlc3MiOiIxMDMuMTA3LjI0NS4yNDQiLCJpYXQiOjE3NTIwNTc2MTYsImV4cCI6MTc1MjE0NDAxNiwiaXNzIjoia2VtZGlrYnVkLmdvLmlkIiwic3ViIjoicHVzZGF0aW5Aa2VtZGlrYnVkLmdvLmlkIn0.LlTFwdNjBeMwh6zM5o5zNYXsA0oBOQWcXWDloXgnnC6pd5lNxKO9TMvRAj7dmCyr1MFuhLCn7C9xR6h3Gt630w';
 
     if (!token_bearer) {
       return res.status(401).json({
