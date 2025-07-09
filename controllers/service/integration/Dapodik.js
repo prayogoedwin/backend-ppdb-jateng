@@ -2,6 +2,8 @@ import axios from 'axios';
 import db3 from '../../../config/Database3.js';
 import EzAppKey from '../../../models/config/AppKeyModel.js';
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
+import http from 'http';
+import https from 'https';
 
 const API_URL = 'http://118.98.237.214'; // ganti dengan URL asli
 const USERNAME = 'masthenol@gmail.com';  // ganti dengan username asli
@@ -176,7 +178,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
         proxy: false,
         timeout: 120000, // 60 detik
         maxRedirects: 0,              // Nonaktifkan redirect jika tidak perlu
-        // httpAgent: new http.Agent({ keepAlive: true }),  // Untuk Node.js
+        httpAgent: new http.Agent({ keepAlive: true }),
+        httpsAgent: new https.Agent({ keepAlive: true })
       });
 
     // const response = await fetch(url, {
