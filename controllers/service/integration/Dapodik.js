@@ -321,7 +321,7 @@ export const downloadCsvDonk = async (req, res) => {
     //   csvContent += line + '\n';
     // });
     const delimiter = '|';
-    
+
     // Baris data: semua nilai di-enclose juga
     for (const row of rows) {
       const line = Object.values(row).map(val => {
@@ -333,9 +333,11 @@ export const downloadCsvDonk = async (req, res) => {
     }
 
     // Kirim file CSV sebagai download
+      const bom = '\uFEFF'; // Excel-compatible BOM
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="data_peserta_didik.csv"');
-    return res.status(200).send(csvContent);
+    // return res.status(200).send(csvContent);
+     return res.status(200).send(bom + csvContent);
 
   } catch (error) {
     console.error('Export Error:', error);
