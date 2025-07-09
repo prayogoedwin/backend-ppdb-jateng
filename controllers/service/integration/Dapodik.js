@@ -156,10 +156,10 @@ export const KirimSatuanResponsJson = async (req, res) => {
       tempat_lahir: row.tempat_lahir,
       tanggal_lahir: row.tanggal_lahir,
       jenis_kelamin: row.jenis_kelamin,
-      nik_ibu: row.nik_ibu.substring(0, 16);,
+      nik_ibu: row.nik_ibu.substring(0, 16),
       nama_ibu_kandung: row.nama_ibu_kandung,
       nama_ayah: row.nama_ayah,
-      nik_ayah: row.nik_ayah.substring(0, 16);,
+      nik_ayah: row.nik_ayah.substring(0, 16),
       nama_wali: null
       nik_wali: null
       alamat_jalan: row.alamat_jalan,
