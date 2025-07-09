@@ -80,7 +80,7 @@ const httpsAgent = new https.Agent({
 
 const api = axios.create({
   baseURL: 'http://118.98.237.214',
-  timeout: 60000,
+  timeout: 120000, // Naikkan timeout menjadi 120 detik
   httpAgent,
   httpsAgent,
   headers: {
@@ -94,7 +94,7 @@ const api = axios.create({
   }
 });
 
-export const KirimSatuanResponsJson = async (req, res) => {
+export const KirimSatuanResponsJson_ = async (req, res) => {
   const { no_pendaftaran } = req.body;
 
   if (!no_pendaftaran) {
@@ -266,3 +266,158 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 };
+
+export const KirimSatuanResponsJson = async (req, res) => {
+  const { no_pendaftaran } = req.body;
+
+  if (!no_pendaftaran) {
+    return res.status(400).json({
+      status: 0,
+      message: 'Parameter no_pendaftaran diperlukan'
+    });
+  }
+
+  const redis_key = 'dapodik';
+  const tokenData = await redisGet(redis_key);
+  const token_bearer = tokenData;
+  const url = 'http://118.98.237.214/v1/api-gateway/pd/tambahDataHasilPPDB';
+
+  if (!token_bearer) {
+    return res.status(401).json({
+      status: 0,
+      message: 'Token tidak tersedia, silakan autentikasi terlebih dahulu'
+    });
+  }
+
+  try {
+    const results = await db3.query(`
+      SELECT 
+          b.id as peserta_didik_id, 
+          b.sekolah_id as sekolah_id_asal,
+          b.npsn as npsn_sekolah_asal,
+          c.nama_sekolah_asal,
+          a.nik, a.nisn, a.nama_lengkap as nama, b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
+          b.nik_ibu, b.nama_ibu_kandung, b.nik_ayah, b.nama_ayah, b.nik_wali, b.nama_wali,
+          c.alamat as alamat_jalan, c.rt, c.rw, NULL as nama_dusun, NULL as desa_kelurahan, 
+          c.kelurahan_id as kode_wilayah_siswa,
+          c.lat as lintang, c.lng as bujur, b.kebutuhan_khusus_id, NULL as agama_id,
+          b.no_kk, a.sekolah_tujuan_id, d.sekolah_id as sekolah_id_tujuan, 
+          d.npsn as npsn_sekolah_tujuan, d.nama as nama_sekolah_tujuan
+      FROM ez_perangkingan a 
+      INNER JOIN ez_peserta_didik b ON a.nik = b.nik
+      INNER JOIN ez_pendaftar c ON b.nik = c.nik
+      INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
+      WHERE a.is_delete = 0
+      AND a.is_daftar_ulang = 1
+      AND a.no_pendaftaran = :no_pendaftaran
+      LIMIT 1
+      `, {
+      replacements: { no_pendaftaran },
+      type: db3.QueryTypes.SELECT
+    });
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        status: 0,
+        message: 'Data tidak ditemukan untuk no_pendaftaran tersebut'
+      });
+    }
+
+    const row = results[0];
+    const payload = {
+      token: TOKEN_STATIS,
+      peserta_didik_id: row.peserta_didik_id,
+      sekolah_id_asal: row.sekolah_id_asal,
+      npsn_sekolah_asal: row.npsn_sekolah_asal,
+      nama_sekolah_asal: row.nama_sekolah_asal,
+      nik: row.nik,
+      nisn: row.nisn,
+      nama: row.nama,
+      tempat_lahir: row.tempat_lahir,
+      tanggal_lahir: row.tanggal_lahir,
+      jenis_kelamin: row.jenis_kelamin,
+      nik_ibu: row.nik_ibu ? row.nik_ibu.substring(0, 16) : "",
+      nama_ibu_kandung: row.nama_ibu_kandung,
+      nama_ayah: row.nama_ayah,
+      nik_ayah: row.nik_ayah ? row.nik_ayah.substring(0, 16) : "",
+      nama_wali: "",
+      nik_wali: "",
+      alamat_jalan: row.alamat_jalan,
+      rt: row.rt,
+      rw: row.rw,
+      nama_dusun: "",
+      desa_kelurahan: "",
+      kode_wilayah_siswa: row.kode_wilayah_siswa,
+      lintang: row.lintang ? row.lintang.toString() : "",
+      bujur: row.bujur ? row.bujur.toString() : "",
+      kebutuhan_khusus_id: "0", 
+      agama_id: "",
+      no_kk: "",
+      sekolah_id_tujuan: row.sekolah_id_tujuan,
+      npsn_sekolah_tujuan: row.npsn_sekolah_tujuan,
+      nama_sekolah_tujuan: row.nama_sekolah_tujuan
+    };
+
+    console.log('Mengirim payload:', JSON.stringify(payload, null, 2));
+    console.log('Menggunakan token:', token_bearer);
+
+    
+      // 3. Eksekusi curl dengan execSync
+    const curlCommand = [
+      'curl -X POST',
+      `'${url}'`,
+      '-H "Authorization: Bearer ${token_bearer}"',
+      '-H "Content-Type: application/json"',
+      `--data-raw '${JSON.stringify(payload).replace(/'/g, "'\\''")}'`,
+      '--connect-timeout 30',
+      '--max-time 60',
+      '--silent',
+      '--show-error'
+    ].join(' ');
+
+    console.log('Executing CURL:', curlCommand);
+
+    const stdout = execSync(curlCommand, {
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'pipe'], // stdin, stdout, stderr
+      timeout: 120000 // 2 menit timeout untuk proses eksekusi
+    });
+
+    const response = JSON.parse(stdout);
+
+    // 4. Handle response
+    if (response.statusCode === 200) {
+      await db3.query(
+        `UPDATE ez_perangkingan 
+         SET integrasi_id = :integrasi_id 
+         WHERE no_pendaftaran = :no_pendaftaran`,
+        {
+          replacements: {
+            integrasi_id: response.uploadIntegrasiId,
+            no_pendaftaran
+          }
+        }
+      );
+    }
+
+    return res.status(200).json({
+      status: 1,
+      data: response
+    });
+
+    
+
+  } catch (error) {
+    console.error('Error details:', error);
+    return res.status(500).json({
+      status: 0,
+      message: 'Terjadi kesalahan server',
+      error: error.message,
+      stack: error.stack, // Include stack trace for debugging
+      data: {
+        no_pendaftaran
+      }
+    });
+  }
+};
+
