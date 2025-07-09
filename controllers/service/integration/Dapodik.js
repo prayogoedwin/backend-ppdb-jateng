@@ -169,11 +169,14 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
     const response = await axios.post(url, payload, {
         headers: {
-          'Authorization': `Bearer ${token_bearer}`,
-          'Content-Type': 'application/json'
+            'Authorization': `Bearer ${token_bearer}`,
+            'Content-Type': 'application/json',
+            'Connection': 'keep-alive'  // Tambahkan ini
         },
         proxy: false,
         timeout: 120000 // 60 detik
+        maxRedirects: 0,              // Nonaktifkan redirect jika tidak perlu
+        httpAgent: new http.Agent({ keepAlive: true }),  // Untuk Node.js
       });
 
     // const response = await fetch(url, {
