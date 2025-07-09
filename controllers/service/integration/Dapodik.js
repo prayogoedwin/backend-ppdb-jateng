@@ -4,6 +4,8 @@ import EzAppKey from '../../../models/config/AppKeyModel.js';
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 import http from 'http';
 import https from 'https';
+import { execSync } from 'child_process';
+import { URL } from 'url';
 
 const API_URL = 'http://118.98.237.214'; // ganti dengan URL asli
 const USERNAME = 'masthenol@gmail.com';  // ganti dengan username asli
