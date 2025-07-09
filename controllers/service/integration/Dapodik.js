@@ -66,7 +66,7 @@ const httpAgent = new http.Agent({
   keepAliveMsecs: 60000, // 1 menit
   maxSockets: Infinity,
   maxFreeSockets: 256,
-  timeout: 30000
+  timeout: 60000
 });
 
 const httpsAgent = new https.Agent({
@@ -74,13 +74,13 @@ const httpsAgent = new https.Agent({
   keepAliveMsecs: 60000,
   maxSockets: Infinity,
   maxFreeSockets: 256,
-  timeout: 30000,
+  timeout: 60000,
   rejectUnauthorized: false // Hanya untuk development
 });
 
 const api = axios.create({
   baseURL: 'http://118.98.237.214',
-  timeout: 30000,
+  timeout: 60000,
   httpAgent,
   httpsAgent,
   headers: {
