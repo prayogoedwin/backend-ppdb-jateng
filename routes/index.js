@@ -565,7 +565,7 @@ router.get('/rekap-api/external/rekap_harian', pendaftarHarian);
 router.get('/rekap-api/monitoring/sma', getMonitoringSMA);
 
 router.get('/admin-api/auth-dapodik', callAuthenticateV2);
-router.post('/admin-api/auth-dapodik', KirimSatuanResponsJson);
+router.post('/admin-api/kirim_dapodik_satuan', KirimSatuanResponsJson);
 
 
 
