@@ -173,7 +173,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
     //     proxy: false
     //   });
 
-      const response = await fetch(url, {
+    const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token_bearer}`,
@@ -182,8 +182,10 @@ export const KirimSatuanResponsJson = async (req, res) => {
         body: JSON.stringify(payload) // axios otomatis stringify, fetch tidak
     });
 
+    const data = await response.json();
+
       // Jika response status code 200 dan ada uploadIntegrasiId
-      if (response.status === 200 && response.data.uploadIntegrasiId) {
+      if (data.statusCode === 200 && data.data.uploadIntegrasiId) {
         // Update data di database
         await db3.query(
           `UPDATE ez_perangkingan 
@@ -192,22 +194,22 @@ export const KirimSatuanResponsJson = async (req, res) => {
            WHERE no_pendaftaran = :no_pendaftaran`,
           {
             replacements: {
-              integrasi_id: response.data.uploadIntegrasiId,
+              integrasi_id: data.data.uploadIntegrasiId,
 
             }
           }
         );
       }
 
-      console.log(response);
+      console.log(data);
 
       return res.status(200).json({
         status: 1,
         message: 'Data berhasil dikirim',
         data: {
-          status: response.statusCode, 
+          status: data.statusCode, 
           no_pendaftaran,
-          response: response.data,
+          response: data.data,
         }
       });
 
