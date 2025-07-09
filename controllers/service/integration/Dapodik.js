@@ -153,9 +153,9 @@ export const KirimSatuanResponsJson = async (req, res) => {
       desa_kelurahan: "-",
       kode_wilayah_siswa: row.kode_wilayah_siswa,
     //   lintang: row.lintang.toString(),
-      lintang: "-6.976066"
+      lintang: "-6.976066",
     //   bujur: row.bujur.toString(),
-       bujur: "-6.111.4081"
+       bujur: "-6.111.4081",
       kebutuhan_khusus_id: null,
       agama_id: "1",
       no_kk: "",
