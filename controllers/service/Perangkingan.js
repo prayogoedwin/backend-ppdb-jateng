@@ -780,8 +780,6 @@ export const getPerangkinganDetailByNisnPengumuman = async (req, res) => {
 };
 
 
-
-
 //percobaan untuk akomodir urutan peserta didalam redis
 //selain tambah redis, ada perbaikan di jarak terdekat SMK, penambahan 2% untuk anak guru
 export const getPerangkinganBackupAsli = async (req, res) => {
