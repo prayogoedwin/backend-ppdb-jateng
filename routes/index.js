@@ -575,7 +575,7 @@ router.post('/admin-api/kirim_dapodik_satuan', KirimSatuanResponsJson);
 
 
 // Define the version as a constant
-const VERSION = '2.2.4'; 
+const VERSION = '2.2.5'; 
 const APPNAME = 'Backend PPDB';
 
 // // Create a GET route at '/' that sends the version as a JSON response
