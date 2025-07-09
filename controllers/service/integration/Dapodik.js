@@ -183,7 +183,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
     //     body: JSON.stringify(payload) // axios otomatis stringify, fetch tidak
     // });
 
-      const datas = respons;
+      const datas = response;
 
       // Jika response status code 200 dan ada uploadIntegrasiId
       if (datas.statusCode === 200 && datas.data.uploadIntegrasiId) {
