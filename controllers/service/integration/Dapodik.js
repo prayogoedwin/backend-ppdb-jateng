@@ -166,31 +166,31 @@ export const KirimSatuanResponsJson = async (req, res) => {
   
   try {
     // Eksekusi query langsung menggunakan Sequelize dengan parameter
-    const [results, metadata] = await db3.query(`
-      SELECT 
-        b.id as peserta_didik_id, 
-        b.sekolah_id as sekolah_id_asal,
-        b.npsn as npsn_sekolah_asal,
-        c.nama_sekolah_asal,
-        a.nik, a.nisn, a.nama_lengkap as nama, b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
-        b.nik_ibu, b.nama_ibu_kandung, b.nik_ayah, b.nama_ayah, b.nik_wali, b.nama_wali,
-        c.alamat as alamat_jalan, c.rt, c.rw, NULL as nama_dusun, NULL as desa_kelurahan, 
-        c.kelurahan_id as kode_wilayah_siswa,
-        c.lat as lintang, c.lng as bujur, b.kebutuhan_khusus_id, NULL as agama_id,
-        b.no_kk, a.sekolah_tujuan_id, d.sekolah_id as sekolah_id_tujuan, 
-        d.npsn as npsn_sekolah_tujuan, d.nama as nama_sekolah_tujuan
-      FROM ez_perangkingan a 
-      INNER JOIN ez_peserta_didik b ON a.nik = b.nik
-      INNER JOIN ez_pendaftar c ON b.nik = c.nik
-      INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
-      WHERE a.is_delete = 0
-      AND a.is_daftar_ulang = 1
-      AND a.no_pendaftaran = :no_pendaftaran
-      LIMIT 1
-    `, {
-      replacements: { no_pendaftaran },
-      type: db3.QueryTypes.SELECT
-    });
+    const results = await db3.query(`
+        SELECT 
+            b.id as peserta_didik_id, 
+            b.sekolah_id as sekolah_id_asal,
+            b.npsn as npsn_sekolah_asal,
+            c.nama_sekolah_asal,
+            a.nik, a.nisn, a.nama_lengkap as nama, b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
+            b.nik_ibu, b.nama_ibu_kandung, b.nik_ayah, b.nama_ayah, b.nik_wali, b.nama_wali,
+            c.alamat as alamat_jalan, c.rt, c.rw, NULL as nama_dusun, NULL as desa_kelurahan, 
+            c.kelurahan_id as kode_wilayah_siswa,
+            c.lat as lintang, c.lng as bujur, b.kebutuhan_khusus_id, NULL as agama_id,
+            b.no_kk, a.sekolah_tujuan_id, d.sekolah_id as sekolah_id_tujuan, 
+            d.npsn as npsn_sekolah_tujuan, d.nama as nama_sekolah_tujuan
+        FROM ez_perangkingan a 
+        INNER JOIN ez_peserta_didik b ON a.nik = b.nik
+        INNER JOIN ez_pendaftar c ON b.nik = c.nik
+        INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
+        WHERE a.is_delete = 0
+        AND a.is_daftar_ulang = 1
+        AND a.no_pendaftaran = :no_pendaftaran
+        LIMIT 1
+        `, {
+        replacements: { no_pendaftaran },
+        type: db3.QueryTypes.SELECT
+        });
 
     if (results.length === 0) {
       return res.status(404).json({
