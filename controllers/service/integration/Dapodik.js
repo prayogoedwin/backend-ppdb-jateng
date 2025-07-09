@@ -237,17 +237,21 @@ export const KirimSatuanResponsJson = async (req, res) => {
         }
         });
 
+    }else{
+
+        return res.status(200).json({
+            status: 1,
+            message: datas.message,
+            data: {
+                status: datas.statusCode, 
+                no_pendaftaran,
+                response: datas.data,
+            }
+            });
+
     }
 
-    return res.status(200).json({
-      status: 1,
-      message: datas.message,
-      data: {
-        status: datas.statusCode, 
-        no_pendaftaran,
-        response: datas.data,
-      }
-    });
+    
 
   } catch (error) {
     console.error('Error details:', error);
