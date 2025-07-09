@@ -66,7 +66,7 @@ export const callAuthenticateV2 = async (req, res) => {
 const httpAgent = new http.Agent({
   keepAlive: true,
   keepAliveMsecs: 60000,
-  maxSockets: 100,
+  maxSockets: Infinity,
   maxFreeSockets: 256,
   timeout: 300000 // Increased to 5 minutes
 });
@@ -74,7 +74,7 @@ const httpAgent = new http.Agent({
 const httpsAgent = new https.Agent({
   keepAlive: true,
   keepAliveMsecs: 60000,
-  maxSockets: 100,
+  maxSockets: Infinity,
   maxFreeSockets: 256,
   timeout: 300000, // Increased to 5 minutes
   rejectUnauthorized: false
@@ -82,7 +82,7 @@ const httpsAgent = new https.Agent({
 
 const api = axios.create({
   baseURL: 'http://118.98.237.214',
-  timeout: 300000, // Increased to 5 minutes
+  timeout: 120000, // Naikkan timeout menjadi 120 detik
   httpAgent,
   httpsAgent,
   headers: {
