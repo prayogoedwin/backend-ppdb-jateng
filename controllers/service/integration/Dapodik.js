@@ -165,13 +165,22 @@ export const KirimSatuanResponsJson = async (req, res) => {
     console.log('Mengirim payload:', JSON.stringify(payload, null, 2));
     console.log('Menggunakan token:', token_bearer);
 
-    const response = await axios.post(url, payload, {
-        headers: {
-          'Authorization': `Bearer ${token_bearer}`,
-          'Content-Type': 'application/json'
-        },
-        proxy: false
-      });
+    // const response = await axios.post(url, payload, {
+    //     headers: {
+    //       'Authorization': `Bearer ${token_bearer}`,
+    //       'Content-Type': 'application/json'
+    //     },
+    //     proxy: false
+    //   });
+
+      const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token_bearer}`,
+                'Content-Type': 'application/json'
+            },
+        body: JSON.stringify(payload) // axios otomatis stringify, fetch tidak
+    });
 
       // Jika response status code 200 dan ada uploadIntegrasiId
       if (response.status === 200 && response.data.uploadIntegrasiId) {
