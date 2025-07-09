@@ -70,6 +70,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 
+  const redis_key = 'dapodik';
+
    // 1. Ambil token dari Redis terlebih dahulu
     const tokenData = await redisGet(redis_key);
     const token_bearer = tokenData ? JSON.parse(tokenData) : null;
