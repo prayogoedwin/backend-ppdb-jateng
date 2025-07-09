@@ -273,13 +273,11 @@ export const KirimSatuanResponsJson = async (req, res) => {
   }
 }
 
-
-
 export const downloadCsvDonk = async (req, res) => {
-    try {
-        const query = `
-            SELECT 
-                b.id AS peserta_didik_id, 
+  try {
+    const results = await db3.query(`
+      SELECT 
+        b.id AS peserta_didik_id, 
                 b.npsn AS npsn_sekolah_asal,
                 c.nama_sekolah_asal,
                 a.nik, a.nisn, a.nama_lengkap AS nama, 
@@ -290,47 +288,51 @@ export const downloadCsvDonk = async (req, res) => {
                 d.sekolah_id AS sekolah_id_tujuan, 
                 d.npsn AS npsn_sekolah_tujuan, 
                 d.nama AS nama_sekolah_tujuan
-            FROM ez_perangkingan a 
-            INNER JOIN ez_peserta_didik b ON a.nik = b.nik
-            INNER JOIN ez_pendaftar c ON b.nik = c.nik
-            INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
-            WHERE a.is_delete = 0
-              AND a.is_diterima != 0
-              AND a.is_daftar_ulang = 1
-        `;
+      FROM ez_perangkingan a 
+      INNER JOIN ez_peserta_didik b ON a.nik = b.nik
+      INNER JOIN ez_pendaftar c ON b.nik = c.nik
+      INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
+      WHERE a.is_delete = 0
+        AND a.is_daftar_ulang = 1
+    `, {
+      type: db3.QueryTypes.SELECT
+    });
 
-        const result = await db3.query(query);
-        console.log('Query result:', result); // DEBUG LINE
+    const rows = results;
 
-        const rows = result.rows;
-
-        if (!Array.isArray(rows) || rows.length === 0) {
-            return res.status(404).send('No data found');
-        }
-
-        // Convert rows to CSV
-        let csvContent = Object.keys(rows[0]).join('|') + '\n'; // headers
-        rows.forEach(row => {
-            const line = Object.values(row).map(val => {
-                if (val === null || val === undefined) return '';
-                const str = String(val).replace(/"/g, '""');
-                return str.includes('|') || str.includes('\n') ? `"${str}"` : str;
-            }).join('|');
-            csvContent += line + '\n';
-        });
-
-        // Set headers and send
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename="data_peserta_didik.csv"');
-        return res.status(200).send(csvContent);
-
-    } catch (error) {
-        console.error('Export Error:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Gagal generate CSV',
-            error: error.message
-        });
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res.status(404).send('No data found');
     }
+
+    // Bangun isi CSV
+    let csvContent = '';
+
+    // Header
+    const headers = Object.keys(rows[0]).join('|');
+    csvContent += headers + '\n';
+
+    // Baris data
+    rows.forEach(row => {
+      const line = Object.values(row).map(val => {
+        if (val === null || val === undefined) return '';
+        const str = String(val).replace(/"/g, '""');
+        return str.includes('|') || str.includes('\n') ? `"${str}"` : str;
+      }).join('|');
+      csvContent += line + '\n';
+    });
+
+    // Kirim file CSV sebagai download
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="data_peserta_didik.csv"');
+    return res.status(200).send(csvContent);
+
+  } catch (error) {
+    console.error('Export Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Gagal generate CSV',
+      error: error.message
+    });
+  }
 };
 
