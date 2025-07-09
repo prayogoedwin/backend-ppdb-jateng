@@ -155,7 +155,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
     //   lintang: row.lintang.toString(),
       lintang: "-6.976066",
     //   bujur: row.bujur.toString(),
-       bujur: "-6.111.4081",
+      bujur: "111.4081",
       kebutuhan_khusus_id: "", 
       agama_id: "1",
       no_kk: "",
