@@ -12,7 +12,7 @@ import ipWhitelistMiddleware from '../middleware/IpWhitelist.js';
 import domainWhitelistMiddleware from '../middleware/IpWhitelist.js';
 import simpleAuthMiddleware from '../middleware/simpleAuthMiddleware.js';
 
-import { callAuthenticateV2 } from '../controllers/service/integration/Dapodik.js';
+import { callAuthenticateV2, KirimSatuanResponsJson } from '../controllers/service/integration/Dapodik.js';
 
 // import domainWhitelistMiddleware from '../middleware/domainWhitelist.js';
 import { appKeyMiddleware, appKeynyaIntegrator} from '../middleware/AppKey.js';
@@ -565,6 +565,7 @@ router.get('/rekap-api/external/rekap_harian', pendaftarHarian);
 router.get('/rekap-api/monitoring/sma', getMonitoringSMA);
 
 router.get('/admin-api/auth-dapodik', callAuthenticateV2);
+router.post('/admin-api/auth-dapodik', KirimSatuanResponsJson);
 
 
 
