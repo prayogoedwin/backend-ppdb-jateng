@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Initialize Sequelize for Database 2
-const db2 = new Sequelize(process.env.DB2_NAME, process.env.DB2_USER, process.env.DB2_PASSWORD, {
+const db3 = new Sequelize(process.env.DB2_NAME, process.env.DB2_USER, process.env.DB2_PASSWORD, {
     host: process.env.DB3_HOST,
     port: process.env.DB3_PORT,
     dialect: process.env.DB3_DRIVER,
@@ -26,4 +26,4 @@ const db2 = new Sequelize(process.env.DB2_NAME, process.env.DB2_USER, process.en
     // }  
 });
 
-export default db2;
+export default db3;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import db from '../../../../config/Database3.js';
+import db3 from '../../../config/Database3.js';
 import EzAppKey from '../../../models/config/AppKeyModel.js';
 import { redisGet, redisSet } from '../../../redis.js'; // Import the Redis functions
 
@@ -166,7 +166,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
   
   try {
     // Eksekusi query langsung menggunakan Sequelize dengan parameter
-    const [results, metadata] = await db.query(`
+    const [results, metadata] = await db3.query(`
       SELECT 
         b.id as peserta_didik_id, 
         b.sekolah_id as sekolah_id_asal,
@@ -189,7 +189,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
       LIMIT 1
     `, {
       replacements: { no_pendaftaran },
-      type: db.QueryTypes.SELECT
+      type: db3.QueryTypes.SELECT
     });
 
     if (results.length === 0) {
@@ -246,7 +246,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
       // Jika response status code 200 dan ada uploadIntegrasiId
       if (response.status === 200 && response.data.uploadIntegrasiId) {
         // Update data di database
-        await db.query(
+        await db3.query(
           `UPDATE ez_perangkingan 
            SET integrasi_id = :integrasi_id, 
                integrated_at = NOW() 
@@ -276,7 +276,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
       return res.status(statusCode).json({
         status: 0,
         message: message,
-        statusCode: statusCode
+        statusCode: statusCode,
         data: {
           no_pendaftaran,
           response: response.data
