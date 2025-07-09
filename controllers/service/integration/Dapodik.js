@@ -10,75 +10,79 @@ const TOKEN_STATIS = '0CFA4030-9EBD-448B-A860-54EE711EA3A3';          // ganti d
 
 export const callAuthenticateV2 = async (req, res) => {
   const url = `${API_URL}/v1/api-gateway/authenticate/authenticateV2/`;
-
   const redis_key = `dapodik`;
+
   try {
-        const response = await axios.get(url, {
-        auth: {
-            username: USERNAME,
-            password: PASSWORD,
-        },
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        });
+    const response = await axios.get(url, {
+      auth: {
+        username: USERNAME,
+        password: PASSWORD,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-        const result = response.data;
+    const result = response.data;
 
-        if (result?.statusCode === 200 && result?.data?.token) {
-        const token = result.data.token;
+    if (result?.statusCode === 200 && result?.data?.token) {
+      const token = result.data.token;
+      const checkQuery = "SELECT * FROM ez_app_key WHERE nama = 'dapodik'";
+      const [existingKey] = await db3.query(checkQuery);
 
-         const checkQuery = "SELECT * FROM ez_app_key WHERE nama = 'dapodik'";
-         const [existingKey] = await db3.query(checkQuery);
-
-        if (existingKey.length > 0) {
-            
-            // 2. Update the existing key
-            const updateQuery = `
-                UPDATE ez_app_key 
-                SET aapikey = $1, 
-                    kode_random = $2, 
-                    updated_at = NOW()
-                WHERE nama = $3
-            `;
-            
-            await db3.query(updateQuery, [
-                token, 
-                `Bearer ${token}`, 
-                'dapodik'
-            ]);
-
-        }
-
-        await redisSet(
-                redis_key,
-                JSON.stringify(result),
-                process.env.REDIS_EXPIRE_TIME_HARIAN
-            );
+      if (existingKey.length > 0) {
+        // Update the existing key
+        const updateQuery = `
+          UPDATE ez_app_key 
+          SET aapikey = ?, 
+              kode_random = ?, 
+              updated_at = NOW()
+          WHERE nama = ?
+        `;
         
-        return res.status(200).json({
-            status: 1,
-            message: 'Token saved successfully',
-            token: token
-        });
+        await db3.query(updateQuery, [
+          token, 
+          `Bearer ${token}`, 
+          'dapodik'
+        ]);
+      } else {
+        // Insert new key if it doesn't exist
+        const insertQuery = `
+          INSERT INTO ez_app_key (nama, aapikey, kode_random, created_at, updated_at)
+          VALUES (?, ?, ?, NOW(), NOW())
+        `;
+        await db3.query(insertQuery, [
+          'dapodik',
+          token,
+          `Bearer ${token}`
+        ]);
+      }
 
-        } else {
-
-            return res.status(200).json({
-                status: 0,
-                message: result?.message || 'Unauthorized'
-            });
-
-        }
-
-    } catch (error) {
-        const errMsg = error.response?.data?.message || error.message;
-        
-        return res.status(200).json({
+      await redisSet(
+        redis_key,
+        JSON.stringify(result),
+        process.env.REDIS_EXPIRE_TIME_HARIAN
+      );
+      
+      return res.status(200).json({
+        status: 1,
+        message: 'Token saved successfully',
+        token: token
+      });
+    } else {
+      return res.status(200).json({
         status: 0,
-        message: errMsg
-        });
+        message: result?.message || 'Unauthorized'
+      });
     }
+  } catch (error) {
+    const errMsg = error.response?.data?.message || error.message;
+    console.error('Authentication error:', error);
+    return res.status(200).json({
+      status: 0,
+      message: errMsg
+    });
+  }
 };
 
 export const authenticateV2Internal = async () => {
