@@ -320,15 +320,17 @@ export const downloadCsvDonk = async (req, res) => {
     //   }).join('|');
     //   csvContent += line + '\n';
     // });
-
-   rows.forEach(row => {
+    const delimiter = '|';
+    
+    // Baris data: semua nilai di-enclose juga
+    for (const row of rows) {
       const line = Object.values(row).map(val => {
         if (val === null || val === undefined) return '""';
-        const str = String(val).replace(/"/g, '""');
-        return `"${str}"`; // Always wrap with quotes
-      }).join('|');
+        const str = String(val).replace(/"/g, '""'); // escape double quotes
+        return `"${str}"`; // always enclose with quotes
+      }).join(delimiter);
       csvContent += line + '\n';
-    });
+    }
 
     // Kirim file CSV sebagai download
     res.setHeader('Content-Type', 'text/csv');
