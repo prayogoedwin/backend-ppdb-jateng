@@ -59,6 +59,14 @@ export const callAuthenticateV2 = async (req, res) => {
   }
 };
 
+function cleanPayload(payload) {
+  return Object.keys(payload).reduce((acc, key) => {
+    const value = payload[key];
+    acc[key] = (value === null || value === "NULL" || value === "" || value === 0) ? null : value;
+    return acc;
+  }, {});
+}
+
 export const KirimSatuanResponsJson = async (req, res) => {
   const { no_pendaftaran } = req.body; // Ambil no_pendaftaran dari request body
   // atau bisa juga dari query params: const { no_pendaftaran } = req.query;
@@ -69,6 +77,19 @@ export const KirimSatuanResponsJson = async (req, res) => {
       message: 'Parameter no_pendaftaran diperlukan'
     });
   }
+
+  function trimDonk(value) {
+  // Jika value null, undefined, "NULL", atau string kosong
+  if (value === null || value === undefined || value === "NULL" || value === "") {
+    return null;
+  }
+  
+  // Konversi ke string dan trim
+  const trimmedValue = String(value).trim();
+  
+  // Jika setelah trim kosong, return null
+  return trimmedValue === "" ? null : trimmedValue;
+}
 
   const redis_key = 'dapodik';
 
@@ -135,9 +156,9 @@ export const KirimSatuanResponsJson = async (req, res) => {
       tempat_lahir: row.tempat_lahir,
       tanggal_lahir: row.tanggal_lahir,
       jenis_kelamin: row.jenis_kelamin,
-      nik_ibu: row.nik_ibu,
+      nik_ibu: trimDonk(row.nik_ibu),
       nama_ibu_kandung: row.nama_ibu_kandung,
-      nama_ayah: row.nama_ayah,
+      nama_ayah: trimDonk(row.nama_ayah),
       nik_ayah: row.nik_ayah,
       nama_wali: row.nama_wali,
       nik_wali: row.nik_wali,
@@ -157,8 +178,10 @@ export const KirimSatuanResponsJson = async (req, res) => {
       nama_sekolah_tujuan: row.nama_sekolah_tujuan
     };
 
+    const cleanedPayload = cleanPayload(payload);
+
     try {
-      const response = await axios.post(url, payload, {
+      const response = await axios.post(url, cleanedPayload, {
         headers: {
           'Authorization': `Bearer ${token_bearer}`,
           'Content-Type': 'application/json'
