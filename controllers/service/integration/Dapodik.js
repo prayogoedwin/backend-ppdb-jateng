@@ -275,91 +275,68 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
 
 
+import db3 from '../../config/database3.js'; // pastikan path dan driver-nya benar
+
 export const downloadCsvDonk = async (req, res) => {
     try {
         const query = `
             SELECT 
-            b.id as peserta_didik_id, 
-            b.npsn as npsn_sekolah_asal,
-            c.nama_sekolah_asal,
-            a.nik, a.nisn, a.nama_lengkap as nama, 
-            b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
-            b.nama_ibu_kandung, '1' as agama_id, 
-            b.kebutuhan_khusus_id, NULL as no_kk, 
-            c.kelurahan_id as kode_desa_peserta_didik,
-            d.sekolah_id as sekolah_id_tujuan, 
-            d.npsn as npsn_sekolah_tujuan, 
-            d.nama as nama_sekolah_tujuan
+                b.id AS peserta_didik_id, 
+                b.npsn AS npsn_sekolah_asal,
+                c.nama_sekolah_asal,
+                a.nik, a.nisn, a.nama_lengkap AS nama, 
+                b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
+                b.nama_ibu_kandung, '1' AS agama_id, 
+                b.kebutuhan_khusus_id, NULL AS no_kk, 
+                c.kelurahan_id AS kode_desa_peserta_didik,
+                d.sekolah_id AS sekolah_id_tujuan, 
+                d.npsn AS npsn_sekolah_tujuan, 
+                d.nama AS nama_sekolah_tujuan
             FROM ez_perangkingan a 
             INNER JOIN ez_peserta_didik b ON a.nik = b.nik
             INNER JOIN ez_pendaftar c ON b.nik = c.nik
             INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
             WHERE a.is_delete = 0
-            AND a.is_diterima != 0
-            AND a.is_daftar_ulang = 1
+              AND a.is_diterima != 0
+              AND a.is_daftar_ulang = 1
         `;
 
-        // Execute query and examine the response structure
-        const result = await db3.query(query);
-        console.log('Query result structure:', result); // Debugging line
+        const { rows } = await db3.query(query);
+        // jika pakai pg (node-postgres), gunakan: const { rows } = await db3.query(query);
 
-        // Handle different possible response structures
-        let rows = [];
-        if (Array.isArray(result)) {
-            // If result is directly an array (some PostgreSQL clients)
-            rows = result;
-        } else if (result.rows && Array.isArray(result.rows)) {
-            // Standard node-postgres response
-            rows = result.rows;
-        } else if (result[0] && Array.isArray(result[0])) {
-            // Some clients return [rows, fields]
-            rows = result[0];
-        } else {
-            throw new Error('Unrecognized query result structure');
+        if (!rows || rows.length === 0) {
+            return res.status(404).send('No data found');
         }
 
-        // Convert to CSV
+        // Buat CSV
         let csvContent = '';
-        
-        if (rows.length > 0) {
-            // Add headers
-            const headers = Object.keys(rows[0]).join('|');
-            csvContent += headers + '\n';
-            
-            // Add rows
-            rows.forEach(row => {
-                const values = Object.values(row).map(value => {
-                    // Handle null/undefined
-                    if (value === null || value === undefined) return '';
-                    
-                    // Convert to string and escape quotes
-                    const strValue = String(value).replace(/"/g, '""');
-                    
-                    // Quote fields containing delimiter or newlines
-                    if (strValue.includes('|') || strValue.includes('\n')) {
-                        return `"${strValue}"`;
-                    }
-                    return strValue;
-                }).join('|');
-                
-                csvContent += values + '\n';
-            });
-        } else {
-            csvContent = 'No data found\n';
+
+        // Header
+        const headers = Object.keys(rows[0]).join('|');
+        csvContent += headers + '\n';
+
+        // Data baris
+        for (const row of rows) {
+            const line = Object.values(row).map(value => {
+                if (value === null || value === undefined) return '';
+                const strValue = String(value).replace(/"/g, '""');
+                return strValue.includes('|') || strValue.includes('\n')
+                    ? `"${strValue}"`
+                    : strValue;
+            }).join('|');
+            csvContent += line + '\n';
         }
 
-        // Set response headers
+        // Kirim sebagai download
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=export.csv');
-        
-        // Send CSV
-        res.send(csvContent);
+        res.setHeader('Content-Disposition', 'attachment; filename="data_peserta_didik.csv"');
+        res.status(200).send(csvContent);
 
     } catch (error) {
         console.error('Export Error:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to generate CSV export',
+            message: 'Gagal mengunduh CSV',
             error: error.message
         });
     }
