@@ -96,7 +96,7 @@ const api = axios.create({
   }
 });
 
-export const KirimSatuanResponsJson_ = async (req, res) => {
+export const KirimSatuanResponsJson = async (req, res) => {
   const { no_pendaftaran } = req.body;
 
   if (!no_pendaftaran) {
@@ -269,7 +269,7 @@ export const KirimSatuanResponsJson_ = async (req, res) => {
   }
 };
 
-export const KirimSatuanResponsJson = async (req, res) => {
+export const KirimSatuanResponsJsonP = async (req, res) => {
   const { no_pendaftaran } = req.body;
 
   if (!no_pendaftaran) {
