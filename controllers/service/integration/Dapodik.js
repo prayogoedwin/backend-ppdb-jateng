@@ -276,7 +276,6 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
 export const downloadCsvDonk = async (req, res) => {
     try {
-        // Execute the query
         const query = `
             SELECT 
             b.id as peserta_didik_id, 
@@ -298,23 +297,25 @@ export const downloadCsvDonk = async (req, res) => {
             AND a.is_diterima != 0
             AND a.is_daftar_ulang = 1
         `;
+
+        // For PostgreSQL using node-postgres (pg)
+        const result = await db3.query(query);
         
-        const results = await db3.query(query);
-        
-        // Convert to CSV with pipe delimiter
+        if (!result.rows || !Array.isArray(result.rows)) {
+            throw new Error('Invalid query results structure');
+        }
+
         let csvContent = '';
         
-        // Add headers
-        if (results.rows.length > 0) {
-            const headers = Object.keys(results.rows[0]).join('|');
+        // Add headers if we have data
+        if (result.rows.length > 0) {
+            const headers = Object.keys(result.rows[0]).join('|');
             csvContent += headers + '\n';
             
             // Add rows
-            results.rows.forEach(row => {
+            result.rows.forEach(row => {
                 const values = Object.values(row).map(value => {
-                    // Handle null/undefined values
                     if (value === null || value === undefined) return '';
-                    // Escape quotes and wrap in quotes if contains delimiter or newline
                     const strValue = String(value).replace(/"/g, '""');
                     if (strValue.includes('|') || strValue.includes('\n')) {
                         return `"${strValue}"`;
@@ -324,17 +325,16 @@ export const downloadCsvDonk = async (req, res) => {
                 
                 csvContent += values + '\n';
             });
+        } else {
+            csvContent = 'No data found\n';
         }
-        
-        // Set response headers for CSV download
+
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=export.csv');
-        
-        // Send the CSV content
+        res.setHeader('Content-Disposition', 'attachment; filename=data_export.csv');
         res.send(csvContent);
-        
+
     } catch (error) {
-        console.error('Error exporting data:', error);
-        res.status(500).send('Error exporting data');
+        console.error('Export Error:', error);
+        res.status(500).send('Error generating CSV export');
     }
 };
