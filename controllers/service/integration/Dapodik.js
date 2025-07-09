@@ -169,7 +169,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
         headers: {
           'Authorization': `Bearer ${token_bearer}`,
           'Content-Type': 'application/json'
-        }
+        },
+        proxy: false
       });
 
       // Jika response status code 200 dan ada uploadIntegrasiId
