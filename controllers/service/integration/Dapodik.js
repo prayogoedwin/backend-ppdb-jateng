@@ -312,11 +312,21 @@ export const downloadCsvDonk = async (req, res) => {
     csvContent += headers + '\n';
 
     // Baris data
+    // rows.forEach(row => {
+    //   const line = Object.values(row).map(val => {
+    //     if (val === null || val === undefined) return '';
+    //     const str = String(val).replace(/"/g, '""');
+    //     return str.includes('|') || str.includes('\n') ? `"${str}"` : str;
+    //   }).join('|');
+    //   csvContent += line + '\n';
+    // });
+
+    // Baris data dengan enclosure untuk semua nilai
     rows.forEach(row => {
       const line = Object.values(row).map(val => {
-        if (val === null || val === undefined) return '';
+        if (val === null || val === undefined) return '""';
         const str = String(val).replace(/"/g, '""');
-        return str.includes('|') || str.includes('\n') ? `"${str}"` : str;
+        return `"${str}"`;
       }).join('|');
       csvContent += line + '\n';
     });
