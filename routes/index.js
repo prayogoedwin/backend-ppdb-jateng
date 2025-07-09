@@ -88,6 +88,9 @@ import { loginUser, logoutUser, resetPassword, forgotPassword, verifikasiOtpUser
 //akun client api
 import { loginClient, logoutClient } from '../controllers/service/integration/Auth.js';
 
+//getPerangkinganKhususAfirmasi2
+import { getPerangkinganKhususAfirmasi2, automasiPerangkingan2 } from '../controllers/service/Perangkingan.js';
+
 
 //Admin
 //Auth
@@ -569,6 +572,9 @@ router.get('/rekap-api/monitoring/sma', getMonitoringSMA);
 router.get('/admin-api/auth-dapodik', callAuthenticateV2);
 
 router.get('/api/tarik_csv', downloadCsvDonk);
+
+
+router.post('/admin-api/servis/automasi_perangkingan_afirmasi', ipWhitelistMiddleware, automasiPerangkingan2); 
 
 
 
