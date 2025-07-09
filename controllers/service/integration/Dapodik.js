@@ -176,20 +176,11 @@ export const KirimSatuanResponsJson = async (req, res) => {
             'Connection': 'keep-alive'  // Tambahkan ini
         },
         proxy: false,
-        timeout: 120000, // 60 detik
+        timeout: 500000,
         maxRedirects: 0,              // Nonaktifkan redirect jika tidak perlu
         httpAgent: new http.Agent({ keepAlive: true }),
         httpsAgent: new https.Agent({ keepAlive: true })
       });
-
-    // const response = await fetch(url, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Authorization': `Bearer ${token_bearer}`,
-    //             'Content-Type': 'application/json'
-    //         },
-    //     body: JSON.stringify(payload) // axios otomatis stringify, fetch tidak
-    // });
 
     const datas = response.data;
 
