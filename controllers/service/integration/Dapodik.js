@@ -182,10 +182,10 @@ export const KirimSatuanResponsJson = async (req, res) => {
         body: JSON.stringify(payload) // axios otomatis stringify, fetch tidak
     });
 
-    const data = await response.json();
+    const datas = await response.json();
 
       // Jika response status code 200 dan ada uploadIntegrasiId
-      if (data.statusCode === 200 && data.data.uploadIntegrasiId) {
+      if (datas.statusCode === 200 && datas.data.uploadIntegrasiId) {
         // Update data di database
         await db3.query(
           `UPDATE ez_perangkingan 
@@ -207,9 +207,9 @@ export const KirimSatuanResponsJson = async (req, res) => {
         status: 1,
         message: 'Data berhasil dikirim',
         data: {
-          status: data.statusCode, 
+          status: datas.statusCode, 
           no_pendaftaran,
-          response: data.data,
+          response: datas.data,
         }
       });
 
