@@ -66,7 +66,7 @@ export const callAuthenticateV2 = async (req, res) => {
 const httpAgent = new http.Agent({
   keepAlive: true,
   keepAliveMsecs: 60000,
-  maxSockets: Infinity,
+  maxSockets: 100,
   maxFreeSockets: 256,
   timeout: 300000 // Increased to 5 minutes
 });
@@ -74,7 +74,7 @@ const httpAgent = new http.Agent({
 const httpsAgent = new https.Agent({
   keepAlive: true,
   keepAliveMsecs: 60000,
-  maxSockets: Infinity,
+  maxSockets: 100,
   maxFreeSockets: 256,
   timeout: 300000, // Increased to 5 minutes
   rejectUnauthorized: false
