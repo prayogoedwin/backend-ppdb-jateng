@@ -28,20 +28,19 @@ export const callAuthenticateV2 = async (req, res) => {
         if (result?.statusCode === 200 && result?.data?.token) {
         const token = result.data.token;
 
-        // Update ke EzAppKey
-        const key = await EzAppKey.findOne({ where: { nama: 'dapodik' } });
+       // Check if record exists
+        const checkQuery = 'SELECT * FROM ez_app_key WHERE nama = ?';
+        const [existingKey] = await db3.query(checkQuery, ['dapodik']);
 
-        if (key) {
-            await key.update({
-            apiKey: token,
-            kode_random: `Bearer ${token}`,
-            });
-        } else {
-            await EzAppKey.create({
-            nama: 'dapodik',
-            apiKey: token,
-            kode_random: `Bearer ${token}`,
-            });
+        if (existingKey.length > 0) {
+            
+             const updateQuery = `
+                UPDATE ez_app_key 
+                SET aapikey = ?, kode_random = ?, updated_at = NOW()
+                WHERE nama = ?
+                `;
+                await db3.query(updateQuery, [token, `Bearer ${token}`, 'dapodik']);
+
         }
 
         await redisSet(
@@ -93,27 +92,30 @@ export const authenticateV2Internal = async () => {
     const result = response.data;
 
     if (result?.statusCode === 200 && result?.data?.token) {
-      const token = result.data.token;
+    const token = result.data.token;
+    const token_lengkap = `Bearer ${token}`;
+     // Check if record exists
+    const checkQuery = 'SELECT * FROM ez_app_key WHERE nama = ?';
+    const [existingKey] = await db3.query(checkQuery, ['dapodik']);
 
-      // Update ke EzAppKey
-      const key = await EzAppKey.findOne({ where: { nama: 'dapodik' } });
+    if (existingKey.length > 0) {
+            
+            const updateQuery = `
+            UPDATE ez_app_key 
+            SET aapikey = ?, kode_random = ?, updated_at = NOW()
+            WHERE nama = ?
+            `;
+            await db3.query(updateQuery, [token, `Bearer ${token}`, 'dapodik']);
 
-      if (key) {
-        await key.update({
-          apiKey: token,
-          kode_random: `Bearer ${token}`,
-        });
-      } else {
-        await EzAppKey.create({
-          nama: 'dapodik',
-          apiKey: token,
-          kode_random: `Bearer ${token}`,
-        });
-      }
+    }
+
+    const checkQuery2 = 'SELECT * FROM ez_app_key WHERE nama = ?';
+    const [existingKey2] = await db3.query(checkQuery, ['dapodik']);
+    
 
       await redisSet(
         redis_key,
-        JSON.stringify(result),
+        JSON.stringify(existingKey2),
         process.env.REDIS_EXPIRE_TIME_HARIAN
       );
 
@@ -150,19 +152,13 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 
-  const redis_key = `dapodik`; 
-  let token;
-  let keyNya = await redisGet(redis_key);
-  if (keyNya) {
-      keyNya = JSON.parse(keyNya); // Convert dari string ke objek JS
-      token = keyNya.kode_random
-  } else {
-      const authResult = await authenticateV2();
-      token = authResult.token
-  }
+ const checkQuery2 = 'SELECT * FROM ez_app_key WHERE nama = ?';
+ const [existingKey2] = await db3.query(checkQuery2, ['dapodik']);
+
+ 
 
   const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB/`;
-  const bearer_token = token;
+  const bearer_token = existingKey2.kode_random;
   
   try {
     // Eksekusi query langsung menggunakan Sequelize dengan parameter
