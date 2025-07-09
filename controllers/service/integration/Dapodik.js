@@ -321,15 +321,15 @@ export const downloadCsvDonk = async (req, res) => {
     //   csvContent += line + '\n';
     // });
 
-    // Baris data dengan enclosure untuk semua nilai
-    rows.forEach(row => {
-      const line = Object.values(row).map(val => {
-        if (val === null || val === undefined) return '""';
-        const str = String(val).replace(/"/g, '""');
-        return `"${str}"`;
-      }).join('|');
-      csvContent += line + '\n';
-    });
+  rows.forEach(row => {
+  const line = Object.keys(row).map(key => {
+    const val = row[key];
+    if (val === null || val === undefined) return '""';
+    const str = String(val).replace(/"/g, '""');
+    return `"${str}"`;
+  }).join('|');
+  csvContent += line + '\n';
+});
 
     // Kirim file CSV sebagai download
     res.setHeader('Content-Type', 'text/csv');
