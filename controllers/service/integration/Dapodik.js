@@ -272,3 +272,69 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 }
+
+
+export const downloadCsvDonk = async (req, res) => {
+    try {
+        // Execute the query
+        const query = `
+            SELECT 
+            b.id as peserta_didik_id, 
+            b.npsn as npsn_sekolah_asal,
+            c.nama_sekolah_asal,
+            a.nik, a.nisn, a.nama_lengkap as nama, 
+            b.tempat_lahir, b.tanggal_lahir, b.jenis_kelamin,
+            b.nama_ibu_kandung, '1' as agama_id, 
+            b.kebutuhan_khusus_id, NULL as no_kk, 
+            c.kelurahan_id as kode_desa_peserta_didik,
+            d.sekolah_id as sekolah_id_tujuan, 
+            d.npsn as npsn_sekolah_tujuan, 
+            d.nama as nama_sekolah_tujuan
+            FROM ez_perangkingan a 
+            INNER JOIN ez_peserta_didik b ON a.nik = b.nik
+            INNER JOIN ez_pendaftar c ON b.nik = c.nik
+            INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
+            WHERE a.is_delete = 0
+            AND a.is_diterima != 0
+            AND a.is_daftar_ulang = 1
+        `;
+        
+        const results = await db3.query(query);
+        
+        // Convert to CSV with pipe delimiter
+        let csvContent = '';
+        
+        // Add headers
+        if (results.rows.length > 0) {
+            const headers = Object.keys(results.rows[0]).join('|');
+            csvContent += headers + '\n';
+            
+            // Add rows
+            results.rows.forEach(row => {
+                const values = Object.values(row).map(value => {
+                    // Handle null/undefined values
+                    if (value === null || value === undefined) return '';
+                    // Escape quotes and wrap in quotes if contains delimiter or newline
+                    const strValue = String(value).replace(/"/g, '""');
+                    if (strValue.includes('|') || strValue.includes('\n')) {
+                        return `"${strValue}"`;
+                    }
+                    return strValue;
+                }).join('|');
+                
+                csvContent += values + '\n';
+            });
+        }
+        
+        // Set response headers for CSV download
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=export.csv');
+        
+        // Send the CSV content
+        res.send(csvContent);
+        
+    } catch (error) {
+        console.error('Error exporting data:', error);
+        res.status(500).send('Error exporting data');
+    }
+};
