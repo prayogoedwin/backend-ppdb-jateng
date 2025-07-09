@@ -160,8 +160,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
       nama_ibu_kandung: row.nama_ibu_kandung,
       nama_ayah: row.nama_ayah,
       nik_ayah: row.nik_ayah.substring(0, 16),
-      nama_wali: null
-      nik_wali: null
+      nama_wali: null,
+      nik_wali: null,
       alamat_jalan: row.alamat_jalan,
       rt: row.rt,
       rw: row.rw,
@@ -170,8 +170,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
       kode_wilayah_siswa: row.kode_wilayah_siswa,
       lintang: row.lintang,
       bujur: row.bujur,
-      kebutuhan_khusus_id: null
-      agama_id: null
+      kebutuhan_khusus_id: null,
+      agama_id: null,
       no_kk: null,
       sekolah_id_tujuan: row.sekolah_id_tujuan,
       npsn_sekolah_tujuan: row.npsn_sekolah_tujuan,
