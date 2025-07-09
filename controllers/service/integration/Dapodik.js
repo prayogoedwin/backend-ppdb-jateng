@@ -63,26 +63,12 @@ export const callAuthenticateV2 = async (req, res) => {
   }
 };
 
-// const httpAgent = new http.Agent({
-//   keepAlive: true,
-//   keepAliveMsecs: 60000,
-//   maxSockets: 100,
-//   maxFreeSockets: 256,
-//   timeout: 300000 // Increased to 5 minutes
-// });
-
 const httpAgent = new http.Agent({
   keepAlive: true,
   keepAliveMsecs: 60000,
-  maxSockets: 50, // Tidak perlu Infinity
-  maxFreeSockets: 20,
-  timeout: 300000,
-  socketOptions: {
-    keepAlive: true,
-    timeout: 300000,
-    noDelay: true, // Disable Nagle's algorithm
-    keepAliveInitialDelay: 10000
-  }
+  maxSockets: 100,
+  maxFreeSockets: 256,
+  timeout: 300000 // Increased to 5 minutes
 });
 
 const httpsAgent = new https.Agent({
@@ -284,7 +270,3 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 };
-
-
-
-
