@@ -171,7 +171,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
           'Content-Type': 'application/json'
         },
         proxy: false,
-        timeout: 60000 // 60 detik
+        timeout: 120000 // 60 detik
       });
 
     // const response = await fetch(url, {
