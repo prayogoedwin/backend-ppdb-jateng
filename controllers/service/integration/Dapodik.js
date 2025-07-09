@@ -152,10 +152,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
     });
   }
 
- const checkQuery2 = 'SELECT * FROM ez_app_key WHERE nama = ?';
- const [existingKey2] = await db3.query(checkQuery2, ['dapodik']);
-
- 
+  const checkQuery2 = "SELECT * FROM ez_app_key WHERE nama = 'dapodik'";
+  const [existingKey2] = await db3.query(checkQuery2);
 
   const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB/`;
   const bearer_token = existingKey2.kode_random;
