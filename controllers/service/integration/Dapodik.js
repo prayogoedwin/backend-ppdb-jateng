@@ -76,9 +76,9 @@ export const KirimSatuanResponsJson = async (req, res) => {
     const tokenData = await redisGet(redis_key);
     const token_bearer = tokenData;
 
-    // const url = 'http://118.98.237.214/v1/api-gateway/pd/tambahDataHasilPPDB/';
+    const url = 'http://118.98.237.214/v1/api-gateway/pd/tambahDataHasilPPDB/';
 
-    const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB/`;
+    // const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB`;
 
     console.log('URL yang digunakan:', url);
     // const token_bearer = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hc3RoZW5vbEBnbWFpbC5jb20iLCJpbnN0YW5zaVBlbmdndW5hSWQiOiJBODVFNDZBQS03MDE5LTQ3RjYtQUJFOS1CNjIwRjkyMDk0M0QiLCJpcEFkZHJlc3MiOiIxMDMuMTA3LjI0NS4yNDQiLCJpYXQiOjE3NTIwNTc2MTYsImV4cCI6MTc1MjE0NDAxNiwiaXNzIjoia2VtZGlrYnVkLmdvLmlkIiwic3ViIjoicHVzZGF0aW5Aa2VtZGlrYnVkLmdvLmlkIn0.LlTFwdNjBeMwh6zM5o5zNYXsA0oBOQWcXWDloXgnnC6pd5lNxKO9TMvRAj7dmCyr1MFuhLCn7C9xR6h3Gt630w';
