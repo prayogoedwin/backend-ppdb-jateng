@@ -76,7 +76,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
     const tokenData = await redisGet(redis_key);
     const token_bearer = tokenData;
 
-    const url = 'http://118.98.237.214/v1/api-gateway/pd/tambahDataHasilPPDB/';
+    const url = 'http://118.98.237.214/v1/api-gateway/pd/tambahDataHasilPPDB';
 
     // const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB`;
 
@@ -170,7 +170,8 @@ export const KirimSatuanResponsJson = async (req, res) => {
           'Authorization': `Bearer ${token_bearer}`,
           'Content-Type': 'application/json'
         },
-        proxy: false
+        proxy: false,
+        timeout: 60000 // 60 detik
       });
 
     // const response = await fetch(url, {
