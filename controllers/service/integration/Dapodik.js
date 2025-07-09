@@ -61,6 +61,39 @@ export const callAuthenticateV2 = async (req, res) => {
   }
 };
 
+const httpAgent = new http.Agent({
+  keepAlive: true,
+  keepAliveMsecs: 60000, // 1 menit
+  maxSockets: Infinity,
+  maxFreeSockets: 256,
+  timeout: 30000
+});
+
+const httpsAgent = new https.Agent({
+  keepAlive: true,
+  keepAliveMsecs: 60000,
+  maxSockets: Infinity,
+  maxFreeSockets: 256,
+  timeout: 30000,
+  rejectUnauthorized: false // Hanya untuk development
+});
+
+const api = axios.create({
+  baseURL: 'http://118.98.237.214',
+  timeout: 30000,
+  httpAgent,
+  httpsAgent,
+  headers: {
+    'Connection': 'keep-alive',
+    'Keep-Alive': 'timeout=60, max=1000'
+  },
+  transitional: {
+    silentJSONParsing: false,
+    forcedJSONParsing: true,
+    clarifyTimeoutError: true
+  }
+});
+
 export const KirimSatuanResponsJson = async (req, res) => {
   const { no_pendaftaran } = req.body;
 
@@ -156,20 +189,27 @@ export const KirimSatuanResponsJson = async (req, res) => {
     console.log('Menggunakan token:', token_bearer);
 
     // Simplified Axios request with direct connection
-    const response = await axios({
-      method: 'post',
-      url: url,
-      data: payload,
-      headers: {
-        'Authorization': `Bearer ${token_bearer}`,
-        'Content-Type': 'application/json'
-      },
-      // Force direct connection (no proxy)
-      proxy: false,
-      // Disable any automatic proxy detection
-      httpAgent: new http.Agent({ keepAlive: true, rejectUnauthorized: false }),
-      httpsAgent: new https.Agent({ keepAlive: true, rejectUnauthorized: false })
-    });
+    // const response = await axios({
+    //   method: 'post',
+    //   url: url,
+    //   data: payload,
+    //   headers: {
+    //     'Authorization': `Bearer ${token_bearer}`,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   // Force direct connection (no proxy)
+    //   proxy: false,
+    //   // Disable any automatic proxy detection
+    //   httpAgent: new http.Agent({ keepAlive: true, rejectUnauthorized: false }),
+    //   httpsAgent: new https.Agent({ keepAlive: true, rejectUnauthorized: false })
+    // });
+
+    const response = await api.post('/v1/api-gateway/pd/tambahDataHasilPPDB', payload, {
+        headers: {
+            'Authorization': `Bearer ${token_bearer}`,
+            'Content-Type': 'application/json'
+        }
+        });
 
     const datas = response.data;
 
