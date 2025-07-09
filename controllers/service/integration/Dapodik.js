@@ -174,7 +174,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
             'Connection': 'keep-alive'  // Tambahkan ini
         },
         proxy: false,
-        timeout: 120000 // 60 detik
+        timeout: 120000, // 60 detik
         maxRedirects: 0,              // Nonaktifkan redirect jika tidak perlu
         httpAgent: new http.Agent({ keepAlive: true }),  // Untuk Node.js
       });
