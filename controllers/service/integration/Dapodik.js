@@ -348,7 +348,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
       kode_wilayah_siswa: row.kode_wilayah_siswa,
       lintang: row.lintang.toString(),
       bujur: row.bujur.toString(),
-      kebutuhan_khusus_id: null,
+      kebutuhan_khusus_id: row.kebutuhan_khusus_id,
       agama_id: null,
       no_kk: null,
       sekolah_id_tujuan: row.sekolah_id_tujuan,
