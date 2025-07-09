@@ -215,7 +215,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
     const datas = response;
 
-    console.log(JSON.stringify(datas, null, 2));  // Pretty-printed JSON
+    console.log(datas);  // Pretty-printed JSON
 
     if (datas.statusCode === 200) {
       await db3.query(
