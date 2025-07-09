@@ -31,7 +31,7 @@ export const callAuthenticateV2 = async (req, res) => {
       // Simpan ke Redis terlebih dahulu
       await redisSet(
         redis_key,
-        JSON.stringify(token),
+        token,
         process.env.REDIS_EXPIRE_TIME_HARIAN
       );
 
@@ -74,7 +74,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
 
     // 1. Ambil token dari Redis terlebih dahulu
     const tokenData = await redisGet(redis_key);
-    const token_bearer = tokenData.token;
+    const token_bearer = tokenData;
 
     const url = `${API_URL}/v1/api-gateway/pd/tambahDataHasilPPDB`;
     // const token_bearer = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hc3RoZW5vbEBnbWFpbC5jb20iLCJpbnN0YW5zaVBlbmdndW5hSWQiOiJBODVFNDZBQS03MDE5LTQ3RjYtQUJFOS1CNjIwRjkyMDk0M0QiLCJpcEFkZHJlc3MiOiIxMDMuMTA3LjI0NS4yNDQiLCJpYXQiOjE3NTIwNTc2MTYsImV4cCI6MTc1MjE0NDAxNiwiaXNzIjoia2VtZGlrYnVkLmdvLmlkIiwic3ViIjoicHVzZGF0aW5Aa2VtZGlrYnVkLmdvLmlkIn0.LlTFwdNjBeMwh6zM5o5zNYXsA0oBOQWcXWDloXgnnC6pd5lNxKO9TMvRAj7dmCyr1MFuhLCn7C9xR6h3Gt630w';
