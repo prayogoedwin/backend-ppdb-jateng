@@ -205,7 +205,7 @@ export const KirimSatuanResponsJson = async (req, res) => {
         status: 1,
         message: 'Data berhasil dikirim',
         data: {
-          status: respons.statusCode, 
+          status: response.statusCode, 
           no_pendaftaran,
           response: response.data,
         }
