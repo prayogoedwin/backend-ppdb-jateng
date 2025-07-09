@@ -364,11 +364,11 @@ export const KirimSatuanResponsJson = async (req, res) => {
     console.log('Menggunakan token:', token_bearer);
 
     
-      // 3. Eksekusi curl dengan execSync
+      // 2. Format command curl dengan benar
     const curlCommand = [
       'curl -X POST',
       `'${url}'`,
-      '-H "Authorization: Bearer ${token_bearer}"',
+      `-H "Authorization: Bearer ${token_bearer}"`, // Interpolasi langsung
       '-H "Content-Type: application/json"',
       `--data-raw '${JSON.stringify(payload).replace(/'/g, "'\\''")}'`,
       '--connect-timeout 30',
@@ -377,12 +377,12 @@ export const KirimSatuanResponsJson = async (req, res) => {
       '--show-error'
     ].join(' ');
 
-    console.log('Executing CURL:', curlCommand);
+    console.log('Executing CURL:', curlCommand); // Verifikasi command
 
+    // 3. Eksekusi command
     const stdout = execSync(curlCommand, {
       encoding: 'utf-8',
-      stdio: ['ignore', 'pipe', 'pipe'], // stdin, stdout, stderr
-      timeout: 120000 // 2 menit timeout untuk proses eksekusi
+      timeout: 120000
     });
 
     const response = JSON.parse(stdout);
