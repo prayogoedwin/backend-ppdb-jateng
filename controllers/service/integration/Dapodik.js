@@ -308,7 +308,7 @@ export const downloadCsvDonk = async (req, res) => {
     let csvContent = '';
 
     // Header
-    const headers = Object.keys(rows[0]).join('|');
+    const headers = Object.keys(rows[0]).map(header => `"${header.replace(/"/g, '""')}"`).join('|');
     csvContent += headers + '\n';
 
     // Baris data
