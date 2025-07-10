@@ -277,6 +277,7 @@ export const downloadCsvDonk = async (req, res) => {
   try {
     const results = await db3.query(`
       SELECT 
+      	DISTINCT ON (a.nisn)
         b.id AS peserta_didik_id, 
                 b.npsn AS npsn_sekolah_asal,
                 c.nama_sekolah_asal,
