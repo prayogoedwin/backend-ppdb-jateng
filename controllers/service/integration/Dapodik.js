@@ -290,10 +290,11 @@ export const downloadCsvDonk = async (req, res) => {
                 d.nama AS nama_sekolah_tujuan
       FROM ez_perangkingan a 
       INNER JOIN ez_peserta_didik b ON a.nik = b.nik
-      INNER JOIN ez_pendaftar c ON b.nik = c.nik
+      INNER JOIN ez_pendaftar c ON a.nik = c.nik
       INNER JOIN ez_sekolah_tujuan d ON a.sekolah_tujuan_id = d.id
       WHERE a.is_delete = 0
-        AND a.is_daftar_ulang = 1 LIMIT 5
+      AND a.is_daftar_ulang = 
+      ORDER BY a.nisn
     `, {
       type: db3.QueryTypes.SELECT
     });
